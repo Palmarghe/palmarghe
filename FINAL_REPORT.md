@@ -2,7 +2,7 @@
 
 ## Status
 
-**INCOMPLETE — external production integration remains.** Local/test environment implements the public site and Studio flows listed below. Supabase migrations, Cloudflare deployment, domain/DNS and live security behavior have not been verified. This report records the exact boundary; a local adapter does not prove production readiness.
+**COMPLETE WITH BLOCKERS — local V1 implementation; production is not deployed.** Local/test environment implements the public site and Studio flows listed below. Supabase migrations, Cloudflare deployment, domain/DNS and live security behavior have not been verified. A local adapter does not prove production readiness.
 
 ## Live URLs
 
@@ -43,12 +43,12 @@ Limited client JavaScript, semantic HTML, skip link, focus states and reduced mo
 
 - `npm run verify`: typecheck 0 errors/warnings, Vitest 11/11, Cloudflare build passed.
 - `npm run test:e2e`: Playwright Chrome 21/21 passed against local adapter (roles, CRUD, blocks, media, settings, translations, redirects, contact/auth limits, schedule/preview, mobile/tablet and axe WCAG checks on four public routes plus Studio). A serial rerun passed after test IP isolation prevented rate limits from coupling separate test cases.
-- `npm audit --omit=dev --audit-level=high`: 0 reported vulnerabilities at the prior check; recheck before release.
+- `npm audit --omit=dev --audit-level=high`: 0 reported vulnerabilities; recheck before release.
 - Production browser tests, real Supabase Auth/RLS/Storage integration, Cloudflare Worker preview and DNS/SSL smoke: **not run**.
 
 ## GitHub / CI
 
-The original local Git history and GitHub README initial commit were merged via `cee944f`, with the original README retained in `docs/github-initial-readme.md`. `origin` is `https://github.com/Palmarghe/palmarghe.git`. Commits `b2bb02e`, `4f76588` and `284dc38` were pushed to `main` without force; the root file tree and commit were verified in Chrome. GitHub Actions Verify #3 passed; the latest run must be checked after the final push.
+The original local Git history and GitHub README initial commit were merged via `cee944f`, with the original README retained in `docs/github-initial-readme.md`. `origin` is `https://github.com/Palmarghe/palmarghe.git`. The local history was pushed to `main` without force. Chrome showed the files and latest code commit `f108a42`; GitHub Actions Verify #10 completed successfully. The final report commit requires its own CI check after push.
 
 ## Deployments
 
