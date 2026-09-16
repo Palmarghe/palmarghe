@@ -52,15 +52,15 @@ The original local Git history and GitHub README initial commit were merged via 
 
 ## Deployments
 
-No staging or production deployment was made: Supabase/Cloudflare environments are not configured. See `docs/deployment.md`.
+No staging or production deployment was made: Supabase project credentials are unavailable and the available Cloudflare account has no domain zone. See `docs/deployment.md`.
 
 ## DNS Changes
 
-No DNS edit or nameserver change was made. Existing records need a snapshot and equivalent MX/SPF/DKIM verification before any transition. Desired hosts: apex/www, `studio.palmarghe.com`, isolated preview.
+No DNS edit or nameserver change was made. Public DNS precheck on 16 September returned SERVFAIL from Google and Cloudflare DoH; Cloudflare reported no reachable authority and `REFUSED` from `37.230.111.111:53`. Turhost's old tab redirected to login, so a complete zone export was unavailable. See `docs/dns-before.md`. Existing records need a panel snapshot and equivalent MX/SPF/DKIM verification before any transition. Desired hosts: apex/www, `studio.palmarghe.com`, isolated preview.
 
 ## External Services
 
-GitHub remote and Actions are connected. Supabase, Cloudflare/Turnstile, DNS and Search Console are not configured for this app.
+GitHub remote and Actions are connected. Chrome showed an authenticated Cloudflare account, but its Domains overview has no zones. Supabase redirected to sign-in and Turhost redirected to login; Turnstile, DNS and Search Console are not configured for this app.
 
 ## Environment Variables Required
 
@@ -68,9 +68,9 @@ GitHub remote and Actions are connected. Supabase, Cloudflare/Turnstile, DNS and
 
 ## Remaining Blockers
 
-1. Supabase is not connected. **User step:** provide the project URL and publishable/anon key, with the service role key in a server secret store. Then apply migrations and test Auth, CRUD, RLS and Storage against real roles.
-2. Cloudflare and Turnstile are not connected. **User step:** provide authorized account access and configure Turnstile/Worker secrets. Then deploy isolated preview, test contact bot protection, and promote after checks.
-3. Domain/DNS management is unverified. **User step:** provide authorized Turhost/Cloudflare DNS access. Then snapshot all records, preserve mail records, route hosts and verify TLS/redirects.
+1. Supabase redirected to sign-in; no project configuration is available. **User step:** sign in to the authorized Supabase account and provide the project URL and publishable/anon key, with the service role key in a server secret store. Then apply migrations and test Auth, CRUD, RLS and Storage against real roles.
+2. Cloudflare account access exists, but Domains shows no zones and Turnstile/Worker secrets are not configured. **User step:** identify the intended Cloudflare account/zone and configure the relevant secrets. Then deploy isolated preview, test contact bot protection, and promote after checks.
+3. Domain/DNS management is blocked by an expired Turhost session; public resolvers currently return SERVFAIL. **User step:** sign in to the authorized Turhost DNS panel. Then export zone records, diagnose the refused authority/delegation, preserve mail records, route hosts and verify TLS/redirects.
 4. Search Console ownership is unverified. **User step:** provide authorized Google account access. Then verify domain property and submit sitemap after production DNS is ready.
 
 ## Admin First Login
