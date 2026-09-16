@@ -1,5 +1,6 @@
 ---
 import { copy, nav, pathFor, type Locale } from '../lib/site';
+import { supabase } from '../lib/supabase';
 import '../styles/global.css';
 interface Props { locale: Locale; title?: string; description?: string; alternate?: string; noindex?: boolean; }
 const { locale, title, description, alternate, noindex = false } = Astro.props;
@@ -7,6 +8,10 @@ const t = copy[locale];
 const siteTitle = title ? `${title} — Palmarghe` : 'Palmarghe';
 const canonical = new URL(Astro.url.pathname, 'https://palmarghe.com').href;
 const alternatePath = alternate ?? pathFor(locale === 'tr' ? 'en' : 'tr');
+const db = supabase(Astro.cookies, Astro.request);
+const { data: dbCategories } = db ? await db.from('categories').select('slug,name_tr,name_en').is('parent_id',null).eq('active',true).order('sort_order').limit(8) : { data: null };
+const publicNav = dbCategories?.length ? dbCategories.map((entry) => ({ slug: entry.slug, tr: entry.name_tr, en: entry.name_en })) : nav.slice(0,4);
+const mainNav = [...publicNav, nav[4]];
 ---
 <!doctype html>
 <html lang={locale}>
@@ -36,14 +41,14 @@ const alternatePath = alternate ?? pathFor(locale === 'tr' ? 'en' : 'tr');
         <span>PALMARGHE</span>
       </a>
       <nav class="desktop-nav" aria-label={locale === 'tr' ? 'Ana menü' : 'Main menu'}>
-        {nav.map((item) => <a href={pathFor(locale, item.slug)}>{item[locale]}</a>)}
+        {mainNav.map((item) => <a href={pathFor(locale, item.slug)}>{item[locale]}</a>)}
       </nav>
       <div class="head-actions">
         <a href={pathFor(locale, 'search')} aria-label={t.search} class="search-icon">⌕</a>
         <a href={alternatePath} lang={locale === 'tr' ? 'en' : 'tr'} aria-label={locale === 'tr' ? 'Switch to English' : 'Türkçeye geç'}>{locale === 'tr' ? 'EN' : 'TR'}</a>
         <a href={pathFor(locale, 'account')}>{t.account}</a>
       </div>
-      <details class="mobile-menu"><summary aria-label={locale === 'tr' ? 'Menüyü aç' : 'Open menu'}>☰</summary><nav aria-label={locale === 'tr' ? 'Mobil menü' : 'Mobile menu'}>{nav.map((item) => <a href={pathFor(locale, item.slug)}>{item[locale]}</a>)}</nav></details>
+      <details class="mobile-menu"><summary aria-label={locale === 'tr' ? 'Menüyü aç' : 'Open menu'}>☰</summary><nav aria-label={locale === 'tr' ? 'Mobil menü' : 'Mobile menu'}>{mainNav.map((item) => <a href={pathFor(locale, item.slug)}>{item[locale]}</a>)}</nav></details>
     </header>
     <main id="main"><slot /></main>
     <footer class="site-footer wrap"><div class="footer-top"><span>PALMARGHE</span><span>{t.descriptor}</span></div><div class="footer-bottom"><span>© {new Date().getFullYear()} Palmarghe</span><nav aria-label="Footer"><a href={pathFor(locale, 'about')}>{t.about}</a><a href={pathFor(locale, 'contact')}>{t.contact}</a><a href={pathFor(locale, 'privacy')}>{t.privacy}</a></nav></div></footer>

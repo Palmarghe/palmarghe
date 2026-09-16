@@ -16,7 +16,7 @@
 - Türkçe kök ve İngilizce `/en/` public route'ları; ana sayfa, AI, Gaming, FM/FM26, Lab, arşiv, arama, About, Contact, Privacy, Account.
 - Flat SVG monogram/wordmark, dark editorial arayüz, duyarlı CSS.
 - Yayınlanmış içerik sorgusu ve beş içerik türü için başlangıç veri modeli.
-- Studio için server tarafı kullanıcı/rol denetimi, içerik ekle/düzenle, kategori ve etiket ekleme, mesaj listeleme. Bunlar gerçek Supabase bağlantısı kurulmadan uçtan uca doğrulanmadı.
+- Studio için server tarafı kullanıcı/rol denetimi, içerik ekle/düzenle ve kategori atama, kategori/etiket ekle-düzenle-sil, mesaj listeleme/durum güncelleme. Bunlar gerçek Supabase bağlantısı kurulmadan uçtan uca doğrulanmadı.
 - Supabase Auth giriş/kayıt/çıkış/şifre sıfırlama endpoint'leri, email code exchange.
 - Turnstile doğrulamalı ve DB inbox'a yazan iletişim endpoint'i; anahtar yokken form kapalı.
 - sitemap, robots, TR/EN RSS, temel canonical/hreflang/OG.
@@ -84,7 +84,7 @@ Studio > Content bölümünde başlık, slug, dil, tür ve gövde girip önce `d
 
 ## Known Limitations
 
-- Public kategoriler ve navigasyon hâlen kodda; DB kategori değişiklikleri public navigasyona yansımıyor.
+- Public ana kategoriler Supabase bağlandığında DB'den okunur; boş bağlantı için kodda fallback bulunur. Nav ve kategori yönetiminin tüm seçenekleri henüz Studio'ya bağlanmadı.
 - Her içerik türü aynı basit detay görünümünü kullanıyor.
 - Arama küçük veri kümesi için basit başlık/özet sorgusu; Türkçe full-text ve tag/kategori filtreleri yok.
 - Studio eylemlerinde işlem başına audit kaydı ve tam CRUD yok.
