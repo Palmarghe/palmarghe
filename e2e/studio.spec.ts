@@ -199,6 +199,8 @@ test('social settings and translated content alternate', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('navigation', { name: 'Footer' }).getByRole('link', { name: 'github' })).toHaveAttribute('rel','noopener noreferrer');
   const group = crypto.randomUUID();
+  await page.goto('/studio/?section=content');
+  await expect(page.locator('input[name="translation_group"]')).toBeVisible();
   for (const [locale,slug,title] of [['tr','lab/ceviri-test','Türkçe Deneme'],['en','lab/translation-test','English Test']]) {
     const response = await page.request.post('/api/studio/', { headers: { Origin: 'http://127.0.0.1:4322' }, form: { entity: 'content', title, slug, locale, translation_group: group, type: 'article', status: 'published', body: JSON.stringify({ type: 'doc', content: [{ type:'paragraph', content:[{ type:'text', text:title }] }] }) }, maxRedirects: 0 });
     expect(response.status()).toBe(303);
