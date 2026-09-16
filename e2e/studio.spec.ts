@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
 
+test.beforeEach(async ({ context }, testInfo) => {
+  const suffix = [...testInfo.title].reduce((sum,character) => sum + character.charCodeAt(0),0) % 240 + 1;
+  await context.setExtraHTTPHeaders({ 'CF-Connecting-IP': `198.51.100.${suffix}` });
+});
+
 test('public language and metadata', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Dijital işler');
@@ -283,4 +288,29 @@ test('public layout fits mobile and tablet viewports', async ({ page }) => {
     await page.locator('.mobile-menu summary').click();
     await expect(page.getByRole('navigation', { name: 'Mobil menü' }).getByRole('link', { name: 'Switch to English' })).toBeVisible();
   }
+});
+
+test('featured and noindex content controls affect public output', async ({ page }) => {
+  await page.goto('/studio/');
+  await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
+  await page.locator('input[name="password"]').fill('LocalTest123!');
+  await page.getByRole('button', { name: 'Giriş' }).click();
+  await page.goto('/studio/?section=content');
+  await page.locator('input[name="title"]').fill('Öne Çıkan Gizli İndeks');
+  await page.locator('input[name="slug"]').fill('lab/featured-noindex');
+  await page.locator('select[name="status"]').selectOption('published');
+  await page.locator('input[name="featured"]').check();
+  await page.locator('input[name="indexable"][type="checkbox"]').uncheck();
+  await page.locator('#block-editor .tiptap').fill('Deneme metni.');
+  await page.getByRole('button', { name: 'Kaydet' }).click();
+  const homepage = await page.request.post('/api/studio/', { headers: { Origin: 'http://127.0.0.1:4322' }, form: { entity:'homepage', featured_visible:'on', categories_visible:'on', latest_visible:'on', featured_order:'1', categories_order:'2', latest_order:'3' }, maxRedirects:0 });
+  expect(homepage.status()).toBe(303);
+  await page.goto('/');
+  await expect(page.locator('.home-sections section').first()).toContainText('Öne Çıkan Gizli İndeks');
+  await page.goto('/lab/featured-noindex/');
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content','noindex,nofollow');
+  const schema = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() ?? '{}');
+  expect(schema.headline).toBe('Öne Çıkan Gizli İndeks');
+  const sitemap = await (await page.request.get('/sitemap.xml')).text();
+  expect(sitemap).not.toContain('/lab/featured-noindex/');
 });

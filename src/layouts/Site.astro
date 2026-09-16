@@ -2,8 +2,8 @@
 import { copy, nav, pathFor, safeExternalUrl, type Locale } from '../lib/site';
 import { supabase } from '../lib/supabase';
 import '../styles/global.css';
-interface Props { locale: Locale; title?: string; description?: string; alternate?: string; noindex?: boolean; }
-const { locale, title, description, alternate, noindex = false } = Astro.props;
+interface Props { locale: Locale; title?: string; description?: string; alternate?: string; noindex?: boolean; structuredData?: Record<string, unknown>; }
+const { locale, title, description, alternate, noindex = false, structuredData } = Astro.props;
 const t = copy[locale];
 const siteTitle = title ? `${title} — Palmarghe` : 'Palmarghe';
 const canonical = new URL(Astro.url.pathname, 'https://palmarghe.com').href;
@@ -39,6 +39,7 @@ const socialLinks = (['github','youtube','instagram','x'] as const).map((name) =
     <meta property="og:description" content={description ?? t.descriptor} />
     <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content="summary" />
+    {structuredData && <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData).replace(/</g,'\\u003c')}></script>}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body style={`--accent:${accent};--radius:${radius}`}>

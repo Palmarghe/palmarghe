@@ -19,44 +19,74 @@
 - Contact Turnstile validation and DB rate limit RPC; hashed IP/action/email auth rate limit RPC; Origin/input checks, CSP/headers, noindex/no-store.
 - Canonical/hreflang for matched translations, OG, sitemap, robots and TR/EN RSS. GitHub Actions runs typecheck, unit/build and Playwright E2E.
 
-## Architecture and Database
+## Architecture
 
-One Astro SSR app targeting Cloudflare Workers with Supabase Auth/Postgres/Storage. Migration files `202609160001`–`202609160008` are prepared, **not applied to a real Supabase project**. See `docs/architecture.md`, `docs/content-model.md`, `docs/admin-guide.md`, `docs/security.md` and `docs/deployment.md`. Initial admin bootstrap requires a controlled privileged transaction after confirming the owner UUID.
+One Astro SSR app targeting Cloudflare Workers with Supabase Auth/Postgres/Storage. See `docs/architecture.md` and `docs/content-model.md`.
+
+## Database & Auth
+
+Migration files `202609160001`–`202609160008` are prepared, **not applied to a real Supabase project**. Auth flows were exercised with the local adapter only. Initial admin bootstrap requires a controlled privileged transaction after confirming the owner UUID.
 
 ## Security Controls
 
 RLS policies, server role checks, same-origin checks, constrained form input and block rendering, media signature/size limits, Turnstile, DB contact/auth rate limits, no-store/noindex and audit triggers are implemented. Production behavior, migrations, Storage policy, SMTP and RLS have not been tested on Supabase. MFA and external security review are pending. Account deletion requests need verified human handling in Supabase Auth; marking a request complete does not delete an identity.
 
-## SEO, Performance and Accessibility
+## SEO
 
-Canonical, paired hreflang, sitemap/RSS and noindex for private/search routes are implemented. Limited client JavaScript, semantic HTML, skip link, focus states and reduced motion are present. Real production Lighthouse, axe, responsive viewport, Search Console and Core Web Vitals checks remain outstanding. Search uses bounded, sanitized title/excerpt matching; advanced full-text/filtering and image derivatives are absent.
+Canonical, paired hreflang, sitemap/RSS, JSON-LD for published content, content indexability, and noindex for private/search routes are implemented. Search uses bounded, sanitized title/excerpt matching; advanced full-text/filtering is absent. Search Console remains unverified.
+
+## Performance & Accessibility
+
+Limited client JavaScript, semantic HTML, skip link, focus states and reduced motion are present. Mobile/tablet Playwright checks and axe WCAG scans cover critical routes and Studio form with no serious/critical findings. Production Lighthouse, Core Web Vitals and full manual assistive technology checks remain outstanding. Image derivatives are absent.
 
 ## Tests
 
 - `npm run verify`: typecheck 0 errors/warnings, Vitest 9/9, Cloudflare build passed.
-- `npm run test:e2e`: Playwright Chrome 15/15 passed against local adapter (roles, CRUD, blocks, media, settings, translations, redirects, contact/auth limits, schedule/preview). A mobile/tablet viewport check also passed after restoring language/search/account links in the mobile menu. An earlier concurrent build/E2E run temporarily lost the editor asset; a serial rerun passed.
+- `npm run test:e2e`: Playwright Chrome 21/21 passed against local adapter (roles, CRUD, blocks, media, settings, translations, redirects, contact/auth limits, schedule/preview, mobile/tablet and axe WCAG checks on four public routes plus Studio). A serial rerun passed after test IP isolation prevented rate limits from coupling separate test cases.
 - `npm audit --omit=dev --audit-level=high`: 0 reported vulnerabilities at the prior check; recheck before release.
 - Production browser tests, real Supabase Auth/RLS/Storage integration, Cloudflare Worker preview and DNS/SSL smoke: **not run**.
 
 ## GitHub / CI
 
-The original local Git history and GitHub README initial commit were merged via `cee944f`, with the original README retained in `docs/github-initial-readme.md`. `origin` is `https://github.com/Palmarghe/palmarghe.git`. Commits `b2bb02e` and `4f76588` were pushed to `main` without force; the latter's commit and root file tree were verified in Chrome. GitHub Actions Verify #2 passed; #3 was still running when this paragraph was updated.
+The original local Git history and GitHub README initial commit were merged via `cee944f`, with the original README retained in `docs/github-initial-readme.md`. `origin` is `https://github.com/Palmarghe/palmarghe.git`. Commits `b2bb02e`, `4f76588` and `284dc38` were pushed to `main` without force; the root file tree and commit were verified in Chrome. GitHub Actions Verify #3 passed; the latest run must be checked after the final push.
 
-## Deployments and DNS
+## Deployments
 
-No deployment, DNS edit or nameserver change was made. Existing records need a snapshot and equivalent MX/SPF/DKIM verification before any DNS transition. Desired hosts: apex/www, `studio.palmarghe.com`, isolated preview. See `docs/deployment.md`.
+No staging or production deployment was made: Supabase/Cloudflare environments are not configured. See `docs/deployment.md`.
 
-## External Services and Remaining Blockers
+## DNS Changes
 
-1. Supabase project URL and anon/publishable key, server service role secret and migrations are needed to test Auth, CRUD, RLS and Storage for real. Secret values must go to local/Worker secret storage, never Git.
-2. Cloudflare account/Worker/Turnstile access and secret configuration are needed for preview/production deployment and contact bot validation.
-3. DNS management access and existing record snapshot are needed for safe domain routing and SSL verification.
-4. Search Console account and DNS verification are needed for ownership confirmation and indexing checks.
+No DNS edit or nameserver change was made. Existing records need a snapshot and equivalent MX/SPF/DKIM verification before any transition. Desired hosts: apex/www, `studio.palmarghe.com`, isolated preview.
 
-`PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `CONTACT_RATE_PEPPER`, `APP_URL`, and `STUDIO_URL` are described in `.env.example`. `LOCAL_TEST_MODE` is development only. These are external configuration gates, not reasons to skip the local implementation.
+## External Services
+
+GitHub remote and Actions are connected. Supabase, Cloudflare/Turnstile, DNS and Search Console are not configured for this app.
+
+## Environment Variables Required
+
+`PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `CONTACT_RATE_PEPPER`, `APP_URL`, and `STUDIO_URL` are described in `.env.example`. `LOCAL_TEST_MODE` is development only. Secrets stay outside Git.
+
+## Remaining Blockers
+
+1. Supabase is not connected. **User step:** provide the project URL and publishable/anon key, with the service role key in a server secret store. Then apply migrations and test Auth, CRUD, RLS and Storage against real roles.
+2. Cloudflare and Turnstile are not connected. **User step:** provide authorized account access and configure Turnstile/Worker secrets. Then deploy isolated preview, test contact bot protection, and promote after checks.
+3. Domain/DNS management is unverified. **User step:** provide authorized Turhost/Cloudflare DNS access. Then snapshot all records, preserve mail records, route hosts and verify TLS/redirects.
+4. Search Console ownership is unverified. **User step:** provide authorized Google account access. Then verify domain property and submit sitemap after production DNS is ready.
+
+## Admin First Login
+
+Create and verify the owner account in Supabase Auth. Confirm its UUID independently. In a privileged SQL transaction, temporarily disable `prevent_profile_role_change`, set only that UUID's `public.profiles.role` to `admin`, re-enable the trigger and verify both role and trigger. Do not store the password or UUID in Git. See `docs/admin-guide.md`.
+
+## Content Publishing Guide
+
+In Studio > Content, enter title/slug/language/type, compose blocks, and save as `draft`. Open the staff preview, then publish or schedule with a future UTC time. Choose category/tags, cover, featured and indexability as needed. See `docs/admin-guide.md`.
 
 ## Known Limitations
 
 - Production migration/RPC behavior and Auth callback/email have not been proven. Preview isolation and MFA must be configured in the provider.
 - Content relationship writes span multiple requests, so a failed later tag write can leave an earlier content update; transaction-backed RPC would strengthen atomicity.
 - Search is intentionally basic; image derivative optimization, member self-service deletion execution, extensive automated accessibility/performance coverage and full content analytics remain open.
+
+## Recommended V2
+
+- Transaction-backed content and relation save, optimized media derivatives, richer search/filtering, analytics, and automated account deletion processing after identity verification.

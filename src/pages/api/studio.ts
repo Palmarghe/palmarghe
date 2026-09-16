@@ -6,7 +6,7 @@ import { parseDocument } from '../../lib/blocks';
 import { safeExternalUrl } from '../../lib/site';
 
 const category = z.object({ slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/), name_tr: z.string().min(1).max(100), name_en: z.string().min(1).max(100), parent_id: z.uuid().nullable(), active: z.boolean(), sort_order: z.number().int().min(0).max(1000) });
-const content = z.object({ id: z.uuid().optional(), category_id: z.uuid().nullable(), cover_media_id: z.uuid().nullable(), translation_group: z.uuid().nullable(), title: z.string().min(1).max(200), slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*(\/[a-z0-9]+(-[a-z0-9]+)*)*$/), locale: z.enum(['tr','en']), type: z.enum(['article','project','fm_mod','gallery','lab_entry']), status: z.enum(['draft','scheduled','published','archived']), excerpt: z.string().max(500).nullable(), body: z.string().max(100000), seo_title: z.string().max(200).nullable(), seo_description: z.string().max(300).nullable() });
+const content = z.object({ id: z.uuid().optional(), category_id: z.uuid().nullable(), cover_media_id: z.uuid().nullable(), translation_group: z.uuid().nullable(), featured: z.boolean(), indexable: z.boolean(), title: z.string().min(1).max(200), slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*(\/[a-z0-9]+(-[a-z0-9]+)*)*$/), locale: z.enum(['tr','en']), type: z.enum(['article','project','fm_mod','gallery','lab_entry']), status: z.enum(['draft','scheduled','published','archived']), excerpt: z.string().max(500).nullable(), body: z.string().max(100000), seo_title: z.string().max(200).nullable(), seo_description: z.string().max(300).nullable() });
 export const POST: APIRoute = async ({ request, cookies }) => {
   if (!sameOrigin(request)) return errorResponse('Invalid origin', 403);
   const db = supabase(cookies, request);
@@ -141,7 +141,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       if (error) return errorResponse('Delete failed',400);
       return redirectTo(request, '/studio/?section=content');
     }
-    const parsed = content.safeParse({ id: form.get('id') || undefined, category_id: form.get('category_id') || null, cover_media_id: form.get('cover_media_id') || null, translation_group: form.get('translation_group') || null, title: form.get('title'), slug: form.get('slug'), locale: form.get('locale'), type: form.get('type'), status: form.get('status'), excerpt: form.get('excerpt') || null, body: form.get('body'), seo_title: form.get('seo_title') || null, seo_description: form.get('seo_description') || null });
+    const parsed = content.safeParse({ id: form.get('id') || undefined, category_id: form.get('category_id') || null, cover_media_id: form.get('cover_media_id') || null, translation_group: form.get('translation_group') || null, featured: form.get('featured') === 'on', indexable: !form.has('indexable') || form.getAll('indexable').includes('on'), title: form.get('title'), slug: form.get('slug'), locale: form.get('locale'), type: form.get('type'), status: form.get('status'), excerpt: form.get('excerpt') || null, body: form.get('body'), seo_title: form.get('seo_title') || null, seo_description: form.get('seo_description') || null });
     if (!parsed.success) return errorResponse('Invalid data');
     const tagIds = form.getAll('tag_ids').map(String);
     if (tagIds.some((tagId) => !z.uuid().safeParse(tagId).success) || tagIds.length > 20) return errorResponse('Invalid tags');

@@ -10,6 +10,7 @@ if (element && output) {
   const editor = new Editor({
     element,
     extensions: [StarterKit.configure({ heading: { levels: [2, 3] } })],
+    editorProps: { attributes: { 'aria-label': 'İçerik blok editörü' } },
     content: initial as object,
     onUpdate: ({ editor }) => { output.value = JSON.stringify(editor.getJSON()); dirty = true; },
   });

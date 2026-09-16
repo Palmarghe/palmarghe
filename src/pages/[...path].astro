@@ -45,8 +45,9 @@ const currentUser = accountDb ? (await accountDb.auth.getUser()).data.user : nul
 const accountProfile = currentUser && accountDb ? (await accountDb.from('profiles').select('display_name').eq('id',currentUser.id).single()).data : null;
 const articleBody = item?.body && typeof item.body === 'object' ? parseDocument(JSON.stringify(item.body)) : null;
 const typeData = item?.type_data ?? {};
+const structuredData = item ? { '@context': 'https://schema.org', '@type': item.type === 'article' ? 'Article' : 'CreativeWork', headline: item.title, description: item.excerpt ?? undefined, inLanguage: locale, datePublished: item.published_at ?? undefined, url: new URL(pathFor(locale,item.slug),'https://palmarghe.com').href, publisher: { '@type':'Organization', name:'Palmarghe' } } : undefined;
 ---
-<Site locale={locale} title={title} description={item?.seo_description ?? item?.excerpt ?? undefined} alternate={alternatePath} noindex={['account','search'].includes(slug)}>
+<Site locale={locale} title={title} description={item?.seo_description ?? item?.excerpt ?? undefined} alternate={alternatePath} noindex={['account','search'].includes(slug) || item?.indexable === false} structuredData={structuredData}>
   {slug === '' && <>
     <section class="hero wrap"><span class="eyebrow">PALMARGHE — INDEPENDENT DIGITAL JOURNAL</span><h1>{t.title}</h1><p>{t.descriptor}</p></section>
     <div class="home-sections">
