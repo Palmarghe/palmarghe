@@ -1,0 +1,51 @@
+---
+import { copy, nav, pathFor, type Locale } from '../lib/site';
+import '../styles/global.css';
+interface Props { locale: Locale; title?: string; description?: string; alternate?: string; noindex?: boolean; }
+const { locale, title, description, alternate, noindex = false } = Astro.props;
+const t = copy[locale];
+const siteTitle = title ? `${title} — Palmarghe` : 'Palmarghe';
+const canonical = new URL(Astro.url.pathname, 'https://palmarghe.com').href;
+const alternatePath = alternate ?? pathFor(locale === 'tr' ? 'en' : 'tr');
+---
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0B0B0D" />
+    <title>{siteTitle}</title>
+    <meta name="description" content={description ?? t.descriptor} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={locale} href={canonical} />
+    <link rel="alternate" hreflang={locale === 'tr' ? 'en' : 'tr'} href={new URL(alternatePath, 'https://palmarghe.com').href} />
+    <link rel="alternate" hreflang="x-default" href={new URL(locale === 'tr' ? Astro.url.pathname : alternatePath, 'https://palmarghe.com').href} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={description ?? t.descriptor} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <a class="skip" href="#main">{locale === 'tr' ? 'İçeriğe geç' : 'Skip to content'}</a>
+    <header class="site-header wrap">
+      <a class="brand" href={pathFor(locale)} aria-label="Palmarghe home">
+        <svg viewBox="0 0 48 56" role="img" aria-label="Palmarghe P monogram" width="30" height="35"><path d="M5 3 43 15v26H24V29h7v-5L17 20v34L5 50Z" fill="currentColor"/></svg>
+        <span>PALMARGHE</span>
+      </a>
+      <nav class="desktop-nav" aria-label={locale === 'tr' ? 'Ana menü' : 'Main menu'}>
+        {nav.map((item) => <a href={pathFor(locale, item.slug)}>{item[locale]}</a>)}
+      </nav>
+      <div class="head-actions">
+        <a href={pathFor(locale, 'search')} aria-label={t.search} class="search-icon">⌕</a>
+        <a href={alternatePath} lang={locale === 'tr' ? 'en' : 'tr'} aria-label={locale === 'tr' ? 'Switch to English' : 'Türkçeye geç'}>{locale === 'tr' ? 'EN' : 'TR'}</a>
+        <a href={pathFor(locale, 'account')}>{t.account}</a>
+      </div>
+      <details class="mobile-menu"><summary aria-label={locale === 'tr' ? 'Menüyü aç' : 'Open menu'}>☰</summary><nav aria-label={locale === 'tr' ? 'Mobil menü' : 'Mobile menu'}>{nav.map((item) => <a href={pathFor(locale, item.slug)}>{item[locale]}</a>)}</nav></details>
+    </header>
+    <main id="main"><slot /></main>
+    <footer class="site-footer wrap"><div class="footer-top"><span>PALMARGHE</span><span>{t.descriptor}</span></div><div class="footer-bottom"><span>© {new Date().getFullYear()} Palmarghe</span><nav aria-label="Footer"><a href={pathFor(locale, 'about')}>{t.about}</a><a href={pathFor(locale, 'contact')}>{t.contact}</a><a href={pathFor(locale, 'privacy')}>{t.privacy}</a></nav></div></footer>
+  </body>
+</html>
