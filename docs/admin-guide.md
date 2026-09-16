@@ -8,4 +8,4 @@ Medya kütüphanesi PNG/JPEG/WebP ve 10 MB sınırını uygular. Alt metni düze
 
 Users bölümünde admin başka üyelerin rollerini günceller, hesap silme taleplerini inceler. Talebi `completed` işaretlemek kimlik sağlayıcıdaki hesabı silmez; doğrulanmış talep ayrıca Supabase Auth yönetiminde işlenmelidir. Kendi rolünüzü panelden değiştiremezsiniz.
 
-İlk admin ataması migration yetkisiyle kontrollü bakım işlemidir. `prevent_profile_role_change` trigger'ını tek bir transaction içinde geçici devre dışı bırakıp doğrulanmış owner UUID'sini admin yapın ve trigger'ı yeniden açın; işlemden sonra rolü ve trigger durumunu doğrulayın. Kimlik veya şifreyi repoya yazmayın.
+İlk admin ataması yalnız migration sahibi `postgres` yetkisiyle kontrollü SQL işlemidir. Doğrulanmış owner UUID'si için `public.profiles.role` alanını `admin` yapın ve sonucu doğrulayın. `prevent_profile_role_change` trigger'ını devre dışı bırakmayın; normal oturumlarda rol değişimini engeller. Kimlik veya şifreyi repoya yazmayın.

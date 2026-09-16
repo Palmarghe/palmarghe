@@ -75,7 +75,7 @@ GitHub remote and Actions are connected. Chrome showed an authenticated Cloudfla
 
 ## Admin First Login
 
-Create and verify the owner account in Supabase Auth. Confirm its UUID independently. In a privileged SQL transaction, temporarily disable `prevent_profile_role_change`, set only that UUID's `public.profiles.role` to `admin`, re-enable the trigger and verify both role and trigger. Do not store the password or UUID in Git. See `docs/admin-guide.md`.
+Create and verify the owner account in Supabase Auth. Confirm its UUID independently. As the migration owner `postgres`, set only that UUID's `public.profiles.role` to `admin`; keep `prevent_profile_role_change` enabled and verify the role and trigger. Do not store the password or UUID in Git. See `docs/admin-guide.md`.
 
 ## Content Publishing Guide
 
