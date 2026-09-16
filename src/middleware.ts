@@ -1,7 +1,8 @@
 import { defineMiddleware } from 'astro:middleware';
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  const response = await next();
+  const original = await next();
+  const response = new Response(original.body, original);
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');

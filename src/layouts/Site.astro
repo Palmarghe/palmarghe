@@ -10,8 +10,14 @@ const canonical = new URL(Astro.url.pathname, 'https://palmarghe.com').href;
 const alternatePath = alternate ?? pathFor(locale === 'tr' ? 'en' : 'tr');
 const db = supabase(Astro.cookies, Astro.request);
 const { data: dbCategories } = db ? await db.from('categories').select('slug,name_tr,name_en').is('parent_id',null).eq('active',true).order('sort_order').limit(8) : { data: null };
-const publicNav = dbCategories?.length ? dbCategories.map((entry) => ({ slug: entry.slug, tr: entry.name_tr, en: entry.name_en })) : nav.slice(0,4);
+const categories: { slug: string; name_tr: string; name_en: string }[] = dbCategories ?? [];
+const publicNav = categories.length ? categories.map((entry) => ({ slug: entry.slug, tr: entry.name_tr, en: entry.name_en })) : nav.slice(0,4);
 const mainNav = [...publicNav, nav[4]];
+const { data: dbNav } = db ? await db.from('navigation').select('label,href').eq('locale',locale).eq('active',true).order('sort_order').limit(10) : { data: null };
+const customNav: { label: string; href: string }[] = dbNav ?? [];
+const { data: appearanceRow } = db ? await db.from('site_settings').select('value').eq('key','appearance').single() : { data: null };
+const accent = ({ violet: '#8b5cf6', blue: '#60a5fa', amber: '#fbbf24' } as Record<string,string>)[appearanceRow?.value?.accent] ?? '#8b5cf6';
+const radius = appearanceRow?.value?.radius === 'subtle' ? '4px' : '0px';
 ---
 <!doctype html>
 <html lang={locale}>
@@ -33,7 +39,7 @@ const mainNav = [...publicNav, nav[4]];
     <meta name="twitter:card" content="summary" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
-  <body>
+  <body style={`--accent:${accent};--radius:${radius}`}>
     <a class="skip" href="#main">{locale === 'tr' ? 'İçeriğe geç' : 'Skip to content'}</a>
     <header class="site-header wrap">
       <a class="brand" href={pathFor(locale)} aria-label="Palmarghe home">
@@ -41,14 +47,14 @@ const mainNav = [...publicNav, nav[4]];
         <span>PALMARGHE</span>
       </a>
       <nav class="desktop-nav" aria-label={locale === 'tr' ? 'Ana menü' : 'Main menu'}>
-        {mainNav.map((item) => <a href={pathFor(locale, item.slug)}>{item[locale]}</a>)}
+        {customNav.length ? customNav.map((item) => <a href={item.href} rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}>{item.label}</a>) : mainNav.map((item) => <a href={pathFor(locale, item.slug)}>{item[locale]}</a>)}
       </nav>
       <div class="head-actions">
         <a href={pathFor(locale, 'search')} aria-label={t.search} class="search-icon">⌕</a>
         <a href={alternatePath} lang={locale === 'tr' ? 'en' : 'tr'} aria-label={locale === 'tr' ? 'Switch to English' : 'Türkçeye geç'}>{locale === 'tr' ? 'EN' : 'TR'}</a>
         <a href={pathFor(locale, 'account')}>{t.account}</a>
       </div>
-      <details class="mobile-menu"><summary aria-label={locale === 'tr' ? 'Menüyü aç' : 'Open menu'}>☰</summary><nav aria-label={locale === 'tr' ? 'Mobil menü' : 'Mobile menu'}>{mainNav.map((item) => <a href={pathFor(locale, item.slug)}>{item[locale]}</a>)}</nav></details>
+      <details class="mobile-menu"><summary aria-label={locale === 'tr' ? 'Menüyü aç' : 'Open menu'}>☰</summary><nav aria-label={locale === 'tr' ? 'Mobil menü' : 'Mobile menu'}>{customNav.length ? customNav.map((item) => <a href={item.href} rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}>{item.label}</a>) : mainNav.map((item) => <a href={pathFor(locale, item.slug)}>{item[locale]}</a>)}</nav></details>
     </header>
     <main id="main"><slot /></main>
     <footer class="site-footer wrap"><div class="footer-top"><span>PALMARGHE</span><span>{t.descriptor}</span></div><div class="footer-bottom"><span>© {new Date().getFullYear()} Palmarghe</span><nav aria-label="Footer"><a href={pathFor(locale, 'about')}>{t.about}</a><a href={pathFor(locale, 'contact')}>{t.contact}</a><a href={pathFor(locale, 'privacy')}>{t.privacy}</a></nav></div></footer>

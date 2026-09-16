@@ -10,6 +10,8 @@ Türkçe/İngilizce creator journal ve Studio başlangıcı. Astro SSR, Supabase
 4. Supabase migration'ı uygulayın: `supabase db push` veya SQL Editor.
 5. `npm run dev`; test için `npm run verify`.
 
+Supabase olmadan yerel UI/E2E testi için yalnız loopback üzerinde `LOCAL_TEST_MODE=true` ile dev server başlatılabilir. Bu mod `admin@example.test`, `editor@example.test`, `member@example.test` hesaplarını `LocalTest123!` test şifresiyle sunar; gerçek kullanıcı verisi içermez ve production build'de kapalıdır. `npm run test:e2e` bunu otomatik başlatır.
+
 Boş env ile public tasarım ve boş durumlar görülebilir. Veri, hesap ve iletişim işlevleri bağlı servis gerektirir.
 
 ## Yapı
@@ -28,3 +30,4 @@ Boş env ile public tasarım ve boş durumlar görülebilir. Veri, hesap ve ilet
 - `npm run test`: Vitest
 - `npm run build`: Workers build
 - `npm run verify`: typecheck, test, build
+- `npm run test:e2e`: Playwright tarayıcı akışları (Chrome yerel, Chromium CI)

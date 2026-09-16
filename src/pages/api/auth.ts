@@ -13,6 +13,23 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const locale = form.get('locale') === 'en' ? 'en' : 'tr';
   const account = `/${locale === 'en' ? 'en/' : ''}account/`;
   if (action === 'logout') { await db.auth.signOut(); return redirectTo(request, account); }
+  if (action === 'logout_all') { await db.auth.signOut({ scope: 'global' }); return redirectTo(request, account); }
+  if (action === 'profile') {
+    const { data: { user } } = await db.auth.getUser();
+    if (!user) return errorResponse('Unauthorized',401);
+    const display_name = z.string().trim().max(100).safeParse(form.get('display_name'));
+    if (!display_name.success) return errorResponse('Invalid name');
+    const { error } = await db.from('profiles').update({ display_name: display_name.data }).eq('id',user.id);
+    if (error) return errorResponse('Update failed',400);
+    return redirectTo(request, account);
+  }
+  if (action === 'delete_request') {
+    const { data: { user } } = await db.auth.getUser();
+    if (!user) return errorResponse('Unauthorized',401);
+    const { error } = await db.from('account_deletion_requests').insert({ user_id: user.id });
+    if (error) return errorResponse('Request failed',400);
+    return redirectTo(request, `${account}?notice=deletion`);
+  }
   if (action === 'reset') {
     const email = z.email().safeParse(form.get('email'));
     if (!email.success) return errorResponse('Invalid email');
