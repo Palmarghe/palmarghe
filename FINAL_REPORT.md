@@ -34,13 +34,13 @@ Canonical, paired hreflang, sitemap/RSS and noindex for private/search routes ar
 ## Tests
 
 - `npm run verify`: typecheck 0 errors/warnings, Vitest 9/9, Cloudflare build passed.
-- `npm run test:e2e`: Playwright Chrome 14/14 passed against local adapter (roles, CRUD, blocks, media, settings, translations, redirects, contact/auth limits, schedule/preview). An earlier concurrent build/E2E run temporarily lost the editor asset; a serial rerun passed.
+- `npm run test:e2e`: Playwright Chrome 15/15 passed against local adapter (roles, CRUD, blocks, media, settings, translations, redirects, contact/auth limits, schedule/preview). A mobile/tablet viewport check also passed after restoring language/search/account links in the mobile menu. An earlier concurrent build/E2E run temporarily lost the editor asset; a serial rerun passed.
 - `npm audit --omit=dev --audit-level=high`: 0 reported vulnerabilities at the prior check; recheck before release.
 - Production browser tests, real Supabase Auth/RLS/Storage integration, Cloudflare Worker preview and DNS/SSL smoke: **not run**.
 
 ## GitHub / CI
 
-The original local Git history and GitHub README initial commit were merged via `cee944f`, with the original README retained in `docs/github-initial-readme.md`. `origin` is `https://github.com/Palmarghe/palmarghe.git`. The earlier implementation commit `b2bb02e` was pushed to `main`, files were verified in Chrome and GitHub Actions Verify run #2 passed. The current extension commit is pending push and Chrome verification at the time of this report edit. No force push was used.
+The original local Git history and GitHub README initial commit were merged via `cee944f`, with the original README retained in `docs/github-initial-readme.md`. `origin` is `https://github.com/Palmarghe/palmarghe.git`. Commits `b2bb02e` and `4f76588` were pushed to `main` without force; the latter's commit and root file tree were verified in Chrome. GitHub Actions Verify #2 passed; #3 was still running when this paragraph was updated.
 
 ## Deployments and DNS
 

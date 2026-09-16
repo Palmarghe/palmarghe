@@ -272,3 +272,15 @@ test('category hierarchy rejects cycles and supports inactive state', async ({ p
   const cycle = await page.request.post('/api/studio/', { headers: { Origin: 'http://127.0.0.1:4322' }, form: { entity: 'category', operation: 'update', id, slug: 'inactive-test', name_tr: 'Pasif Kategori', name_en: 'Inactive Category', parent_id: id, sort_order: '0', active: 'on' } });
   expect(cycle.status()).toBe(400);
 });
+
+test('public layout fits mobile and tablet viewports', async ({ page }) => {
+  for (const width of [390,768]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto('/');
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 2);
+    expect(overflow, `horizontal overflow at ${width}px`).toBe(false);
+    await page.locator('.mobile-menu summary').click();
+    await expect(page.getByRole('navigation', { name: 'Mobil menü' }).getByRole('link', { name: 'Switch to English' })).toBeVisible();
+  }
+});
