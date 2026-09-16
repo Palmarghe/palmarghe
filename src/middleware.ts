@@ -2,6 +2,11 @@ import { defineMiddleware } from 'astro:middleware';
 import { supabase } from './lib/supabase';
 
 export const onRequest = defineMiddleware(async (context, next) => {
+  if (import.meta.env.PROD && context.url.hostname === 'www.palmarghe.com') {
+    const canonical = new URL(context.url);
+    canonical.hostname = 'palmarghe.com';
+    return Response.redirect(canonical,301);
+  }
   if (import.meta.env.PROD && context.url.hostname === 'palmarghe.com' && context.url.pathname.startsWith('/studio/')) {
     return Response.redirect(new URL(context.url.pathname + context.url.search, import.meta.env.STUDIO_URL || 'https://studio.palmarghe.com'), 302);
   }
@@ -25,5 +30,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
     response.headers.set('Cache-Control', 'private, no-store');
     response.headers.set('X-Robots-Tag', 'noindex, nofollow');
   }
+  if (import.meta.env.PROD && context.url.hostname !== 'palmarghe.com') response.headers.set('X-Robots-Tag','noindex, nofollow');
   return response;
 });

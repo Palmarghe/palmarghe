@@ -41,7 +41,7 @@ Limited client JavaScript, semantic HTML, skip link, focus states and reduced mo
 
 ## Tests
 
-- `npm run verify`: typecheck 0 errors/warnings, Vitest 9/9, Cloudflare build passed.
+- `npm run verify`: typecheck 0 errors/warnings, Vitest 10/10, Cloudflare build passed.
 - `npm run test:e2e`: Playwright Chrome 21/21 passed against local adapter (roles, CRUD, blocks, media, settings, translations, redirects, contact/auth limits, schedule/preview, mobile/tablet and axe WCAG checks on four public routes plus Studio). A serial rerun passed after test IP isolation prevented rate limits from coupling separate test cases.
 - `npm audit --omit=dev --audit-level=high`: 0 reported vulnerabilities at the prior check; recheck before release.
 - Production browser tests, real Supabase Auth/RLS/Storage integration, Cloudflare Worker preview and DNS/SSL smoke: **not run**.
