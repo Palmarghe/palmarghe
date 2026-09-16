@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { sameOrigin, errorResponse, redirectTo } from '../../lib/security';
-import { localMode } from '../../lib/supabase';
+import { localTestRequest } from '../../lib/supabase';
 import { localInsertContact, localContactAllowed } from '../../lib/local-adapter';
 
 const schema = z.object({ name: z.string().trim().min(1).max(100), email: z.email().max(254), message: z.string().trim().min(10).max(5000), locale: z.enum(['tr','en']), consent: z.literal('on'), token: z.string().min(1) });
@@ -13,7 +13,7 @@ export const POST: APIRoute = async ({ request }) => {
   const parsed = schema.safeParse({ name: form.get('name'), email: form.get('email'), message: form.get('message'), locale: form.get('locale'), consent: form.get('consent'), token: form.get('cf-turnstile-response') });
   if (!parsed.success) return errorResponse('Invalid form', 400);
   const ip = request.headers.get('cf-connecting-ip') ?? 'unknown';
-  if (localMode) {
+  if (localTestRequest(request)) {
     if (parsed.data.token !== 'local-test-token') return errorResponse('Bot check failed',403);
     if (!localContactAllowed(ip)) return errorResponse('Rate limit exceeded',429);
     localInsertContact({ name: parsed.data.name, email: parsed.data.email, message: parsed.data.message });

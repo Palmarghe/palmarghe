@@ -1,0 +1,16 @@
+---
+import Site from '../../../layouts/Site.astro';
+import { supabase } from '../../../lib/supabase';
+import { parseDocument, renderDocument } from '../../../lib/blocks';
+const db = supabase(Astro.cookies, Astro.request);
+const user = db ? (await db.auth.getUser()).data.user : null;
+const profile = user && db ? (await db.from('profiles').select('role').eq('id',user.id).single()).data : null;
+const allowed = ['admin','editor'].includes(profile?.role ?? '');
+if (!allowed) Astro.response.status = 403;
+const { data: item } = allowed && db ? await db.from('content_items').select('title,excerpt,locale,body,status').eq('id',Astro.params.id).single() : { data: null };
+if (allowed && !item) Astro.response.status = 404;
+const doc = item?.body && typeof item.body === 'object' ? parseDocument(JSON.stringify(item.body)) : null;
+---
+<Site locale={item?.locale === 'en' ? 'en' : 'tr'} title={item?.title ?? 'Preview'} noindex>
+  <div class="wrap"><header class="page-head"><span class="eyebrow">STUDIO / PREVIEW / {item?.status}</span><h1>{item?.title ?? (allowed ? 'Not found' : 'Forbidden')}</h1></header>{item && <article class="page-content"><p>{item.excerpt}</p>{doc && <div set:html={renderDocument(doc)}/>}</article>}</div>
+</Site>

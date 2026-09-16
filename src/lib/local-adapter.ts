@@ -1,6 +1,6 @@
 /** Development-only, in-memory Supabase-shaped adapter for browser and E2E tests. */
 type Row = Record<string, any>;
-type TableName = 'profiles' | 'categories' | 'tags' | 'content_items' | 'content_categories' | 'contact_messages' | 'site_settings' | 'navigation' | 'media' | 'redirects' | 'audit_logs' | 'account_deletion_requests';
+type TableName = 'profiles' | 'categories' | 'tags' | 'content_items' | 'content_categories' | 'content_tags' | 'contact_messages' | 'site_settings' | 'navigation' | 'media' | 'redirects' | 'audit_logs' | 'account_deletion_requests';
 type Filter = (row: Row) => boolean;
 const uid = () => crypto.randomUUID();
 const initialCategories: Row[] = [
@@ -17,7 +17,7 @@ const users: Row[] = [
 ];
 const tables: Record<TableName, Row[]> = {
   profiles: users.map(({ id, role }) => ({ id, role })), categories: initialCategories,
-  tags: [], content_items: [], content_categories: [], contact_messages: [],
+  tags: [], content_items: [], content_categories: [], content_tags: [], contact_messages: [],
   site_settings: [], navigation: [], media: [], redirects: [], audit_logs: [], account_deletion_requests: [],
 };
 const mediaFiles = new Map<string, Uint8Array>();
@@ -35,6 +35,7 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
   constructor(private table: TableName, private user: Row | null) {}
   select(columns = '*') { this.columns = columns; return this; }
   eq(field: string, value: any) { this.filters.push((row) => row[field] === value); return this; }
+  in(field: string, values: any[]) { this.filters.push((row) => values.includes(row[field])); return this; }
   lte(field: string, value: any) { this.filters.push((row) => row[field] <= value); return this; }
   is(field: string, value: any) { this.filters.push((row) => row[field] === value); return this; }
   or(filter: string) {
@@ -50,11 +51,12 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
   delete() { this.action = 'delete'; return this; }
   upsert(values: Row | Row[]) { this.action = 'upsert'; this.values = values; return this; }
   private visible(row: Row): boolean {
-    if (this.table === 'content_items') return this.user?.role === 'admin' || this.user?.role === 'editor' || (row.status === 'published' && row.published_at && row.published_at <= new Date().toISOString());
-    if (this.table === 'content_categories') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => item.id === row.content_id && item.status === 'published');
+    if (this.table === 'content_items') return this.user?.role === 'admin' || this.user?.role === 'editor' || (['published','scheduled'].includes(row.status) && row.published_at && row.published_at <= new Date().toISOString());
+    if (this.table === 'content_categories') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => item.id === row.content_id && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
+    if (this.table === 'content_tags') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => item.id === row.content_id && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
     if (this.table === 'profiles') return Boolean(this.user && (this.user.id === row.id || this.user.role === 'admin'));
     if (this.table === 'account_deletion_requests') return Boolean(this.user && (this.user.id === row.user_id || this.user.role === 'admin'));
-    if (this.table === 'media') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => item.cover_media_id === row.id && item.status === 'published');
+    if (this.table === 'media') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => item.cover_media_id === row.id && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
     if (this.table === 'contact_messages') return this.user?.role === 'admin' || this.user?.role === 'editor';
     if (this.table === 'audit_logs') return this.user?.role === 'admin';
     return true;
@@ -87,7 +89,7 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
     } else if (this.action === 'update') selected.forEach((row) => Object.assign(row, this.values));
     else if (this.action === 'delete') {
       if (this.table === 'categories' && selected.some((row) => tables.content_categories.some((link) => link.category_id === row.id) || tables.categories.some((child) => child.parent_id === row.id))) return { data: null, error: { code: '23503', message: 'linked category' } };
-      if (this.table === 'tags' && selected.some((row) => tables.content_items.some((item) => item.tag_id === row.id))) return { data: null, error: { code: '23503', message: 'linked tag' } };
+      if (this.table === 'tags' && selected.some((row) => tables.content_tags.some((link) => link.tag_id === row.id))) return { data: null, error: { code: '23503', message: 'linked tag' } };
       selected.forEach((row) => rows.splice(rows.indexOf(row), 1));
     }
     if (this.sortField) { const field = this.sortField; selected.sort((a,b) => String(a[field] ?? '').localeCompare(String(b[field] ?? '')) * (this.ascending ? 1 : -1)); }
@@ -104,6 +106,17 @@ export function localSupabase(cookies: import('astro').AstroCookies) {
   const getUser = () => users.find((user) => user.id === cookies.get('pg_mock_user')?.value) ?? null;
   return {
     from: (name: string) => { if (!isTable(name)) throw new Error('Unknown table'); return new Query(name, getUser()); },
+    rpc: async (name: string, args: Row) => {
+      const actor = getUser();
+      if (name !== 'set_member_role' || actor?.role !== 'admin' || actor.id === args.p_user_id || !['member','editor','admin'].includes(args.p_role)) return { data: null, error: { message: 'permission denied' } };
+      const target = users.find((entry) => entry.id === args.p_user_id);
+      if (!target || (target.role === 'admin' && args.p_role !== 'admin' && users.filter((entry) => entry.role === 'admin').length <= 1)) return { data: null, error: { message: 'invalid role change' } };
+      target.role = args.p_role;
+      const profile = tables.profiles.find((entry) => entry.id === target.id);
+      if (profile) profile.role = args.p_role;
+      tables.audit_logs.push({ actor_id: actor.id, action: 'ROLE_CHANGE', entity: 'profiles', entity_id: target.id, created_at: new Date().toISOString() });
+      return { data: null, error: null };
+    },
     auth: {
       getUser: async () => ({ data: { user: getUser() }, error: null }),
       signInWithPassword: async ({ email, password }: { email: string; password: string }) => {
@@ -132,6 +145,14 @@ export function localContactAllowed(key: string) {
   const next = !current || now-current.start > 15*60*1000 ? { start: now, count: 1 } : { start: current.start, count: current.count+1 };
   localContactRate.set(key,next);
   return next.count <= 5;
+}
+const localAuthRate = new Map<string, { start: number; count: number }>();
+export function localAuthAllowed(key: string, max: number) {
+  const now = Date.now();
+  const current = localAuthRate.get(key);
+  const next = !current || now-current.start > 15*60*1000 ? { start: now, count: 1 } : { start: current.start, count: current.count+1 };
+  localAuthRate.set(key,next);
+  return next.count <= max;
 }
 export function localStoreMedia(path: string, bytes: Uint8Array) { mediaFiles.set(path, bytes); }
 export function localReadMedia(path: string) { return mediaFiles.get(path) ?? null; }

@@ -2,99 +2,61 @@
 
 ## Status
 
-**INCOMPLETE.** Public temel, veri şeması ve yerel test ortamında çalışan Studio akışları oluşturuldu. Gerçek Supabase/Cloudflare entegrasyonu, kalan Studio özellikleri ve production doğrulaması bitmeden üretim için hazır değildir.
+**INCOMPLETE — external production integration remains.** Local/test environment implements the public site and Studio flows listed below. Supabase migrations, Cloudflare deployment, domain/DNS and live security behavior have not been verified. This report records the exact boundary; a local adapter does not prove production readiness.
 
 ## Live URLs
 
-- Production: kurulmadı / doğrulanmadı
-- Studio: kurulmadı / doğrulanmadı
-- Preview: kurulmadı / doğrulanmadı
-- Local: `http://127.0.0.1:4321/` (`npm run dev` ile)
+- Production, Studio and preview: not deployed or verified.
+- Local: `http://127.0.0.1:4321/` with `npm run dev`; E2E uses port 4322 and `LOCAL_TEST_MODE=true`.
 
 ## What Was Built
 
-- Türkçe kök ve İngilizce `/en/` public route'ları; ana sayfa, AI, Gaming, FM/FM26, Lab, arşiv, arama, About, Contact, Privacy, Account.
-- Flat SVG monogram/wordmark, dark editorial arayüz, duyarlı CSS.
-- Yayınlanmış içerik sorgusu ve beş içerik türü için başlangıç veri modeli.
-- Studio için server tarafı kullanıcı/rol denetimi, içerik ekle/düzenle/sil ve kategori atama, kategori/etiket ekle-düzenle-sil, mesaj listeleme/durum güncelleme.
-- Tiptap tabanlı kontrollü blok editörü; sunucuda izinli JSON blok doğrulaması ve güvenli HTML rendering.
-- PNG/JPEG/WebP dosya imzası ve 10 MB boyut kontrolüyle medya yükleme; private Storage policy taslağı ve kapak görseli seçimi.
-- Appearance accent/radius preset'leri ve locale bazlı navigation yönetimi.
-- Yalnız local development için bellek içi test adapter'ı; admin/editor/member test hesapları ve production'da kapalı mod.
-- Supabase Auth giriş/kayıt/çıkış/tüm oturumlardan çıkış/şifre sıfırlama, profil düzenleme ve hesap silme talebi endpoint'leri, email code exchange.
-- Turnstile doğrulamalı ve DB inbox'a yazan iletişim endpoint'i; anahtar yokken form kapalı.
-- sitemap, robots, TR/EN RSS, temel canonical/hreflang/OG.
+- Astro SSR bilingual public routes (Turkish root, English `/en/`), category/hierarchy listings, archive, search, detail pages for article/project/FM mod/gallery/Lab, About, Contact, Privacy, Account.
+- Responsive editorial UI, SVG logo, navigation, footer, homepage visibility/order, appearance presets and social links.
+- Studio content CRUD with Tiptap controlled block editor and server-side JSON allowlist, category/tag relationships, type-specific fields, draft/staff preview/publish/UTC scheduling, SEO fields and translation group.
+- Category and tag CRUD, media library with PNG/JPEG/WebP signature and 10 MB validation, alt editing, cover selection, protected deletion, contact inbox, redirect manager with loop detection, audit view, member roles and account deletion request review.
+- Supabase Auth login/signup/reset/session/profile/deletion request endpoints, server role checks, RLS and private Storage migration. Local-only in-memory adapter provides admin/editor/member accounts and controlled tests.
+- Contact Turnstile validation and DB rate limit RPC; hashed IP/action/email auth rate limit RPC; Origin/input checks, CSP/headers, noindex/no-store.
+- Canonical/hreflang for matched translations, OG, sitemap, robots and TR/EN RSS. GitHub Actions runs typecheck, unit/build and Playwright E2E.
 
-## Architecture
+## Architecture and Database
 
-Astro SSR tek uygulama, Cloudflare Workers adapter, Supabase Auth/Postgres. Public ve Studio route'ları aynı projede, ayrı server denetimleriyle. Henüz monorepo değil; boş depoda basit başlangıç seçildi. `docs/architecture.md` ayrıntıları içerir.
-
-## Database & Auth
-
-`supabase/migrations/` içerik, kategori, medya, hesap silme talebi, iletişim rate limit şeması ve RLS politikalarını tanımlar. Migration gerçek Supabase üzerinde çalıştırılmadı. Auth akışları yerel test adapter'ında test edildi; canlı kullanıcı/e-posta ile test edilmedi. İlk admin yalnız güvenli SQL adımıyla atanmalı; aşağıya bakın.
+One Astro SSR app targeting Cloudflare Workers with Supabase Auth/Postgres/Storage. Migration files `202609160001`–`202609160008` are prepared, **not applied to a real Supabase project**. See `docs/architecture.md`, `docs/content-model.md`, `docs/admin-guide.md`, `docs/security.md` and `docs/deployment.md`. Initial admin bootstrap requires a controlled privileged transaction after confirming the owner UUID.
 
 ## Security Controls
 
-RLS taslağı, server rol kontrolü, Origin/Zod doğrulaması, CSP, güvenlik başlıkları, Turnstile doğrulaması, DB tabanlı contact rate limit migration'ı ve no-store/noindex var. Login rate limiting, MFA zorunluluğu, audit yazımı, RLS/Storage entegrasyon testleri ve tam OWASP denetimi eksik. Canlıya çıkış kapısı olarak görülmeli.
+RLS policies, server role checks, same-origin checks, constrained form input and block rendering, media signature/size limits, Turnstile, DB contact/auth rate limits, no-store/noindex and audit triggers are implemented. Production behavior, migrations, Storage policy, SMTP and RLS have not been tested on Supabase. MFA and external security review are pending. Account deletion requests need verified human handling in Supabase Auth; marking a request complete does not delete an identity.
 
-## SEO
+## SEO, Performance and Accessibility
 
-Temel meta, canonical, hreflang, sitemap, RSS, robots var. Dinamik içerik hreflang eşleştirmesi, JSON-LD, yönlendirme yöneticisi ve Search Console doğrulaması eksik. Arşiv filtreleri yalnız tür filtresini kapsıyor.
-
-## Performance & Accessibility
-
-Çok az client JavaScript, semantik HTML, skip link, focus stili ve reduced motion var. Lighthouse, axe ve mobil/tablet viewport testleri çalıştırılmadı. Görsel optimizasyon pipeline'ı eksik.
+Canonical, paired hreflang, sitemap/RSS and noindex for private/search routes are implemented. Limited client JavaScript, semantic HTML, skip link, focus states and reduced motion are present. Real production Lighthouse, axe, responsive viewport, Search Console and Core Web Vitals checks remain outstanding. Search uses bounded, sanitized title/excerpt matching; advanced full-text/filtering and image derivatives are absent.
 
 ## Tests
 
-- `npm run verify`: **PASS** (Astro typecheck 0 hata/uyarı; Vitest 9/9; Workers build başarılı).
-- `npm run test:e2e`: **PASS** (Playwright Chrome, 5/5; yerel test adapter'ı).
-- `npm audit --omit=dev --audit-level=high`: **PASS**, 0 vulnerability.
-- HTTP local smoke: `/`, `/en/`, `/search/`, `/studio/`, `/robots.txt`, `/sitemap.xml`, `/rss.xml` 200; bilinmeyen sayfa 404.
-- Gerçek tarayıcı: TR/EN ana sayfa, dil geçişi, arama formu ve Studio yapılandırma boş durumu doğrulandı.
-- Gerçek Supabase üzerinde Auth, Studio CRUD, contact ve RLS; production browser akışları: **test edilmedi** (servis yapılandırılmadı).
+- `npm run verify`: typecheck 0 errors/warnings, Vitest 9/9, Cloudflare build passed.
+- `npm run test:e2e`: Playwright Chrome 14/14 passed against local adapter (roles, CRUD, blocks, media, settings, translations, redirects, contact/auth limits, schedule/preview). An earlier concurrent build/E2E run temporarily lost the editor asset; a serial rerun passed.
+- `npm audit --omit=dev --audit-level=high`: 0 reported vulnerabilities at the prior check; recheck before release.
+- Production browser tests, real Supabase Auth/RLS/Storage integration, Cloudflare Worker preview and DNS/SSL smoke: **not run**.
 
-## Deployments
+## GitHub / CI
 
-Yok. GitHub remote bağlandı ve `main` geçmişler birleştirilerek force push olmadan yayımlandı. Eksik güvenlik ve işlevler nedeniyle production deploy yapılmadı.
+The original local Git history and GitHub README initial commit were merged via `cee944f`, with the original README retained in `docs/github-initial-readme.md`. `origin` is `https://github.com/Palmarghe/palmarghe.git`. The earlier implementation commit `b2bb02e` was pushed to `main`, files were verified in Chrome and GitHub Actions Verify run #2 passed. The current extension commit is pending push and Chrome verification at the time of this report edit. No force push was used.
 
-## DNS Changes
+## Deployments and DNS
 
-Yok. DNS kaydı veya nameserver değiştirilmedi.
+No deployment, DNS edit or nameserver change was made. Existing records need a snapshot and equivalent MX/SPF/DKIM verification before any DNS transition. Desired hosts: apex/www, `studio.palmarghe.com`, isolated preview. See `docs/deployment.md`.
 
-## External Services
+## External Services and Remaining Blockers
 
-GitHub deposuna push yapıldı ve dosyalar Chrome'da görüldü. Supabase, Cloudflare, Turhost ve Search Console bağlantıları yapılandırılmış değil.
+1. Supabase project URL and anon/publishable key, server service role secret and migrations are needed to test Auth, CRUD, RLS and Storage for real. Secret values must go to local/Worker secret storage, never Git.
+2. Cloudflare account/Worker/Turnstile access and secret configuration are needed for preview/production deployment and contact bot validation.
+3. DNS management access and existing record snapshot are needed for safe domain routing and SSL verification.
+4. Search Console account and DNS verification are needed for ownership confirmation and indexing checks.
 
-## Environment Variables Required
-
-`.env.example`: `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `CONTACT_RATE_PEPPER`, `APP_URL`, `STUDIO_URL`. `LOCAL_TEST_MODE` yalnız yerel geliştirme içindir. Secret'lar repoya eklenmedi.
-
-## Remaining Blockers
-
-1. **Supabase bağlantısı yok.** Kullanıcıdan gereken tek adım: Supabase proje URL'si ve publishable/anon anahtarını yerel/Worker secret ortamına sağlamak. Sonra migration ve gerçek auth/CRUD/RLS testleri yapılacak.
-2. **Cloudflare/Turnstile erişimi yok.** Kullanıcıdan gereken tek adım: Cloudflare hesabına yetkili bağlantı ve Turnstile anahtarlarını sağlamak. Sonra bot kontrolü ve Worker preview kurulacak.
-3. **DNS erişimi doğrulanmadı.** Kullanıcıdan gereken tek adım: Turhost/Cloudflare DNS yönetimine yetkili erişim sağlamak. Önce kayıt snapshot'ı, sonra güvenli geçiş yapılacak.
-
-Bu dış blokajlardan bağımsız kod eksikleri de var: tam Studio içerik türü ekranları, medya silme/usage, homepage ve sosyal ayarlar, kullanıcı yönetimi, redirect yönetimi, scheduled publish, login rate limiting, entegrasyon/a11y testleri. Bunlar tamamlanmadan production yayına çıkılmamalı.
-
-## Admin First Login
-
-Supabase email doğrulaması çalışan bir hesap oluşturun. Yalnız doğrulanmış owner UUID'siyle güvenli SQL ortamında `public.profiles.role` değerini `admin` yapın. `prevent_profile_role_change` trigger'ı normal oturumdan rol değişimini engeller; yetkili migration veya geçici bakım işlemi gerekir. Şifreyi dosyaya koymayın. Cloudflare Access owner email'ini tahmin etmeyin.
-
-## Content Publishing Guide
-
-Studio > Content bölümünde başlık, slug, dil, tür ve gövde girip önce `draft` kaydedin. Veriyi kontrol ettikten sonra `published` durumuna alın. Şu an preview, medya ve zengin editör olmadığı için bu akış production yayın standardını karşılamaz.
+`PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `CONTACT_RATE_PEPPER`, `APP_URL`, and `STUDIO_URL` are described in `.env.example`. `LOCAL_TEST_MODE` is development only. These are external configuration gates, not reasons to skip the local implementation.
 
 ## Known Limitations
 
-- Public ana kategoriler Supabase bağlandığında DB'den okunur; boş bağlantı için kodda fallback bulunur. Nav ve kategori yönetiminin tüm seçenekleri henüz Studio'ya bağlanmadı.
-- Her içerik türü aynı basit detay görünümünü kullanıyor.
-- Arama küçük veri kümesi için basit başlık/özet sorgusu; Türkçe full-text ve tag/kategori filtreleri yok.
-- Studio eylemlerinde işlem başına audit kaydı yok; görünüm/medya/yönlendirme yönetiminin bir kısmı eksik.
-- Supabase e-posta/redirect ayarları yapılandırılmadan Auth çalışmaz.
-- Local dev server kod değişikliklerinden sonra dependency optimize hatası verebilir; yeniden başlatma ile giderildi. Production build başarılı.
-
-## Recommended V2
-
-V1 tamamlandıktan sonra: gelişmiş editör, içerik analitiği, otomatik görsel türevleri, sosyal dağıtım, isteğe bağlı üyeye özel yayınlar.
+- Production migration/RPC behavior and Auth callback/email have not been proven. Preview isolation and MFA must be configured in the provider.
+- Content relationship writes span multiple requests, so a failed later tag write can leave an earlier content update; transaction-backed RPC would strengthen atomicity.
+- Search is intentionally basic; image derivative optimization, member self-service deletion execution, extensive automated accessibility/performance coverage and full content analytics remain open.

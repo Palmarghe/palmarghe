@@ -1,12 +1,13 @@
 ---
 import Site from '../layouts/Site.astro';
-import { copy, nav, parsePath, pathFor } from '../lib/site';
+import { copy, nav, parsePath, pathFor, safeExternalUrl } from '../lib/site';
 import { published, type ContentItem } from '../lib/content';
-import { supabase, localMode } from '../lib/supabase';
+import { supabase, localTestRequest } from '../lib/supabase';
 import { parseDocument, renderDocument } from '../lib/blocks';
 
 const { locale, slug } = parsePath(Astro.url.pathname);
 const t = copy[locale];
+const localMode = localTestRequest(Astro.request);
 const basePages = ['', 'ai', 'gaming', 'fm', 'fm/fm26', 'lab', 'archive', 'about', 'contact', 'search', 'account', 'privacy'];
 const items = await published(Astro.cookies, Astro.request, locale);
 let item: ContentItem | undefined;
@@ -19,13 +20,15 @@ const valid = basePages.includes(slug) || Boolean(item) || Boolean(dbCategory);
 if (!valid) Astro.response.status = 404;
 const titleMap: Record<string, string> = { ai: 'AI', gaming: 'Gaming', fm: 'Football Manager', 'fm/fm26': 'FM26', lab: 'Lab', archive: locale === 'tr' ? 'Arşiv' : 'Archive', about: t.about, contact: t.contact, search: t.search, account: t.account, privacy: t.privacy };
 const title = item?.seo_title ?? item?.title ?? (dbCategory ? dbCategory[locale === 'tr' ? 'name_tr' : 'name_en'] : titleMap[slug]) ?? (valid ? undefined : '404');
-const alternate = item?.translation_group ? items.find((other) => other.translation_group === item?.translation_group && other.locale !== locale)?.slug : undefined;
-const alternatePath = alternate ? pathFor(locale === 'tr' ? 'en' : 'tr', alternate) : pathFor(locale === 'tr' ? 'en' : 'tr', basePages.includes(slug) ? slug : '');
+const { data: counterpart } = item?.translation_group && categoryDb ? await categoryDb.from('content_items').select('slug').eq('translation_group',item.translation_group).eq('locale',locale === 'tr' ? 'en' : 'tr').in('status',['published','scheduled']).lte('published_at',new Date().toISOString()).limit(1) : { data: null };
+const alternate = counterpart?.[0]?.slug;
+const alternatePath = alternate ? pathFor(locale === 'tr' ? 'en' : 'tr', alternate) : !item ? pathFor(locale === 'tr' ? 'en' : 'tr', basePages.includes(slug) ? slug : '') : undefined;
 const query = Astro.url.searchParams.get('q')?.trim().slice(0, 100) ?? '';
 let searchResults: ContentItem[] = [];
 if (slug === 'search' && query) {
   const db = supabase(Astro.cookies, Astro.request);
-  if (db) { const { data } = await db.from('content_items').select('id,locale,title,slug,excerpt,type,body,cover_url,published_at,featured,seo_title,seo_description,translation_group').eq('locale', locale).eq('status', 'published').or(`title.ilike.%${query.replaceAll(',', '')}%,excerpt.ilike.%${query.replaceAll(',', '')}%`).limit(30); searchResults = (data ?? []) as ContentItem[]; }
+  const safeQuery = query.replace(/[^\p{L}\p{N}\s-]/gu, '').trim();
+  if (db && safeQuery) { const { data } = await db.from('content_items').select('id,locale,title,slug,excerpt,type,body,type_data,cover_url,published_at,featured,seo_title,seo_description,translation_group').eq('locale', locale).in('status', ['published','scheduled']).lte('published_at',new Date().toISOString()).or(`title.ilike.%${safeQuery}%,excerpt.ilike.%${safeQuery}%`).limit(30); searchResults = (data ?? []) as ContentItem[]; }
 }
 const { data: categoryLinks } = dbCategory && categoryDb ? await categoryDb.from('content_categories').select('content_id').eq('category_id',dbCategory.id) : { data: null };
 const links: { content_id: string }[] = categoryLinks ?? [];
@@ -33,20 +36,27 @@ const linkedIds = new Set(links.map((link) => link.content_id));
 const categoryItems = dbCategory ? items.filter((entry) => linkedIds.has(entry.id)) : ['ai','gaming','fm','lab'].includes(slug) ? items.filter((entry) => entry.slug.startsWith(`${slug}/`)) : slug === 'fm/fm26' ? items.filter((entry) => entry.slug.startsWith('fm/fm26/')) : items;
 const archived = slug === 'archive' ? categoryItems.filter((entry) => !Astro.url.searchParams.get('type') || entry.type === Astro.url.searchParams.get('type')) : categoryItems;
 const homeCategories = allCategories.length ? allCategories.filter((entry) => !entry.parent_id).map((entry) => ({ slug: entry.slug, tr: entry.name_tr, en: entry.name_en })) : nav.slice(0,4);
+const { data: homepageRow } = categoryDb ? await categoryDb.from('site_settings').select('value').eq('key','homepage').single() : { data: null };
+const homeValue = homepageRow?.value ?? {};
+const homeVisible = (section: string) => homeValue?.visible?.[section] !== false;
+const homeOrder = (section: string) => Number(homeValue?.order?.[section] ?? ({ featured: 1, categories: 2, latest: 3 } as Record<string,number>)[section]);
 const accountDb = slug === 'account' ? supabase(Astro.cookies, Astro.request) : null;
 const currentUser = accountDb ? (await accountDb.auth.getUser()).data.user : null;
 const accountProfile = currentUser && accountDb ? (await accountDb.from('profiles').select('display_name').eq('id',currentUser.id).single()).data : null;
 const articleBody = item?.body && typeof item.body === 'object' ? parseDocument(JSON.stringify(item.body)) : null;
+const typeData = item?.type_data ?? {};
 ---
 <Site locale={locale} title={title} description={item?.seo_description ?? item?.excerpt ?? undefined} alternate={alternatePath} noindex={['account','search'].includes(slug)}>
   {slug === '' && <>
     <section class="hero wrap"><span class="eyebrow">PALMARGHE — INDEPENDENT DIGITAL JOURNAL</span><h1>{t.title}</h1><p>{t.descriptor}</p></section>
-    <section class="section wrap"><div class="section-heading"><h2>{t.selected}</h2><span>01 / 03</span></div>{items.filter((entry) => entry.featured).length ? <div class="card-grid">{items.filter((entry) => entry.featured).slice(0,3).map((entry) => <a class="entry-card" href={pathFor(locale,entry.slug)}>{entry.cover_url && <img src={entry.cover_url} alt="" width="800" height="500" loading="lazy"/>}<span class="eyebrow">{entry.type.replace('_',' ')}</span><h3>{entry.title}</h3><p>{entry.excerpt}</p></a>)}</div> : <div class="empty">{t.empty}</div>}</section>
-    <section class="section wrap"><div class="section-heading"><h2>{t.explore}</h2><span>AI / GAMING / FM / LAB</span></div><div class="categories">{homeCategories.map((entry,index) => <a class="category" href={pathFor(locale,entry.slug)}><span>0{index+1} / {entry.slug.toUpperCase()}</span><strong>{entry[locale]} ↗</strong></a>)}</div></section>
-    <section class="section wrap"><div class="section-heading"><h2>{t.latest}</h2><a class="text-link" href={pathFor(locale,'archive')}>{t.explore} ↗</a></div>{items.length ? <div class="card-grid">{items.slice(0,6).map((entry) => <a class="entry-card" href={pathFor(locale,entry.slug)}><span class="eyebrow">{entry.type.replace('_',' ')}</span><h3>{entry.title}</h3><p>{entry.excerpt}</p></a>)}</div> : <div class="empty">{t.empty}</div>}</section>
+    <div class="home-sections">
+      {homeVisible('featured') && <section class="section wrap" style={`order:${homeOrder('featured')}`}><div class="section-heading"><h2>{t.selected}</h2><span>01 / 03</span></div>{items.filter((entry) => entry.featured).length ? <div class="card-grid">{items.filter((entry) => entry.featured).slice(0,3).map((entry) => <a class="entry-card" href={pathFor(locale,entry.slug)}>{entry.cover_url && <img src={entry.cover_url} alt="" width="800" height="500" loading="lazy"/>}<span class="eyebrow">{entry.type.replace('_',' ')}</span><h3>{entry.title}</h3><p>{entry.excerpt}</p></a>)}</div> : <div class="empty">{t.empty}</div>}</section>}
+      {homeVisible('categories') && <section class="section wrap" style={`order:${homeOrder('categories')}`}><div class="section-heading"><h2>{t.explore}</h2><span>AI / GAMING / FM / LAB</span></div><div class="categories">{homeCategories.map((entry,index) => <a class="category" href={pathFor(locale,entry.slug)}><span>0{index+1} / {entry.slug.toUpperCase()}</span><strong>{entry[locale]} ↗</strong></a>)}</div></section>}
+      {homeVisible('latest') && <section class="section wrap" style={`order:${homeOrder('latest')}`}><div class="section-heading"><h2>{t.latest}</h2><a class="text-link" href={pathFor(locale,'archive')}>{t.explore} ↗</a></div>{items.length ? <div class="card-grid">{items.slice(0,6).map((entry) => <a class="entry-card" href={pathFor(locale,entry.slug)}><span class="eyebrow">{entry.type.replace('_',' ')}</span><h3>{entry.title}</h3><p>{entry.excerpt}</p></a>)}</div> : <div class="empty">{t.empty}</div>}</section>}
+    </div>
   </>}
   {slug !== '' && <div class="wrap"><header class="page-head"><span class="eyebrow">PALMARGHE / {slug.toUpperCase()}</span><h1>{title}</h1></header>
-    {item && <article class="page-content">{item.cover_url && <img src={item.cover_url} alt="" width="1200" height="750"/>}<p>{item.excerpt}</p>{articleBody ? <div set:html={renderDocument(articleBody)}/> : typeof item.body === 'string' && <p>{item.body}</p>}{item.type === 'fm_mod' && <p>{locale === 'tr' ? 'İndirme bağlantıları içerik yayınlandığında görünür.' : 'Download links appear when content is published.'}</p>}</article>}
+    {item && <article class="page-content">{item.cover_url && <img src={item.cover_url} alt="" width="1200" height="750"/>}<p>{item.excerpt}</p>{item.type === 'fm_mod' && <div class="filters"><span>{String(typeData.compatibility ?? '')}</span><span>{String(typeData.mod_version ?? '')}</span><span>{String(typeData.size_label ?? '')}</span></div>}{articleBody ? <div set:html={renderDocument(articleBody)}/> : typeof item.body === 'string' && <p>{item.body}</p>}{item.type === 'fm_mod' && <section><h2>{locale === 'tr' ? 'Kurulum' : 'Installation'}</h2><p>{String(typeData.installation ?? '')}</p><h2>{locale === 'tr' ? 'Değişiklikler' : 'Changelog'}</h2><p>{String(typeData.changelog ?? '')}</p><p>{String(typeData.compatibility_notes ?? '')}</p>{safeExternalUrl(String(typeData.download_url ?? '')) && <a class="button" href={String(typeData.download_url)} target="_blank" rel="noopener noreferrer" data-download={item.id}>{locale === 'tr' ? 'Harici indirme' : 'External download'} ↗</a>}</section>}{item.type === 'project' && safeExternalUrl(String(typeData.project_url ?? '')) && <p><a class="button" href={String(typeData.project_url)} target="_blank" rel="noopener noreferrer">{locale === 'tr' ? 'Projeyi aç' : 'Open project'} ↗</a></p>}{item.type === 'lab_entry' && <section><p>{String(typeData.experiment_note ?? '')}</p>{safeExternalUrl(String(typeData.experiment_url ?? '')) && <a class="text-link" href={String(typeData.experiment_url)} target="_blank" rel="noopener noreferrer">{locale === 'tr' ? 'Deneyi aç' : 'Open experiment'} ↗</a>}</section>}{item.type === 'gallery' && <p class="eyebrow">{locale === 'tr' ? 'Görsel çalışma' : 'Visual work'}</p>}</article>}
     {(Boolean(dbCategory) || ['ai','gaming','fm','fm/fm26','lab','archive'].includes(slug)) && <section class="section">{slug === 'fm' && <p><a class="text-link" href={pathFor(locale,'fm/fm26')}>FM26 ↗</a></p>}{slug === 'archive' && <form class="filters" method="get"><label for="type">{locale === 'tr' ? 'Tür' : 'Type'}</label><select id="type" name="type"><option value="">{locale === 'tr' ? 'Tümü' : 'All'}</option>{['article','project','fm_mod','gallery','lab_entry'].map((type) => <option value={type} selected={Astro.url.searchParams.get('type') === type}>{type.replace('_',' ')}</option>)}</select><button class="button" type="submit">{locale === 'tr' ? 'Filtrele' : 'Filter'}</button></form>}{archived.length ? <div class="card-grid">{archived.map((entry) => <a class="entry-card" href={pathFor(locale,entry.slug)}><span class="eyebrow">{entry.type.replace('_',' ')}</span><h3>{entry.title}</h3><p>{entry.excerpt}</p></a>)}</div> : <div class="empty">{t.empty}</div>}</section>}
     {slug === 'search' && <section class="page-content"><form method="get"><label class="field" for="q">{t.searchPlaceholder}<input id="q" type="search" name="q" value={query} maxlength="100"/></label><button class="button" type="submit">{t.searchButton}</button></form>{query && <section class="section"><h2>{t.search}</h2>{searchResults.length ? searchResults.map((entry) => <p><a class="text-link" href={pathFor(locale,entry.slug)}>{entry.title}</a></p>) : <p>{t.noResults}</p>}</section>}</section>}
     {slug === 'about' && <section class="page-content"><p>{t.descriptor}</p></section>}
