@@ -31,6 +31,6 @@ export function parsePath(pathname: string): { locale: Locale; slug: string } {
   return { locale, slug: bits.slice(locale === 'en' ? 1 : 0).join('/') };
 }
 export function safeExternalUrl(value: string): boolean {
-  try { const url = new URL(value); return ['https:', 'http:'].includes(url.protocol); }
+  try { const url = new URL(value); return url.protocol === 'https:' && Boolean(url.hostname); }
   catch { return false; }
 }
