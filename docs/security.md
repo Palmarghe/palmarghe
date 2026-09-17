@@ -11,4 +11,4 @@
 
 ## Henüz tamamlanmayanlar
 
-MFA sağlayıcıda yapılandırılmadı. Gerçek Supabase üzerinde migration/RLS/Storage ve e-posta akışı test edilmedi. Local adapter politika ve RPC davranışını yaklaşıklar; üretim yetki kanıtı değildir. Production öncesi gerçek servisle entegrasyon ve güvenlik taraması gerekir.
+MFA sağlayıcıda yapılandırılmadı. Production Supabase migration 001–009, anonim RLS erişim/red kontrolleri ve admin Storage yüklemesi doğrulandı; ayrıntı `FINAL_REPORT.md` dosyasındadır. Gerçek member/editor rol matrisi, Auth e-posta akışı, şifre sıfırlama callback'i ve geniş kapsamlı üretim E2E hâlâ açıktır. Local adapter politika ve RPC davranışını yaklaşıklar; bu roller için üretim yetki kanıtı değildir.

@@ -1,0 +1,20 @@
+# Görsel ve ürün denetimi — 17 Eylül 2026
+
+## Yöntem
+
+Canlı `palmarghe.com/`, `/ai/` ve oturum açık `studio.palmarghe.com/studio/` Chrome'da görsel ve erişilebilirlik ağacıyla incelendi. Yerel Chrome Playwright testleri 360, 390, 768, 1024, 1440 ve 1920 piksel genişliklerde ana sayfa, kategori ve Studio yatay taşmasını kontrol etti. Kritik sayfalarda axe taramaları koştu. Bulgular yayındaki içerik sayısının sıfır, Studio içerik sayısının bir olduğu mevcut durumu yansıtır.
+
+| Öncelik | Rota / durum | Gözlem | Düzeltme / durum |
+| --- | --- | --- | --- |
+| P1 | `/` masaüstü ve mobil | Vitrin ve son yayınlar, içerik olmadığı halde iki büyük boş panel üretiyordu. | İçerik yokken bu bölümler gizlendi; konu alanları görünür kaldı. Yerel test ve canlı Chrome doğrulaması geçti. |
+| P1 | `/ai/` ve diğer boş kategori rotaları | Büyük başlığın altında tek satırlık boş mesaj sayfayı bitmemiş gösteriyordu. | Açıklayıcı TR/EN metin ve arşive dönüş bağlantısı eklendi. Yerel test ve canlı `/ai/` Chrome doğrulaması geçti. |
+| P1 | `/studio/` admin | İngilizce, düz kenar menü ve boş dashboard araçların önceliğini göstermiyordu. | Türkçe bölüm adları, aktif durum, içerik/mesaj/medya sayıları, hızlı eylem ve son içerikler eklendi. Yerel test ve canlı Chrome doğrulaması geçti. |
+| P1 | `/studio/` 768 px | Studio yan menüsünün min-content genişliği sayfayı 1189 px'e taşıyordu. | Grid `minmax(0,1fr)` ve menü iç kaydırmasıyla giderildi; altı genişlikte test geçti. |
+| P2 | Studio giriş ve listeler | Formlar ve tablolar henüz kapsamlı klavye/ekran okuyucu incelemesinden geçmedi. | Otomatik axe kritik ihlal bulmadı; manuel inceleme açık. |
+| P1 | Production auth/roles | Member/editor/admin ve Storage matrisi gerçek hesaplarla uçtan uca kanıtlanmadı. | Yerel adapter testleri var; production doğrulaması açık. |
+
+## Ölçümler ve sınırlar
+
+- Önceki canlı Lighthouse mobile sonucu 99/100/100/100, LCP 2.1 s ve CLS 0 idi. Bu değişiklikler sonrası tekrar ölçüm gereklidir.
+- `npm run verify` 0 typecheck hatası, 11 unit test ve build geçti. 24/24 E2E testi ve `npm audit --omit=dev --audit-level=high` geçti.
+- Üretimde gerçek TR/EN içerik örnekleri, rol matrisi, SMTP ve alan performans verisi henüz doğrulanmadı. Bu bulgular kapanana kadar nihai durum tamamlanmış sayılmaz.
