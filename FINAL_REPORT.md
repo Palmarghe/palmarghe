@@ -45,13 +45,13 @@ Limited client JavaScript, semantic HTML, skip link, focus states and reduced mo
 ## Tests
 
 - `npm run verify`: typecheck 0 errors/warnings, Vitest 11/11, Cloudflare build passed.
-- `npm run test:e2e`: 21/22 passed on first run after menu markup changed; the remaining test still targeted the old `summary` element. Updated it and reran the two responsive/menu tests: 2/2 passed. Full suite should be rerun after commit.
-- `npm audit --omit=dev --audit-level=high`: 0 reported vulnerabilities; recheck before release.
+- `npm run test:e2e`: after updating the old menu selector, the two targeted responsive/menu tests passed 2/2. GitHub Actions Verify #12 ran the full suite for commit `fc44e1d` and completed successfully.
+- `npm audit --omit=dev --audit-level=high`: 0 reported vulnerabilities on 17 September 2026.
 - Production Chrome: TR home, Studio, account, contact opened; valid HTTPS; generated assets loaded; no browser console errors on checked pages. HTTP smoke: TR/EN, Studio, sitemap, robots, RSS and hero asset returned 200; `www` returned 301 to apex. Supabase REST anonymous grant/RLS checks and authenticated Studio media upload passed. Full production E2E remains open.
 
 ## GitHub / CI
 
-The original local Git history and GitHub README initial commit were merged via `cee944f`, with the original README retained in `docs/github-initial-readme.md`. `origin` is `https://github.com/Palmarghe/palmarghe.git`. The local history was pushed to `main` without force. Chrome showed the files and latest code commit `f108a42`; GitHub Actions Verify #10 completed successfully. The final report commit requires its own CI check after push.
+The original local Git history and GitHub README initial commit were merged via `cee944f`, with the original README retained in `docs/github-initial-readme.md`. `origin` is `https://github.com/Palmarghe/palmarghe.git`. Production and visual commit `fc44e1d` was pushed to `main` without force. Chrome showed that commit and the repository file tree; GitHub Actions Verify #12 completed successfully in 2m 13s.
 
 ## Deployments
 
@@ -72,7 +72,7 @@ GitHub, Cloudflare, Supabase and Turhost authenticated sessions were available. 
 ## Remaining Blockers
 
 1. Turnstile live widget on contact page has not produced a response token in Chrome. Determine whether a CAPTCHA needs human completion or a widget configuration fix; then submit and inspect a controlled production contact message.
-2. Cloudflare Access for Studio, full production member/editor permission matrix, SMTP email callback/reset and Search Console ownership have not yet been verified. Continue these independent checks; request user intervention only if 2FA/CAPTCHA, account ownership or explicit approval is required.
+2. Cloudflare Zero Trust Access onboarding displayed a required payment card form, Terms of Service acceptance and an authorization for monthly overage charges even on the Free plan. The checkout was exited without entering payment details or accepting terms. **User step:** decide whether to activate Access personally under those terms; the Studio still has server-side Supabase Auth and role checks. Full production member/editor permission matrix, SMTP email callback/reset and Search Console ownership remain unverified.
 3. Production content CRUD/preview/publish, Storage policy denial cases, Lighthouse/Core Web Vitals and full E2E remain open. Test without leaving published sample content.
 
 ## Admin First Login

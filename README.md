@@ -1,6 +1,6 @@
 # Palmarghe
 
-Türkçe/İngilizce creator journal ve Studio başlangıcı. Astro SSR, Supabase ve Cloudflare Workers hedeflenir. Üretim durumu ve eksikler için [FINAL_REPORT.md](FINAL_REPORT.md) dosyasına bakın.
+Türkçe/İngilizce creator journal ve Studio. Astro SSR, Supabase ve Cloudflare Workers üzerinde [palmarghe.com](https://palmarghe.com/) ve [Studio](https://studio.palmarghe.com/studio/) adreslerinde yayınlanır. Production doğrulaması ve açık işler için [FINAL_REPORT.md](FINAL_REPORT.md) dosyasına bakın.
 
 ## Yerel kurulum
 
