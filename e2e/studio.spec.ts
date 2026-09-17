@@ -287,7 +287,7 @@ test('public layout fits mobile and tablet viewports', async ({ page }) => {
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 2);
     expect(overflow, `horizontal overflow at ${width}px`).toBe(false);
-    await page.locator('.mobile-menu summary').click();
+    await page.getByRole('button', { name: 'Menüyü aç' }).click();
     await expect(page.getByRole('navigation', { name: 'Mobil menü' }).getByRole('link', { name: 'Switch to English' })).toBeVisible();
   }
 });

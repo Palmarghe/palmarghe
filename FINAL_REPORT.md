@@ -2,17 +2,20 @@
 
 ## Status
 
-**COMPLETE WITH BLOCKERS — local V1 implementation; production is not deployed.** Local/test environment implements the public site and Studio flows listed below. Supabase migrations, Cloudflare deployment, domain/DNS and live security behavior have not been verified. A local adapter does not prove production readiness.
+**IN PROGRESS — production is live; final production E2E and external service checks remain.** Public site and Studio are reachable through Cloudflare. The remaining checks below must pass before this report can say COMPLETE.
 
 ## Live URLs
 
-- Production, Studio and preview: not deployed or verified.
+- Production: `https://palmarghe.com/` (opened in Chrome, HTTPS valid).
+- Studio: `https://studio.palmarghe.com/studio/` (opened in Chrome, HTTPS valid).
+- Worker preview: `https://palmarghe.palmarghe.workers.dev/` (noindex).
 - Local: `http://127.0.0.1:4321/` with `npm run dev`; E2E uses port 4322 and `LOCAL_TEST_MODE=true`.
 
 ## What Was Built
 
 - Astro SSR bilingual public routes (Turkish root, English `/en/`), category/hierarchy listings, archive, search, detail pages for article/project/FM mod/gallery/Lab, About, Contact, Privacy, Account.
 - Responsive editorial UI, SVG logo, navigation, footer, homepage visibility/order, appearance presets and social links.
+- Generated editorial glass hero and four AI/Gaming/FM/Lab illustrations, optimized to 274 KB total WebP; animated desktop/mobile menus with reduced motion support.
 - Studio content CRUD with Tiptap controlled block editor and server-side JSON allowlist, category/tag relationships, type-specific fields, draft/staff preview/publish/UTC scheduling, SEO fields and translation group.
 - Category and tag CRUD, media library with PNG/JPEG/WebP signature and 10 MB validation, alt editing, cover selection, protected deletion, contact inbox, redirect manager with loop detection, audit view, member roles and account deletion request review.
 - Supabase Auth login/signup/reset/session/profile/deletion request endpoints, server role checks, RLS and private Storage migration. Local-only in-memory adapter provides admin/editor/member accounts and controlled tests.
@@ -25,11 +28,11 @@ One Astro SSR app targeting Cloudflare Workers with Supabase Auth/Postgres/Stora
 
 ## Database & Auth
 
-Migration files `202609160001`–`202609160008` are prepared, **not applied to a real Supabase project**. Auth flows were exercised with the local adapter only. Initial admin bootstrap requires a controlled privileged transaction after confirming the owner UUID.
+Production Supabase project `ozztqhiqzchlbxscbwhy` is active. Migrations `202609160001`–`202609160009` were applied through the SQL Editor. Migration 009 adds API grants required in addition to RLS; anon REST reads for public categories/content return 200, while anon reads of contact messages/audit logs and category writes return 401. All 15 public tables have RLS enabled, with 26 public policies and five private media Storage policies. Auth site URL and callback allowlist point to production. A verified admin session reached Studio in Chrome and uploaded the generated hero image to private Storage, where its thumbnail and alt text appeared.
 
 ## Security Controls
 
-RLS policies, server role checks, same-origin checks, constrained form input and block rendering, media signature/size limits, Turnstile, DB contact/auth rate limits, no-store/noindex and audit triggers are implemented. Production behavior, migrations, Storage policy, SMTP and RLS have not been tested on Supabase. MFA and external security review are pending. Account deletion requests need verified human handling in Supabase Auth; marking a request complete does not delete an identity.
+RLS policies, server role checks, same-origin checks, constrained form input and block rendering, media signature/size limits, Turnstile, DB contact/auth rate limits, no-store/noindex and audit triggers are implemented. Cloudflare Worker stores `CONTACT_RATE_PEPPER`, `SUPABASE_SERVICE_ROLE_KEY` and `TURNSTILE_SECRET_KEY` as encrypted secrets; Wrangler confirmed all three after redeploy. Production anonymous RLS read/write checks and authenticated Storage upload passed. Contact submission/Turnstile response, SMTP, full role matrix and Cloudflare Access remain to be proven. MFA and external security review are pending. Account deletion requests need verified human handling in Supabase Auth.
 
 ## SEO
 
@@ -37,14 +40,14 @@ Canonical, paired hreflang, sitemap/RSS, JSON-LD for published content, content 
 
 ## Performance & Accessibility
 
-Limited client JavaScript, semantic HTML, skip link, focus states and reduced motion are present. Mobile/tablet Playwright checks and axe WCAG scans cover critical routes and Studio form with no serious/critical findings. Production Lighthouse, Core Web Vitals and full manual assistive technology checks remain outstanding. Image derivatives are absent.
+Limited client JavaScript, semantic HTML, skip link, focus states and reduced motion are present. Mobile/tablet Playwright checks and axe WCAG scans cover critical routes and Studio form with no serious/critical findings. Five generated WebP assets total about 274 KB. Chrome desktop screenshot confirmed the live hero; all five live images loaded. Production Lighthouse, Core Web Vitals and full manual assistive technology checks remain outstanding.
 
 ## Tests
 
 - `npm run verify`: typecheck 0 errors/warnings, Vitest 11/11, Cloudflare build passed.
-- `npm run test:e2e`: Playwright Chrome 21/21 passed against local adapter (roles, CRUD, blocks, media, settings, translations, redirects, contact/auth limits, schedule/preview, mobile/tablet and axe WCAG checks on four public routes plus Studio). A serial rerun passed after test IP isolation prevented rate limits from coupling separate test cases.
+- `npm run test:e2e`: 21/22 passed on first run after menu markup changed; the remaining test still targeted the old `summary` element. Updated it and reran the two responsive/menu tests: 2/2 passed. Full suite should be rerun after commit.
 - `npm audit --omit=dev --audit-level=high`: 0 reported vulnerabilities; recheck before release.
-- Production browser tests, real Supabase Auth/RLS/Storage integration, Cloudflare Worker preview and DNS/SSL smoke: **not run**.
+- Production Chrome: TR home, Studio, account, contact opened; valid HTTPS; generated assets loaded; no browser console errors on checked pages. HTTP smoke: TR/EN, Studio, sitemap, robots, RSS and hero asset returned 200; `www` returned 301 to apex. Supabase REST anonymous grant/RLS checks and authenticated Studio media upload passed. Full production E2E remains open.
 
 ## GitHub / CI
 
@@ -52,15 +55,15 @@ The original local Git history and GitHub README initial commit were merged via 
 
 ## Deployments
 
-No staging or production deployment was made: Supabase project credentials are unavailable and the available Cloudflare account has no domain zone. See `docs/deployment.md`.
+Cloudflare Worker `palmarghe` deployed via Wrangler 4.132.0. Current version `fba9976c-376d-4817-94db-3937e511f1ef`; apex, Studio and www custom domains are attached. Cloudflare zone is active. No separate staging environment was created; Workers.dev preview is noindex. See `docs/deployment.md`.
 
 ## DNS Changes
 
-No DNS edit or nameserver change was made. Public DNS precheck on 16 September returned SERVFAIL from Google and Cloudflare DoH; Cloudflare reported no reachable authority and `REFUSED` from `37.230.111.111:53`. Turhost's old tab redirected to login, so a complete zone export was unavailable. See `docs/dns-before.md`. Existing records need a panel snapshot and equivalent MX/SPF/DKIM verification before any transition. Desired hosts: apex/www, `studio.palmarghe.com`, isolated preview.
+SERVFAIL root cause was lame Turhost delegation: the parent pointed at cpns servers that returned REFUSED. Parent DS was absent, so DNSSEC was not the cause. Turhost DNS service was disabled and zone export unavailable; backup and rollback were recorded before change in `docs/dns-backup-2026-09-16.md`. Registrar NS changed from `cpns1.turhost.com`/`cpns2.turhost.com` to Cloudflare's `kaiser.ns.cloudflare.com`/`serenity.ns.cloudflare.com`. Cloudflare zone activated with three Worker DNS records. DS/DNSSEC were not changed. Chrome verified valid HTTPS for apex and Studio; www redirects to apex.
 
 ## External Services
 
-GitHub remote and Actions are connected. Chrome showed an authenticated Cloudflare account, but its Domains overview has no zones. Supabase redirected to sign-in and Turhost redirected to login; Turnstile, DNS and Search Console are not configured for this app.
+GitHub, Cloudflare, Supabase and Turhost authenticated sessions were available. Production Supabase, Cloudflare zone/Worker/custom domains and Turnstile widget were configured. Search Console and Cloudflare Access are not yet configured; Turnstile live completion is unverified.
 
 ## Environment Variables Required
 
@@ -68,10 +71,9 @@ GitHub remote and Actions are connected. Chrome showed an authenticated Cloudfla
 
 ## Remaining Blockers
 
-1. Supabase redirected to sign-in; no project configuration is available. **User step:** sign in to the authorized Supabase account and provide the project URL and publishable/anon key, with the service role key in a server secret store. Then apply migrations and test Auth, CRUD, RLS and Storage against real roles.
-2. Cloudflare account access exists, but Domains shows no zones and Turnstile/Worker secrets are not configured. **User step:** identify the intended Cloudflare account/zone and configure the relevant secrets. Then deploy isolated preview, test contact bot protection, and promote after checks.
-3. Domain/DNS management is blocked by an expired Turhost session; public resolvers currently return SERVFAIL. **User step:** sign in to the authorized Turhost DNS panel. Then export zone records, diagnose the refused authority/delegation, preserve mail records, route hosts and verify TLS/redirects.
-4. Search Console ownership is unverified. **User step:** provide authorized Google account access. Then verify domain property and submit sitemap after production DNS is ready.
+1. Turnstile live widget on contact page has not produced a response token in Chrome. Determine whether a CAPTCHA needs human completion or a widget configuration fix; then submit and inspect a controlled production contact message.
+2. Cloudflare Access for Studio, full production member/editor permission matrix, SMTP email callback/reset and Search Console ownership have not yet been verified. Continue these independent checks; request user intervention only if 2FA/CAPTCHA, account ownership or explicit approval is required.
+3. Production content CRUD/preview/publish, Storage policy denial cases, Lighthouse/Core Web Vitals and full E2E remain open. Test without leaving published sample content.
 
 ## Admin First Login
 

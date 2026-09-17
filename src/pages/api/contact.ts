@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { sameOrigin, errorResponse, redirectTo } from '../../lib/security';
 import { localTestRequest } from '../../lib/supabase';
 import { localInsertContact, localContactAllowed } from '../../lib/local-adapter';
+import { runtimeSecret } from '../../lib/runtime-secrets';
 
 const schema = z.object({ name: z.string().trim().min(1).max(100), email: z.email().max(254), message: z.string().trim().min(10).max(5000), locale: z.enum(['tr','en']), consent: z.literal('on'), token: z.string().min(1) });
 export const POST: APIRoute = async ({ request }) => {
@@ -19,10 +20,10 @@ export const POST: APIRoute = async ({ request }) => {
     localInsertContact({ name: parsed.data.name, email: parsed.data.email, message: parsed.data.message });
     return redirectTo(request, `${parsed.data.locale === 'en' ? '/en' : ''}/contact/?sent=1`);
   }
-  const secret = import.meta.env.TURNSTILE_SECRET_KEY;
+  const secret = runtimeSecret('TURNSTILE_SECRET_KEY');
   const url = import.meta.env.PUBLIC_SUPABASE_URL;
-  const serviceKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
-  const pepper = import.meta.env.CONTACT_RATE_PEPPER;
+  const serviceKey = runtimeSecret('SUPABASE_SERVICE_ROLE_KEY');
+  const pepper = runtimeSecret('CONTACT_RATE_PEPPER');
   if (!secret || !url || !serviceKey || !pepper) return errorResponse('Contact service unavailable', 503);
   const verification = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body: new URLSearchParams({ secret, response: parsed.data.token }), signal: AbortSignal.timeout(7000) });
   if (!verification.ok || !(await verification.json() as { success: boolean }).success) return errorResponse('Bot check failed', 403);

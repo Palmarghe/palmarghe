@@ -4,13 +4,16 @@ import { createClient } from '@supabase/supabase-js';
 import { supabase, localTestRequest } from '../../lib/supabase';
 import { sameOrigin, errorResponse, redirectTo } from '../../lib/security';
 import { localAuthAllowed } from '../../lib/local-adapter';
+import { runtimeSecret } from '../../lib/runtime-secrets';
 
 const credentials = z.object({ email: z.email().max(254), password: z.string().min(8).max(128) });
 async function allowed(request: Request, action: string, email: string): Promise<boolean | null> {
   const ip = request.headers.get('cf-connecting-ip') ?? 'unknown';
   const max = action === 'login' ? 10 : 5;
   if (localTestRequest(request)) return localAuthAllowed(`${ip}:${action}`, 30) && localAuthAllowed(`${ip}:${action}:${email.toLowerCase()}`, max);
-  const { PUBLIC_SUPABASE_URL: url, SUPABASE_SERVICE_ROLE_KEY: key, CONTACT_RATE_PEPPER: pepper } = import.meta.env;
+  const url = import.meta.env.PUBLIC_SUPABASE_URL;
+  const key = runtimeSecret('SUPABASE_SERVICE_ROLE_KEY');
+  const pepper = runtimeSecret('CONTACT_RATE_PEPPER');
   if (!url || !key || !pepper) return null;
   const service = createClient(url,key,{ auth: { persistSession: false } });
   for (const [identity,limit] of [[`${ip}:${action}`,30],[`${ip}:${action}:${email.toLowerCase()}`,max]] as const) {
