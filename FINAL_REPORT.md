@@ -32,7 +32,7 @@ Production Supabase project `ozztqhiqzchlbxscbwhy` is active. Migrations `202609
 
 ## Security Controls
 
-RLS policies, server role checks, same-origin checks, constrained form input and block rendering, media signature/size limits, Turnstile, DB contact/auth rate limits, no-store/noindex and audit triggers are implemented. Cloudflare Worker stores `CONTACT_RATE_PEPPER`, `SUPABASE_SERVICE_ROLE_KEY` and `TURNSTILE_SECRET_KEY` as encrypted secrets; Wrangler confirmed all three after redeploy. Production anonymous RLS read/write checks and authenticated Storage upload passed. Contact submission/Turnstile response, SMTP, full role matrix and Cloudflare Access remain to be proven. MFA and external security review are pending. Account deletion requests need verified human handling in Supabase Auth.
+RLS policies, server role checks, same-origin checks, constrained form input and block rendering, media signature/size limits, Turnstile, DB contact/auth rate limits, no-store/noindex and audit triggers are implemented. Cloudflare Worker stores `CONTACT_RATE_PEPPER`, `SUPABASE_SERVICE_ROLE_KEY` and `TURNSTILE_SECRET_KEY` as encrypted secrets; Wrangler confirmed all three after redeploy. Production anonymous RLS read/write checks, authenticated Storage upload and real Turnstile contact submission passed. SMTP, full role matrix and Cloudflare Access remain to be proven. MFA and external security review are pending. Account deletion requests need verified human handling in Supabase Auth.
 
 ## SEO
 
@@ -47,7 +47,7 @@ Limited client JavaScript, semantic HTML, skip link, focus states and reduced mo
 - `npm run verify`: typecheck 0 errors/warnings, Vitest 11/11, Cloudflare build passed.
 - `npm run test:e2e`: after updating the old menu selector, the two targeted responsive/menu tests passed 2/2. GitHub Actions Verify #12 ran the full suite for commit `fc44e1d` and completed successfully.
 - `npm audit --omit=dev --audit-level=high`: 0 reported vulnerabilities on 17 September 2026.
-- Production Chrome: TR home, Studio, account, contact opened; valid HTTPS; generated assets loaded; no browser console errors on checked pages. HTTP smoke: TR/EN, Studio, sitemap, robots, RSS and hero asset returned 200; `www` returned 301 to apex. Supabase REST anonymous grant/RLS checks and authenticated Studio media upload passed. Full production E2E remains open.
+- Production Chrome: TR home, Studio, account, contact opened; valid HTTPS; generated assets loaded; no browser console errors on checked pages. HTTP smoke: TR/EN, Studio, sitemap, robots, RSS and hero asset returned 200; `www` returned 301 to apex. Supabase REST anonymous grant/RLS checks and authenticated Studio media upload passed. Admin created and updated a noindex draft with Lab category, generated cover and block content; the edited text persisted. Public draft route returned 404; authenticated preview opened; anonymous preview returned 403 with noindex/no-store. Contact/Turnstile form submitted a controlled test message, displayed success and the Studio inbox stored it; message was archived. Full production E2E remains open.
 
 ## GitHub / CI
 
@@ -71,9 +71,8 @@ GitHub, Cloudflare, Supabase and Turhost authenticated sessions were available. 
 
 ## Remaining Blockers
 
-1. Turnstile live widget on contact page has not produced a response token in Chrome. Determine whether a CAPTCHA needs human completion or a widget configuration fix; then submit and inspect a controlled production contact message.
-2. Cloudflare Zero Trust Access onboarding displayed a required payment card form, Terms of Service acceptance and an authorization for monthly overage charges even on the Free plan. The checkout was exited without entering payment details or accepting terms. **User step:** decide whether to activate Access personally under those terms; the Studio still has server-side Supabase Auth and role checks. Full production member/editor permission matrix, SMTP email callback/reset and Search Console ownership remain unverified.
-3. Production content CRUD/preview/publish, Storage policy denial cases, Lighthouse/Core Web Vitals and full E2E remain open. Test without leaving published sample content.
+1. Cloudflare Zero Trust Access onboarding displayed a required payment card form, Terms of Service acceptance and an authorization for monthly overage charges even on the Free plan. The checkout was exited without entering payment details or accepting terms. **User step:** decide whether to activate Access personally under those terms; the Studio still has server-side Supabase Auth and role checks.
+2. Full production member/editor permission matrix, SMTP email callback/reset and Search Console ownership remain unverified. Production publish, complete Storage policy denial matrix, Lighthouse/Core Web Vitals and full E2E remain open. An anonymous request for the authenticated Studio media URL returned 404. A `Production QA taslağı` draft remains private in Studio for repeatable verification; no sample content was published.
 
 ## Admin First Login
 

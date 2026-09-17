@@ -15,4 +15,4 @@ npx wrangler secret list --name palmarghe
 
 `wrangler deploy` uzaktaki Worker config'ini yerel üretilen config ile karşılaştırabilir. Deploy sonrasında üç custom domain, Worker Secret'ları, apex/Studio HTTPS ve `www` yönlendirmesini tekrar kontrol edin. `LOCAL_TEST_MODE` yalnız geliştirme ortamında ve loopback test isteğinde etkindir.
 
-Turnstile ile gerçek iletişim gönderimi, SMTP/Auth e-posta callback ve reset, production anon/member/editor/admin rol matrisi, Cloudflare Access, Search Console ve ayrı preview Supabase projesi hâlâ kontrol edilmelidir. Cloudflare Zero Trust Free onboarding ödeme kartı, Terms kabulü ve aylık aşım tahsilatı yetkisi istediği için Access aktivasyonu otomatik yapılmadı.
+Turnstile ile gerçek iletişim gönderimi ve Studio gelen kutusuna kaydı doğrulandı. SMTP/Auth e-posta callback ve reset, production member/editor rol matrisi, Cloudflare Access, Search Console ve ayrı preview Supabase projesi hâlâ kontrol edilmelidir. Cloudflare Zero Trust Free onboarding ödeme kartı, Terms kabulü ve aylık aşım tahsilatı yetkisi istediği için Access aktivasyonu otomatik yapılmadı.
