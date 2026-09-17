@@ -40,7 +40,7 @@ Canonical, paired hreflang, sitemap/RSS, JSON-LD for published content, content 
 
 ## Performance & Accessibility
 
-Limited client JavaScript, semantic HTML, skip link, focus states and reduced motion are present. Mobile/tablet Playwright checks and axe WCAG scans cover critical routes and Studio form with no serious/critical findings. Five generated WebP assets total about 274 KB. Chrome desktop screenshot confirmed the live hero; all five live images loaded. Production Lighthouse, Core Web Vitals and full manual assistive technology checks remain outstanding.
+Limited client JavaScript, semantic HTML, skip link, focus states and reduced motion are present. Mobile/tablet Playwright checks and axe WCAG scans cover critical routes and Studio form with no serious/critical findings. Five generated WebP assets total about 274 KB. Chrome desktop screenshot confirmed the live hero; all five live images loaded. Production Lighthouse mobile audit after fixing CSP: Performance 99, Accessibility 100, Best Practices 100, SEO 100, LCP 2.1 s, CLS 0, no console errors or DevTools issues. Local audit JSON is `test-results/lighthouse-production-2026-09-17.json` (ignored from Git). Field Core Web Vitals and full manual assistive technology checks remain outstanding.
 
 ## Tests
 
@@ -55,7 +55,7 @@ The original local Git history and GitHub README initial commit were merged via 
 
 ## Deployments
 
-Cloudflare Worker `palmarghe` deployed via Wrangler 4.132.0. Current version `fba9976c-376d-4817-94db-3937e511f1ef`; apex, Studio and www custom domains are attached. Cloudflare zone is active. No separate staging environment was created; Workers.dev preview is noindex. See `docs/deployment.md`.
+Cloudflare Worker `palmarghe` deployed via Wrangler 4.132.0. Current version `048fe171-51fa-444e-932a-f3cfe40af35b`; apex, Studio and www custom domains are attached. Cloudflare zone is active. No separate staging environment was created; Workers.dev preview is noindex. See `docs/deployment.md`.
 
 ## DNS Changes
 
@@ -72,7 +72,7 @@ GitHub, Cloudflare, Supabase and Turhost authenticated sessions were available. 
 ## Remaining Blockers
 
 1. Cloudflare Zero Trust Access onboarding displayed a required payment card form, Terms of Service acceptance and an authorization for monthly overage charges even on the Free plan. The checkout was exited without entering payment details or accepting terms. **User step:** decide whether to activate Access personally under those terms; the Studio still has server-side Supabase Auth and role checks.
-2. Full production member/editor permission matrix, SMTP email callback/reset and Search Console ownership remain unverified. Production publish, complete Storage policy denial matrix, Lighthouse/Core Web Vitals and full E2E remain open. An anonymous request for the authenticated Studio media URL returned 404. A `Production QA taslağı` draft remains private in Studio for repeatable verification; no sample content was published.
+2. Full production member/editor permission matrix, SMTP email callback/reset and Search Console ownership remain unverified. Production publish, complete Storage policy denial matrix, field Core Web Vitals and full E2E remain open. An anonymous request for the authenticated Studio media URL returned 404. A `Production QA taslağı` draft remains private in Studio for repeatable verification; no sample content was published.
 
 ## Admin First Login
 

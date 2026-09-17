@@ -61,21 +61,6 @@ const socialLinks = (['github','youtube','instagram','x'] as const).map((name) =
     </header>
     <main id="main"><slot /></main>
     <footer class="site-footer wrap"><div class="footer-top"><span>PALMARGHE</span><span>{t.descriptor}</span></div><div class="footer-bottom"><span>© {new Date().getFullYear()} Palmarghe</span><nav aria-label="Footer"><a href={pathFor(locale, 'about')}>{t.about}</a><a href={pathFor(locale, 'contact')}>{t.contact}</a><a href={pathFor(locale, 'privacy')}>{t.privacy}</a>{socialLinks.map(({name,url}) => <a href={url} target="_blank" rel="noopener noreferrer">{name}</a>)}</nav></div></footer>
-  <script>
-    const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
-    const menu = document.querySelector<HTMLElement>('#mobile-nav');
-    if (toggle && menu) {
-      const setOpen = (open: boolean) => {
-        toggle.setAttribute('aria-expanded', String(open));
-        toggle.setAttribute('aria-label', open ? (document.documentElement.lang === 'tr' ? 'Menüyü kapat' : 'Close menu') : (document.documentElement.lang === 'tr' ? 'Menüyü aç' : 'Open menu'));
-        menu.toggleAttribute('inert', !open);
-        menu.classList.toggle('is-open', open);
-      };
-      toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
-      document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') { setOpen(false); toggle.focus(); } });
-      document.addEventListener('click', (event) => { if (event.target instanceof Node && !event.target.parentElement?.closest('.mobile-menu') && toggle.getAttribute('aria-expanded') === 'true') setOpen(false); });
-      menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setOpen(false)));
-    }
-  </script>
+  <script is:inline src="/scripts/mobile-menu.js" defer></script>
   </body>
 </html>
