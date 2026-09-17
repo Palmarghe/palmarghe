@@ -37,6 +37,7 @@
 .empty{display:grid;gap:1rem;max-width:780px;padding:clamp(2rem,5vw,4rem);background:linear-gradient(120deg,rgba(139,92,246,.055),transparent 62%);color:var(--text)}
 .empty p{color:var(--muted);margin:0;max-width:56ch}
 .empty .text-link{justify-self:start}
+.about-content{max-width:900px}.about-content h2{font-size:clamp(2rem,4vw,3.8rem);margin:1rem 0 2rem}.about-content p{max-width:70ch}.about-links{display:flex;align-items:center;gap:2rem;flex-wrap:wrap;margin-top:2.5rem}
 .admin-shell{grid-template-columns:248px minmax(0,1fr)}
 .admin-side{padding:2rem 1.2rem;background:#101014}
 .admin-side .brand{padding-inline:.7rem;font-size:.83rem;letter-spacing:.18em}

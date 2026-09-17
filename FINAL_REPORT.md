@@ -12,6 +12,8 @@ The larger final audit remains open: production member/editor permission matrix,
 
 A separate read-only production Chrome Playwright suite now covers 12 public routes, key assets, 404, response privacy/security headers, Workers preview noindex, mobile navigation and six viewport widths; 3/3 passed. It runs with `npm run test:e2e:production` and does not mutate live data. The remaining production role/content/auth flows need controlled accounts and dedicated tests. See `docs/production-checklist.md`.
 
+The About page was also expanded from a single sentence into a bilingual editorial explanation with archive and contact paths. Local verification and targeted navigation E2E passed; Cloudflare Worker version `cd56375e-1627-4456-a08f-997e0a7e12ee` is live, and Chrome confirmed the updated page. GitHub Actions Verify #17 passed; #18 was still running at the last check.
+
 ## Live URLs
 
 - Production: `https://palmarghe.com/` (opened in Chrome, HTTPS valid).

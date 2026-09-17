@@ -22,6 +22,9 @@ test('empty publication presents areas without placeholder work', async ({ page 
   await page.goto('/ai/');
   await expect(page.getByText('Bu alanda henüz yayımlanmış bir çalışma yok.')).toBeVisible();
   await expect(page.getByRole('link', { name: /Tüm alanları keşfet/ })).toHaveAttribute('href','/archive/');
+  await page.goto('/about/');
+  await expect(page.getByRole('heading', { name: 'Üretim, oyun ve deney için bir alan.' })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Çalışmaları keşfet/ })).toHaveAttribute('href','/archive/');
 });
 
 test('six public widths and Studio dashboard have no horizontal overflow', async ({ page }) => {

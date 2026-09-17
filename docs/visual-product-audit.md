@@ -10,6 +10,7 @@ Canlı `palmarghe.com/`, `/ai/` ve oturum açık `studio.palmarghe.com/studio/` 
 | P1 | `/ai/` ve diğer boş kategori rotaları | Büyük başlığın altında tek satırlık boş mesaj sayfayı bitmemiş gösteriyordu. | Açıklayıcı TR/EN metin ve arşive dönüş bağlantısı eklendi. Yerel test ve canlı `/ai/` Chrome doğrulaması geçti. |
 | P1 | `/studio/` admin | İngilizce, düz kenar menü ve boş dashboard araçların önceliğini göstermiyordu. | Türkçe bölüm adları, aktif durum, içerik/mesaj/medya sayıları, hızlı eylem ve son içerikler eklendi. Yerel test ve canlı Chrome doğrulaması geçti. |
 | P1 | `/studio/` 768 px | Studio yan menüsünün min-content genişliği sayfayı 1189 px'e taşıyordu. | Grid `minmax(0,1fr)` ve menü iç kaydırmasıyla giderildi; altı genişlikte test geçti. |
+| P1 | `/about/` masaüstü | Sayfa tek satır açıklamadan oluşuyor, alanın amacı ve sonraki eylem belirsiz kalıyordu. | TR/EN editoryal açıklama ve arşiv/iletişim bağlantıları eklendi; yerel E2E ve canlı Chrome geçti. |
 | P2 | Studio giriş ve listeler | Formlar ve tablolar henüz kapsamlı klavye/ekran okuyucu incelemesinden geçmedi. | Otomatik axe kritik ihlal bulmadı; manuel inceleme açık. |
 | P1 | Production auth/roles | Member/editor/admin ve Storage matrisi gerçek hesaplarla uçtan uca kanıtlanmadı. | Yerel adapter testleri var; production doğrulaması açık. |
 
