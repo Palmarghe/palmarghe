@@ -17,4 +17,5 @@ Canlı `palmarghe.com/`, `/ai/` ve oturum açık `studio.palmarghe.com/studio/` 
 
 - Önceki canlı Lighthouse mobile sonucu 99/100/100/100, LCP 2.1 s ve CLS 0 idi. Bu değişiklikler sonrası tekrar ölçüm gereklidir.
 - `npm run verify` 0 typecheck hatası, 11 unit test ve build geçti. 24/24 E2E testi ve `npm audit --omit=dev --audit-level=high` geçti.
+- Salt okunur production Chrome Playwright paketi 12 rota, assetler, güvenlik başlıkları, 404, altı genişlik ve menüyü kapsıyor; 3/3 geçti.
 - Üretimde gerçek TR/EN içerik örnekleri, rol matrisi, SMTP ve alan performans verisi henüz doğrulanmadı. Bu bulgular kapanana kadar nihai durum tamamlanmış sayılmaz.

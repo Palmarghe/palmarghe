@@ -10,6 +10,8 @@ The live homepage, empty AI category and authenticated Studio dashboard were ins
 
 The larger final audit remains open: production member/editor permission matrix, Auth email flows, complete content-type publication checks, full production E2E, renewed Lighthouse/assistive technology review, Cloudflare Access, Search Console and field Core Web Vitals have not yet been proven. Earlier sections below are a historical baseline and may contain superseded counts or deployment IDs.
 
+A separate read-only production Chrome Playwright suite now covers 12 public routes, key assets, 404, response privacy/security headers, Workers preview noindex, mobile navigation and six viewport widths; 3/3 passed. It runs with `npm run test:e2e:production` and does not mutate live data. The remaining production role/content/auth flows need controlled accounts and dedicated tests. See `docs/production-checklist.md`.
+
 ## Live URLs
 
 - Production: `https://palmarghe.com/` (opened in Chrome, HTTPS valid).
