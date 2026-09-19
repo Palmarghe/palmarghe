@@ -13,6 +13,7 @@ Canlı `palmarghe.com/`, `/ai/` ve oturum açık `studio.palmarghe.com/studio/` 
 | P1 | `/about/` masaüstü | Sayfa tek satır açıklamadan oluşuyor, alanın amacı ve sonraki eylem belirsiz kalıyordu. | TR/EN editoryal açıklama ve arşiv/iletişim bağlantıları eklendi; yerel E2E ve canlı Chrome geçti. |
 | P2 | Studio giriş ve listeler | Formlar ve tablolar henüz kapsamlı klavye/ekran okuyucu incelemesinden geçmedi. | Otomatik axe kritik ihlal bulmadı; manuel inceleme açık. |
 | P1 | Production auth/roles | Member/editor/admin ve Storage matrisi gerçek hesaplarla uçtan uca kanıtlanmadı. | Yerel adapter testleri var; production doğrulaması açık. |
+| P1 | Studio content persistence | İçerik, kategori ve etiket bağları birden fazla istekle güncelleniyor; ara hata kısmi veri bırakabilirdi. | `202609170010` ile atomik RPC eklendi; private QA taslağı production Studio’da başarıyla kaydedildi. Role matrix doğrulaması açık. |
 
 ## Ölçümler ve sınırlar
 
