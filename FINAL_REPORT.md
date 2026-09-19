@@ -18,6 +18,8 @@ The About page was also expanded from a single sentence into a bilingual editori
 
 Migration `202609170010_content_transaction.sql` was applied successfully through the production Supabase SQL Editor. It adds the `save_content_with_relations` SECURITY INVOKER function: an authenticated editor or admin can write one content row plus its category and tag relationships atomically, while the function retains the caller's RLS context. The application and local adapter now use that RPC. A local regression test proves an invalid category leaves no partial content row. The change was deployed as Worker `0c6e5d92-ce3d-4849-967d-99da82cf3490`; Chrome confirmed that the existing private Production QA draft saved through Studio without changing its title, state, category or cover. The read-only production suite passed 3/3 afterwards.
 
+Production Lighthouse was renewed on 19 September: Performance 99, Accessibility 100, Best Practices 100 and SEO 100, with LCP 2.2 seconds and CLS 0. The JSON evidence is kept in the ignored `test-results/lighthouse-production-2026-09-19.json` artifact.
+
 ## Live URLs
 
 - Production: `https://palmarghe.com/` (opened in Chrome, HTTPS valid).

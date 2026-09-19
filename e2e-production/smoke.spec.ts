@@ -48,3 +48,16 @@ test('live mobile navigation and six viewport widths', async ({ page }) => {
   await page.keyboard.press('Escape');
   await expect(page.getByRole('navigation', { name: 'Mobil menü' })).toBeHidden();
 });
+
+test('critical live routes emit no browser errors', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(`pageerror: ${error.message}`));
+  page.on('console', (message) => {
+    if (message.type() === 'error') errors.push(`console: ${message.text()}`);
+  });
+  for (const route of ['/', '/ai/', '/about/', '/contact/', '/account/']) {
+    await page.goto(route, { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(350);
+  }
+  expect(errors).toEqual([]);
+});

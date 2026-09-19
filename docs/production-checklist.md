@@ -10,6 +10,7 @@ Son gözden geçirme: 17 Eylül 2026. Bu belge tamamlanan kanıt ile açık işl
 - [x] Yerel typecheck, 11 unit test, build ve 24 Chrome E2E testi geçti.
 - [x] Üretim salt okunur Chrome E2E: 12 public rota, asset/sitemap/robots/RSS, 404, güvenlik başlıkları, preview noindex, altı viewport ve mobil menü; 3/3 geçti.
 - [x] `npm audit --omit=dev --audit-level=high` bulgu vermedi.
+- [x] 19 Eylül production Lighthouse: Performance 99, Accessibility 100, Best Practices 100, SEO 100; LCP 2.2 sn, CLS 0.
 - [x] Önceki anonim Supabase RLS red/okuma, admin Storage yükleme ve Turnstile temas akışı `FINAL_REPORT.md` içinde kayıtlı.
 
 ## Açık kapılar
