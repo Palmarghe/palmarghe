@@ -20,6 +20,12 @@ Migration `202609170010_content_transaction.sql` was applied successfully throug
 
 Production Lighthouse was renewed on 19 September: Performance 99, Accessibility 100, Best Practices 100 and SEO 100, with LCP 2.2 seconds and CLS 0. The JSON evidence is kept in the ignored `test-results/lighthouse-production-2026-09-19.json` artifact.
 
+Two temporary, auto-confirmed production Auth users were created for role verification. Studio admin assigned one `editor`; the other stayed `member`. The controlled production script `scripts/verify-production-roles.mjs` passed 20/20 checks: Auth login, own-profile access and cross-profile denial, member inbox/audit/draft denial, editor private-draft visibility and audit denial, member category-write denial versus editor category-write success, member/editor appearance-write denial, member Storage upload/download denial and editor upload success. It removed the test category and private Storage object in `finally`. The member also logged into the live account page in Chrome. GitHub Actions Verify #22 for `e1cdfeb` completed successfully. The temporary Auth users still require removal. Supabase TOTP is enabled in the provider, while custom SMTP is disabled. App-level MFA enrollment/enforcement and email delivery remain open.
+
+The editor then ran `scripts/verify-production-content.mjs` against the live database and public Worker. For article, project, FM mod, gallery and lab entry, private draft routes returned 404; each published route returned 200 with its SEO title/description and noindex directive. A future scheduled lab entry stayed private. All six controlled records were deleted in the script's `finally` block. Local `npm run verify` passed with 11 unit tests; local E2E passed 25/25 and read-only production E2E passed 4/4. No deployment was needed for these verification scripts and documents.
+
+An isolated Chrome Playwright run (`scripts/verify-production-studio.mjs`) confirmed that member and editor could log in on the Studio domain, member saw the Studio access-denied state, editor opened the dashboard and content editor, and editor could not open admin member management. The existing admin Chrome session remains intact.
+
 ## Live URLs
 
 - Production: `https://palmarghe.com/` (opened in Chrome, HTTPS valid).

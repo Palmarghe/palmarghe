@@ -1,6 +1,6 @@
 # Production doğrulama kontrol listesi
 
-Son gözden geçirme: 17 Eylül 2026. Bu belge tamamlanan kanıt ile açık işleri ayırır; `FINAL_REPORT.md` ana durum kaydıdır.
+Son gözden geçirme: 19 Eylül 2026. Bu belge tamamlanan kanıt ile açık işleri ayırır; `FINAL_REPORT.md` ana durum kaydıdır.
 
 ## Kanıtlanan
 
@@ -12,14 +12,19 @@ Son gözden geçirme: 17 Eylül 2026. Bu belge tamamlanan kanıt ile açık işl
 - [x] `npm audit --omit=dev --audit-level=high` bulgu vermedi.
 - [x] 19 Eylül production Lighthouse: Performance 99, Accessibility 100, Best Practices 100, SEO 100; LCP 2.2 sn, CLS 0.
 - [x] Önceki anonim Supabase RLS red/okuma, admin Storage yükleme ve Turnstile temas akışı `FINAL_REPORT.md` içinde kayıtlı.
+- [x] Geçici member/editor hesaplarıyla production Auth girişi, profil görünürlüğü, inbox/audit/draft RLS, kategori yazma, görünüm yönetimi ve private Storage matrisi 20/20 geçti. Test kategorisi ve medya dosyası temizlendi. Hesap temizliği ayrıca izleniyor.
+- [x] Beş içerik türünde production taslak 404, yayın 200, SEO/noindex ve gelecekteki scheduled 404 doğrulandı; altı test içeriği silindi. `scripts/verify-production-content.mjs`.
+- [x] Ayrı Chrome Playwright oturumlarında member Studio dashboard'a alınmadı; editor dashboard/içerik editörünü gördü ve admin üye yönetimine alınmadı. `scripts/verify-production-studio.mjs`.
+- [x] Son yerel verify 0 hata/11 unit, E2E 25/25 ve production salt okunur E2E 4/4.
+- [x] GitHub Actions Verify #20–#22 yeşil.
 
 ## Açık kapılar
 
-- [ ] Production gerçek member/editor/admin rol matrisi; Auth, RLS ve Storage için kontrollü hesaplarla olumsuz ve olumlu test.
+- [ ] Production gerçek member/editor/admin rol matrisinin kalan admin karşılaştırması ve geçici Auth hesaplarının temizliği.
 - [ ] Auth kayıt, doğrulama, reset, callback ve SMTP teslimatı.
-- [ ] Beş içerik tipi için gerçek production yayın/önizleme/SEO/medya/scheduled doğrulaması; test kayıtları sonradan temizlenecek.
+- [ ] Beş içerik tipinin Studio önizleme, tür alanları ve medya bağları için ek production UI doğrulaması.
 - [x] İçerik ve ilişki yazılarını tek transaction içinde kaydeden `save_content_with_relations` RPC migration `202609170010` production SQL Editor'da başarıyla uygulandı. Worker `0c6e5d92-ce3d-4849-967d-99da82cf3490` üzerinde mevcut private QA taslağı, ilişkileri korunarak Studio’dan yeniden kaydedildi.
 - [ ] Search Console doğrulaması, sitemap sunumu ve indeks durumu.
-- [ ] MFA ve Cloudflare Access; Access onboarding ödeme kartı ve Terms kullanıcı müdahalesi gerektiriyor.
+- [ ] Supabase TOTP etkin olsa da uygulamada MFA kayıt/zorunluluk akışı ve doğrulaması; Cloudflare Access onboarding ödeme kartı ve Terms kullanıcı müdahalesi gerektiriyor.
 - [ ] Güncel Lighthouse/axe ve manuel klavye/ekran okuyucu taraması, alan Core Web Vitals.
-- [ ] GitHub Actions Verify #17 ve sonraki commit'in yeşil sonucu.
+- [ ] Sonraki kod ve belge commit'inin GitHub Actions Verify sonucu.

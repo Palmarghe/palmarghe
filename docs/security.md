@@ -12,4 +12,4 @@
 
 ## Henüz tamamlanmayanlar
 
-MFA sağlayıcıda yapılandırılmadı. Production Supabase migration 001–010, anonim RLS erişim/red kontrolleri ve admin Storage yüklemesi doğrulandı; ayrıntı `FINAL_REPORT.md` dosyasındadır. Gerçek member/editor rol matrisi, Auth e-posta akışı, şifre sıfırlama callback'i ve geniş kapsamlı üretim E2E hâlâ açıktır. Local adapter politika ve RPC davranışını yaklaşıklar; bu roller için üretim yetki kanıtı değildir.
+Supabase Auth TOTP faktörü etkin; uygulama MFA kayıt ve zorunluluk akışını henüz uygulamıyor. Özel SMTP kapalı; gerçek e-posta teslimatı ve reset callback'i doğrulanmadı. Production migration 001–010, anonim RLS erişim/red ve admin Storage yüklemesi doğrulandı. 19 Eylül'de geçici member/editor hesaplarıyla Auth, profil, inbox, audit, private draft, kategori yazma, appearance yazma ve Storage için 20 olumlu/olumsuz production kontrolü geçti. Test kategorisi ile medya nesnesi temizlendi; geçici Auth hesapları temizlenene kadar açık kalır. Ayrıntı `FINAL_REPORT.md` dosyasındadır.
