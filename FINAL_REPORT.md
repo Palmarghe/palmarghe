@@ -1,120 +1,59 @@
 # Palmarghe V1 Final Report
 
-## Status
+## Status — 19 September 2026
 
-**IN PROGRESS — production is live; final production E2E and external service checks remain.** Public site and Studio are reachable through Cloudflare. The remaining checks below must pass before this report can say COMPLETE.
+**FAZ 1 applicable scope complete; only external or user-dependent gates remain.** The public site and Studio run on Cloudflare Workers with Supabase production. The existing Astro architecture and local/GitHub history were preserved. FAZ 2 deep review may proceed. This status does not claim that the external gates below have passed.
 
-### 17 September final polish pass
+## Live services
 
-The live homepage, empty AI category and authenticated Studio dashboard were inspected in Chrome before edits. Empty featured/latest panels were removed when there are no published entries. Category empty states now explain the state and lead back to the archive. Studio gained Turkish navigation labels, a clear current section, publication/message/media counts, a creation action and a recent-content list. A real 768 px horizontal overflow in the Studio menu was found by the new six-width test and fixed. Local `npm run verify` passed (11 unit tests), Chrome Playwright passed 24/24, and production dependency audit found no high-severity issues. Cloudflare Worker version `4db27bcf-151e-4f79-956f-fbaffea19831` was deployed. Chrome showed the updated production homepage, category and authenticated Studio. See `docs/visual-product-audit.md` for findings and remaining checks.
+- Public: `https://palmarghe.com/` and English routes under `/en/`.
+- Studio: `https://studio.palmarghe.com/studio/`.
+- Worker preview: `https://palmarghe.palmarghe.workers.dev/`, marked noindex.
+- Repository: `https://github.com/Palmarghe/palmarghe`, branch `main`, remote `origin`. No force push was used. GitHub's original README commit was reconciled with local history via `cee944f`; its README is retained in `docs/github-initial-readme.md`.
 
-The larger final audit remains open: Auth email flows, Studio media/preview interaction checks, manual assistive technology review, app-level MFA, Cloudflare Access and field Core Web Vitals have not yet been proven. Earlier sections below are a historical baseline and may contain superseded counts or deployment IDs.
+After QA account cleanup, real Chrome opened the apex homepage and authenticated Studio dashboard. Both rendered their expected headings over HTTPS. The final read-only production E2E suite passed 10/10. `www` redirects to apex; account, Studio and API responses carry no-store/noindex protections.
 
-A separate read-only production Chrome Playwright suite now covers 12 public routes, key assets, 404, response privacy/security headers, Workers preview noindex, mobile navigation and six viewport widths; 3/3 passed. It runs with `npm run test:e2e:production` and does not mutate live data. The remaining production role/content/auth flows need controlled accounts and dedicated tests. See `docs/production-checklist.md`.
+## Delivered product
 
-The About page was also expanded from a single sentence into a bilingual editorial explanation with archive and contact paths. Local verification and targeted navigation E2E passed; Cloudflare Worker version `cd56375e-1627-4456-a08f-997e0a7e12ee` is live, and Chrome confirmed the updated page. GitHub Actions Verify #17 passed; #18 was still running at the last check.
+- Bilingual Astro SSR editorial site with home, AI, gaming, Football Manager, Lab, archive, search, details, About, Contact, Privacy and Account routes.
+- Responsive navigation and footer, SVG identity, five optimized generated WebP illustrations (about 274 KB total), soft menu transitions and reduced-motion support.
+- Studio content CRUD with controlled Tiptap blocks, five content types, category/tag relations, drafts, preview, publishing, UTC scheduling, translation groups, SEO and indexability fields.
+- Category/tag CRUD, private media library with type/signature/size checks, alt and cover controls, appearance/homepage/navigation/social settings, redirect manager, contact inbox, audit view and member role management.
+- Supabase Auth login/signup/reset/session/profile/deletion request endpoints, local/test adapter, Turnstile contact validation, DB-backed contact/auth rate limits, Origin checks and security headers.
+- Canonical/hreflang, JSON-LD on content, sitemap, robots and TR/EN RSS.
 
-### 19 September transaction reliability pass
+See `docs/architecture.md`, `docs/content-model.md`, `docs/admin-guide.md` and `docs/deployment.md` for implementation details.
 
-Migration `202609170010_content_transaction.sql` was applied successfully through the production Supabase SQL Editor. It adds the `save_content_with_relations` SECURITY INVOKER function: an authenticated editor or admin can write one content row plus its category and tag relationships atomically, while the function retains the caller's RLS context. The application and local adapter now use that RPC. A local regression test proves an invalid category leaves no partial content row. The change was deployed as Worker `0c6e5d92-ce3d-4849-967d-99da82cf3490`; Chrome confirmed that the existing private Production QA draft saved through Studio without changing its title, state, category or cover. The read-only production suite passed 3/3 afterwards.
+## Production database, Auth and permissions
 
-Production Lighthouse was renewed on 19 September: Performance 99, Accessibility 100, Best Practices 100 and SEO 100, with LCP 2.2 seconds and CLS 0. The JSON evidence is kept in the ignored `test-results/lighthouse-production-2026-09-19.json` artifact.
+Supabase project `ozztqhiqzchlbxscbwhy` is active. Migrations `202609160001`–`202609160009` and `202609170010_content_transaction.sql` were applied in production. The latter adds `save_content_with_relations`, a SECURITY INVOKER RPC that writes an item and its category/tag links in one transaction while retaining RLS. A local regression proved an invalid category leaves no partial item; live Studio resaved the existing private QA draft through the RPC with its fields and relations intact. The RPC Worker deployment was version `0c6e5d92-ce3d-4849-967d-99da82cf3490`. No later application-code deployment was required for verification scripts and documents.
 
-Two temporary, auto-confirmed production Auth users were created for role verification. Studio admin assigned one `editor`; the other stayed `member`. The controlled production script `scripts/verify-production-roles.mjs` passed 20/20 checks: Auth login, own-profile access and cross-profile denial, member inbox/audit/draft denial, editor private-draft visibility and audit denial, member category-write denial versus editor category-write success, member/editor appearance-write denial, member Storage upload/download denial and editor upload success. It removed the test category and private Storage object in `finally`. The member also logged into the live account page in Chrome. GitHub Actions Verify #22 for `e1cdfeb` completed successfully. The temporary Auth users still require removal. Supabase TOTP is enabled in the provider, while custom SMTP is disabled. App-level MFA enrollment/enforcement and email delivery remain open.
+All 15 public tables have RLS enabled. Anonymous REST access to public categories/content succeeds; private inbox/audit reads and anonymous writes are denied. Production role script `scripts/verify-production-roles.mjs` passed 20/20 checks with separate `member` and `editor` users: Auth login, own-profile and cross-profile boundaries, private drafts, inbox/audit access, category and appearance writes, and private Storage upload/download. An isolated Chrome Playwright run (`scripts/verify-production-studio.mjs`) verified member Studio denial, editor dashboard/content access and editor denial of admin member management. Existing admin Studio access and private Storage upload had already been verified.
 
-The editor then ran `scripts/verify-production-content.mjs` against the live database and public Worker. For article, project, FM mod, gallery and lab entry, private draft routes returned 404; each published route returned 200 with its SEO title/description and noindex directive. A future scheduled lab entry stayed private. All six controlled records were deleted in the script's `finally` block. Local `npm run verify` passed with 11 unit tests; local E2E passed 25/25 and read-only production E2E passed 4/4. No deployment was needed for these verification scripts and documents.
+The two temporary Auth users were identified by exact email, UUID and role before removal. The editor's 19 audit rows were checked against its QA category and six QA contents, then removed to clear the restrictive profile FK. Supabase Auth deleted **only** `qa-member-20260919@example.test` and `qa-editor-20260919@example.test`. Final SQL returned `0` remaining Auth rows, `0` profile rows and `0` audit rows for those UUIDs; the real owner `recepkaanerkay@gmail.com` remained an `admin` (`owner_admin_intact = 1`). The test category and Storage object were already removed by the role script.
 
-An isolated Chrome Playwright run (`scripts/verify-production-studio.mjs`) confirmed that member and editor could log in on the Studio domain, member saw the Studio access-denied state, editor opened the dashboard and content editor, and editor could not open admin member management. The existing admin Chrome session remains intact.
+## Publication and production E2E
 
-Google Search Console domain ownership was verified via one apex TXT record after exporting the existing Cloudflare zone and documenting the three Worker records that its BIND export omits. The sitemap was submitted and Search Console reported successful processing with 20 discovered pages. Both apex and Studio still returned HTTPS 200 and the Cloudflare NS pair remained intact. The new property has no mature indexing or field Core Web Vitals data yet. See `docs/dns-search-console-2026-09-19.md`.
+`scripts/verify-production-content.mjs` exercised article, project, FM mod, gallery and Lab entries against the live database and Worker. Each private draft route returned 404; each temporarily published route returned 200 with the expected SEO title/description and noindex directive. A future scheduled item stayed private. All six controlled content rows were removed in the script's cleanup block. Earlier Chrome checks also confirmed a staff preview, anonymous preview denial, generated cover, live Turnstile submission/inbox entry and appearance setting round-trip. The private `Production QA taslağı` draft remains in Studio for repeatable staff checks.
 
-Six live axe checks were added for TR/EN home, contact, account, archive and Studio sign-in. All had zero serious or critical WCAG 2 A/AA and 2.1 A/AA violations; the expanded read-only production suite passed 10/10. This automated coverage does not replace manual keyboard and assistive technology review.
+Final local `npm run verify` returned zero typecheck errors/warnings, 11/11 unit tests and a successful Cloudflare build. Local Chrome E2E passed 25/25. After account cleanup, `npm run test:e2e:production` passed 10/10: 12 public routes/assets, response/privacy headers, six viewports and mobile menu, console checks, plus six live axe scans. Those scans found no serious or critical WCAG 2 A/AA or 2.1 A/AA violation on TR/EN home, contact, account, archive and Studio sign-in. `npm audit --omit=dev --audit-level=high` reported zero high-severity vulnerabilities. Production Lighthouse on 19 September scored Performance 99, Accessibility 100, Best Practices 100 and SEO 100, with LCP 2.2 s and CLS 0; ignored local evidence is `test-results/lighthouse-production-2026-09-19.json`.
 
-## Live URLs
+## DNS, Cloudflare and Search Console
 
-- Production: `https://palmarghe.com/` (opened in Chrome, HTTPS valid).
-- Studio: `https://studio.palmarghe.com/studio/` (opened in Chrome, HTTPS valid).
-- Worker preview: `https://palmarghe.palmarghe.workers.dev/` (noindex).
-- Local: `http://127.0.0.1:4321/` with `npm run dev`; E2E uses port 4322 and `LOCAL_TEST_MODE=true`.
+Initial SERVFAIL came from lame Turhost delegation: parent NS pointed to servers returning REFUSED. Parent DS was absent, so DNSSEC was not the cause. After backup and rollback planning in `docs/dns-backup-2026-09-16.md`, registrar NS moved to Cloudflare's `kaiser.ns.cloudflare.com` and `serenity.ns.cloudflare.com`; DS/DNSSEC were not changed. Cloudflare serves three proxied Worker hostnames: apex, `studio` and `www`. The Worker holds `CONTACT_RATE_PEPPER`, `SUPABASE_SERVICE_ROLE_KEY` and `TURNSTILE_SECRET_KEY` as encrypted secrets. HTTPS and custom domains were verified in Chrome.
 
-## What Was Built
+Before Search Console DNS changes, the Cloudflare zone was exported and the three Worker records omitted by that export were recorded. One apex TXT verified `palmarghe.com` domain ownership. Search Console processed `https://palmarghe.com/sitemap.xml` successfully and discovered 20 pages. Apex and Studio continued returning HTTPS 200, and the NS pair stayed intact. Backup and rollback details are in `docs/dns-search-console-2026-09-19.md`.
 
-- Astro SSR bilingual public routes (Turkish root, English `/en/`), category/hierarchy listings, archive, search, detail pages for article/project/FM mod/gallery/Lab, About, Contact, Privacy, Account.
-- Responsive editorial UI, SVG logo, navigation, footer, homepage visibility/order, appearance presets and social links.
-- Generated editorial glass hero and four AI/Gaming/FM/Lab illustrations, optimized to 274 KB total WebP; animated desktop/mobile menus with reduced motion support.
-- Studio content CRUD with Tiptap controlled block editor and server-side JSON allowlist, category/tag relationships, type-specific fields, draft/staff preview/publish/UTC scheduling, SEO fields and translation group.
-- Category and tag CRUD, media library with PNG/JPEG/WebP signature and 10 MB validation, alt editing, cover selection, protected deletion, contact inbox, redirect manager with loop detection, audit view, member roles and account deletion request review.
-- Supabase Auth login/signup/reset/session/profile/deletion request endpoints, server role checks, RLS and private Storage migration. Local-only in-memory adapter provides admin/editor/member accounts and controlled tests.
-- Contact Turnstile validation and DB rate limit RPC; hashed IP/action/email auth rate limit RPC; Origin/input checks, CSP/headers, noindex/no-store.
-- Canonical/hreflang for matched translations, OG, sitemap, robots and TR/EN RSS. GitHub Actions runs typecheck, unit/build and Playwright E2E.
+## External and user-dependent gates
 
-## Architecture
+1. **Custom SMTP and email callbacks:** Supabase custom SMTP is disabled. Real signup mail delivery, confirmation and reset callback cannot be certified without a mail provider and delivery access. Auth password login and role controls were verified independently.
+2. **MFA:** Supabase TOTP is enabled at the provider, but app-level enrollment, enforcement and owner second-factor setup are not complete. Enforcing it on the real owner requires an intentional enrollment and recovery process.
+3. **Cloudflare Access:** Zero Trust onboarding required a payment card, Terms acceptance and authorization for possible overage charges, including on Free. The flow was left for the account owner. Studio still requires server-side Supabase Auth and staff role.
+4. **Search field data:** The new Search Console property is verified and its sitemap processed. Indexing reports and field Core Web Vitals need Google to collect data over time.
+5. **Manual assistive-technology review:** Automated axe, keyboard navigation E2E, responsive and Lighthouse checks passed, but a human screen reader pass remains.
 
-One Astro SSR app targeting Cloudflare Workers with Supabase Auth/Postgres/Storage. See `docs/architecture.md` and `docs/content-model.md`.
+These external/user-dependent gates remain open in `docs/production-checklist.md` and do not block starting FAZ 2. No P0/P1 defect was found in the tested applicable FAZ 1 scope. FAZ 2 must re-audit this claim against its own requirements.
 
-## Database & Auth
+## GitHub and deployment verification
 
-Production Supabase project `ozztqhiqzchlbxscbwhy` is active. Migrations `202609160001`–`202609160009` were applied through the SQL Editor. Migration 009 adds API grants required in addition to RLS; anon REST reads for public categories/content return 200, while anon reads of contact messages/audit logs and category writes return 401. All 15 public tables have RLS enabled, with 26 public policies and five private media Storage policies. Auth site URL and callback allowlist point to production. A verified admin session reached Studio in Chrome and uploaded the generated hero image to private Storage, where its thumbnail and alt text appeared.
-
-## Security Controls
-
-RLS policies, server role checks, same-origin checks, constrained form input and block rendering, media signature/size limits, Turnstile, DB contact/auth rate limits, no-store/noindex and audit triggers are implemented. Cloudflare Worker stores `CONTACT_RATE_PEPPER`, `SUPABASE_SERVICE_ROLE_KEY` and `TURNSTILE_SECRET_KEY` as encrypted secrets; Wrangler confirmed all three after redeploy. Production anonymous RLS read/write checks, authenticated Storage upload and real Turnstile contact submission passed. SMTP, full role matrix and Cloudflare Access remain to be proven. MFA and external security review are pending. Account deletion requests need verified human handling in Supabase Auth.
-
-## SEO
-
-Canonical, paired hreflang, sitemap/RSS, JSON-LD for published content, content indexability, and noindex for private/search routes are implemented. Search uses bounded, sanitized title/excerpt matching; advanced full-text/filtering is absent. Search Console remains unverified.
-
-## Performance & Accessibility
-
-Limited client JavaScript, semantic HTML, skip link, focus states and reduced motion are present. Mobile/tablet Playwright checks and axe WCAG scans cover critical routes and Studio form with no serious/critical findings. Five generated WebP assets total about 274 KB. Chrome desktop screenshot confirmed the live hero; all five live images loaded. Production Lighthouse mobile audit after fixing CSP: Performance 99, Accessibility 100, Best Practices 100, SEO 100, LCP 2.1 s, CLS 0, no console errors or DevTools issues. Local audit JSON is `test-results/lighthouse-production-2026-09-17.json` (ignored from Git). Field Core Web Vitals and full manual assistive technology checks remain outstanding.
-
-## Tests
-
-- `npm run verify`: typecheck 0 errors/warnings, Vitest 11/11, Cloudflare build passed.
-- `npm run test:e2e`: after updating the old menu selector, the two targeted responsive/menu tests passed 2/2. GitHub Actions Verify #12 ran the full suite for commit `fc44e1d` and completed successfully.
-- `npm audit --omit=dev --audit-level=high`: 0 reported vulnerabilities on 17 September 2026.
-- Production Chrome: TR home, Studio, account, contact opened; valid HTTPS; generated assets loaded; no browser console errors on checked pages. Language switch changed TR root to EN root. HTTP smoke: TR/EN, Studio, sitemap, robots, RSS and hero asset returned 200; `www` returned 301 to apex. Supabase REST anonymous grant/RLS checks and authenticated Studio media upload passed. Admin created and updated a noindex draft with Lab category, generated cover and block content; the edited text persisted. Public draft route returned 404; authenticated preview opened; anonymous preview returned 403 with noindex/no-store. Contact/Turnstile form submitted a controlled test message, displayed success and the Studio inbox stored it; message was archived. Studio appearance changed accent to blue, public CSS reflected `#60a5fa`, then restored violet `#8b5cf6`. Full production E2E remains open.
-
-## GitHub / CI
-
-The original local Git history and GitHub README initial commit were merged via `cee944f`, with the original README retained in `docs/github-initial-readme.md`. `origin` is `https://github.com/Palmarghe/palmarghe.git`. Production and visual commit `fc44e1d` was pushed to `main` without force. Chrome showed that commit and the repository file tree; GitHub Actions Verify #12 completed successfully in 2m 13s.
-
-## Deployments
-
-Cloudflare Worker `palmarghe` deployed via Wrangler 4.132.0. Current version `048fe171-51fa-444e-932a-f3cfe40af35b`; apex, Studio and www custom domains are attached. Cloudflare zone is active. No separate staging environment was created; Workers.dev preview is noindex. See `docs/deployment.md`.
-
-## DNS Changes
-
-SERVFAIL root cause was lame Turhost delegation: the parent pointed at cpns servers that returned REFUSED. Parent DS was absent, so DNSSEC was not the cause. Turhost DNS service was disabled and zone export unavailable; backup and rollback were recorded before change in `docs/dns-backup-2026-09-16.md`. Registrar NS changed from `cpns1.turhost.com`/`cpns2.turhost.com` to Cloudflare's `kaiser.ns.cloudflare.com`/`serenity.ns.cloudflare.com`. Cloudflare zone activated with three Worker DNS records. DS/DNSSEC were not changed. Chrome verified valid HTTPS for apex and Studio; www redirects to apex.
-
-## External Services
-
-Production Supabase, Cloudflare zone/Worker/custom domains and Turnstile widget are configured. Search Console domain ownership and sitemap processing were verified on 19 September. Cloudflare Access remains blocked by payment card and Terms onboarding; an earlier live Turnstile submission passed.
-
-## Environment Variables Required
-
-`PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `CONTACT_RATE_PEPPER`, `APP_URL`, and `STUDIO_URL` are described in `.env.example`. `LOCAL_TEST_MODE` is development only. Secrets stay outside Git.
-
-## Remaining Blockers
-
-1. Cloudflare Zero Trust Access onboarding displayed a required payment card form, Terms of Service acceptance and an authorization for monthly overage charges even on the Free plan. The checkout was exited without entering payment details or accepting terms. **User step:** decide whether to activate Access personally under those terms; the Studio still has server-side Supabase Auth and role checks.
-2. Custom SMTP is disabled, so email delivery, signup confirmation and reset callback remain unverified. App-level TOTP MFA enrollment/enforcement and administrator setup require a second factor workflow. Field Core Web Vitals and indexing reports await Search Console data processing. Manual assistive technology review and additional Studio preview/media interaction checks remain.
-3. Two temporary production Auth accounts used for the member/editor matrix await the browser policy's action-time deletion confirmation. Their test content and media have already been removed. A `Production QA taslağı` draft remains private in Studio for repeatable verification.
-
-## Admin First Login
-
-Create and verify the owner account in Supabase Auth. Confirm its UUID independently. As the migration owner `postgres`, set only that UUID's `public.profiles.role` to `admin`; keep `prevent_profile_role_change` enabled and verify the role and trigger. Do not store the password or UUID in Git. See `docs/admin-guide.md`.
-
-## Content Publishing Guide
-
-In Studio > Content, enter title/slug/language/type, compose blocks, and save as `draft`. Open the staff preview, then publish or schedule with a future UTC time. Choose category/tags, cover, featured and indexability as needed. See `docs/admin-guide.md`.
-
-## Known Limitations
-
-- Production migration/RPC behavior and Auth callback/email have not been proven. Preview isolation and MFA must be configured in the provider.
-- Content relationship writes span multiple requests, so a failed later tag write can leave an earlier content update; transaction-backed RPC would strengthen atomicity.
-- Search is intentionally basic; image derivative optimization, member self-service deletion execution, extensive automated accessibility/performance coverage and full content analytics remain open.
-
-## Recommended V2
-
-- Transaction-backed content and relation save, optimized media derivatives, richer search/filtering, analytics, and automated account deletion processing after identity verification.
+All changes were normal commits on `main`; the repository was clean and in sync before this report update. GitHub Actions Verify #20–#25 passed, including the live accessibility test commit `e1e963b`. The final documentation commit's action must also pass before FAZ 1 closure. Cloudflare's current production app remained healthy after the QA cleanup; documentation/test-only changes do not require a Worker redeploy.
