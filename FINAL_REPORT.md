@@ -8,7 +8,7 @@
 
 The live homepage, empty AI category and authenticated Studio dashboard were inspected in Chrome before edits. Empty featured/latest panels were removed when there are no published entries. Category empty states now explain the state and lead back to the archive. Studio gained Turkish navigation labels, a clear current section, publication/message/media counts, a creation action and a recent-content list. A real 768 px horizontal overflow in the Studio menu was found by the new six-width test and fixed. Local `npm run verify` passed (11 unit tests), Chrome Playwright passed 24/24, and production dependency audit found no high-severity issues. Cloudflare Worker version `4db27bcf-151e-4f79-956f-fbaffea19831` was deployed. Chrome showed the updated production homepage, category and authenticated Studio. See `docs/visual-product-audit.md` for findings and remaining checks.
 
-The larger final audit remains open: production member/editor permission matrix, Auth email flows, complete content-type publication checks, full production E2E, renewed Lighthouse/assistive technology review, Cloudflare Access, Search Console and field Core Web Vitals have not yet been proven. Earlier sections below are a historical baseline and may contain superseded counts or deployment IDs.
+The larger final audit remains open: Auth email flows, Studio media/preview interaction checks, manual assistive technology review, app-level MFA, Cloudflare Access and field Core Web Vitals have not yet been proven. Earlier sections below are a historical baseline and may contain superseded counts or deployment IDs.
 
 A separate read-only production Chrome Playwright suite now covers 12 public routes, key assets, 404, response privacy/security headers, Workers preview noindex, mobile navigation and six viewport widths; 3/3 passed. It runs with `npm run test:e2e:production` and does not mutate live data. The remaining production role/content/auth flows need controlled accounts and dedicated tests. See `docs/production-checklist.md`.
 
@@ -89,7 +89,7 @@ SERVFAIL root cause was lame Turhost delegation: the parent pointed at cpns serv
 
 ## External Services
 
-GitHub, Cloudflare, Supabase and Turhost authenticated sessions were available. Production Supabase, Cloudflare zone/Worker/custom domains and Turnstile widget were configured. Search Console and Cloudflare Access are not yet configured; Turnstile live completion is unverified.
+Production Supabase, Cloudflare zone/Worker/custom domains and Turnstile widget are configured. Search Console domain ownership and sitemap processing were verified on 19 September. Cloudflare Access remains blocked by payment card and Terms onboarding; an earlier live Turnstile submission passed.
 
 ## Environment Variables Required
 
@@ -98,7 +98,8 @@ GitHub, Cloudflare, Supabase and Turhost authenticated sessions were available. 
 ## Remaining Blockers
 
 1. Cloudflare Zero Trust Access onboarding displayed a required payment card form, Terms of Service acceptance and an authorization for monthly overage charges even on the Free plan. The checkout was exited without entering payment details or accepting terms. **User step:** decide whether to activate Access personally under those terms; the Studio still has server-side Supabase Auth and role checks.
-2. Full production member/editor permission matrix, SMTP email callback/reset and Search Console ownership remain unverified. Production publish, complete Storage policy denial matrix, field Core Web Vitals and full E2E remain open. An anonymous request for the authenticated Studio media URL returned 404. A `Production QA taslağı` draft remains private in Studio for repeatable verification; no sample content was published.
+2. Custom SMTP is disabled, so email delivery, signup confirmation and reset callback remain unverified. App-level TOTP MFA enrollment/enforcement and administrator setup require a second factor workflow. Field Core Web Vitals and indexing reports await Search Console data processing. Manual assistive technology review and additional Studio preview/media interaction checks remain.
+3. Two temporary production Auth accounts used for the member/editor matrix await the browser policy's action-time deletion confirmation. Their test content and media have already been removed. A `Production QA taslağı` draft remains private in Studio for repeatable verification.
 
 ## Admin First Login
 
