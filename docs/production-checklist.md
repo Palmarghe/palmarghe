@@ -17,7 +17,7 @@ Son gözden geçirme: 17 Eylül 2026. Bu belge tamamlanan kanıt ile açık işl
 - [ ] Production gerçek member/editor/admin rol matrisi; Auth, RLS ve Storage için kontrollü hesaplarla olumsuz ve olumlu test.
 - [ ] Auth kayıt, doğrulama, reset, callback ve SMTP teslimatı.
 - [ ] Beş içerik tipi için gerçek production yayın/önizleme/SEO/medya/scheduled doğrulaması; test kayıtları sonradan temizlenecek.
-- [ ] İçerik ve ilişki yazılarını tek transaction içinde yapacak RPC ve üretim migration doğrulaması.
+- [x] İçerik ve ilişki yazılarını tek transaction içinde kaydeden `save_content_with_relations` RPC migration `202609170010` production SQL Editor'da başarıyla uygulandı; uygulama doğrulaması dağıtımdan sonra yapılacak.
 - [ ] Search Console doğrulaması, sitemap sunumu ve indeks durumu.
 - [ ] MFA ve Cloudflare Access; Access onboarding ödeme kartı ve Terms kullanıcı müdahalesi gerektiriyor.
 - [ ] Güncel Lighthouse/axe ve manuel klavye/ekran okuyucu taraması, alan Core Web Vitals.

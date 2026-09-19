@@ -108,6 +108,23 @@ export function localSupabase(cookies: import('astro').AstroCookies) {
     from: (name: string) => { if (!isTable(name)) throw new Error('Unknown table'); return new Query(name, getUser()); },
     rpc: async (name: string, args: Row) => {
       const actor = getUser();
+      if (name === 'save_content_with_relations') {
+        if (!actor || !['admin','editor'].includes(actor.role)) return { data: null, error: { message: 'permission denied' } };
+        const existing = args.p_content_id ? tables.content_items.find((item) => item.id === args.p_content_id) : null;
+        if (args.p_content_id && !existing) return { data: null, error: { message: 'content not found' } };
+        const category = args.p_category_id ? tables.categories.find((item) => item.id === args.p_category_id) : null;
+        if (args.p_category_id && !category) return { data: null, error: { message: 'unknown category' } };
+        const tagIds: string[] = args.p_tag_ids ?? [];
+        if (tagIds.length > 20 || new Set(tagIds).size !== tagIds.length || tagIds.some((id) => !tables.tags.some((tag) => tag.id === id))) return { data: null, error: { message: 'unknown or duplicate tag' } };
+        const contentId = existing?.id ?? uid();
+        if (existing) Object.assign(existing,args.p_payload,{ updated_at:new Date().toISOString() });
+        else tables.content_items.push({ id:contentId,author_id:actor.id,created_at:new Date().toISOString(),...args.p_payload });
+        tables.content_categories = tables.content_categories.filter((item) => item.content_id !== contentId);
+        tables.content_tags = tables.content_tags.filter((item) => item.content_id !== contentId);
+        if (category) tables.content_categories.push({ content_id:contentId,category_id:category.id });
+        for (const tag_id of tagIds) tables.content_tags.push({ content_id:contentId,tag_id });
+        return { data: contentId, error: null };
+      }
       if (name !== 'set_member_role' || actor?.role !== 'admin' || actor.id === args.p_user_id || !['member','editor','admin'].includes(args.p_role)) return { data: null, error: { message: 'permission denied' } };
       const target = users.find((entry) => entry.id === args.p_user_id);
       if (!target || (target.role === 'admin' && args.p_role !== 'admin' && users.filter((entry) => entry.role === 'admin').length <= 1)) return { data: null, error: { message: 'invalid role change' } };

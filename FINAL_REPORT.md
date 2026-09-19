@@ -14,6 +14,10 @@ A separate read-only production Chrome Playwright suite now covers 12 public rou
 
 The About page was also expanded from a single sentence into a bilingual editorial explanation with archive and contact paths. Local verification and targeted navigation E2E passed; Cloudflare Worker version `cd56375e-1627-4456-a08f-997e0a7e12ee` is live, and Chrome confirmed the updated page. GitHub Actions Verify #17 passed; #18 was still running at the last check.
 
+### 19 September transaction reliability pass
+
+Migration `202609170010_content_transaction.sql` was applied successfully through the production Supabase SQL Editor. It adds the `save_content_with_relations` SECURITY INVOKER function: an authenticated editor or admin can write one content row plus its category and tag relationships atomically, while the function retains the caller's RLS context. The application and local adapter now use that RPC. A local regression test proves an invalid category leaves no partial content row. Production application verification and deployment follow this entry.
+
 ## Live URLs
 
 - Production: `https://palmarghe.com/` (opened in Chrome, HTTPS valid).

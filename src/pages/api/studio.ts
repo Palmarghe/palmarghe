@@ -172,23 +172,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const previous = id ? (await db.from('content_items').select('published_at').eq('id',id).single()).data : null;
     const published_at = values.status === 'published' ? previous?.published_at ?? new Date().toISOString() : values.status === 'scheduled' ? scheduledAt : values.status === 'archived' ? previous?.published_at ?? null : null;
     const payload = { ...values, body, type_data, cover_media_id, cover_url: cover_media_id ? `/api/media/${cover_media_id}/` : null, published_at, updated_at: new Date().toISOString() };
-    const result = id ? await db.from('content_items').update(payload).eq('id', id).select('id').single() : await db.from('content_items').insert({ ...payload, author_id: user.id }).select('id').single();
-    const { error } = result;
+    const { error } = await db.rpc('save_content_with_relations', {
+      p_content_id: id ?? null, p_payload: payload, p_category_id: category_id, p_tag_ids: [...new Set(tagIds)],
+    });
     if (error) return errorResponse('Save failed', 400);
-    const contentId = result.data?.id;
-    if (contentId) {
-      const { error: clearCategories } = await db.from('content_categories').delete().eq('content_id',contentId);
-      const { error: clearTags } = await db.from('content_tags').delete().eq('content_id',contentId);
-      if (clearCategories || clearTags) return errorResponse('Relationship update failed',400);
-      if (category_id) {
-        const { error } = await db.from('content_categories').insert({ content_id: contentId, category_id });
-        if (error) return errorResponse('Category assignment failed',400);
-      }
-      if (tagIds.length) {
-        const { error } = await db.from('content_tags').insert([...new Set(tagIds)].map((tag_id) => ({ content_id: contentId, tag_id })));
-        if (error) return errorResponse('Tag assignment failed',400);
-      }
-    }
     return redirectTo(request, '/studio/?section=content');
   }
   return errorResponse('Invalid entity');

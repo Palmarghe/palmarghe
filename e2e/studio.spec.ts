@@ -24,6 +24,25 @@ test('member is denied Studio', async ({ page }) => {
   expect(denied.status()).toBe(403);
 });
 
+test('content transaction rejects an unknown category without inserting a row', async ({ page }) => {
+  await page.goto('/studio/');
+  await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
+  await page.locator('input[name="password"]').fill('LocalTest123!');
+  await page.getByRole('button', { name: 'Giriş' }).click();
+  const slug = `transaction-check-${Date.now()}`;
+  const response = await page.request.post('/api/studio/', {
+    headers: { Origin: 'http://127.0.0.1:4322' },
+    form: {
+      entity: 'content', title: 'Transaction check', slug, locale: 'tr', type: 'article',
+      status: 'draft', category_id: '00000000-0000-4000-8000-ffffffffffff',
+      body: JSON.stringify({ type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Test' }] }] }),
+    },
+  });
+  expect(response.status()).toBe(400);
+  await page.goto('/studio/?section=content');
+  await expect(page.getByRole('link', { name: 'Transaction check' })).toHaveCount(0);
+});
+
 test('admin creates a category and publishes content', async ({ page }) => {
   await page.goto('/studio/');
   await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
