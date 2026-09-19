@@ -26,6 +26,8 @@ The editor then ran `scripts/verify-production-content.mjs` against the live dat
 
 An isolated Chrome Playwright run (`scripts/verify-production-studio.mjs`) confirmed that member and editor could log in on the Studio domain, member saw the Studio access-denied state, editor opened the dashboard and content editor, and editor could not open admin member management. The existing admin Chrome session remains intact.
 
+Google Search Console domain ownership was verified via one apex TXT record after exporting the existing Cloudflare zone and documenting the three Worker records that its BIND export omits. The sitemap was submitted and Search Console reported successful processing with 20 discovered pages. Both apex and Studio still returned HTTPS 200 and the Cloudflare NS pair remained intact. The new property has no mature indexing or field Core Web Vitals data yet. See `docs/dns-search-console-2026-09-19.md`.
+
 ## Live URLs
 
 - Production: `https://palmarghe.com/` (opened in Chrome, HTTPS valid).
