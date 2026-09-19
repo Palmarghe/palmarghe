@@ -28,6 +28,8 @@ An isolated Chrome Playwright run (`scripts/verify-production-studio.mjs`) confi
 
 Google Search Console domain ownership was verified via one apex TXT record after exporting the existing Cloudflare zone and documenting the three Worker records that its BIND export omits. The sitemap was submitted and Search Console reported successful processing with 20 discovered pages. Both apex and Studio still returned HTTPS 200 and the Cloudflare NS pair remained intact. The new property has no mature indexing or field Core Web Vitals data yet. See `docs/dns-search-console-2026-09-19.md`.
 
+Six live axe checks were added for TR/EN home, contact, account, archive and Studio sign-in. All had zero serious or critical WCAG 2 A/AA and 2.1 A/AA violations; the expanded read-only production suite passed 10/10. This automated coverage does not replace manual keyboard and assistive technology review.
+
 ## Live URLs
 
 - Production: `https://palmarghe.com/` (opened in Chrome, HTTPS valid).
