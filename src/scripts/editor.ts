@@ -60,7 +60,7 @@ if (element && output) {
           editor.chain().focus().insertContent({ type: 'callout', attrs: { title, tone }, content: [{ type: 'paragraph' }] }).run(); break;
         }
         case 'cta': { const label = promptText('Buton metni'); const href = promptText('Güvenli bağlantı (/... veya https://...)'); if (label && href) editor.chain().focus().insertContent({ type: 'cta', attrs: { label, href } }).run(); break; }
-        case 'embed': { const src = promptText('Gömülecek HTTPS URL'); const title = promptText('Gömülü içeriğin başlığı', 'Gömülü içerik') || 'Gömülü içerik'; if (src) editor.chain().focus().insertContent({ type: 'embed', attrs: { src, title } }).run(); break; }
+        case 'embed': { const src = promptText('YouTube veya Vimeo gömme URL’si'); const title = promptText('Gömülü içeriğin başlığı', 'Gömülü içerik') || 'Gömülü içerik'; if (src) editor.chain().focus().insertContent({ type: 'embed', attrs: { src, title } }).run(); break; }
         case 'table': editor.chain().focus().insertContent({ type: 'table', content: [{ type: 'tableRow', content: [{ type: 'tableHeader', content: [{ type: 'paragraph' }] }, { type: 'tableHeader', content: [{ type: 'paragraph' }] }] }, { type: 'tableRow', content: [{ type: 'tableCell', content: [{ type: 'paragraph' }] }, { type: 'tableCell', content: [{ type: 'paragraph' }] }] }] }).run(); break;
       }
       sync();

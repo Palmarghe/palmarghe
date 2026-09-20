@@ -6,7 +6,7 @@
 
 ## İçerik blokları
 
-İçerik araç çubuğu başlık, liste, alıntı ve kodun yanında **Görsel**, **Not**, **Buton**, **Göm** ve **Tablo** denetimlerini sunar. Görsel, medya kütüphanesinden sıralı adla seçilir; UUID yazılması gerekmez. Gömme yalnız HTTPS adres kabul eder. Buton bağlantısı site içi `/...` yolu veya HTTPS adresi olmalıdır. Kaydetmeden önce önizlemeyi açın; kontrol edilen blok şeması geçersiz veya güvenli olmayan veriyi reddeder.
+İçerik araç çubuğu başlık, liste, alıntı ve kodun yanında **Görsel**, **Not**, **Buton**, **Göm** ve **Tablo** denetimlerini sunar. Görsel, medya kütüphanesinden sıralı adla seçilir; UUID yazılması gerekmez. Gömme yalnız YouTube veya Vimeo'nun HTTPS gömme URL'lerini kabul eder. Buton bağlantısı site içi `/...` yolu veya HTTPS adresi olmalıdır. Kaydetmeden önce önizlemeyi açın; kontrol edilen blok şeması geçersiz veya güvenli olmayan veriyi reddeder.
 
 Medya kütüphanesi PNG/JPEG/WebP ve 10 MB sınırını uygular. Alt metni düzenleyin; kapak olarak kullanılan dosyanın silinmesi engellenir. Kategoriler hiyerarşiktir ve ilişkili kategori/etiket veritabanı kısıtları nedeniyle silinemez. Homepage bölümünde görünürlük ve sıra, Appearance bölümünde renk ve köşe ayarlanır. Settings bölümündeki sosyal bağlantılar footer'a yansır.
 

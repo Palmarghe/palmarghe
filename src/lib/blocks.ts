@@ -6,6 +6,13 @@ const blockTypes = new Set(['paragraph','heading','blockquote','bulletList','ord
 const markTypes = new Set(['bold','italic','strike','code','link']);
 const escapeHtml = (text: string) => text.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const embedHosts = new Set(['www.youtube.com', 'www.youtube-nocookie.com', 'player.vimeo.com']);
+export function safeEmbedUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' && embedHosts.has(url.hostname.toLowerCase());
+  } catch { return false; }
+}
 function validNode(node: unknown, depth = 0): node is Block {
   if (!node || typeof node !== 'object' || depth > 24) return false;
   const value = node as Block;
@@ -18,7 +25,7 @@ function validNode(node: unknown, depth = 0): node is Block {
   if (value.type === 'mediaImage' && (!uuid.test(String(value.attrs?.media_id ?? '')) || typeof value.attrs?.alt !== 'string' || value.attrs.alt.length > 300 || (value.attrs?.caption !== undefined && (typeof value.attrs.caption !== 'string' || value.attrs.caption.length > 300)))) return false;
   if (value.type === 'callout' && (!['note','info','warning'].includes(String(value.attrs?.tone ?? '')) || typeof value.attrs?.title !== 'string' || value.attrs.title.length > 120)) return false;
   if (value.type === 'cta' && (!safeLink(String(value.attrs?.href ?? '')) || typeof value.attrs?.label !== 'string' || !String(value.attrs?.label).trim() || String(value.attrs?.label).length > 120)) return false;
-  if (value.type === 'embed' && (!safeExternalUrl(String(value.attrs?.src ?? '')) || (value.attrs?.title !== undefined && (typeof value.attrs.title !== 'string' || value.attrs.title.length > 160)))) return false;
+  if (value.type === 'embed' && (!safeEmbedUrl(String(value.attrs?.src ?? '')) || (value.attrs?.title !== undefined && (typeof value.attrs.title !== 'string' || value.attrs.title.length > 160)))) return false;
   if (value.type === 'table' && (value.content?.some((child) => child.type !== 'tableRow') ?? true)) return false;
   if (value.type === 'tableRow' && (value.content?.some((child) => !['tableHeader','tableCell'].includes(child.type)) ?? true)) return false;
   if (['tableHeader','tableCell'].includes(value.type) && (value.content?.some((child) => child.type !== 'paragraph') ?? true)) return false;
