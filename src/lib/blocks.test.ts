@@ -13,4 +13,18 @@ describe('controlled blocks', () => {
     const doc = parseDocument('{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"<img>"}]}]}');
     expect(doc && renderDocument(doc)).toContain('&lt;img&gt;');
   });
+  it('renders controlled rich blocks and rejects unsafe attributes', () => {
+    const id = '123e4567-e89b-42d3-a456-426614174000';
+    const doc = parseDocument(JSON.stringify({ type: 'doc', content: [
+      { type: 'mediaImage', attrs: { media_id: id, alt: 'Portal' } },
+      { type: 'callout', attrs: { tone: 'note', title: 'Not' }, content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Açıklama' }] }] },
+      { type: 'cta', attrs: { href: '/contact/', label: 'İletişim' } },
+      { type: 'table', content: [{ type: 'tableRow', content: [{ type: 'tableHeader', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Başlık' }] }] }] }] },
+    ] }));
+    expect(doc && renderDocument(doc)).toContain(`/api/media/${id}/`);
+    expect(doc && renderDocument(doc)).toContain('<table>');
+    expect(parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'cta', attrs: { href: 'javascript:alert(1)', label: 'X' } }] }))).toBeNull();
+    expect(parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'embed', attrs: { src: 'javascript:alert(1)', title: 'X' } }] }))).toBeNull();
+    expect(parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'mediaImage', attrs: { media_id: id, alt: 'A', caption: 7 } }] }))).toBeNull();
+  });
 });
