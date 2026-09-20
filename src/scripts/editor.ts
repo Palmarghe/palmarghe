@@ -32,7 +32,23 @@ if (element && output) {
     onUpdate: ({ editor }) => { output.value = JSON.stringify(editor.getJSON()); dirty = true; },
   });
   const sync = () => { output.value = JSON.stringify(editor.getJSON()); };
-  const promptText = (label: string, initialValue = '') => window.prompt(label, initialValue)?.trim();
+  const dialog = document.createElement('dialog');
+  dialog.className = 'editor-block-dialog';
+  dialog.innerHTML = '<form method="dialog"><header><strong id="editor-dialog-title"></strong><button value="cancel" aria-label="Kapat">×</button></header><div class="editor-dialog-fields"></div><footer><button value="cancel" type="button" data-dialog-cancel>Vazgeç</button><button value="confirm">Ekle</button></footer></form>';
+  document.body.append(dialog);
+  const fields = dialog.querySelector<HTMLElement>('.editor-dialog-fields')!;
+  const dialogTitle = dialog.querySelector<HTMLElement>('#editor-dialog-title')!;
+  const openDialog = (kind: 'media' | 'callout' | 'cta' | 'embed') => {
+    const mediaOptions = media.map((item) => `<option value="${item.id}">${item.alt_tr || item.alt_en || item.path || 'Görsel'}</option>`).join('');
+    dialogTitle.textContent = ({ media: 'Görsel ekle', callout: 'Not ekle', cta: 'Buton ekle', embed: 'Video ekle' })[kind];
+    fields.innerHTML = kind === 'media' ? `<label>Medya<select name="media_id" required>${mediaOptions}</select></label><label>Alternatif metin<input name="alt" maxlength="300" required></label><label>Açıklama<input name="caption" maxlength="300"></label>` : kind === 'callout' ? '<label>Tür<select name="tone"><option value="note">Not</option><option value="info">Bilgi</option><option value="warning">Uyarı</option></select></label><label>Başlık<input name="title" maxlength="120" required value="Not"></label>' : kind === 'cta' ? '<label>Buton metni<input name="label" maxlength="120" required></label><label>Bağlantı<input name="href" placeholder="/iletisim/ veya https://" required></label>' : '<label>YouTube veya Vimeo URL<input name="src" type="url" required placeholder="https://www.youtube.com/watch?v=..."></label><label>Başlık<input name="title" maxlength="160" required value="Video"></label>';
+    const form = dialog.querySelector('form')!;
+    form.onsubmit = (event) => { event.preventDefault(); const data = new FormData(form); if (kind === 'media') { const selected = media.find((item) => item.id === data.get('media_id')); if (!selected) return; editor.chain().focus().insertContent({ type: 'mediaImage', attrs: { media_id: selected.id, alt: String(data.get('alt') || selected.alt_tr || selected.alt_en || ''), caption: String(data.get('caption') || '') } }).run(); } if (kind === 'callout') editor.chain().focus().insertContent({ type: 'callout', attrs: { tone: String(data.get('tone')), title: String(data.get('title')) }, content: [{ type: 'paragraph' }] }).run(); if (kind === 'cta') editor.chain().focus().insertContent({ type: 'cta', attrs: { label: String(data.get('label')), href: String(data.get('href')) } }).run(); if (kind === 'embed') editor.chain().focus().insertContent({ type: 'embed', attrs: { src: normalizeEmbed(String(data.get('src'))), title: String(data.get('title')) } }).run(); dialog.close(); sync(); };
+    dialog.querySelector<HTMLButtonElement>('[data-dialog-cancel]')!.onclick = () => dialog.close();
+    dialog.showModal();
+    dialog.querySelector<HTMLElement>('input,select')?.focus();
+  };
+  const normalizeEmbed = (value: string) => { try { const url = new URL(value); if (url.hostname.includes('youtu')) { const id = url.searchParams.get('v') || url.pathname.split('/').filter(Boolean).pop(); return id ? `https://www.youtube-nocookie.com/embed/${id}` : value; } if (url.hostname === 'vimeo.com') { const id = url.pathname.split('/').filter(Boolean).pop(); return id ? `https://player.vimeo.com/video/${id}` : value; } return value; } catch { return value; } };
   document.querySelectorAll<HTMLButtonElement>('[data-editor]').forEach((button) => {
     button.addEventListener('click', () => {
       switch (button.dataset.editor) {
@@ -45,22 +61,10 @@ if (element && output) {
         case 'quote': editor.chain().focus().toggleBlockquote().run(); break;
         case 'code': editor.chain().focus().toggleCodeBlock().run(); break;
         case 'divider': editor.chain().focus().setHorizontalRule().run(); break;
-        case 'media': {
-          if (!media.length) { window.alert('Önce Medya bölümünden bir görsel yükleyin.'); break; }
-          const options = media.map((item, index) => `${index + 1}. ${item.alt_tr || item.alt_en || item.path || 'Görsel'}`).join('\n');
-          const selected = media[Number(promptText(`Görsel seçin:\n${options}`, '1')) - 1];
-          if (!selected) break;
-          const alt = promptText('Alternatif metin', selected.alt_tr || selected.alt_en || '') ?? '';
-          const caption = promptText('Açıklama (isteğe bağlı)', '') ?? '';
-          editor.chain().focus().insertContent({ type: 'mediaImage', attrs: { media_id: selected.id, alt, caption } }).run(); break;
-        }
-        case 'callout': {
-          const title = promptText('Not başlığı', 'Not'); const tone = promptText('Ton: note, info veya warning', 'note');
-          if (!title || !['note', 'info', 'warning'].includes(tone ?? '')) break;
-          editor.chain().focus().insertContent({ type: 'callout', attrs: { title, tone }, content: [{ type: 'paragraph' }] }).run(); break;
-        }
-        case 'cta': { const label = promptText('Buton metni'); const href = promptText('Güvenli bağlantı (/... veya https://...)'); if (label && href) editor.chain().focus().insertContent({ type: 'cta', attrs: { label, href } }).run(); break; }
-        case 'embed': { const src = promptText('YouTube veya Vimeo gömme URL’si'); const title = promptText('Gömülü içeriğin başlığı', 'Gömülü içerik') || 'Gömülü içerik'; if (src) editor.chain().focus().insertContent({ type: 'embed', attrs: { src, title } }).run(); break; }
+        case 'media': if (media.length) openDialog('media'); else window.alert('Önce Medya bölümünden bir görsel yükleyin.'); break;
+        case 'callout': openDialog('callout'); break;
+        case 'cta': openDialog('cta'); break;
+        case 'embed': openDialog('embed'); break;
         case 'table': editor.chain().focus().insertContent({ type: 'table', content: [{ type: 'tableRow', content: [{ type: 'tableHeader', content: [{ type: 'paragraph' }] }, { type: 'tableHeader', content: [{ type: 'paragraph' }] }] }, { type: 'tableRow', content: [{ type: 'tableCell', content: [{ type: 'paragraph' }] }, { type: 'tableCell', content: [{ type: 'paragraph' }] }] }] }).run(); break;
       }
       sync();
