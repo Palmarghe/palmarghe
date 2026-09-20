@@ -25,6 +25,7 @@ describe('controlled blocks', () => {
     expect(doc && renderDocument(doc)).toContain('<table>');
     expect(parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'cta', attrs: { href: 'javascript:alert(1)', label: 'X' } }] }))).toBeNull();
     expect(parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'embed', attrs: { src: 'https://www.youtube.com/embed/example', title: 'Video' } }] }))).not.toBeNull();
+    expect(parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'embed', attrs: { src: 'https://www.youtube.com/watch?v=example', title: 'Video' } }] }))).toBeNull();
     expect(parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'embed', attrs: { src: 'https://untrusted.example/embed', title: 'X' } }] }))).toBeNull();
     expect(parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'mediaImage', attrs: { media_id: id, alt: 'A', caption: 7 } }] }))).toBeNull();
   });

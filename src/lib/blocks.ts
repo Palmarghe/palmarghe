@@ -6,11 +6,13 @@ const blockTypes = new Set(['paragraph','heading','blockquote','bulletList','ord
 const markTypes = new Set(['bold','italic','strike','code','link']);
 const escapeHtml = (text: string) => text.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const embedHosts = new Set(['www.youtube.com', 'www.youtube-nocookie.com', 'player.vimeo.com']);
 export function safeEmbedUrl(value: string): boolean {
   try {
     const url = new URL(value);
-    return url.protocol === 'https:' && embedHosts.has(url.hostname.toLowerCase());
+    if (url.protocol !== 'https:') return false;
+    const host = url.hostname.toLowerCase();
+    return (['www.youtube.com', 'www.youtube-nocookie.com'].includes(host) && url.pathname.startsWith('/embed/'))
+      || (host === 'player.vimeo.com' && url.pathname.startsWith('/video/'));
   } catch { return false; }
 }
 function validNode(node: unknown, depth = 0): node is Block {
