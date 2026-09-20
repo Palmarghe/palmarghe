@@ -1,3 +1,4 @@
+export {};
 const trigger = document.querySelector<HTMLButtonElement>('[data-search-trigger]');
 const dialog = document.querySelector<HTMLDialogElement>('#search-overlay');
 if (trigger && dialog) {
