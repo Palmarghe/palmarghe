@@ -1,4 +1,15 @@
-# Görsel ve ürün denetimi — 17 Eylül 2026
+# Görsel ve ürün denetimi — 20 Eylül 2026
+
+## FAZ 2 yayın doğrulaması
+
+20 Eylül'de canlı `https://palmarghe.com/` Chrome'da tekrar incelendi. Yeni hero görseli, kategori kartları, mobil menü ve tipografik hiyerarşi doğru yüklendi. Worker sürümü `2be3e57e-e694-4298-a13c-914b9c5422e3` üzerindeki production Playwright paketi 10/10 geçti; yerel regresyon 28/28 geçti. Önceki tablodaki FAZ 1 production role matrix ve atomik transaction maddeleri tarihsel bulgudur; ikisi de 19 Eylül production doğrulamasıyla kapanmıştır.
+
+| Öncelik | Rota / alan | FAZ 2 düzeltmesi | Doğrulama |
+| --- | --- | --- | --- |
+| P1 | `/` masaüstü/mobil | Paket görseliyle güçlü, ölçülü portal hero; TR/EN eyebrow; dinamik konu başlıkları ve yumuşak gezinme geçişleri. | Canlı Chrome, altı genişlik E2E, axe. |
+| P1 | Tüm public rotalar | Self-hosted Manrope, aktif menü durumu, erişilebilir arama simgesi, paylaşım için OG/Twitter fallback görseli. | Yerel typecheck, metadata E2E, production smoke. |
+| P1 | İçerik ayrıntısı ve Studio | Galeri seçimi/sırası, iki dilde alt metin ve başlık, FM mod bilgisi, güvenli harici bağlantılar, slug üretimi, filtreler ve UUID'siz çeviri eşleştirme. | Yerel Studio E2E 28/28. Production DB migration'ı bekliyor. |
+| P1 | Supabase | Yalnız yayımlanmış galerilerin medya erişimi ve iki staff RPC için migration hazır. | SQL uygulanması, Auth/RLS/Storage doğrulaması oturum geri geldiğinde yapılacak. |
 
 ## Yöntem
 
