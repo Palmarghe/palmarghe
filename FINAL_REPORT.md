@@ -10,7 +10,7 @@ Commit `e41c4b1` is on `main` and Cloudflare Worker version `2be3e57e-e694-4298-
 
 Local `npm run verify` passed with 13 unit tests and a successful Cloudflare build; local Playwright passed 28/28; `npm audit --omit=dev --audit-level=high` found no high-severity vulnerability. Production Playwright passed 10/10 after the Worker deploy, and a live Chrome inspection confirmed the new hero, category links and mobile presentation.
 
-Three reviewed migrations remain queued in the repository: gallery-referenced media read policy, staff-only translation pairing RPCs, and persistence of canonical/social metadata through the transactional content RPC. They were not applied because the available Supabase dashboard session is signed out and the CLI has no access token. They require a restored authenticated Supabase session, after which their SQL result and real Studio flows must be verified before the FAZ 2 database scope can be marked complete.
+Migrations `202609190011`–`202609190013` were applied to production on 20 September after a Chrome Supabase session was restored. A direct catalog query returned both gallery policies (`public.media:media_public_read`, `storage.objects:media_storage_public_select`) and all three staff functions (`save_content_with_relations`, `set_content_translation_pair`, `unlink_content_translation`). The live Studio content screen rendered the new canonical/social disclosure, content filters, localized fields and UUID-free translation workflow for the authenticated admin. The migration policy allows anonymous reads only for a cover or gallery asset referenced by an already-live item.
 
 ## Live services
 

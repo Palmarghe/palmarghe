@@ -9,7 +9,7 @@
 | P1 | `/` masaüstü/mobil | Paket görseliyle güçlü, ölçülü portal hero; TR/EN eyebrow; dinamik konu başlıkları ve yumuşak gezinme geçişleri. | Canlı Chrome, altı genişlik E2E, axe. |
 | P1 | Tüm public rotalar | Self-hosted Manrope, aktif menü durumu, erişilebilir arama simgesi, paylaşım için OG/Twitter fallback görseli. | Yerel typecheck, metadata E2E, production smoke. |
 | P1 | İçerik ayrıntısı ve Studio | Galeri seçimi/sırası, iki dilde alt metin ve başlık, FM mod bilgisi, güvenli harici bağlantılar, slug üretimi, filtreler ve UUID'siz çeviri eşleştirme. | Yerel Studio E2E 28/28. Production DB migration'ı bekliyor. |
-| P1 | Supabase | Yalnız yayımlanmış galerilerin medya erişimi ve iki staff RPC için migration hazır. | SQL uygulanması, Auth/RLS/Storage doğrulaması oturum geri geldiğinde yapılacak. |
+| P1 | Supabase | Yalnız yayımlanmış galerilerin medya erişimi, staff çeviri eşleme RPC'leri ve canonical/OG metadata RPC desteği production'a uygulandı. | Chrome SQL katalog sorgusu beş varlığı doğruladı; canlı Studio admin içerik ekranı doğrulandı. |
 
 ## Yöntem
 

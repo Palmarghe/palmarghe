@@ -5,7 +5,7 @@ create or replace function public.save_content_with_relations(
   p_payload jsonb,
   p_category_id uuid,
   p_tag_ids uuid[]
-) returns uuid language plpgsql security invoker set search_path = '' as $$
+) returns uuid language plpgsql security invoker set search_path = '' as $function$
 declare
   v_input public.content_items;
   v_id uuid;
@@ -56,7 +56,7 @@ begin
   insert into public.content_tags(content_id,tag_id)
     select v_id, unnest(coalesce(p_tag_ids,'{}'::uuid[]));
   return v_id;
-end $$;
+end $function$;
 
 revoke all on function public.save_content_with_relations(uuid,jsonb,uuid,uuid[]) from public, anon;
 grant execute on function public.save_content_with_relations(uuid,jsonb,uuid,uuid[]) to authenticated;
