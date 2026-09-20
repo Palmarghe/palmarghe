@@ -1,7 +1,7 @@
 # Güvenlik durumu
 
 - Supabase RLS açık, yayın durumu ve rol politikaları migration'da.
-- Studio sunucuda kullanıcı ve rol kontrolü yapar.
+- Studio sunucuda kullanıcı ve rol kontrolü yapar. İçerik blokları yalnız izinli şema türlerini işler; medya UUID'si, iç bağlantı/HTTPS URL, gömme başlığı ve tablo yapısı doğrulanır. Gömülü çerçeveler sandbox ve sıkı referrer policy ile render edilir.
 - Yazma API'leri Origin kontrolü yapar; input Zod ile doğrulanır.
 - İletişim formu Turnstile doğrulaması olmadan kayıt yapmaz. Production contact kayıtları `submit_contact` RPC ile 15 dakikada 5 istek sınırına tabidir.
 - Yanıt başlıklarında CSP, frame yasağı, nosniff, Referrer ve Permissions politikaları var.
