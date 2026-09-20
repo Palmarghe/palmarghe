@@ -53,7 +53,10 @@ test('critical live routes emit no browser errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(`pageerror: ${error.message}`));
   page.on('console', (message) => {
-    if (message.type() === 'error') errors.push(`console: ${message.text()}`);
+    const source = message.location().url;
+    // Cloudflare Turnstile emits this diagnostic from its own challenge frame.
+    const turnstileDiagnostic = source.startsWith('https://challenges.cloudflare.com/cdn-cgi/challenge-platform/') && message.text() === '%c%d font-size:0;color:transparent NaN';
+    if (message.type() === 'error' && !turnstileDiagnostic) errors.push(`console: ${message.text()}`);
   });
   for (const route of ['/', '/ai/', '/about/', '/contact/', '/account/']) {
     await page.goto(route, { waitUntil: 'domcontentloaded' });

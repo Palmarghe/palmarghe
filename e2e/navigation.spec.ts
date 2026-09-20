@@ -27,6 +27,22 @@ test('empty publication presents areas without placeholder work', async ({ page 
   await expect(page.getByRole('link', { name: /Çalışmaları keşfet/ })).toHaveAttribute('href','/archive/');
 });
 
+test('social metadata and account disclosure are localized', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content','https://palmarghe.com/visuals/og-default.webp');
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content','summary_large_image');
+  await expect(page.getByText('PALMARGHE — BAĞIMSIZ DİJİTAL YAYIN')).toBeVisible();
+  await page.goto('/account/');
+  await expect(page.getByRole('heading', { name: 'Giriş' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Kayıt ol' })).toBeHidden();
+  await page.getByText('Hesap oluştur', { exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Kayıt ol' })).toBeVisible();
+  const password = page.locator('form').filter({ has: page.locator('input[value="login"]') }).locator('input[name="password"]');
+  await expect(password).toHaveAttribute('type','password');
+  await page.getByRole('button', { name: 'Şifreyi göster' }).first().click();
+  await expect(password).toHaveAttribute('type','text');
+});
+
 test('six public widths and Studio dashboard have no horizontal overflow', async ({ page }) => {
   for (const width of [360,390,768,1024,1440,1920]) {
     await page.setViewportSize({ width, height: 900 });

@@ -1,4 +1,11 @@
 export type Locale = 'tr' | 'en';
+export const contentTypeLabels = {
+  tr: { article: 'Yazı', project: 'Proje', fm_mod: 'FM Mod', gallery: 'Galeri', lab_entry: 'Lab' },
+  en: { article: 'Article', project: 'Project', fm_mod: 'FM Mod', gallery: 'Gallery', lab_entry: 'Lab' },
+} as const;
+export function contentTypeLabel(locale: Locale, type: keyof typeof contentTypeLabels.tr): string {
+  return contentTypeLabels[locale][type];
+}
 export const nav = [
   { slug: 'ai', tr: 'AI', en: 'AI' },
   { slug: 'gaming', tr: 'Gaming', en: 'Gaming' },

@@ -2,23 +2,28 @@
 import { copy, nav, pathFor, safeExternalUrl, type Locale } from '../lib/site';
 import { supabase } from '../lib/supabase';
 import '../styles/global.css';
-interface Props { locale: Locale; title?: string; description?: string; alternate?: string; noindex?: boolean; structuredData?: Record<string, unknown>; }
-const { locale, title, description, alternate, noindex = false, structuredData } = Astro.props;
+interface Props { locale: Locale; title?: string; description?: string; alternate?: string; noindex?: boolean; structuredData?: Record<string, unknown>; ogImage?: string; ogAlt?: string; ogType?: 'article' | 'website'; canonicalOverride?: string; }
+const { locale, title, description, alternate, noindex = false, structuredData, ogImage, ogAlt, ogType = 'website', canonicalOverride } = Astro.props;
 const t = copy[locale];
 const siteTitle = title ? `${title} — Palmarghe` : 'Palmarghe';
-const canonical = new URL(Astro.url.pathname, 'https://palmarghe.com').href;
+const canonical = canonicalOverride && safeExternalUrl(canonicalOverride) ? canonicalOverride : new URL(Astro.url.pathname, 'https://palmarghe.com').href;
+const socialImage = ogImage && (safeExternalUrl(ogImage) || ogImage.startsWith('/') && !ogImage.startsWith('//')) ? new URL(ogImage, 'https://palmarghe.com').href : 'https://palmarghe.com/visuals/og-default.webp';
+const activePath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => { const path = new URL(href, 'https://palmarghe.com').pathname.replace(/\/$/, '') || '/'; return activePath === path || (path !== '/' && activePath.startsWith(`${path}/`)); };
 const alternatePath = alternate;
 const db = supabase(Astro.cookies, Astro.request);
-const { data: dbCategories } = db ? await db.from('categories').select('slug,name_tr,name_en').is('parent_id',null).eq('active',true).order('sort_order').limit(8) : { data: null };
+const [{ data: dbCategories }, { data: dbNav }, { data: appearanceRow }, { data: socialRow }] = db ? await Promise.all([
+  db.from('categories').select('slug,name_tr,name_en').is('parent_id',null).eq('active',true).order('sort_order').limit(8),
+  db.from('navigation').select('label,href').eq('locale',locale).eq('active',true).order('sort_order').limit(10),
+  db.from('site_settings').select('value').eq('key','appearance').single(),
+  db.from('site_settings').select('value').eq('key','social').single(),
+]) : [{ data: null }, { data: null }, { data: null }, { data: null }];
 const categories: { slug: string; name_tr: string; name_en: string }[] = dbCategories ?? [];
 const publicNav = categories.length ? categories.map((entry) => ({ slug: entry.slug, tr: entry.name_tr, en: entry.name_en })) : nav.slice(0,4);
 const mainNav = [...publicNav, nav[4]];
-const { data: dbNav } = db ? await db.from('navigation').select('label,href').eq('locale',locale).eq('active',true).order('sort_order').limit(10) : { data: null };
 const customNav: { label: string; href: string }[] = dbNav ?? [];
-const { data: appearanceRow } = db ? await db.from('site_settings').select('value').eq('key','appearance').single() : { data: null };
 const accent = ({ violet: '#8b5cf6', blue: '#60a5fa', amber: '#fbbf24' } as Record<string,string>)[appearanceRow?.value?.accent] ?? '#8b5cf6';
 const radius = appearanceRow?.value?.radius === 'subtle' ? '4px' : '0px';
-const { data: socialRow } = db ? await db.from('site_settings').select('value').eq('key','social').single() : { data: null };
 const socialLinks = (['github','youtube','instagram','x'] as const).map((name) => ({ name, url: String(socialRow?.value?.[name] ?? '') })).filter(({url}) => safeExternalUrl(url));
 ---
 <!doctype html>
@@ -34,13 +39,23 @@ const socialLinks = (['github','youtube','instagram','x'] as const).map((name) =
     <link rel="alternate" hreflang={locale} href={canonical} />
     {alternatePath && <link rel="alternate" hreflang={locale === 'tr' ? 'en' : 'tr'} href={new URL(alternatePath, 'https://palmarghe.com').href} />}
     {alternatePath && <link rel="alternate" hreflang="x-default" href={new URL(locale === 'tr' ? Astro.url.pathname : alternatePath, 'https://palmarghe.com').href} />}
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="Palmarghe" />
     <meta property="og:title" content={siteTitle} />
     <meta property="og:description" content={description ?? t.descriptor} />
     <meta property="og:url" content={canonical} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:alt" content={ogAlt ?? title ?? 'Palmarghe'} />
+    {socialImage.endsWith('/og-default.webp') && <><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/></>}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={siteTitle} />
+    <meta name="twitter:description" content={description ?? t.descriptor} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content={ogAlt ?? title ?? 'Palmarghe'} />
     {structuredData && <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData).replace(/</g,'\\u003c')}></script>}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preload" href="/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin />
+    {locale === 'tr' && <link rel="preload" href="/fonts/manrope-latin-ext.woff2" as="font" type="font/woff2" crossorigin />}
   </head>
   <body style={`--accent:${accent};--radius:${radius}`}>
     <a class="skip" href="#main">{locale === 'tr' ? 'İçeriğe geç' : 'Skip to content'}</a>
@@ -50,17 +65,18 @@ const socialLinks = (['github','youtube','instagram','x'] as const).map((name) =
         <span>PALMARGHE</span>
       </a>
       <nav class="desktop-nav" aria-label={locale === 'tr' ? 'Ana menü' : 'Main menu'}>
-        {customNav.length ? customNav.map((item) => <a href={item.href} rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}>{item.label}</a>) : mainNav.map((item) => <a href={pathFor(locale, item.slug)}>{item[locale]}</a>)}
+        {customNav.length ? customNav.map((item) => <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined} rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}>{item.label}</a>) : mainNav.map((item) => <a href={pathFor(locale, item.slug)} aria-current={isActive(pathFor(locale,item.slug)) ? 'page' : undefined}>{item[locale]}</a>)}
       </nav>
       <div class="head-actions">
-        <a href={pathFor(locale, 'search')} aria-label={t.search} class="search-icon">⌕</a>
+        <a href={pathFor(locale, 'search')} aria-label={t.search} class="search-icon"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></a>
         <a href={alternatePath ?? pathFor(locale === 'tr' ? 'en' : 'tr')} lang={locale === 'tr' ? 'en' : 'tr'} aria-label={locale === 'tr' ? 'Switch to English' : 'Türkçeye geç'}>{locale === 'tr' ? 'EN' : 'TR'}</a>
         <a href={pathFor(locale, 'account')}>{t.account}</a>
       </div>
-      <div class="mobile-menu"><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label={locale === 'tr' ? 'Menüyü aç' : 'Open menu'}><span></span><span></span><span></span></button><nav id="mobile-nav" aria-label={locale === 'tr' ? 'Mobil menü' : 'Mobile menu'} inert>{customNav.length ? customNav.map((item) => <a href={item.href} rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}>{item.label}</a>) : mainNav.map((item) => <a href={pathFor(locale, item.slug)}>{item[locale]}</a>)}<a href={pathFor(locale,'search')}>{t.search}</a><a href={alternatePath ?? pathFor(locale === 'tr' ? 'en' : 'tr')} lang={locale === 'tr' ? 'en' : 'tr'} aria-label={locale === 'tr' ? 'Switch to English' : 'Türkçeye geç'}>{locale === 'tr' ? 'EN' : 'TR'}</a><a href={pathFor(locale,'account')}>{t.account}</a></nav></div>
+      <div class="mobile-menu"><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label={locale === 'tr' ? 'Menüyü aç' : 'Open menu'}><span></span><span></span><span></span></button><nav id="mobile-nav" aria-label={locale === 'tr' ? 'Mobil menü' : 'Mobile menu'} inert>{customNav.length ? customNav.map((item) => <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined} rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}>{item.label}</a>) : mainNav.map((item) => <a href={pathFor(locale, item.slug)} aria-current={isActive(pathFor(locale,item.slug)) ? 'page' : undefined}>{item[locale]}</a>)}<a href={pathFor(locale,'search')}>{t.search}</a><a href={alternatePath ?? pathFor(locale === 'tr' ? 'en' : 'tr')} lang={locale === 'tr' ? 'en' : 'tr'} aria-label={locale === 'tr' ? 'Switch to English' : 'Türkçeye geç'}>{locale === 'tr' ? 'EN' : 'TR'}</a><a href={pathFor(locale,'account')}>{t.account}</a></nav></div>
     </header>
     <main id="main"><slot /></main>
     <footer class="site-footer wrap"><div class="footer-top"><span>PALMARGHE</span><span>{t.descriptor}</span></div><div class="footer-bottom"><span>© {new Date().getFullYear()} Palmarghe</span><nav aria-label="Footer"><a href={pathFor(locale, 'about')}>{t.about}</a><a href={pathFor(locale, 'contact')}>{t.contact}</a><a href={pathFor(locale, 'privacy')}>{t.privacy}</a>{socialLinks.map(({name,url}) => <a href={url} target="_blank" rel="noopener noreferrer">{name}</a>)}</nav></div></footer>
   <script is:inline src="/scripts/mobile-menu.js" defer></script>
+  {Astro.url.pathname.includes('/account/') && <script is:inline src="/scripts/password-visibility.js" defer></script>}
   </body>
 </html>

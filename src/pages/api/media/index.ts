@@ -17,12 +17,16 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const bytes = new Uint8Array(await file.arrayBuffer());
   const mime = detectImage(bytes);
   if (!mime || file.type !== mime) return errorResponse('Invalid image type', 400);
+  const alt = String(form.get('alt_tr') ?? '').trim().slice(0,200);
+  const altEn = String(form.get('alt_en') ?? '').trim().slice(0,200);
+  const captionTr = String(form.get('caption_tr') ?? '').trim().slice(0,500);
+  const captionEn = String(form.get('caption_en') ?? '').trim().slice(0,500);
+  if (!alt) return errorResponse('Turkish alt text required',400);
   const extension = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp' }[mime];
   const path = `${crypto.randomUUID()}.${extension}`;
   if (localMode) localStoreMedia(path, bytes);
   else { const { error } = await db.storage.from('media').upload(path, bytes, { contentType: mime, upsert: false }); if (error) return errorResponse('Upload failed', 503); }
-  const alt = String(form.get('alt_tr') ?? '').trim().slice(0,200);
-  const { error } = await db.from('media').insert({ path, mime, bytes: bytes.length, alt_tr: alt, uploaded_by: user.id });
+  const { error } = await db.from('media').insert({ path, mime, bytes: bytes.length, alt_tr: alt, alt_en: altEn || null, caption_tr: captionTr || null, caption_en: captionEn || null, uploaded_by: user.id });
   if (error) { if (!localMode) await db.storage.from('media').remove([path]); return errorResponse('Metadata save failed', 503); }
   return redirectTo(request, '/studio/?section=media');
 };

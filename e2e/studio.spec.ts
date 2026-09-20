@@ -4,7 +4,6 @@ test.beforeEach(async ({ context }, testInfo) => {
   const suffix = [...testInfo.title].reduce((sum,character) => sum + character.charCodeAt(0),0) % 240 + 1;
   await context.setExtraHTTPHeaders({ 'CF-Connecting-IP': `198.51.100.${suffix}` });
 });
-
 test('public language and metadata', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Dijital işler');
@@ -17,7 +16,7 @@ test('member is denied Studio', async ({ page }) => {
   await page.goto('/account/');
   await page.locator('form').filter({ has: page.locator('input[value="login"]') }).getByRole('textbox', { name: 'Email' }).fill('member@example.test');
   await page.locator('form').filter({ has: page.locator('input[value="login"]') }).locator('input[name="password"]').fill('LocalTest123!');
-  await page.locator('form').filter({ has: page.locator('input[value="login"]') }).getByRole('button').click();
+  await page.locator('form').filter({ has: page.locator('input[value="login"]') }).getByRole('button', { name: 'Giriş yap' }).click();
   await page.goto('/studio/');
   await expect(page.getByRole('heading', { name: 'Erişim yok' })).toBeVisible();
   const denied = await page.request.post('/api/studio/', { headers: { Origin: 'http://127.0.0.1:4322' }, form: { entity: 'category', slug: 'forbidden', name_tr: 'X', name_en: 'X' } });
@@ -58,7 +57,7 @@ test('admin creates a category and publishes content', async ({ page }) => {
   await page.locator('input[name="title"]').fill('Yerel Test Yazısı');
   await page.locator('input[name="slug"]').fill('test-category/yerel-test-yazisi');
   await page.locator('select[name="category_id"]').selectOption({ label: 'Test Kategorisi' });
-  await page.locator('select[name="status"]').selectOption('published');
+  await page.locator('.content-editor-form select[name="status"]').selectOption('published');
   await page.locator('#block-editor .tiptap').fill('İçerik doğrulandı.');
   await page.getByRole('button', { name: 'Kaydet' }).click();
   await expect(page.getByText('Yerel Test Yazısı')).toBeVisible();
@@ -103,6 +102,66 @@ test('admin manages tags, appearance, navigation and media', async ({ page }) =>
   await page.locator('.entry-card summary').click();
   await page.locator('.entry-card').getByRole('button', { name: 'Silmeyi onayla' }).click();
   expect((await page.request.get(`/api/media/${mediaId}/`)).status()).toBe(404);
+});
+
+test('gallery media is private until publication and retains its caption', async ({ page }) => {
+  await page.goto('/studio/');
+  await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
+  await page.locator('input[name="password"]').fill('LocalTest123!');
+  await page.getByRole('button', { name: 'Giriş' }).click();
+  await page.goto('/studio/?section=media');
+  const image = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/lXcAAAAASUVORK5CYII=', 'base64');
+  await page.locator('input[name="file"]').setInputFiles({ name: 'gallery.png', mimeType: 'image/png', buffer: image });
+  await page.locator('form[action="/api/media/"] input[name="alt_tr"]').fill('Galeri görseli');
+  await page.locator('form[action="/api/media/"] input[name="alt_en"]').fill('Gallery image');
+  await page.locator('form[action="/api/media/"] input[name="caption_tr"]').fill('Test galerisi açıklaması');
+  await page.getByRole('button', { name: 'Yükle' }).click();
+  const mediaId = await page.locator('.entry-card input[name="id"]').first().inputValue();
+  await page.goto('/studio/?section=content');
+  await page.locator('input[name="title"]').fill('Türkçe Galeri Testi');
+  await expect(page.locator('input[name="slug"]')).toHaveValue('turkce-galeri-testi');
+  await page.locator('.content-editor-form select[name="type"]').selectOption('gallery');
+  await page.locator(`input[name="gallery_media_ids"][value="${mediaId}"]`).check();
+  await page.locator('#block-editor .tiptap').fill('Galeri metni.');
+  await page.getByRole('button', { name: 'Kaydet' }).click();
+  await page.context().clearCookies();
+  expect((await page.request.get(`/api/media/${mediaId}/`)).status()).toBe(404);
+  await page.goto('/studio/');
+  await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
+  await page.locator('input[name="password"]').fill('LocalTest123!');
+  await page.getByRole('button', { name: 'Giriş' }).click();
+  await page.goto('/studio/?section=content');
+  await page.getByRole('row').filter({ hasText: 'Türkçe Galeri Testi' }).getByRole('link', { name: 'Düzenle' }).click();
+  await page.locator('.content-editor-form select[name="status"]').selectOption('published');
+  await page.getByRole('button', { name: 'Kaydet' }).click();
+  await page.context().clearCookies();
+  await page.goto('/turkce-galeri-testi/');
+  await expect(page.getByRole('img', { name: 'Galeri görseli' })).toBeVisible();
+  await expect(page.getByText('Test galerisi açıklaması')).toBeVisible();
+  expect((await page.request.get(`/api/media/${mediaId}/`)).status()).toBe(200);
+});
+
+test('Studio pairs translations without exposing a UUID field', async ({ page }) => {
+  await page.goto('/studio/');
+  await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
+  await page.locator('input[name="password"]').fill('LocalTest123!');
+  await page.getByRole('button', { name: 'Giriş' }).click();
+  await page.goto('/studio/?section=content');
+  await expect(page.getByText('Çeviri grup UUID')).toHaveCount(0);
+  await page.locator('input[name="title"]').fill('Bağlantılı Türkçe');
+  await page.locator('.content-editor-form select[name="status"]').selectOption('published');
+  await page.locator('#block-editor .tiptap').fill('Türkçe içerik.');
+  await page.getByRole('button', { name: 'Kaydet' }).click();
+  await page.locator('input[name="title"]').fill('Linked English');
+  await page.locator('.content-editor-form select[name="locale"]').selectOption('en');
+  await page.locator('.content-editor-form select[name="status"]').selectOption('published');
+  await page.locator('#block-editor .tiptap').fill('English content.');
+  await page.getByRole('button', { name: 'Kaydet' }).click();
+  await page.getByRole('row').filter({ hasText: 'Bağlantılı Türkçe' }).getByRole('link', { name: 'Düzenle' }).click();
+  await page.locator('select[name="target_id"]').selectOption({ label: 'Linked English · EN' });
+  await page.getByRole('button', { name: 'Eşleştir' }).click();
+  await page.goto('/baglantili-turkce/');
+  await expect(page.locator('link[hreflang="en"]')).toHaveAttribute('href','https://palmarghe.com/en/linked-english/');
 });
 
 test('contact validation, bot check and rate limit', async ({ page }) => {
@@ -150,8 +209,8 @@ test('FM mod has dedicated fields and safe external download', async ({ page }) 
   await page.locator('input[name="title"]').fill('FM26 Test Modu');
   await page.locator('input[name="slug"]').fill('fm/fm26/test-modu');
   await page.locator('select[name="category_id"]').selectOption({ label: 'FM26' });
-  await page.locator('select[name="type"]').selectOption('fm_mod');
-  await page.locator('select[name="status"]').selectOption('published');
+  await page.locator('.content-editor-form select[name="type"]').selectOption('fm_mod');
+  await page.locator('.content-editor-form select[name="status"]').selectOption('published');
   await page.locator('input[name="compatibility"]').fill('FM26');
   await page.locator('input[name="mod_version"]').fill('1.0');
   await page.locator('textarea[name="installation"]').fill('Dosyayı oyun klasörüne kopyalayın.');
@@ -172,7 +231,7 @@ test('scheduled content stays private and staff preview is noindex', async ({ pa
   await page.goto('/studio/?section=content');
   await page.locator('input[name="title"]').fill('Gelecek Yayın');
   await page.locator('input[name="slug"]').fill('lab/gelecek-yayin');
-  await page.locator('select[name="status"]').selectOption('scheduled');
+  await page.locator('.content-editor-form select[name="status"]').selectOption('scheduled');
   const future = new Date(Date.now()+60*60*1000).toISOString().slice(0,16);
   await page.locator('input[name="publish_at"]').fill(future);
   await page.locator('#block-editor .tiptap').fill('Henüz özel.');
@@ -186,7 +245,7 @@ test('scheduled content stays private and staff preview is noindex', async ({ pa
   await page.goto(preview!);
   await expect(page.getByRole('heading', { name: 'Forbidden' })).toBeVisible();
   await page.goto('/lab/gelecek-yayin/');
-  await expect(page.getByText('Sayfa bulunamadı.')).toBeVisible();
+  await expect(page.getByRole('heading', { name: '404' })).toBeVisible();
 });
 
 test('homepage controls hide and reorder sections', async ({ page }) => {
@@ -219,7 +278,7 @@ test('social settings and translated content alternate', async ({ page }) => {
   await expect(page.getByRole('navigation', { name: 'Footer' }).getByRole('link', { name: 'github' })).toHaveAttribute('rel','noopener noreferrer');
   const group = crypto.randomUUID();
   await page.goto('/studio/?section=content');
-  await expect(page.locator('input[name="translation_group"]')).toBeVisible();
+  await expect(page.getByText('Çeviri grup UUID')).toHaveCount(0);
   for (const [locale,slug,title] of [['tr','lab/ceviri-test','Türkçe Deneme'],['en','lab/translation-test','English Test']]) {
     const response = await page.request.post('/api/studio/', { headers: { Origin: 'http://127.0.0.1:4322' }, form: { entity: 'content', title, slug, locale, translation_group: group, type: 'article', status: 'published', body: JSON.stringify({ type: 'doc', content: [{ type:'paragraph', content:[{ type:'text', text:title }] }] }) }, maxRedirects: 0 });
     expect(response.status()).toBe(303);
@@ -270,11 +329,10 @@ test('admin manages member roles without self escalation', async ({ page }) => {
   await page.locator('input[name="password"]').fill('LocalTest123!');
   await page.getByRole('button', { name: 'Giriş' }).click();
   await page.goto('/studio/?section=users');
-  const memberId = '00000000-0000-4000-8000-100000000003';
-  const row = page.getByRole('row').filter({ hasText: memberId });
-  await row.locator('select[name="role"]').selectOption('editor');
-  await row.getByRole('button', { name: 'Kaydet' }).click();
-  await expect(page.getByRole('row').filter({ hasText: memberId }).locator('select[name="role"]')).toHaveValue('editor');
+  const role = page.locator('select[name="role"]').last();
+  await role.selectOption('editor');
+  await role.locator('xpath=..').getByRole('button', { name: 'Kaydet' }).click();
+  await expect(page.locator('select[name="role"]').last()).toHaveValue('editor');
   const self = await page.request.post('/api/studio/', { headers: { Origin: 'http://127.0.0.1:4322' }, form: { entity: 'member_role', id: '00000000-0000-4000-8000-100000000001', role: 'member' } });
   expect(self.status()).toBe(400);
 });
@@ -319,7 +377,7 @@ test('featured and noindex content controls affect public output', async ({ page
   await page.goto('/studio/?section=content');
   await page.locator('input[name="title"]').fill('Öne Çıkan Gizli İndeks');
   await page.locator('input[name="slug"]').fill('lab/featured-noindex');
-  await page.locator('select[name="status"]').selectOption('published');
+  await page.locator('.content-editor-form select[name="status"]').selectOption('published');
   await page.locator('input[name="featured"]').check();
   await page.locator('input[name="indexable"][type="checkbox"]').uncheck();
   await page.locator('#block-editor .tiptap').fill('Deneme metni.');
@@ -335,3 +393,4 @@ test('featured and noindex content controls affect public output', async ({ page
   const sitemap = await (await page.request.get('/sitemap.xml')).text();
   expect(sitemap).not.toContain('/lab/featured-noindex/');
 });
+

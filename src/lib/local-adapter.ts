@@ -56,7 +56,7 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
     if (this.table === 'content_tags') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => item.id === row.content_id && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
     if (this.table === 'profiles') return Boolean(this.user && (this.user.id === row.id || this.user.role === 'admin'));
     if (this.table === 'account_deletion_requests') return Boolean(this.user && (this.user.id === row.user_id || this.user.role === 'admin'));
-    if (this.table === 'media') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => item.cover_media_id === row.id && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
+    if (this.table === 'media') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => (item.cover_media_id === row.id || item.type === 'gallery' && Array.isArray(item.type_data?.gallery_media_ids) && item.type_data.gallery_media_ids.includes(row.id)) && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
     if (this.table === 'contact_messages') return this.user?.role === 'admin' || this.user?.role === 'editor';
     if (this.table === 'audit_logs') return this.user?.role === 'admin';
     return true;
@@ -108,6 +108,24 @@ export function localSupabase(cookies: import('astro').AstroCookies) {
     from: (name: string) => { if (!isTable(name)) throw new Error('Unknown table'); return new Query(name, getUser()); },
     rpc: async (name: string, args: Row) => {
       const actor = getUser();
+      if (name === 'set_content_translation_pair') {
+        if (!actor || !['admin','editor'].includes(actor.role)) return { data: null, error: { message: 'permission denied' } };
+        const source = tables.content_items.find((item) => item.id === args.p_source_id);
+        const target = tables.content_items.find((item) => item.id === args.p_target_id);
+        if (!source || !target || source.id === target.id || source.locale === target.locale || source.translation_group && target.translation_group && source.translation_group !== target.translation_group) return { data: null, error: { message: 'invalid translation pair' } };
+        const group = source.translation_group ?? target.translation_group ?? uid();
+        if (tables.content_items.some((item) => item.translation_group === group && item.id !== source.id && item.id !== target.id)) return { data: null, error: { message: 'group already in use' } };
+        source.translation_group = group;
+        target.translation_group = group;
+        return { data: group, error: null };
+      }
+      if (name === 'unlink_content_translation') {
+        if (!actor || !['admin','editor'].includes(actor.role)) return { data: null, error: { message: 'permission denied' } };
+        const source = tables.content_items.find((item) => item.id === args.p_content_id);
+        if (!source) return { data: null, error: { message: 'content not found' } };
+        if (source.translation_group) for (const item of tables.content_items) if (item.translation_group === source.translation_group) item.translation_group = null;
+        return { data: null, error: null };
+      }
       if (name === 'save_content_with_relations') {
         if (!actor || !['admin','editor'].includes(actor.role)) return { data: null, error: { message: 'permission denied' } };
         const existing = args.p_content_id ? tables.content_items.find((item) => item.id === args.p_content_id) : null;

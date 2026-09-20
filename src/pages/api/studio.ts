@@ -5,8 +5,8 @@ import { sameOrigin, errorResponse, redirectTo } from '../../lib/security';
 import { parseDocument } from '../../lib/blocks';
 import { safeExternalUrl } from '../../lib/site';
 
-const category = z.object({ slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/), name_tr: z.string().min(1).max(100), name_en: z.string().min(1).max(100), parent_id: z.uuid().nullable(), active: z.boolean(), sort_order: z.number().int().min(0).max(1000) });
-const content = z.object({ id: z.uuid().optional(), category_id: z.uuid().nullable(), cover_media_id: z.uuid().nullable(), translation_group: z.uuid().nullable(), featured: z.boolean(), indexable: z.boolean(), title: z.string().min(1).max(200), slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*(\/[a-z0-9]+(-[a-z0-9]+)*)*$/), locale: z.enum(['tr','en']), type: z.enum(['article','project','fm_mod','gallery','lab_entry']), status: z.enum(['draft','scheduled','published','archived']), excerpt: z.string().max(500).nullable(), body: z.string().max(100000), seo_title: z.string().max(200).nullable(), seo_description: z.string().max(300).nullable() });
+const category = z.object({ slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/), name_tr: z.string().min(1).max(100), name_en: z.string().min(1).max(100), description_tr: z.string().max(500).nullable(), description_en: z.string().max(500).nullable(), seo: z.object({ title_tr: z.string().max(120), title_en: z.string().max(120), description_tr: z.string().max(300), description_en: z.string().max(300) }), parent_id: z.uuid().nullable(), active: z.boolean(), sort_order: z.number().int().min(0).max(1000) });
+const content = z.object({ id: z.uuid().optional(), category_id: z.uuid().nullable(), cover_media_id: z.uuid().nullable(), og_media_id: z.uuid().nullable(), canonical_override: z.url().max(500).nullable(), translation_group: z.uuid().nullable(), featured: z.boolean(), indexable: z.boolean(), title: z.string().min(1).max(200), slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*(\/[a-z0-9]+(-[a-z0-9]+)*)*$/), locale: z.enum(['tr','en']), type: z.enum(['article','project','fm_mod','gallery','lab_entry']), status: z.enum(['draft','scheduled','published','archived']), excerpt: z.string().max(500).nullable(), body: z.string().max(100000), seo_title: z.string().max(200).nullable(), seo_description: z.string().max(300).nullable() });
 export const POST: APIRoute = async ({ request, cookies }) => {
   if (!sameOrigin(request)) return errorResponse('Invalid origin', 403);
   const db = supabase(cookies, request);
@@ -18,6 +18,20 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const form = await request.formData();
   const entity = form.get('entity');
   const operation = String(form.get('operation') ?? 'create');
+  if (entity === 'translation') {
+    const source = z.uuid().safeParse(form.get('id'));
+    if (!source.success) return errorResponse('Invalid content',400);
+    if (operation === 'unlink') {
+      const { error } = await db.rpc('unlink_content_translation',{ p_content_id: source.data });
+      if (error) return errorResponse('Translation unlink failed',400);
+    } else if (operation === 'pair') {
+      const target = z.uuid().safeParse(form.get('target_id'));
+      if (!target.success) return errorResponse('Choose a translation',400);
+      const { error } = await db.rpc('set_content_translation_pair',{ p_source_id: source.data, p_target_id: target.data });
+      if (error) return errorResponse('Translation pairing failed',400);
+    } else return errorResponse('Invalid operation',400);
+    return redirectTo(request, `/studio/?section=content&edit=${source.data}`);
+  }
   if (entity === 'member_role') {
     if (profile?.role !== 'admin') return errorResponse('Forbidden',403);
     const id = z.uuid().safeParse(form.get('id'));
@@ -107,7 +121,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       if (error) return errorResponse('Delete blocked: item may be in use', 409);
       return redirectTo(request, `/studio/?section=${entity === 'tag' ? 'tags' : 'categories'}`);
     }
-    const parsed = category.safeParse({ slug: form.get('slug'), name_tr: form.get('name_tr'), name_en: form.get('name_en'), parent_id: form.get('parent_id') || null, active: entity === 'tag' || form.get('active') === 'on', sort_order: Number(form.get('sort_order') ?? 0) });
+    const parsed = category.safeParse({ slug: form.get('slug'), name_tr: form.get('name_tr'), name_en: form.get('name_en'), description_tr: form.get('description_tr') || null, description_en: form.get('description_en') || null, seo: { title_tr: String(form.get('seo_title_tr') ?? ''), title_en: String(form.get('seo_title_en') ?? ''), description_tr: String(form.get('seo_description_tr') ?? ''), description_en: String(form.get('seo_description_en') ?? '') }, parent_id: form.get('parent_id') || null, active: entity === 'tag' || form.get('active') === 'on', sort_order: Number(form.get('sort_order') ?? 0) });
     if (!parsed.success) return errorResponse('Invalid data');
     if (entity === 'category' && id.success && parsed.data.parent_id) {
       let parent: string | null = parsed.data.parent_id;
@@ -141,7 +155,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       if (error) return errorResponse('Delete failed',400);
       return redirectTo(request, '/studio/?section=content');
     }
-    const parsed = content.safeParse({ id: form.get('id') || undefined, category_id: form.get('category_id') || null, cover_media_id: form.get('cover_media_id') || null, translation_group: form.get('translation_group') || null, featured: form.get('featured') === 'on', indexable: !form.has('indexable') || form.getAll('indexable').includes('on'), title: form.get('title'), slug: form.get('slug'), locale: form.get('locale'), type: form.get('type'), status: form.get('status'), excerpt: form.get('excerpt') || null, body: form.get('body'), seo_title: form.get('seo_title') || null, seo_description: form.get('seo_description') || null });
+    const parsed = content.safeParse({ id: form.get('id') || undefined, category_id: form.get('category_id') || null, cover_media_id: form.get('cover_media_id') || null, og_media_id: form.get('og_media_id') || null, canonical_override: form.get('canonical_override') || null, translation_group: form.get('translation_group') || null, featured: form.get('featured') === 'on', indexable: !form.has('indexable') || form.getAll('indexable').includes('on'), title: form.get('title'), slug: form.get('slug'), locale: form.get('locale'), type: form.get('type'), status: form.get('status'), excerpt: form.get('excerpt') || null, body: form.get('body'), seo_title: form.get('seo_title') || null, seo_description: form.get('seo_description') || null });
     if (!parsed.success) return errorResponse('Invalid data');
     const tagIds = form.getAll('tag_ids').map(String);
     if (tagIds.some((tagId) => !z.uuid().safeParse(tagId).success) || tagIds.length > 20) return errorResponse('Invalid tags');
@@ -149,18 +163,29 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       const { data: known } = await db.from('tags').select('id').in('id',[...new Set(tagIds)]);
       if (known?.length !== new Set(tagIds).size) return errorResponse('Unknown tag',400);
     }
-    const { id, category_id, cover_media_id, ...values } = parsed.data;
+    const { id, category_id, cover_media_id, og_media_id, ...values } = parsed.data;
     const body = parseDocument(values.body);
     if (!body) return errorResponse('Invalid content blocks', 400);
     const field = (key: string, max = 5000) => String(form.get(key) ?? '').trim().slice(0,max);
     const urlField = (key: string) => { const value = field(key,500); return value && safeExternalUrl(value) ? value : null; };
     const unsafeUrl = ['download_url','source_url','project_url','experiment_url'].some((key) => field(key) && !urlField(key));
     if (unsafeUrl) return errorResponse('Invalid external URL',400);
+    const galleryMediaIds = [...new Set(form.getAll('gallery_media_ids').map(String))].sort((a,b) => {
+      const orderA = Number(form.get(`gallery_order_${a}`) ?? 0);
+      const orderB = Number(form.get(`gallery_order_${b}`) ?? 0);
+      return (Number.isFinite(orderA) ? orderA : 0) - (Number.isFinite(orderB) ? orderB : 0);
+    });
+    if (galleryMediaIds.length > 24 || galleryMediaIds.some((mediaId) => !z.uuid().safeParse(mediaId).success)) return errorResponse('Invalid gallery media',400);
+    if (values.type === 'gallery' && galleryMediaIds.length) {
+      const { data: known } = await db.from('media').select('id').in('id',galleryMediaIds);
+      if (known?.length !== galleryMediaIds.length) return errorResponse('Unknown gallery media',400);
+    }
     const type_data = values.type === 'fm_mod' ? { compatibility: field('compatibility',100), mod_version: field('mod_version',50), changelog: field('changelog'), installation: field('installation'), download_url: urlField('download_url'), source_url: urlField('source_url'), size_label: field('size_label',50), compatibility_notes: field('compatibility_notes') }
       : values.type === 'project' ? { project_url: urlField('project_url') }
       : values.type === 'lab_entry' ? { experiment_note: field('experiment_note'), experiment_url: urlField('experiment_url') }
+      : values.type === 'gallery' ? { gallery_media_ids: galleryMediaIds }
       : {};
-    if (cover_media_id) { const { data: cover } = await db.from('media').select('id').eq('id',cover_media_id).single(); if (!cover) return errorResponse('Invalid cover',400); }
+    if (cover_media_id || og_media_id) { const mediaIds = [cover_media_id, og_media_id].filter((mediaId): mediaId is string => Boolean(mediaId)); const { data: knownMedia } = await db.from('media').select('id').in('id', mediaIds); if (knownMedia?.length !== new Set(mediaIds).size) return errorResponse('Invalid media',400); }
     const publishInput = String(form.get('publish_at') ?? '');
     let scheduledAt: string | null = null;
     if (values.status === 'scheduled') {
@@ -171,11 +196,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
     const previous = id ? (await db.from('content_items').select('published_at').eq('id',id).single()).data : null;
     const published_at = values.status === 'published' ? previous?.published_at ?? new Date().toISOString() : values.status === 'scheduled' ? scheduledAt : values.status === 'archived' ? previous?.published_at ?? null : null;
-    const payload = { ...values, body, type_data, cover_media_id, cover_url: cover_media_id ? `/api/media/${cover_media_id}/` : null, published_at, updated_at: new Date().toISOString() };
+    if (values.canonical_override && !safeExternalUrl(values.canonical_override)) return errorResponse('Invalid canonical URL',400);
+    const payload = { ...values, body, type_data, cover_media_id, og_media_id, cover_url: cover_media_id ? `/api/media/${cover_media_id}/` : null, published_at, updated_at: new Date().toISOString() };
     const { error } = await db.rpc('save_content_with_relations', {
       p_content_id: id ?? null, p_payload: payload, p_category_id: category_id, p_tag_ids: [...new Set(tagIds)],
     });
-    if (error) return errorResponse('Save failed', 400);
+    if (error) return errorResponse(error.code === '23505' ? 'Bu dilde bu URL yolu zaten kullanılıyor.' : 'İçerik kaydedilemedi.', 400);
     return redirectTo(request, '/studio/?section=content');
   }
   return errorResponse('Invalid entity');
