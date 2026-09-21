@@ -161,7 +161,7 @@ if (studioEditorForm) {
     'Video/Prototip URL': 'Video veya prototip bağlantısı',
   };
   studioEditorForm.querySelectorAll<HTMLLabelElement>('label').forEach((label) => {
-    const textNode = [...label.childNodes].find((node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim());
+    const textNode = [...label.childNodes].find((node) => node.nodeType === 3 && node.textContent?.trim());
     if (!textNode) return;
     const replacement = simpleLabels[textNode.textContent?.trim() ?? ''];
     if (replacement) textNode.textContent = `${replacement} `;
