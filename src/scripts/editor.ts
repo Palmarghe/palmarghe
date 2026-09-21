@@ -28,7 +28,7 @@ if (element && output) {
   const statusBar = document.createElement('p');
   statusBar.className = 'editor-status'; statusBar.setAttribute('aria-live', 'polite');
   element.parentElement?.append(statusBar);
-  const updateStatus = (state = 'Kaydedildi') => { const words = editor?.getText().trim().split(/\s+/).filter(Boolean).length ?? 0; const minutes = Math.max(1, Math.ceil(words / 200)); statusBar.textContent = `${state} · ${words} kelime · yaklaşık ${minutes} dk okuma`; };
+  const updateStatus = (state = 'Kaydedildi') => { const words = editor?.getText().trim().split(/\s+/).filter(Boolean).length ?? 0; const minutes = Math.max(1, Math.ceil(words / 200)); statusBar.textContent = `${state} · ${words} kelime · yaklaşık ${minutes} dk okuma`; document.querySelectorAll<HTMLElement>('[data-editor-save-state]').forEach((element) => { element.textContent = state; }); };
   const editor = new Editor({
     element,
     extensions: [StarterKit.configure({ heading: { levels: [2, 3] } }), Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true, protocols: ['http', 'https', 'mailto'] }), mediaImage, callout, cta, embed, table, tableRow, tableHeader, tableCell],
