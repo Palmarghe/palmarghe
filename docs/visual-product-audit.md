@@ -1,8 +1,8 @@
-# Görsel ve ürün denetimi — 20 Eylül 2026
+# Görsel ve ürün denetimi — 21 Eylül 2026
 
 ## FAZ 2 yayın doğrulaması
 
-20 Eylül'de canlı `https://palmarghe.com/` Chrome'da tekrar incelendi. Yeni hero görseli, kategori kartları, mobil menü ve tipografik hiyerarşi doğru yüklendi. Worker sürümü `2be3e57e-e694-4298-a13c-914b9c5422e3` üzerindeki production Playwright paketi 10/10 geçti; yerel regresyon 28/28 geçti. Önceki tablodaki FAZ 1 production role matrix ve atomik transaction maddeleri tarihsel bulgudur; ikisi de 19 Eylül production doğrulamasıyla kapanmıştır.
+20 Eylül'de canlı `https://palmarghe.com/` Chrome'da tekrar incelendi. Yeni hero görseli, kategori kartları, mobil menü ve tipografik hiyerarşi doğru yüklendi. Worker sürümü `02653ebf-1315-4569-8f95-41b9b9014a27` üzerindeki production Playwright paketi 10/10 geçti; yerel regresyon 28/28 geçti. Önceki tablodaki FAZ 1 production role matrix ve atomik transaction maddeleri tarihsel bulgudur; ikisi de 19 Eylül production doğrulamasıyla kapanmıştır.
 
 | Öncelik | Rota / alan | FAZ 2 düzeltmesi | Doğrulama |
 | --- | --- | --- | --- |
@@ -31,4 +31,12 @@ Canlı `palmarghe.com/`, `/ai/` ve oturum açık `studio.palmarghe.com/studio/` 
 - Önceki canlı Lighthouse mobile sonucu 99/100/100/100, LCP 2.1 s ve CLS 0 idi. Bu değişiklikler sonrası tekrar ölçüm gereklidir.
 - `npm run verify` 0 typecheck hatası, 11 unit test ve build geçti. 24/24 E2E testi ve `npm audit --omit=dev --audit-level=high` geçti.
 - Salt okunur production Chrome Playwright paketi 12 rota, assetler, güvenlik başlıkları, 404, altı genişlik ve menüyü kapsıyor; 3/3 geçti.
-- Üretimde gerçek TR/EN içerik örnekleri, rol matrisi, SMTP ve alan performans verisi henüz doğrulanmadı. Bu bulgular kapanana kadar nihai durum tamamlanmış sayılmaz.
+- Production içerik tipi örnekleri ve role matrix doğrulandı; custom SMTP ile alan performans verisi dış bağımlılık olarak açık kalır.
+
+
+## V3 devam denetimi — 21 Eylül 2026
+
+- Canlı Chrome: tam arama tür filtresi, Ctrl/Cmd+K arama penceresi, yedi sıralı Studio ana sayfa modülü ve authenticated blok editörü denetlendi.
+- Arama sonucu metni güvenli biçimde oluşturulur; klavyede yukarı/aşağı seçim, Escape ve odak dönüşü vardır.
+- Galeri detayları klavye ile kapatılabilen lightbox'a sahiptir; normal görsel bağlantısı geri dönüş olarak korunur.
+- npm run verify 14/14 test ile geçti; production console-error testi ayrıca geçti ve npm audit --omit=dev --audit-level=high sıfır açık buldu.

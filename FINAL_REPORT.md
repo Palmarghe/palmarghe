@@ -1,16 +1,24 @@
 # Palmarghe V1 Final Report
 
-## Status — 20 September 2026
+## Status — 21 September 2026
 
 **FAZ 1 applicable scope complete; only external or user-dependent gates remain.** The public site and Studio run on Cloudflare Workers with Supabase production. The existing Astro architecture and local/GitHub history were preserved. FAZ 2 deep review may proceed. This status does not claim that the external gates below have passed.
 
-### FAZ 2 delivery update — 20 September 2026
+### FAZ 2 delivery update — 21 September 2026
 
-Commit `2d86d2c` is on `main` and Cloudflare Worker version `7215cb06-be31-4531-94e0-edff52ba3e74` is live. It adds the supplied optimized editorial artwork, self-hosted Manrope fonts, responsive hero and category treatments, active navigation, localized social metadata, richer account controls, dynamic category/archive/search states, and an FM mod detail view. Studio now has readable content status/type filters, generated Turkish-safe slugs, gallery media ordering, bilingual media metadata, category descriptions/SEO, safe translation pairing controls, canonical/social-image inputs, concise member/audit displays without exposing management UUIDs, and controlled rich blocks for media, callouts, calls to action, trusted YouTube/Vimeo embeds and tables.
+Commits `0a2ca06`, `5c43ff7`, `cb01e31`, `6237d18`, `39fa7cc` and `c133e53` are on `main`; Cloudflare Worker version `02653ebf-1315-4569-8f95-41b9b9014a27` is live. It adds the supplied optimized editorial artwork, self-hosted Manrope fonts, responsive hero and category treatments, active navigation, localized social metadata, richer account controls, dynamic category/archive/search states, a command search overlay, data-driven editorial home modules, accessible gallery lightboxes, and an FM mod detail view. Studio now has readable content status/type filters, generated Turkish-safe slugs, gallery media ordering, bilingual media metadata, category descriptions/SEO, safe translation pairing controls, canonical/social-image inputs, concise member/audit displays without exposing management UUIDs, controlled rich blocks for media, callouts, calls to action, safe links, trusted YouTube/Vimeo embeds and tables, slash commands, focus mode, save state and word/read-time feedback.
 
-Local `npm run verify` passed with 13 unit tests and a successful Cloudflare build; local Playwright passed 28/28; `npm audit --omit=dev --audit-level=high` found no high-severity vulnerability. Production Playwright passed 10/10 after the Worker deploy, and a live Chrome inspection confirmed the new hero, category links and mobile presentation.
+Local `npm run verify` passed with 14 unit tests and a successful Cloudflare build; local Playwright passed 28/28; `npm audit --omit=dev --audit-level=high` found no high-severity vulnerability. Production Playwright passed 10/10 after the Worker deploy, and a live Chrome inspection confirmed the new hero, category links and mobile presentation.
 
 Migrations `202609190011`–`202609190013` were applied to production on 20 September after a Chrome Supabase session was restored. A direct catalog query returned both gallery policies (`public.media:media_public_read`, `storage.objects:media_storage_public_select`) and all three staff functions (`save_content_with_relations`, `set_content_translation_pair`, `unlink_content_translation`). The live Studio content screen rendered the new canonical/social disclosure, content filters, localized fields and UUID-free translation workflow for the authenticated admin. The migration policy allows anonymous reads only for a cover or gallery asset referenced by an already-live item.
+
+
+
+### Current V3 continuity update — 21 September 2026
+
+The public search page now has type filtering; the header command search has Ctrl/Cmd+K, focus restoration, debounce, Arrow-key result navigation and escaped result text. Studio can control visibility and unique order for NOW, featured, category, latest, FM spotlight, Lab notes and archive CTA modules. The editor has an accessible rich-block dialog, safe Link control, focus mode, slash commands on any empty paragraph, keyboard menu navigation and persistent status feedback. Gallery detail pages use a keyboard-accessible modal preview with a normal image URL fallback.
+
+After these deployments, npm run verify again passed with 14/14 unit tests and a Cloudflare build. The production E2E suite's accessibility, public-route, security-header and six-viewport cases passed; its separate console-error case passed in 5.8 seconds. npm audit --omit=dev --audit-level=high reported zero vulnerabilities. Live Chrome verified the type-filtered search view, modal command search state, Studio homepage's seven ordered controls and the authenticated editor toolbar.
 
 ## Live services
 
