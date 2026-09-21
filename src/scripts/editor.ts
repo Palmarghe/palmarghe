@@ -1,6 +1,7 @@
 import { Editor, Node, mergeAttributes } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
+import { BubbleMenu } from '@tiptap/extension-bubble-menu';
 
 const mediaImage = Node.create({
   name: 'mediaImage', group: 'block', atom: true,
@@ -29,9 +30,13 @@ if (element && output) {
   statusBar.className = 'editor-status'; statusBar.setAttribute('aria-live', 'polite');
   element.parentElement?.append(statusBar);
   const updateStatus = (state = 'Kaydedildi') => { const words = editor?.getText().trim().split(/\s+/).filter(Boolean).length ?? 0; const minutes = Math.max(1, Math.ceil(words / 200)); statusBar.textContent = `${state} · ${words} kelime · yaklaşık ${minutes} dk okuma`; document.querySelectorAll<HTMLElement>('[data-editor-save-state]').forEach((element) => { element.textContent = state; }); };
+  const bubbleMenu = document.createElement('div');
+  bubbleMenu.className = 'editor-bubble-menu'; bubbleMenu.setAttribute('aria-label', 'Seçili metin araçları');
+  bubbleMenu.innerHTML = '<button type="button" data-editor="bold" aria-label="Kalın">B</button><button type="button" data-editor="italic" aria-label="İtalik">I</button><button type="button" data-editor="link">Bağlantı</button>';
+  document.body.append(bubbleMenu);
   const editor = new Editor({
     element,
-    extensions: [StarterKit.configure({ heading: { levels: [2, 3] } }), Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true, protocols: ['http', 'https', 'mailto'] }), mediaImage, callout, cta, embed, table, tableRow, tableHeader, tableCell],
+    extensions: [StarterKit.configure({ heading: { levels: [2, 3] } }), Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true, protocols: ['http', 'https', 'mailto'] }), BubbleMenu.configure({ element: bubbleMenu, shouldShow: ({ editor, state }) => editor.isEditable && !state.selection.empty }), mediaImage, callout, cta, embed, table, tableRow, tableHeader, tableCell],
     editorProps: { attributes: { 'aria-label': 'İçerik blok editörü' } },
     content: initial as object,
     onUpdate: ({ editor }) => { output.value = JSON.stringify(editor.getJSON()); dirty = true; updateStatus('Kaydedilmedi'); },

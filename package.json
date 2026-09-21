@@ -18,6 +18,7 @@
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
     "@tiptap/core": "^3.31.3",
+    "@tiptap/extension-bubble-menu": "^3.31.3",
     "@tiptap/extension-link": "^3.31.3",
     "@tiptap/html": "^3.31.3",
     "@tiptap/pm": "^3.31.3",
