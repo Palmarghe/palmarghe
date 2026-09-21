@@ -1,4 +1,4 @@
-import { Editor, Node, mergeAttributes } from '@tiptap/core';
+import { Editor, Node, mergeAttributes, type JSONContent } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import { BubbleMenu } from '@tiptap/extension-bubble-menu';
@@ -51,6 +51,33 @@ if (element && output) {
     document.querySelectorAll<HTMLButtonElement>('[data-editor="redo"]').forEach((button) => { button.disabled = !editor.can().redo(); });
   };
   const sync = () => { output.value = JSON.stringify(editor.getJSON()); updateToolbar(); };
+
+  const blockControls = document.createElement('div');
+  blockControls.className = 'editor-block-controls';
+  blockControls.setAttribute('role', 'toolbar');
+  blockControls.setAttribute('aria-label', 'Seçili blok işlemleri');
+  blockControls.innerHTML = '<span>Blok</span><button type="button" data-block-action="insert-above" title="Üste boş blok ekle">Üste ekle</button><button type="button" data-block-action="move-up" title="Bloğu yukarı taşı">Yukarı</button><button type="button" data-block-action="move-down" title="Bloğu aşağı taşı">Aşağı</button><button type="button" data-block-action="duplicate" title="Bloğu çoğalt">Çoğalt</button><button type="button" data-block-action="insert-below" title="Alta boş blok ekle">Alta ekle</button><button type="button" data-block-action="delete" title="Bloğu sil">Sil</button>';
+  element.parentElement?.insertBefore(blockControls, element);
+  const selectedBlockIndex = () => Math.max(0, Math.min(editor.state.doc.childCount - 1, editor.state.selection.$from.index(0)));
+  blockControls.addEventListener('click', (event) => {
+    const action = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-block-action]')?.dataset.blockAction;
+    if (!action) return;
+    const documentJson = editor.getJSON();
+    const blocks: JSONContent[] = [...(documentJson.content ?? [])];
+    const index = Math.min(selectedBlockIndex(), Math.max(0, blocks.length - 1));
+    const paragraph: JSONContent = { type: 'paragraph' };
+    if (action === 'insert-above') blocks.splice(index, 0, paragraph);
+    if (action === 'insert-below') blocks.splice(index + 1, 0, paragraph);
+    if (action === 'duplicate' && blocks[index]) blocks.splice(index + 1, 0, structuredClone(blocks[index]));
+    if (action === 'delete') blocks.splice(index, 1);
+    if (action === 'move-up' && index > 0) [blocks[index - 1], blocks[index]] = [blocks[index], blocks[index - 1]];
+    if (action === 'move-down' && index < blocks.length - 1) [blocks[index], blocks[index + 1]] = [blocks[index + 1], blocks[index]];
+    editor.commands.setContent({ ...documentJson, content: blocks.length ? blocks : [paragraph] });
+    editor.commands.focus('end');
+    dirty = true;
+    updateStatus('Kaydedilmedi');
+    sync();
+  });
 
   const slashMenu = document.createElement('div');
   slashMenu.className = 'editor-slash-menu'; slashMenu.setAttribute('role', 'menu'); slashMenu.setAttribute('aria-label', 'Blok ekle'); slashMenu.hidden = true;

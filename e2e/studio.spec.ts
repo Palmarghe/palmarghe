@@ -56,6 +56,12 @@ test('Studio editor exposes keyboard link and searchable slash commands', async 
   await expect(page.getByRole('button', { name: 'Yayınla' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Zamanla' })).toBeVisible();
   const editor = page.locator('#block-editor .tiptap');
+  await editor.fill('Blok işlemi');
+  const blockControls = page.getByRole('toolbar', { name: 'Seçili blok işlemleri' });
+  await blockControls.getByRole('button', { name: 'Çoğalt' }).click();
+  await expect(editor.locator('p')).toHaveCount(2);
+  await blockControls.getByRole('button', { name: 'Sil', exact: true }).click();
+  await expect(editor.locator('p')).toHaveCount(1);
   await editor.fill('Bağlantı metni');
   await editor.press('Control+A');
   await editor.press('Control+K');
