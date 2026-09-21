@@ -52,4 +52,4 @@ Canlı `palmarghe.com/`, `/ai/` ve oturum açık `studio.palmarghe.com/studio/` 
 
 - Üst çalışma çubuğu taslak, yayın, zamanlama, önizleme ve odak eylemlerini görünür biçimde bir araya getirir; başlık, kısa açıklama ve URL açıklaması yazı hiyerarşisine göre düzenlendi.
 - Araç çubuğunda geri al/yinele, aktif durumlar, ipuçları ve Ctrl/Cmd+K bağlantı akışı vardır. Slash menüsü arama, ok tuşları, Enter ve Escape ile denetlendi.
-- Medya seçici küçük önizlemeli, aranabilir seçim ızgarasına; içerik içi galeri ise doğrulanmış çoklu medya bloğuna dönüştürüldü. CTA blokları kontrollü vurgu/ikincil/metin stili taşır.
+- Medya seçici küçük önizlemeli, aranabilir seçim ızgarasına; içerik içi galeri ise doğrulanmış çoklu medya bloğuna dönüştürüldü. CTA blokları kontrollü vurgu/ikincil/metin stili taşır. Tablo ekleme diyaloğu güvenli sınırlar içinde satır ve sütun sayısını seçtirir.
