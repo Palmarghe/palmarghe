@@ -23,7 +23,7 @@ Canlı `palmarghe.com/`, `/ai/` ve oturum açık `studio.palmarghe.com/studio/` 
 | P1 | `/studio/` 768 px | Studio yan menüsünün min-content genişliği sayfayı 1189 px'e taşıyordu. | Grid `minmax(0,1fr)` ve menü iç kaydırmasıyla giderildi; altı genişlikte test geçti. |
 | P1 | `/about/` masaüstü | Sayfa tek satır açıklamadan oluşuyor, alanın amacı ve sonraki eylem belirsiz kalıyordu. | TR/EN editoryal açıklama ve arşiv/iletişim bağlantıları eklendi; yerel E2E ve canlı Chrome geçti. |
 | P2 | Studio giriş ve listeler | Formlar ve tablolar henüz kapsamlı klavye/ekran okuyucu incelemesinden geçmedi. | Otomatik axe kritik ihlal bulmadı; manuel inceleme açık. |
-| P1 | Production auth/roles | Member/editor/admin ve Storage matrisi gerçek hesaplarla uçtan uca kanıtlanmadı. | Yerel adapter testleri var; production doğrulaması açık. |
+| P1 | Production auth/roles | Member/editor/admin ve Storage sınırları gerçek hesaplarla uçtan uca kanıtlandı. | Production rol betiği 20/20 geçti; kontrollü hesaplar ve ilişkili profile/audit kayıtları temizlendi. |
 | P1 | Studio content persistence | İçerik, kategori ve etiket bağları birden fazla istekle güncelleniyor; ara hata kısmi veri bırakabilirdi. | `202609170010` ile atomik RPC eklendi; private QA taslağı production Studio’da başarıyla kaydedildi. Role matrix doğrulaması açık. |
 
 ## Ölçümler ve sınırlar
@@ -47,3 +47,9 @@ Canlı `palmarghe.com/`, `/ai/` ve oturum açık `studio.palmarghe.com/studio/` 
 - Yapışkan işlem çubuğu, kaydetme durumu, güçlü başlık/deck alanı, odak modu ve sağ ayar rayı production'a alındı.
 - Seçili metinde bağlam araç çubuğu; güvenli link, slash komutları ve erişilebilir blok diyaloglarıyla birlikte çalışır.
 - Ana sayfa visual reel yalnız gerçek kapak görsellerinden oluşur; dar ekranlarda üç ve iki sütuna iner.
+
+### Studio editör derinleştirmesi — 21 Eylül 2026
+
+- Üst çalışma çubuğu taslak, yayın, zamanlama, önizleme ve odak eylemlerini görünür biçimde bir araya getirir; başlık, kısa açıklama ve URL açıklaması yazı hiyerarşisine göre düzenlendi.
+- Araç çubuğunda geri al/yinele, aktif durumlar, ipuçları ve Ctrl/Cmd+K bağlantı akışı vardır. Slash menüsü arama, ok tuşları, Enter ve Escape ile denetlendi.
+- Medya seçici küçük önizlemeli, aranabilir seçim ızgarasına; içerik içi galeri ise doğrulanmış çoklu medya bloğuna dönüştürüldü. CTA blokları kontrollü vurgu/ikincil/metin stili taşır.

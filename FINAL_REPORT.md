@@ -24,6 +24,13 @@ After these deployments, npm run verify again passed with 14/14 unit tests and a
 
 Studio now uses a sticky action bar, writing canvas, focused settings rail, word/read-time status, safe Link dialog, focus mode, slash command navigation and contextual selection toolbar. The homepage uses controlled NOW, featured, category, latest, FM, Lab, visual-reel and archive modules; modules without real eligible data remain hidden. Public detail pages include related work and contextual email/archive discovery links. Commits e474213, cc307eb, 3c3f183, 399fc2f, 527e0e9 and 41594de retain the existing architecture and history.
 
+
+### Master prompt Studio delivery — 21 September 2026
+
+Commits `76ec5b7`, `6bd7c86` and `2f9ddf7` completed another production Studio pass without changing the data model or permission boundaries. The writing workspace now has explicit draft, publish and schedule actions; a title/deck-led canvas; a disclosed URL field; undo/redo; active formatting states; Ctrl/Cmd+K link editing; a filterable slash menu; an inline gallery block; and a visual media picker with search, selection state and direct library access. CTA blocks retain server-side safe-link validation and add controlled primary, secondary and text presentation.
+
+Local verification passed with zero Astro diagnostics, 14/14 unit tests and a successful Cloudflare build. The new keyboard editor E2E passed. Worker versions `4b6bba2f-3be9-4442-ada5-4638be53b09b`, `14c4de61-ca67-43ad-9c09-8c78721e4d88` and `e5c3f0fa-a7cc-461c-93b1-6b70b7cf8058` were deployed in sequence; live Chrome confirmed the deployed action bar, URL disclosure and gallery control.
+
 ## Live services
 
 - Public: `https://palmarghe.com/` and English routes under `/en/`.
