@@ -9,3 +9,4 @@ supabase/.temp/
 playwright-report/
 test-results/
 .full-autonomy-v3/
+.single-package/

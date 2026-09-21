@@ -57,6 +57,7 @@ if (element && output) {
         case 'heading3': editor.chain().focus().toggleHeading({ level: 3 }).run(); break;
         case 'bold': editor.chain().focus().toggleBold().run(); break;
         case 'italic': editor.chain().focus().toggleItalic().run(); break;
+        case 'ordered': editor.chain().focus().toggleOrderedList().run(); break;
         case 'bullet': editor.chain().focus().toggleBulletList().run(); break;
         case 'quote': editor.chain().focus().toggleBlockquote().run(); break;
         case 'code': editor.chain().focus().toggleCodeBlock().run(); break;
