@@ -1,5 +1,6 @@
 import { Editor, Node, mergeAttributes } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
+import Link from '@tiptap/extension-link';
 
 const mediaImage = Node.create({
   name: 'mediaImage', group: 'block', atom: true,
@@ -30,7 +31,7 @@ if (element && output) {
   const updateStatus = (state = 'Kaydedildi') => { const words = editor?.getText().trim().split(/\s+/).filter(Boolean).length ?? 0; const minutes = Math.max(1, Math.ceil(words / 200)); statusBar.textContent = `${state} · ${words} kelime · yaklaşık ${minutes} dk okuma`; };
   const editor = new Editor({
     element,
-    extensions: [StarterKit.configure({ heading: { levels: [2, 3] } }), mediaImage, callout, cta, embed, table, tableRow, tableHeader, tableCell],
+    extensions: [StarterKit.configure({ heading: { levels: [2, 3] } }), Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true, protocols: ['http', 'https', 'mailto'] }), mediaImage, callout, cta, embed, table, tableRow, tableHeader, tableCell],
     editorProps: { attributes: { 'aria-label': 'İçerik blok editörü' } },
     content: initial as object,
     onUpdate: ({ editor }) => { output.value = JSON.stringify(editor.getJSON()); dirty = true; updateStatus('Kaydedilmedi'); },
@@ -62,12 +63,12 @@ if (element && output) {
   document.body.append(dialog);
   const fields = dialog.querySelector<HTMLElement>('.editor-dialog-fields')!;
   const dialogTitle = dialog.querySelector<HTMLElement>('#editor-dialog-title')!;
-  const openDialog = (kind: 'media' | 'callout' | 'cta' | 'embed') => {
+  const openDialog = (kind: 'media' | 'callout' | 'cta' | 'embed' | 'link') => {
     const mediaOptions = media.map((item) => `<option value="${item.id}">${item.alt_tr || item.alt_en || item.path || 'Görsel'}</option>`).join('');
-    dialogTitle.textContent = ({ media: 'Görsel ekle', callout: 'Not ekle', cta: 'Buton ekle', embed: 'Video ekle' })[kind];
-    fields.innerHTML = kind === 'media' ? `<label>Medya<select name="media_id" required>${mediaOptions}</select></label><label>Alternatif metin<input name="alt" maxlength="300" required></label><label>Açıklama<input name="caption" maxlength="300"></label>` : kind === 'callout' ? '<label>Tür<select name="tone"><option value="note">Not</option><option value="info">Bilgi</option><option value="warning">Uyarı</option></select></label><label>Başlık<input name="title" maxlength="120" required value="Not"></label>' : kind === 'cta' ? '<label>Buton metni<input name="label" maxlength="120" required></label><label>Bağlantı<input name="href" placeholder="/iletisim/ veya https://" required></label>' : '<label>YouTube veya Vimeo URL<input name="src" type="url" required placeholder="https://www.youtube.com/watch?v=..."></label><label>Başlık<input name="title" maxlength="160" required value="Video"></label>';
+    dialogTitle.textContent = ({ media: 'Görsel ekle', callout: 'Not ekle', cta: 'Buton ekle', embed: 'Video ekle', link: 'Bağlantı ekle' })[kind];
+    fields.innerHTML = kind === 'media' ? `<label>Medya<select name="media_id" required>${mediaOptions}</select></label><label>Alternatif metin<input name="alt" maxlength="300" required></label><label>Açıklama<input name="caption" maxlength="300"></label>` : kind === 'callout' ? '<label>Tür<select name="tone"><option value="note">Not</option><option value="info">Bilgi</option><option value="warning">Uyarı</option></select></label><label>Başlık<input name="title" maxlength="120" required value="Not"></label>' : kind === 'cta' ? '<label>Buton metni<input name="label" maxlength="120" required></label><label>Bağlantı<input name="href" placeholder="/iletisim/ veya https://" required></label>' : kind === 'link' ? '<label>Bağlantı<input name="href" placeholder="/sayfa/ veya https://" required></label>' : '<label>YouTube veya Vimeo URL<input name="src" type="url" required placeholder="https://www.youtube.com/watch?v=..."></label><label>Başlık<input name="title" maxlength="160" required value="Video"></label>';
     const form = dialog.querySelector('form')!;
-    form.onsubmit = (event) => { event.preventDefault(); const data = new FormData(form); if (kind === 'media') { const selected = media.find((item) => item.id === data.get('media_id')); if (!selected) return; editor.chain().focus().insertContent({ type: 'mediaImage', attrs: { media_id: selected.id, alt: String(data.get('alt') || selected.alt_tr || selected.alt_en || ''), caption: String(data.get('caption') || '') } }).run(); } if (kind === 'callout') editor.chain().focus().insertContent({ type: 'callout', attrs: { tone: String(data.get('tone')), title: String(data.get('title')) }, content: [{ type: 'paragraph' }] }).run(); if (kind === 'cta') editor.chain().focus().insertContent({ type: 'cta', attrs: { label: String(data.get('label')), href: String(data.get('href')) } }).run(); if (kind === 'embed') editor.chain().focus().insertContent({ type: 'embed', attrs: { src: normalizeEmbed(String(data.get('src'))), title: String(data.get('title')) } }).run(); dialog.close(); sync(); };
+    form.onsubmit = (event) => { event.preventDefault(); const data = new FormData(form); if (kind === 'media') { const selected = media.find((item) => item.id === data.get('media_id')); if (!selected) return; editor.chain().focus().insertContent({ type: 'mediaImage', attrs: { media_id: selected.id, alt: String(data.get('alt') || selected.alt_tr || selected.alt_en || ''), caption: String(data.get('caption') || '') } }).run(); } if (kind === 'callout') editor.chain().focus().insertContent({ type: 'callout', attrs: { tone: String(data.get('tone')), title: String(data.get('title')) }, content: [{ type: 'paragraph' }] }).run(); if (kind === 'cta') editor.chain().focus().insertContent({ type: 'cta', attrs: { label: String(data.get('label')), href: String(data.get('href')) } }).run(); if (kind === 'link') { const href = String(data.get('href') ?? '').trim(); if (!(/^(https?:|mailto:)/i.test(href) || href.startsWith('/'))) return; editor.chain().focus().extendMarkRange('link').setLink({ href }).run(); } if (kind === 'embed') editor.chain().focus().insertContent({ type: 'embed', attrs: { src: normalizeEmbed(String(data.get('src'))), title: String(data.get('title')) } }).run(); dialog.close(); sync(); };
     dialog.querySelector<HTMLButtonElement>('[data-dialog-cancel]')!.onclick = () => dialog.close();
     dialog.showModal();
     dialog.querySelector<HTMLElement>('input,select')?.focus();
@@ -81,6 +82,7 @@ if (element && output) {
         case 'heading3': editor.chain().focus().toggleHeading({ level: 3 }).run(); break;
         case 'bold': editor.chain().focus().toggleBold().run(); break;
         case 'italic': editor.chain().focus().toggleItalic().run(); break;
+        case 'link': openDialog('link'); break;
         case 'ordered': editor.chain().focus().toggleOrderedList().run(); break;
         case 'bullet': editor.chain().focus().toggleBulletList().run(); break;
         case 'quote': editor.chain().focus().toggleBlockquote().run(); break;
@@ -91,6 +93,7 @@ if (element && output) {
         case 'cta': openDialog('cta'); break;
         case 'embed': openDialog('embed'); break;
         case 'table': editor.chain().focus().insertContent({ type: 'table', content: [{ type: 'tableRow', content: [{ type: 'tableHeader', content: [{ type: 'paragraph' }] }, { type: 'tableHeader', content: [{ type: 'paragraph' }] }] }, { type: 'tableRow', content: [{ type: 'tableCell', content: [{ type: 'paragraph' }] }, { type: 'tableCell', content: [{ type: 'paragraph' }] }] }] }).run(); break;
+        case 'focus': element.closest('.content-editor-form')?.classList.toggle('editor-focus-mode'); break;
       }
       sync();
     });
