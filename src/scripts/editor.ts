@@ -95,6 +95,15 @@ if (element && output) {
       case 'paragraph': editor.chain().focus().setParagraph().run(); break; case 'heading2': editor.chain().focus().toggleHeading({ level: 2 }).run(); break; case 'heading3': editor.chain().focus().toggleHeading({ level: 3 }).run(); break; case 'bold': editor.chain().focus().toggleBold().run(); break; case 'italic': editor.chain().focus().toggleItalic().run(); break; case 'link': openDialog('link'); break; case 'undo': editor.chain().focus().undo().run(); break; case 'redo': editor.chain().focus().redo().run(); break; case 'ordered': editor.chain().focus().toggleOrderedList().run(); break; case 'bullet': editor.chain().focus().toggleBulletList().run(); break; case 'quote': editor.chain().focus().toggleBlockquote().run(); break; case 'code': editor.chain().focus().toggleCodeBlock().run(); break; case 'divider': editor.chain().focus().setHorizontalRule().run(); break; case 'gallery': if (media.length) openDialog('gallery'); else window.alert('Önce Medya bölümünden görsel yükleyin.'); break; case 'media': if (media.length) openDialog('media'); else window.alert('Önce Medya bölümünden bir görsel yükleyin.'); break; case 'callout': openDialog('callout'); break; case 'cta': openDialog('cta'); break; case 'embed': openDialog('embed'); break; case 'table': editor.chain().focus().insertContent({ type: 'table', content: [{ type: 'tableRow', content: [{ type: 'tableHeader', content: [{ type: 'paragraph' }] }, { type: 'tableHeader', content: [{ type: 'paragraph' }] }] }, { type: 'tableRow', content: [{ type: 'tableCell', content: [{ type: 'paragraph' }] }, { type: 'tableCell', content: [{ type: 'paragraph' }] }] }] }).run(); break; case 'focus': element.closest('.content-editor-form')?.classList.toggle('editor-focus-mode'); break;
     } sync();
   }));
+  document.querySelectorAll<HTMLButtonElement>('[data-publish-action]').forEach((button) => button.addEventListener('click', () => {
+    const status = button.dataset.publishAction;
+    const select = output.form?.querySelector<HTMLSelectElement>('select[name="status"]');
+    if (!select || !status) return;
+    if (status === 'scheduled' && !output.form?.querySelector<HTMLInputElement>('input[name="publish_at"]')?.value) { window.alert('Zamanlamak için sağdaki yayın tarihinde bir tarih ve saat seçin.'); return; }
+    select.value = status;
+    dirty = false; updateStatus(status === 'published' ? 'Yayınlanıyor…' : status === 'scheduled' ? 'Zamanlanıyor…' : 'Kaydediliyor…');
+    output.form?.requestSubmit();
+  }));
   sync(); updateStatus();
   output.form?.addEventListener('submit', () => { sync(); dirty = false; updateStatus('Kaydediliyor…'); });
   window.addEventListener('beforeunload', (event) => { if (dirty) event.preventDefault(); });
