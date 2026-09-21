@@ -61,9 +61,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
   if (entity === 'homepage') {
     if (profile?.role !== 'admin') return errorResponse('Forbidden',403);
-    const names = ['featured','categories','latest'];
+    const names = ['now','featured','categories','latest','fm_spotlight','lab_notes','archive_cta'];
     const order = Object.fromEntries(names.map((name) => [name, Number(form.get(`${name}_order`))]));
-    if (new Set(Object.values(order)).size !== 3 || Object.values(order).some((value) => ![1,2,3].includes(value))) return errorResponse('Invalid section order');
+    if (new Set(Object.values(order)).size !== names.length || Object.values(order).some((value) => !Array.from({ length: names.length }, (_, index) => index + 1).includes(value))) return errorResponse('Invalid section order');
     const visible = Object.fromEntries(names.map((name) => [name, form.get(`${name}_visible`) === 'on']));
     const { error } = await db.from('site_settings').upsert({ key: 'homepage', value: { order, visible }, updated_at: new Date().toISOString() });
     if (error) return errorResponse('Save failed',400);
