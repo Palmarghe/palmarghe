@@ -24,14 +24,19 @@ if (element && output) {
   let media: StudioMedia[] = [];
   try { media = JSON.parse(element.dataset.media ?? '[]') as StudioMedia[]; } catch { /* keep empty media collection */ }
   let dirty = false;
+  const statusBar = document.createElement('p');
+  statusBar.className = 'editor-status'; statusBar.setAttribute('aria-live', 'polite');
+  element.parentElement?.append(statusBar);
+  const updateStatus = (state = 'Kaydedildi') => { const words = editor?.getText().trim().split(/\s+/).filter(Boolean).length ?? 0; const minutes = Math.max(1, Math.ceil(words / 200)); statusBar.textContent = `${state} · ${words} kelime · yaklaşık ${minutes} dk okuma`; };
   const editor = new Editor({
     element,
     extensions: [StarterKit.configure({ heading: { levels: [2, 3] } }), mediaImage, callout, cta, embed, table, tableRow, tableHeader, tableCell],
     editorProps: { attributes: { 'aria-label': 'İçerik blok editörü' } },
     content: initial as object,
-    onUpdate: ({ editor }) => { output.value = JSON.stringify(editor.getJSON()); dirty = true; },
+    onUpdate: ({ editor }) => { output.value = JSON.stringify(editor.getJSON()); dirty = true; updateStatus('Kaydedilmedi'); },
   });
   const sync = () => { output.value = JSON.stringify(editor.getJSON()); };
+  updateStatus();
   const slashMenu = document.createElement('div');
   slashMenu.className = 'editor-slash-menu'; slashMenu.setAttribute('role', 'menu'); slashMenu.hidden = true;
   const commands = [['Metin','paragraph'],['Başlık','heading2'],['Alt başlık','heading3'],['Görsel','media'],['Not','callout'],['CTA','cta'],['YouTube / Vimeo','embed'],['Tablo','table'],['Alıntı','quote'],['Kod','code'],['Ayırıcı','divider']];
@@ -79,6 +84,6 @@ if (element && output) {
     });
   });
   sync();
-  output.form?.addEventListener('submit', () => { sync(); dirty = false; });
+  output.form?.addEventListener('submit', () => { sync(); dirty = false; updateStatus('Kaydediliyor…'); });
   window.addEventListener('beforeunload', (event) => { if (dirty) event.preventDefault(); });
 }
