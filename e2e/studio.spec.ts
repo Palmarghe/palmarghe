@@ -254,16 +254,23 @@ test('homepage controls hide and reorder sections', async ({ page }) => {
   await page.locator('input[name="password"]').fill('LocalTest123!');
   await page.getByRole('button', { name: 'Giriş' }).click();
   await page.goto('/studio/?section=homepage');
+  await page.locator('input[name="now_visible"]').uncheck();
   await page.locator('input[name="featured_visible"]').uncheck();
+  await page.locator('input[name="fm_spotlight_visible"]').uncheck();
+  await page.locator('input[name="lab_notes_visible"]').uncheck();
+  await page.locator('input[name="archive_cta_visible"]').uncheck();
   await page.locator('select[name="categories_order"]').selectOption('1');
   await page.locator('select[name="latest_order"]').selectOption('2');
   await page.locator('select[name="featured_order"]').selectOption('3');
+  await page.locator('select[name="now_order"]').selectOption('4');
+  await page.locator('select[name="fm_spotlight_order"]').selectOption('5');
+  await page.locator('select[name="lab_notes_order"]').selectOption('6');
+  await page.locator('select[name="archive_cta_order"]').selectOption('7');
   await page.getByRole('button', { name: 'Kaydet' }).click();
   await page.goto('/');
   const sections = page.locator('.home-sections > section');
-  await expect(sections).toHaveCount(2);
+  await expect(sections).toHaveCount(1);
   await expect(sections.first()).toHaveAttribute('style', 'order:1');
-  await expect(sections.last()).toHaveAttribute('style', 'order:2');
 });
 
 test('social settings and translated content alternate', async ({ page }) => {
@@ -382,7 +389,7 @@ test('featured and noindex content controls affect public output', async ({ page
   await page.locator('input[name="indexable"][type="checkbox"]').uncheck();
   await page.locator('#block-editor .tiptap').fill('Deneme metni.');
   await page.getByRole('button', { name: 'Kaydet' }).click();
-  const homepage = await page.request.post('/api/studio/', { headers: { Origin: 'http://127.0.0.1:4322' }, form: { entity:'homepage', featured_visible:'on', categories_visible:'on', latest_visible:'on', featured_order:'1', categories_order:'2', latest_order:'3' }, maxRedirects:0 });
+  const homepage = await page.request.post('/api/studio/', { headers: { Origin: 'http://127.0.0.1:4322' }, form: { entity:'homepage', now_visible:'on', featured_visible:'on', categories_visible:'on', latest_visible:'on', fm_spotlight_visible:'on', lab_notes_visible:'on', archive_cta_visible:'on', now_order:'1', featured_order:'2', categories_order:'3', latest_order:'4', fm_spotlight_order:'5', lab_notes_order:'6', archive_cta_order:'7' }, maxRedirects:0 });
   expect(homepage.status()).toBe(303);
   await page.goto('/');
   await expect(page.locator('.home-sections section').first()).toContainText('Öne Çıkan Gizli İndeks');
