@@ -32,6 +32,13 @@ if (element && output) {
     onUpdate: ({ editor }) => { output.value = JSON.stringify(editor.getJSON()); dirty = true; },
   });
   const sync = () => { output.value = JSON.stringify(editor.getJSON()); };
+  const slashMenu = document.createElement('div');
+  slashMenu.className = 'editor-slash-menu'; slashMenu.setAttribute('role', 'menu'); slashMenu.hidden = true;
+  const commands = [['Metin','paragraph'],['Başlık','heading2'],['Alt başlık','heading3'],['Görsel','media'],['Not','callout'],['CTA','cta'],['YouTube / Vimeo','embed'],['Tablo','table'],['Alıntı','quote'],['Kod','code'],['Ayırıcı','divider']];
+  slashMenu.innerHTML = commands.map(([label, command]) => `<button type="button" role="menuitem" data-editor="${command}">${label}</button>`).join('');
+  element.parentElement?.append(slashMenu);
+  element.addEventListener('keydown', (event) => { if (event.key === '/' && editor.isEmpty) window.setTimeout(() => { slashMenu.hidden = false; slashMenu.querySelector<HTMLButtonElement>('button')?.focus(); }); if (event.key === 'Escape') slashMenu.hidden = true; });
+  slashMenu.addEventListener('click', (event) => { const command = (event.target as HTMLElement).closest<HTMLButtonElement>('button')?.dataset.editor; slashMenu.hidden = true; if (command) document.querySelector<HTMLButtonElement>(`.editor-toolbar [data-editor="${command}"]`)?.click(); });
   const dialog = document.createElement('dialog');
   dialog.className = 'editor-block-dialog';
   dialog.innerHTML = '<form method="dialog"><header><strong id="editor-dialog-title"></strong><button value="cancel" aria-label="Kapat">×</button></header><div class="editor-dialog-fields"></div><footer><button value="cancel" type="button" data-dialog-cancel>Vazgeç</button><button value="confirm">Ekle</button></footer></form>';
