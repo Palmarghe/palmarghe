@@ -62,7 +62,12 @@ test('Studio editor exposes keyboard link and searchable slash commands', async 
   await expect(page.getByRole('menu', { name: 'Blok ekle' })).toBeVisible();
   await expect(page.getByRole('menuitem', { name: /Tablo/ })).toBeVisible();
   await editor.press('Enter');
+  const tableDialog = page.getByRole('dialog', { name: 'Tablo ekle' });
+  await expect(tableDialog).toBeVisible();
+  await tableDialog.locator('input[name="rows"]').fill('4');
+  await tableDialog.getByRole('button', { name: 'Ekle' }).click();
   await expect(editor.locator('table')).toHaveCount(1);
+  await expect(editor.locator('tbody tr')).toHaveCount(4);
   await expect(page.getByRole('button', { name: 'Geri al' })).toBeEnabled();
 });
 
