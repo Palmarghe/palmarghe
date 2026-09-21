@@ -137,3 +137,35 @@ if (element && output) {
   output.form?.addEventListener('submit', () => { sync(); dirty = false; updateStatus('Kaydediliyor…'); });
   window.addEventListener('beforeunload', (event) => { if (dirty) event.preventDefault(); });
 }
+
+const studioEditorForm = document.querySelector<HTMLFormElement>('.content-editor-form');
+if (studioEditorForm) {
+  const simpleLabels: Record<string,string> = {
+    'Etiketler (çoklu seçim)': 'Etiketler',
+    'Kapak görseli': 'Kapak resmi',
+    'Zamanlı yayın (UTC)': 'Yayın tarihi ve saati',
+    'Arama motoruna açık': 'Google ve site aramasında göster',
+    'SEO başlığı': 'Google başlığı',
+    'SEO açıklaması': 'Google açıklaması',
+    'Canonical URL': 'Yazının asıl adresi (varsa)',
+    'Sosyal paylaşım görseli': 'Paylaşım resmi',
+    'Uyumluluk': 'Çalıştığı sürüm',
+    'Mod sürümü': 'Paket sürümü',
+    'Değişiklikler': 'Bu sürümde neler değişti?',
+    'Kurulum': 'Nasıl kurulur?',
+    'İndirme URL': 'İndirme bağlantısı',
+    'Kaynak URL': 'Kaynak bağlantısı',
+    'Dosya boyutu bilgisi': 'Dosya boyutu',
+    'Uyumluluk notu': 'Kullanım notu',
+    'Proje URL': 'Proje bağlantısı',
+    'Video/Prototip URL': 'Video veya prototip bağlantısı',
+  };
+  studioEditorForm.querySelectorAll<HTMLLabelElement>('label').forEach((label) => {
+    const textNode = [...label.childNodes].find((node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim());
+    if (!textNode) return;
+    const replacement = simpleLabels[textNode.textContent?.trim() ?? ''];
+    if (replacement) textNode.textContent = `${replacement} `;
+  });
+  const advancedSummary = studioEditorForm.querySelector<HTMLElement>('.advanced-content summary');
+  if (advancedSummary) advancedSummary.textContent = 'Google ve paylaşım ayarları';
+}
