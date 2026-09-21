@@ -91,4 +91,4 @@ These external/user-dependent gates remain open in `docs/production-checklist.md
 
 ## GitHub and deployment verification
 
-All changes were normal commits on `main`; the repository was clean and in sync before this report update. GitHub Actions Verify #20–#25 passed, including the live accessibility test commit `e1e963b`. The final documentation commit's action must also pass before FAZ 1 closure. Cloudflare's current production app remained healthy after the QA cleanup; documentation/test-only changes do not require a Worker redeploy.
+All changes were normal commits on `main`; no force push was used. GitHub Actions Verify run #78 passed for documentation commit `d8ffd89`; the immediately preceding implementation run #77 also passed for mobile constraint commit `3806e60`. Cloudflare Worker `2d7742d9-8c0d-476c-a8c6-2568489c3144` remained healthy after final Chrome and production E2E checks.
