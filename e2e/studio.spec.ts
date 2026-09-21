@@ -106,7 +106,6 @@ test('admin manages tags, appearance, navigation and media', async ({ page }) =>
   await page.locator('input[name="password"]').fill('LocalTest123!');
   await page.getByRole('button', { name: 'Giriş' }).click();
   await page.goto('/studio/?section=tags');
-  await openContentUrl(page);
   await page.locator('input[name="slug"]').fill('testing');
   await page.locator('input[name="name_tr"]').fill('Test');
   await page.locator('input[name="name_en"]').fill('Test');
@@ -348,7 +347,6 @@ test('content tags can be assigned and cleared', async ({ page }) => {
   await page.locator('input[name="password"]').fill('LocalTest123!');
   await page.getByRole('button', { name: 'Giriş' }).click();
   await page.goto('/studio/?section=tags');
-  await openContentUrl(page);
   await page.locator('input[name="slug"]').fill('tag-connection');
   await page.locator('input[name="name_tr"]').fill('Bağlantı');
   await page.locator('input[name="name_en"]').fill('Connection');
