@@ -92,3 +92,11 @@ These external/user-dependent gates remain open in `docs/production-checklist.md
 ## GitHub and deployment verification
 
 All changes were normal commits on `main`; no force push was used. GitHub Actions Verify run #78 passed for documentation commit `d8ffd89`; the immediately preceding implementation run #77 also passed for mobile constraint commit `3806e60`. Cloudflare Worker `2d7742d9-8c0d-476c-a8c6-2568489c3144` remained healthy after final Chrome and production E2E checks.
+
+### Membership, permission and discussion delivery — 22 September 2026
+
+Commit `3a81394` adds administrator-created and deleted Auth memberships, protected and custom permission groups, detailed capability choices, member profile cards with avatar and biography, authenticated-only content comments, and Studio comment moderation. The writing view now uses a familiar light document canvas and compact ribbon treatment while preserving the controlled Tiptap schema and existing security boundaries.
+
+Local `npm run verify` passed with zero Astro diagnostics, 14/14 unit tests and a successful Cloudflare build. The complete local Playwright suite passed 31/31, including membership lifecycle, custom groups, anonymous comment rejection, member commenting and serious accessibility checks. GitHub Actions Verify run #79 passed for `3a81394`. Cloudflare Worker version `58fe02eb-67ec-46af-9061-3401df47ce8d` is live, and the read-only production E2E suite passed 10/10 after deployment.
+
+Migration `202609210014_members_permissions_comments.sql` is committed and pending application to Supabase production. Chrome's connected browser-control session did not respond during three fresh attempts, so no SQL was submitted and no production account or permission data was changed. Until that migration is applied, the new database-backed membership, profile and comment functions remain unavailable in production; existing public and Studio routes remain healthy.
