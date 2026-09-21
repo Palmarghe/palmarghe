@@ -20,6 +20,10 @@ The public search page now has type filtering; the header command search has Ctr
 
 After these deployments, npm run verify again passed with 14/14 unit tests and a Cloudflare build. The production E2E suite's accessibility, public-route, security-header and six-viewport cases passed; its separate console-error case passed in 5.8 seconds. npm audit --omit=dev --audit-level=high reported zero vulnerabilities. Live Chrome verified the type-filtered search view, modal command search state, Studio homepage's seven ordered controls and the authenticated editor toolbar.
 
+### Workspace and editorial continuity — 21 September 2026
+
+Studio now uses a sticky action bar, writing canvas, focused settings rail, word/read-time status, safe Link dialog, focus mode, slash command navigation and contextual selection toolbar. The homepage uses controlled NOW, featured, category, latest, FM, Lab, visual-reel and archive modules; modules without real eligible data remain hidden. Public detail pages include related work and contextual email/archive discovery links. Commits e474213, cc307eb, 3c3f183, 399fc2f, 527e0e9 and 41594de retain the existing architecture and history.
+
 ## Live services
 
 - Public: `https://palmarghe.com/` and English routes under `/en/`.

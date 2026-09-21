@@ -40,3 +40,10 @@ Canlı `palmarghe.com/`, `/ai/` ve oturum açık `studio.palmarghe.com/studio/` 
 - Arama sonucu metni güvenli biçimde oluşturulur; klavyede yukarı/aşağı seçim, Escape ve odak dönüşü vardır.
 - Galeri detayları klavye ile kapatılabilen lightbox'a sahiptir; normal görsel bağlantısı geri dönüş olarak korunur.
 - npm run verify 14/14 test ile geçti; production console-error testi ayrıca geçti ve npm audit --omit=dev --audit-level=high sıfır açık buldu.
+
+
+## Studio writing workspace — 21 Eylül 2026
+
+- Yapışkan işlem çubuğu, kaydetme durumu, güçlü başlık/deck alanı, odak modu ve sağ ayar rayı production'a alındı.
+- Seçili metinde bağlam araç çubuğu; güvenli link, slash komutları ve erişilebilir blok diyaloglarıyla birlikte çalışır.
+- Ana sayfa visual reel yalnız gerçek kapak görsellerinden oluşur; dar ekranlarda üç ve iki sütuna iner.
