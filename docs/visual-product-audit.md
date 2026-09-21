@@ -53,3 +53,10 @@ Canlı `palmarghe.com/`, `/ai/` ve oturum açık `studio.palmarghe.com/studio/` 
 - Üst çalışma çubuğu taslak, yayın, zamanlama, önizleme ve odak eylemlerini görünür biçimde bir araya getirir; başlık, kısa açıklama ve URL açıklaması yazı hiyerarşisine göre düzenlendi.
 - Araç çubuğunda geri al/yinele, aktif durumlar, ipuçları ve Ctrl/Cmd+K bağlantı akışı vardır. Slash menüsü arama, ok tuşları, Enter ve Escape ile denetlendi.
 - Medya seçici küçük önizlemeli, aranabilir seçim ızgarasına; içerik içi galeri ise doğrulanmış çoklu medya bloğuna dönüştürüldü. CTA blokları kontrollü vurgu/ikincil/metin stili taşır. Tablo ekleme diyaloğu güvenli sınırlar içinde satır ve sütun sayısını seçtirir. Seçili üst düzey blok için ekle, taşı, çoğalt ve sil denetimleri klavye erişimli bir araç çubuğunda sunulur.
+
+## Referans uyumu ve gerçek yayın verisi — 21 Eylül 2026
+
+- Ana sayfa lead/support vitrini, yoğun NOW şeridi, görsel konu portalları, dört sütunlu son yayınlar, FM odağı, Lab notları ve görsel akış ile referanstaki editoryal ritme yaklaştırıldı.
+- AI, oyun, FM26 ve Lab için dört özgün WebP kapak üretildi. Bunlar production Storage'a iki dilli alt metinlerle kaydedildi ve her kategoriye ait gerçek, yapılandırılmış bir örnek yayında kullanıldı.
+- Studio ayar rayındaki teknik etiketler ilk kez içerik girecek kullanıcı için sadeleştirildi. Gizli slash menüsünün görünmesi, uzun medya adlarının yatay taşması ve 360 px dolu ana sayfa taşması canlı Chrome denetimlerinde bulundu ve kapatıldı.
+- Son Worker sürümü `2d7742d9-8c0d-476c-a8c6-2568489c3144`; production Playwright 10/10 geçti. Altı genişlikte yatay taşma yok, canlı axe taramalarında ciddi veya kritik bulgu yok ve kritik rotalarda tarayıcı konsol hatası yok.
