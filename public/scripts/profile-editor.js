@@ -1,0 +1,12 @@
+(() => {
+  const account=document.querySelector('.account-content');
+  const legacy=account?.querySelector('form[action="/api/auth/"] input[value="profile"]')?.closest('form');
+  if(!account || !legacy) return;
+  const locale=document.documentElement.lang==='en'?'en':'tr';
+  const panel=document.createElement('section'); panel.className='profile-card';
+  panel.innerHTML=`<div class="profile-avatar" data-avatar>●</div><div><span class="eyebrow">${locale==='tr'?'PROFİL':'PROFILE'}</span><h2>${locale==='tr'?'Profiliniz':'Your profile'}</h2><p>${locale==='tr'?'Yorumlarda görünen adınızı, kısa tanıtımınızı ve fotoğrafınızı düzenleyin.':'Edit the name, short bio and photo shown with your comments.'}</p><form enctype="multipart/form-data"><label class="field">${locale==='tr'?'Görünen ad':'Display name'}<input name="display_name" maxlength="100" required></label><label class="field">${locale==='tr'?'Kısa tanıtım':'Short bio'}<textarea name="bio" maxlength="500"></textarea></label><label class="field">${locale==='tr'?'Profil fotoğrafı':'Profile photo'}<input name="avatar" type="file" accept="image/png,image/jpeg,image/webp"><small>PNG, JPEG veya WebP · en fazla 10 MB</small></label><button class="button">${locale==='tr'?'Profili kaydet':'Save profile'}</button><span data-profile-status aria-live="polite"></span></form></div>`;
+  legacy.replaceWith(panel);
+  const form=panel.querySelector('form'); const status=panel.querySelector('[data-profile-status]'); const avatar=panel.querySelector('[data-avatar]');
+  fetch('/api/profile/',{credentials:'same-origin'}).then((response)=>response.ok?response.json():Promise.reject()).then((profile)=>{ form.elements.display_name.value=profile.display_name||''; form.elements.bio.value=profile.bio||''; if(profile.avatar_media_id) avatar.innerHTML=`<img src="/api/media/${profile.avatar_media_id}/" alt="">`; else avatar.textContent=(profile.display_name||profile.email||'P').slice(0,1).toUpperCase(); }).catch(()=>{});
+  form.addEventListener('submit',async(event)=>{ event.preventDefault(); status.textContent=locale==='tr'?'Kaydediliyor…':'Saving…'; const response=await fetch('/api/profile/',{method:'POST',body:new FormData(form),credentials:'same-origin'}); status.textContent=response.ok?(locale==='tr'?'Profil kaydedildi.':'Profile saved.'):(locale==='tr'?'Profil kaydedilemedi.':'Profile could not be saved.'); if(response.ok) location.reload(); });
+})();

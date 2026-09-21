@@ -1,6 +1,6 @@
 /** Development-only, in-memory Supabase-shaped adapter for browser and E2E tests. */
 type Row = Record<string, any>;
-type TableName = 'profiles' | 'categories' | 'tags' | 'content_items' | 'content_categories' | 'content_tags' | 'contact_messages' | 'site_settings' | 'navigation' | 'media' | 'redirects' | 'audit_logs' | 'account_deletion_requests';
+type TableName = 'profiles' | 'permission_groups' | 'comments' | 'categories' | 'tags' | 'content_items' | 'content_categories' | 'content_tags' | 'contact_messages' | 'site_settings' | 'navigation' | 'media' | 'redirects' | 'audit_logs' | 'account_deletion_requests';
 type Filter = (row: Row) => boolean;
 const uid = () => crypto.randomUUID();
 const initialCategories: Row[] = [
@@ -16,7 +16,12 @@ const users: Row[] = [
   { id: '00000000-0000-4000-8000-100000000003', email: 'member@example.test', password: 'LocalTest123!', role: 'member' },
 ];
 const tables: Record<TableName, Row[]> = {
-  profiles: users.map(({ id, role }) => ({ id, role })), categories: initialCategories,
+  profiles: users.map(({ id, role }) => ({ id, role, display_name:role === 'admin' ? 'Yerel Yönetici' : null, bio:null, avatar_media_id:null, permission_group_id:`00000000-0000-4000-9000-00000000000${role === 'member' ? 1 : role === 'editor' ? 2 : 3}` })),
+  permission_groups: [
+    { id:'00000000-0000-4000-9000-000000000001',name:'Üye',description:'Yorum yapabilir.',base_role:'member',permissions:{comment:true},protected:true },
+    { id:'00000000-0000-4000-9000-000000000002',name:'Editör',description:'İçerik yönetebilir.',base_role:'editor',permissions:{comment:true,content:true,taxonomy:true,media:true,messages:true},protected:true },
+    { id:'00000000-0000-4000-9000-000000000003',name:'Yönetici',description:'Tam erişim.',base_role:'admin',permissions:{comment:true,content:true,taxonomy:true,media:true,messages:true,appearance:true,navigation:true,members:true,permissions:true,audit:true},protected:true },
+  ], comments: [], categories: initialCategories,
   tags: [], content_items: [], content_categories: [], content_tags: [], contact_messages: [],
   site_settings: [], navigation: [], media: [], redirects: [], audit_logs: [], account_deletion_requests: [],
 };
@@ -55,8 +60,10 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
     if (this.table === 'content_categories') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => item.id === row.content_id && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
     if (this.table === 'content_tags') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => item.id === row.content_id && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
     if (this.table === 'profiles') return Boolean(this.user && (this.user.id === row.id || this.user.role === 'admin'));
+    if (this.table === 'permission_groups') return Boolean(this.user && ['editor','admin'].includes(this.user.role));
+    if (this.table === 'comments') return row.status === 'published' || this.user?.role === 'admin' || this.user?.role === 'editor';
     if (this.table === 'account_deletion_requests') return Boolean(this.user && (this.user.id === row.user_id || this.user.role === 'admin'));
-    if (this.table === 'media') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => (item.cover_media_id === row.id || item.type === 'gallery' && Array.isArray(item.type_data?.gallery_media_ids) && item.type_data.gallery_media_ids.includes(row.id)) && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
+    if (this.table === 'media') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.profiles.some((profile)=>profile.avatar_media_id===row.id) || tables.content_items.some((item) => (item.cover_media_id === row.id || item.type === 'gallery' && Array.isArray(item.type_data?.gallery_media_ids) && item.type_data.gallery_media_ids.includes(row.id)) && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
     if (this.table === 'contact_messages') return this.user?.role === 'admin' || this.user?.role === 'editor';
     if (this.table === 'audit_logs') return this.user?.role === 'admin';
     return true;
@@ -64,6 +71,8 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
   private canWrite(): boolean {
     if (!this.user) return false;
     if (this.table === 'profiles') return this.action === 'update';
+    if (this.table === 'permission_groups') return this.user.role === 'admin';
+    if (this.table === 'comments') return this.action === 'insert' || this.user.role === 'admin' || this.user.role === 'editor';
     if (this.table === 'account_deletion_requests') return this.action === 'insert' || this.user.role === 'admin';
     if (['site_settings','navigation','redirects'].includes(this.table)) return this.user.role === 'admin';
     return ['admin','editor'].includes(this.user.role);
@@ -73,7 +82,7 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
     if (this.action !== 'read' && !this.canWrite()) return { data: null, error: { code: '42501', message: 'permission denied' } };
     let selected = rows.filter((row) => this.visible(row) && this.filters.every((filter) => filter(row)));
     if (this.table === 'profiles' && this.action === 'update') {
-      if ('role' in this.values || selected.some((row) => row.id !== this.user?.id)) return { data: null, error: { code: '42501', message: 'permission denied' } };
+      if ('role' in this.values || this.user?.role !== 'admin' && selected.some((row) => row.id !== this.user?.id)) return { data: null, error: { code: '42501', message: 'permission denied' } };
     }
     if (this.table === 'account_deletion_requests' && this.action === 'insert' && (this.values as Row).user_id !== this.user?.id) return { data: null, error: { code: '42501', message: 'permission denied' } };
     if (this.action === 'insert' || this.action === 'upsert') {
@@ -108,6 +117,22 @@ export function localSupabase(cookies: import('astro').AstroCookies) {
     from: (name: string) => { if (!isTable(name)) throw new Error('Unknown table'); return new Query(name, getUser()); },
     rpc: async (name: string, args: Row) => {
       const actor = getUser();
+      if (name === 'get_public_comments') {
+        const data = tables.comments.filter((comment) => comment.content_id === args.p_content_id && comment.status === 'published').map((comment) => {
+          const author = tables.profiles.find((profile) => profile.id === comment.user_id);
+          return { id:comment.id,body:comment.body,created_at:comment.created_at,display_name:author?.display_name || 'Palmarghe üyesi',avatar_media_id:author?.avatar_media_id ?? null };
+        });
+        return { data, error:null };
+      }
+      if (name === 'assign_permission_group') {
+        if (actor?.role !== 'admin' || actor.id === args.p_user_id) return { data:null,error:{ message:'permission denied' } };
+        const group = tables.permission_groups.find((entry) => entry.id === args.p_group_id);
+        const target = users.find((entry) => entry.id === args.p_user_id);
+        const targetProfile = tables.profiles.find((entry) => entry.id === args.p_user_id);
+        if (!group || !target || !targetProfile) return { data:null,error:{ message:'invalid group' } };
+        target.role=group.base_role; targetProfile.role=group.base_role; targetProfile.permission_group_id=group.id;
+        return { data:null,error:null };
+      }
       if (name === 'set_content_translation_pair') {
         if (!actor || !['admin','editor'].includes(actor.role)) return { data: null, error: { message: 'permission denied' } };
         const source = tables.content_items.find((item) => item.id === args.p_source_id);
@@ -173,6 +198,16 @@ export function localSupabase(cookies: import('astro').AstroCookies) {
 }
 
 export function localInsertContact(data: Row) { tables.contact_messages.push({ id: uid(), status: 'unread', created_at: new Date().toISOString(), ...data }); }
+export function localAdminCreateUser(email:string,password:string,displayName:string){
+  if(users.some((user)=>user.email===email)) return null;
+  const user={id:uid(),email,password,role:'member'}; users.push(user);
+  tables.profiles.push({id:user.id,role:'member',display_name:displayName,bio:null,avatar_media_id:null,permission_group_id:'00000000-0000-4000-9000-000000000001',created_at:new Date().toISOString(),updated_at:new Date().toISOString()});
+  return user;
+}
+export function localAdminDeleteUser(id:string){
+  const index=users.findIndex((user)=>user.id===id); if(index<0||users[index].role==='admin') return false;
+  users.splice(index,1); for(const table of ['profiles','comments'] as const) tables[table]=tables[table].filter((row)=>row.id!==id&&row.user_id!==id); return true;
+}
 const localContactRate = new Map<string, { start: number; count: number }>();
 export function localContactAllowed(key: string) {
   const now = Date.now();

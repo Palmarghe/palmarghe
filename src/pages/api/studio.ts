@@ -4,6 +4,10 @@ import { supabase } from '../../lib/supabase';
 import { sameOrigin, errorResponse, redirectTo } from '../../lib/security';
 import { parseDocument } from '../../lib/blocks';
 import { safeExternalUrl } from '../../lib/site';
+import { createClient } from '@supabase/supabase-js';
+import { runtimeSecret } from '../../lib/runtime-secrets';
+import { localAdminCreateUser, localAdminDeleteUser } from '../../lib/local-adapter';
+import { localTestRequest } from '../../lib/supabase';
 
 const category = z.object({ slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/), name_tr: z.string().min(1).max(100), name_en: z.string().min(1).max(100), description_tr: z.string().max(500).nullable(), description_en: z.string().max(500).nullable(), seo: z.object({ title_tr: z.string().max(120), title_en: z.string().max(120), description_tr: z.string().max(300), description_en: z.string().max(300) }), parent_id: z.uuid().nullable(), active: z.boolean(), sort_order: z.number().int().min(0).max(1000) });
 const content = z.object({ id: z.uuid().optional(), category_id: z.uuid().nullable(), cover_media_id: z.uuid().nullable(), og_media_id: z.uuid().nullable(), canonical_override: z.url().max(500).nullable(), translation_group: z.uuid().nullable(), featured: z.boolean(), indexable: z.boolean(), title: z.string().min(1).max(200), slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*(\/[a-z0-9]+(-[a-z0-9]+)*)*$/), locale: z.enum(['tr','en']), type: z.enum(['article','project','fm_mod','gallery','lab_entry']), status: z.enum(['draft','scheduled','published','archived']), excerpt: z.string().max(500).nullable(), body: z.string().max(100000), seo_title: z.string().max(200).nullable(), seo_description: z.string().max(300).nullable() });
@@ -18,6 +22,71 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const form = await request.formData();
   const entity = form.get('entity');
   const operation = String(form.get('operation') ?? 'create');
+  if (entity === 'comment') {
+    if (!['admin','editor'].includes(profile?.role ?? '')) return errorResponse('Forbidden',403);
+    const id=z.uuid().safeParse(form.get('id'));
+    if(!id.success) return errorResponse('Invalid comment',400);
+    if(operation==='delete') {
+      const {error}=await db.from('comments').delete().eq('id',id.data);
+      if(error) return errorResponse('Delete failed',400);
+    } else {
+      const status=z.enum(['published','hidden']).safeParse(form.get('status'));
+      if(!status.success) return errorResponse('Invalid status',400);
+      const {error}=await db.from('comments').update({status:status.data,updated_at:new Date().toISOString()}).eq('id',id.data);
+      if(error) return errorResponse('Update failed',400);
+    }
+    return redirectTo(request,'/studio/?section=comments');
+  }
+  if (entity === 'permission_group') {
+    if (profile?.role !== 'admin') return errorResponse('Forbidden',403);
+    const id=z.uuid().safeParse(form.get('id'));
+    if(operation==='delete'){
+      if(!id.success) return errorResponse('Invalid group',400);
+      const {data:group}=await db.from('permission_groups').select('protected').eq('id',id.data).single();
+      if(group?.protected) return errorResponse('System groups cannot be deleted',409);
+      const {data:used}=await db.from('profiles').select('id').eq('permission_group_id',id.data).limit(1);
+      if(used?.length) return errorResponse('Group is in use',409);
+      const {error}=await db.from('permission_groups').delete().eq('id',id.data); if(error) return errorResponse('Delete failed',400);
+      return redirectTo(request,'/studio/?section=access');
+    }
+    const permissionNames=['comment','content','taxonomy','media','messages','appearance','navigation','members','permissions','audit'];
+    const parsed=z.object({name:z.string().trim().min(2).max(80),description:z.string().trim().max(300),base_role:z.enum(['member','editor','admin'])}).safeParse({name:form.get('name'),description:form.get('description')??'',base_role:form.get('base_role')});
+    if(!parsed.success) return errorResponse('Invalid group',400);
+    const value={...parsed.data,permissions:Object.fromEntries(permissionNames.map((name)=>[name,form.get(`permission_${name}`)==='on'])),updated_at:new Date().toISOString()};
+    const result=operation==='update'&&id.success?await db.from('permission_groups').update(value).eq('id',id.data):await db.from('permission_groups').insert(value);
+    if(result.error) return errorResponse('Save failed',400);
+    return redirectTo(request,'/studio/?section=access');
+  }
+  if (entity === 'member_group') {
+    if(profile?.role!=='admin') return errorResponse('Forbidden',403);
+    const id=z.uuid().safeParse(form.get('id')); const group=z.uuid().safeParse(form.get('group_id'));
+    if(!id.success||!group.success) return errorResponse('Invalid assignment',400);
+    const {error}=await db.rpc('assign_permission_group',{p_user_id:id.data,p_group_id:group.data}); if(error) return errorResponse('Assignment failed',400);
+    return redirectTo(request,'/studio/?section=members');
+  }
+  if (entity === 'member_account') {
+    if(profile?.role!=='admin') return errorResponse('Forbidden',403);
+    const serviceKey=runtimeSecret('SUPABASE_SERVICE_ROLE_KEY'); const serviceUrl=import.meta.env.PUBLIC_SUPABASE_URL;
+    if(operation==='create'){
+      const parsed=z.object({email:z.email().max(254),password:z.string().min(10).max(128),display_name:z.string().trim().min(2).max(100),group_id:z.uuid()}).safeParse({email:form.get('email'),password:form.get('password'),display_name:form.get('display_name'),group_id:form.get('group_id')});
+      if(!parsed.success) return errorResponse('Invalid member',400);
+      let createdId:string|undefined;
+      if(localTestRequest(request)) createdId=localAdminCreateUser(parsed.data.email,parsed.data.password,parsed.data.display_name)?.id;
+      else if(serviceKey&&serviceUrl){ const service=createClient(serviceUrl,serviceKey,{auth:{persistSession:false}}); const {data,error}=await service.auth.admin.createUser({email:parsed.data.email,password:parsed.data.password,email_confirm:true}); if(error) return errorResponse('Create failed',400); createdId=data.user?.id; }
+      if(!createdId) return errorResponse('Account service unavailable',503);
+      const update=await db.from('profiles').update({display_name:parsed.data.display_name}).eq('id',createdId); if(update.error) return errorResponse('Profile setup failed',400);
+      const assigned=await db.rpc('assign_permission_group',{p_user_id:createdId,p_group_id:parsed.data.group_id}); if(assigned.error) return errorResponse('Group setup failed',400);
+      return redirectTo(request,'/studio/?section=members');
+    }
+    if(operation==='delete'){
+      const id=z.uuid().safeParse(form.get('id')); if(!id.success||id.data===user.id) return errorResponse('Invalid deletion',400);
+      const {data:target}=await db.from('profiles').select('role').eq('id',id.data).single();
+      if(target?.role==='admin'){ const {data:admins}=await db.from('profiles').select('id').eq('role','admin'); if((admins?.length??0)<=1) return errorResponse('Last admin cannot be deleted',409); }
+      let deleted=false; if(localTestRequest(request)) deleted=localAdminDeleteUser(id.data); else if(serviceKey&&serviceUrl){ const service=createClient(serviceUrl,serviceKey,{auth:{persistSession:false}}); deleted=!(await service.auth.admin.deleteUser(id.data)).error; }
+      if(!deleted) return errorResponse('Delete failed',400);
+      return redirectTo(request,'/studio/?section=members');
+    }
+  }
   if (entity === 'translation') {
     const source = z.uuid().safeParse(form.get('id'));
     if (!source.success) return errorResponse('Invalid content',400);
