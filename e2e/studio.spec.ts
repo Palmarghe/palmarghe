@@ -42,6 +42,27 @@ test('content transaction rejects an unknown category without inserting a row', 
   await expect(page.getByRole('link', { name: 'Transaction check' })).toHaveCount(0);
 });
 
+test('Studio editor exposes keyboard link and searchable slash commands', async ({ page }) => {
+  await page.goto('/studio/');
+  await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
+  await page.locator('input[name="password"]').fill('LocalTest123!');
+  await page.getByRole('button', { name: 'Giriş' }).click();
+  await page.goto('/studio/?section=content');
+  const editor = page.locator('#block-editor .tiptap');
+  await editor.fill('Bağlantı metni');
+  await editor.press('Control+A');
+  await editor.press('Control+K');
+  await expect(page.getByRole('dialog', { name: 'Bağlantı ekle' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await editor.fill('');
+  await editor.pressSequentially('/tab');
+  await expect(page.getByRole('menu', { name: 'Blok ekle' })).toBeVisible();
+  await expect(page.getByRole('menuitem', { name: /Tablo/ })).toBeVisible();
+  await editor.press('Enter');
+  await expect(editor.locator('table')).toHaveCount(1);
+  await expect(page.getByRole('button', { name: 'Geri al' })).toBeEnabled();
+});
+
 test('admin creates a category and publishes content', async ({ page }) => {
   await page.goto('/studio/');
   await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');

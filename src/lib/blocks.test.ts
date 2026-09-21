@@ -17,12 +17,15 @@ describe('controlled blocks', () => {
     const id = '123e4567-e89b-42d3-a456-426614174000';
     const doc = parseDocument(JSON.stringify({ type: 'doc', content: [
       { type: 'mediaImage', attrs: { media_id: id, alt: 'Portal' } },
+      { type: 'mediaGallery', attrs: { media_ids: [id] } },
       { type: 'callout', attrs: { tone: 'note', title: 'Not' }, content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Açıklama' }] }] },
       { type: 'cta', attrs: { href: '/contact/', label: 'İletişim' } },
       { type: 'table', content: [{ type: 'tableRow', content: [{ type: 'tableHeader', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Başlık' }] }] }] }] },
     ] }));
     expect(doc && renderDocument(doc)).toContain(`/api/media/${id}/`);
     expect(doc && renderDocument(doc)).toContain('<table>');
+    expect(doc && renderDocument(doc)).toContain('content-gallery');
+    expect(parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'mediaGallery', attrs: { media_ids: ['not-a-uuid'] } }] }))).toBeNull();
     expect(parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'cta', attrs: { href: 'javascript:alert(1)', label: 'X' } }] }))).toBeNull();
     expect(parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'embed', attrs: { src: 'https://www.youtube.com/embed/example', title: 'Video' } }] }))).not.toBeNull();
     expect(parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'embed', attrs: { src: 'https://www.youtube.com/watch?v=example', title: 'Video' } }] }))).toBeNull();

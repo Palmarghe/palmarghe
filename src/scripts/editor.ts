@@ -9,6 +9,7 @@ const mediaImage = Node.create({
   parseHTML: () => [{ tag: 'img[data-media-id]' }],
   renderHTML: ({ HTMLAttributes }) => ['img', mergeAttributes(HTMLAttributes, { 'data-media-id': HTMLAttributes.media_id, src: `/api/media/${HTMLAttributes.media_id}/`, alt: HTMLAttributes.alt })],
 });
+const mediaGallery = Node.create({ name: 'mediaGallery', group: 'block', atom: true, addAttributes: () => ({ media_ids: { default: [] } }), parseHTML: () => [{ tag: 'section[data-media-gallery]' }], renderHTML: ({ HTMLAttributes }) => ['section', mergeAttributes(HTMLAttributes, { 'data-media-gallery': '', class: 'content-gallery' }), 'Galeri'] });
 const callout = Node.create({ name: 'callout', group: 'block', content: 'block+', addAttributes: () => ({ tone: { default: 'note' }, title: { default: '' } }), parseHTML: () => [{ tag: 'aside[data-callout]' }], renderHTML: ({ HTMLAttributes }) => ['aside', mergeAttributes(HTMLAttributes, { 'data-callout': '', class: `content-callout content-callout--${HTMLAttributes.tone}` }), 0] });
 const cta = Node.create({ name: 'cta', group: 'block', atom: true, addAttributes: () => ({ href: { default: '' }, label: { default: '' } }), parseHTML: () => [{ tag: 'a[data-content-cta]' }], renderHTML: ({ HTMLAttributes }) => ['a', mergeAttributes(HTMLAttributes, { 'data-content-cta': '', class: 'button', href: HTMLAttributes.href }), HTMLAttributes.label] });
 const embed = Node.create({ name: 'embed', group: 'block', atom: true, addAttributes: () => ({ src: { default: '' }, title: { default: '' } }), parseHTML: () => [{ tag: 'iframe[data-content-embed]' }], renderHTML: ({ HTMLAttributes }) => ['iframe', mergeAttributes(HTMLAttributes, { 'data-content-embed': '', src: HTMLAttributes.src, title: HTMLAttributes.title, sandbox: 'allow-scripts allow-same-origin allow-popups' })] });
@@ -17,6 +18,7 @@ const tableRow = Node.create({ name: 'tableRow', content: '(tableHeader|tableCel
 const tableHeader = Node.create({ name: 'tableHeader', content: 'paragraph+', parseHTML: () => [{ tag: 'th' }], renderHTML: () => ['th', { scope: 'col' }, 0] });
 const tableCell = Node.create({ name: 'tableCell', content: 'paragraph+', parseHTML: () => [{ tag: 'td' }], renderHTML: () => ['td', 0] });
 type StudioMedia = { id: string; alt_tr?: string | null; alt_en?: string | null; path?: string };
+type Command = [label: string, command: string, hint?: string];
 
 const element = document.querySelector<HTMLElement>('#block-editor');
 const output = document.querySelector<HTMLTextAreaElement>('#body-json');
@@ -29,81 +31,71 @@ if (element && output) {
   const statusBar = document.createElement('p');
   statusBar.className = 'editor-status'; statusBar.setAttribute('aria-live', 'polite');
   element.parentElement?.append(statusBar);
-  const updateStatus = (state = 'Kaydedildi') => { const words = editor?.getText().trim().split(/\s+/).filter(Boolean).length ?? 0; const minutes = Math.max(1, Math.ceil(words / 200)); statusBar.textContent = `${state} · ${words} kelime · yaklaşık ${minutes} dk okuma`; document.querySelectorAll<HTMLElement>('[data-editor-save-state]').forEach((element) => { element.textContent = state; }); };
   const bubbleMenu = document.createElement('div');
   bubbleMenu.className = 'editor-bubble-menu'; bubbleMenu.setAttribute('aria-label', 'Seçili metin araçları');
-  bubbleMenu.innerHTML = '<button type="button" data-editor="bold" aria-label="Kalın">B</button><button type="button" data-editor="italic" aria-label="İtalik">I</button><button type="button" data-editor="link">Bağlantı</button>';
+  bubbleMenu.innerHTML = '<button type="button" data-editor="bold" aria-label="Kalın" title="Kalın">B</button><button type="button" data-editor="italic" aria-label="İtalik" title="İtalik">I</button><button type="button" data-editor="link" title="Bağlantı ekle">Bağlantı</button>';
   document.body.append(bubbleMenu);
   const editor = new Editor({
     element,
-    extensions: [StarterKit.configure({ heading: { levels: [2, 3] } }), Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true, protocols: ['http', 'https', 'mailto'] }), BubbleMenu.configure({ element: bubbleMenu, shouldShow: ({ editor, state }) => editor.isEditable && !state.selection.empty }), mediaImage, callout, cta, embed, table, tableRow, tableHeader, tableCell],
+    extensions: [StarterKit.configure({ heading: { levels: [2, 3] } }), Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true, protocols: ['http', 'https', 'mailto'] }), BubbleMenu.configure({ element: bubbleMenu, shouldShow: ({ editor, state }) => editor.isEditable && !state.selection.empty }), mediaImage, mediaGallery, callout, cta, embed, table, tableRow, tableHeader, tableCell],
     editorProps: { attributes: { 'aria-label': 'İçerik blok editörü' } },
     content: initial as object,
-    onUpdate: ({ editor }) => { output.value = JSON.stringify(editor.getJSON()); dirty = true; updateStatus('Kaydedilmedi'); },
+    onUpdate: ({ editor }) => { output.value = JSON.stringify(editor.getJSON()); dirty = true; updateStatus('Kaydedilmedi'); updateToolbar(); },
+    onSelectionUpdate: () => updateToolbar(),
   });
-  const sync = () => { output.value = JSON.stringify(editor.getJSON()); };
-  updateStatus();
+  const updateStatus = (state = 'Kaydedildi') => { const words = editor.getText().trim().split(/\s+/).filter(Boolean).length; const minutes = Math.max(1, Math.ceil(words / 200)); statusBar.textContent = `${state} · ${words} kelime · yaklaşık ${minutes} dk okuma`; document.querySelectorAll<HTMLElement>('[data-editor-save-state]').forEach((item) => { item.textContent = state; }); };
+  const updateToolbar = () => {
+    const active: Record<string, boolean> = { bold: editor.isActive('bold'), italic: editor.isActive('italic'), paragraph: editor.isActive('paragraph'), heading2: editor.isActive('heading', { level: 2 }), heading3: editor.isActive('heading', { level: 3 }), bullet: editor.isActive('bulletList'), ordered: editor.isActive('orderedList'), quote: editor.isActive('blockquote'), code: editor.isActive('codeBlock'), link: editor.isActive('link') };
+    document.querySelectorAll<HTMLButtonElement>('.editor-toolbar [data-editor], .editor-bubble-menu [data-editor]').forEach((button) => { const isActive = Boolean(active[button.dataset.editor ?? '']); button.classList.toggle('is-active', isActive); button.setAttribute('aria-pressed', String(isActive)); });
+    document.querySelectorAll<HTMLButtonElement>('[data-editor="undo"]').forEach((button) => { button.disabled = !editor.can().undo(); });
+    document.querySelectorAll<HTMLButtonElement>('[data-editor="redo"]').forEach((button) => { button.disabled = !editor.can().redo(); });
+  };
+  const sync = () => { output.value = JSON.stringify(editor.getJSON()); updateToolbar(); };
+
   const slashMenu = document.createElement('div');
-  slashMenu.className = 'editor-slash-menu'; slashMenu.setAttribute('role', 'menu'); slashMenu.hidden = true;
-  const commands = [['Metin','paragraph'],['Başlık','heading2'],['Alt başlık','heading3'],['Görsel','media'],['Not','callout'],['CTA','cta'],['YouTube / Vimeo','embed'],['Tablo','table'],['Alıntı','quote'],['Kod','code'],['Ayırıcı','divider']];
-  slashMenu.innerHTML = commands.map(([label, command]) => `<button type="button" role="menuitem" data-editor="${command}">${label}</button>`).join('');
-  element.parentElement?.append(slashMenu);
+  slashMenu.className = 'editor-slash-menu'; slashMenu.setAttribute('role', 'menu'); slashMenu.setAttribute('aria-label', 'Blok ekle'); slashMenu.hidden = true;
+  const commands: Command[] = [['Metin','paragraph','P'],['Başlık','heading2','H2'],['Alt başlık','heading3','H3'],['Görsel','media'],['Galeri','gallery'],['Not','callout'],['CTA','cta'],['YouTube / Vimeo','embed'],['Tablo','table'],['Alıntı','quote'],['Kod','code'],['Ayırıcı','divider']];
+  const renderSlashMenu = (query = '') => { const term = query.toLocaleLowerCase('tr'); const matches = commands.filter(([label, command]) => `${label} ${command}`.toLocaleLowerCase('tr').includes(term)); slashMenu.innerHTML = `<p class="editor-slash-query">${query ? `“${query}” için bloklar` : 'Blok ara veya seç'}</p>${matches.length ? matches.map(([label, command, hint]) => `<button type="button" role="menuitem" data-editor="${command}"><span>${label}</span>${hint ? `<small>${hint}</small>` : ''}</button>`).join('') : '<p class="editor-slash-empty">Eşleşen blok yok.</p>'}`; };
+  renderSlashMenu(); element.parentElement?.append(slashMenu);
   let slashPosition = 0;
+  let slashFilter = '';
+  const visibleSlashButtons = () => [...slashMenu.querySelectorAll<HTMLButtonElement>('button:not([hidden])')];
+  const applySlashCommand = (command?: string) => { if (!command) return; slashMenu.hidden = true; const to = editor.state.selection.from; editor.chain().focus().deleteRange({ from: slashPosition - 1, to }).run(); document.querySelector<HTMLButtonElement>(`.editor-toolbar [data-editor="${command}"]`)?.click(); slashPosition = 0; slashFilter = ''; };
   element.addEventListener('keydown', (event) => {
-    if (event.key === '/') window.setTimeout(() => {
-      const { from, $from } = editor.state.selection;
-      if ($from.parent.textBetween(0, $from.parentOffset, '\0', '\0').endsWith('/')) { slashPosition = from; slashMenu.hidden = false; slashMenu.querySelector<HTMLButtonElement>('button')?.focus(); }
-    });
-    if (event.key === 'Escape') slashMenu.hidden = true;
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); openDialog('link'); return; }
+    if (!slashMenu.hidden) {
+      if (event.key === 'Escape') { event.preventDefault(); slashMenu.hidden = true; slashPosition = 0; slashFilter = ''; return; }
+      if (event.key === 'Enter') { event.preventDefault(); applySlashCommand(visibleSlashButtons()[0]?.dataset.editor); return; }
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); const buttons = visibleSlashButtons(); const index = buttons.indexOf(document.activeElement as HTMLButtonElement); buttons[(index + (event.key === 'ArrowDown' ? 1 : buttons.length - 1)) % buttons.length]?.focus(); return; }
+      if (event.key === 'Backspace') { slashFilter = slashFilter.slice(0, -1); window.setTimeout(() => renderSlashMenu(slashFilter)); return; }
+      if (event.key.length === 1 && !event.metaKey && !event.ctrlKey) { if (/\s/.test(event.key)) { slashMenu.hidden = true; slashPosition = 0; slashFilter = ''; return; } slashFilter += event.key; window.setTimeout(() => renderSlashMenu(slashFilter)); return; }
+    }
+    if (event.key === '/' && !event.metaKey && !event.ctrlKey && !event.altKey) { slashPosition = editor.state.selection.from + 1; slashFilter = ''; window.setTimeout(() => { if (slashPosition) { renderSlashMenu(); slashMenu.hidden = false; } }); }
   });
-  slashMenu.addEventListener('keydown', (event) => {
-    const buttons = [...slashMenu.querySelectorAll<HTMLButtonElement>('button')]; const current = buttons.indexOf(document.activeElement as HTMLButtonElement);
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); buttons[(current + (event.key === 'ArrowDown' ? 1 : buttons.length - 1)) % buttons.length]?.focus(); }
-    if (event.key === 'Escape') { slashMenu.hidden = true; editor.commands.focus(); }
-  });
-  slashMenu.addEventListener('click', (event) => { const command = (event.target as HTMLElement).closest<HTMLButtonElement>('button')?.dataset.editor; slashMenu.hidden = true; if (command) { editor.chain().focus().deleteRange({ from: slashPosition - 1, to: slashPosition }).run(); document.querySelector<HTMLButtonElement>(`.editor-toolbar [data-editor="${command}"]`)?.click(); } });
+  slashMenu.addEventListener('mousedown', (event) => event.preventDefault());
+  slashMenu.addEventListener('click', (event) => applySlashCommand((event.target as HTMLElement).closest<HTMLButtonElement>('button')?.dataset.editor));
+
   const dialog = document.createElement('dialog');
-  dialog.className = 'editor-block-dialog';
+  dialog.className = 'editor-block-dialog'; dialog.setAttribute('aria-labelledby', 'editor-dialog-title');
   dialog.innerHTML = '<form method="dialog"><header><strong id="editor-dialog-title"></strong><button value="cancel" aria-label="Kapat">×</button></header><div class="editor-dialog-fields"></div><footer><button value="cancel" type="button" data-dialog-cancel>Vazgeç</button><button value="confirm">Ekle</button></footer></form>';
   document.body.append(dialog);
   const fields = dialog.querySelector<HTMLElement>('.editor-dialog-fields')!;
   const dialogTitle = dialog.querySelector<HTMLElement>('#editor-dialog-title')!;
-  const openDialog = (kind: 'media' | 'callout' | 'cta' | 'embed' | 'link') => {
-    const mediaOptions = media.map((item) => `<option value="${item.id}">${item.alt_tr || item.alt_en || item.path || 'Görsel'}</option>`).join('');
-    dialogTitle.textContent = ({ media: 'Görsel ekle', callout: 'Not ekle', cta: 'Buton ekle', embed: 'Video ekle', link: 'Bağlantı ekle' })[kind];
-    fields.innerHTML = kind === 'media' ? `<label>Medya<select name="media_id" required>${mediaOptions}</select></label><label>Alternatif metin<input name="alt" maxlength="300" required></label><label>Açıklama<input name="caption" maxlength="300"></label>` : kind === 'callout' ? '<label>Tür<select name="tone"><option value="note">Not</option><option value="info">Bilgi</option><option value="warning">Uyarı</option></select></label><label>Başlık<input name="title" maxlength="120" required value="Not"></label>' : kind === 'cta' ? '<label>Buton metni<input name="label" maxlength="120" required></label><label>Bağlantı<input name="href" placeholder="/iletisim/ veya https://" required></label>' : kind === 'link' ? '<label>Bağlantı<input name="href" placeholder="/sayfa/ veya https://" required></label>' : '<label>YouTube veya Vimeo URL<input name="src" type="url" required placeholder="https://www.youtube.com/watch?v=..."></label><label>Başlık<input name="title" maxlength="160" required value="Video"></label>';
-    const form = dialog.querySelector('form')!;
-    form.onsubmit = (event) => { event.preventDefault(); const data = new FormData(form); if (kind === 'media') { const selected = media.find((item) => item.id === data.get('media_id')); if (!selected) return; editor.chain().focus().insertContent({ type: 'mediaImage', attrs: { media_id: selected.id, alt: String(data.get('alt') || selected.alt_tr || selected.alt_en || ''), caption: String(data.get('caption') || '') } }).run(); } if (kind === 'callout') editor.chain().focus().insertContent({ type: 'callout', attrs: { tone: String(data.get('tone')), title: String(data.get('title')) }, content: [{ type: 'paragraph' }] }).run(); if (kind === 'cta') editor.chain().focus().insertContent({ type: 'cta', attrs: { label: String(data.get('label')), href: String(data.get('href')) } }).run(); if (kind === 'link') { const href = String(data.get('href') ?? '').trim(); if (!(/^(https?:|mailto:)/i.test(href) || href.startsWith('/'))) return; editor.chain().focus().extendMarkRange('link').setLink({ href }).run(); } if (kind === 'embed') editor.chain().focus().insertContent({ type: 'embed', attrs: { src: normalizeEmbed(String(data.get('src'))), title: String(data.get('title')) } }).run(); dialog.close(); sync(); };
-    dialog.querySelector<HTMLButtonElement>('[data-dialog-cancel]')!.onclick = () => dialog.close();
-    dialog.showModal();
-    dialog.querySelector<HTMLElement>('input,select')?.focus();
-  };
   const normalizeEmbed = (value: string) => { try { const url = new URL(value); if (url.hostname.includes('youtu')) { const id = url.searchParams.get('v') || url.pathname.split('/').filter(Boolean).pop(); return id ? `https://www.youtube-nocookie.com/embed/${id}` : value; } if (url.hostname === 'vimeo.com') { const id = url.pathname.split('/').filter(Boolean).pop(); return id ? `https://player.vimeo.com/video/${id}` : value; } return value; } catch { return value; } };
-  document.querySelectorAll<HTMLButtonElement>('[data-editor]').forEach((button) => {
-    button.addEventListener('click', () => {
-      switch (button.dataset.editor) {
-        case 'paragraph': editor.chain().focus().setParagraph().run(); break;
-        case 'heading2': editor.chain().focus().toggleHeading({ level: 2 }).run(); break;
-        case 'heading3': editor.chain().focus().toggleHeading({ level: 3 }).run(); break;
-        case 'bold': editor.chain().focus().toggleBold().run(); break;
-        case 'italic': editor.chain().focus().toggleItalic().run(); break;
-        case 'link': openDialog('link'); break;
-        case 'ordered': editor.chain().focus().toggleOrderedList().run(); break;
-        case 'bullet': editor.chain().focus().toggleBulletList().run(); break;
-        case 'quote': editor.chain().focus().toggleBlockquote().run(); break;
-        case 'code': editor.chain().focus().toggleCodeBlock().run(); break;
-        case 'divider': editor.chain().focus().setHorizontalRule().run(); break;
-        case 'media': if (media.length) openDialog('media'); else window.alert('Önce Medya bölümünden bir görsel yükleyin.'); break;
-        case 'callout': openDialog('callout'); break;
-        case 'cta': openDialog('cta'); break;
-        case 'embed': openDialog('embed'); break;
-        case 'table': editor.chain().focus().insertContent({ type: 'table', content: [{ type: 'tableRow', content: [{ type: 'tableHeader', content: [{ type: 'paragraph' }] }, { type: 'tableHeader', content: [{ type: 'paragraph' }] }] }, { type: 'tableRow', content: [{ type: 'tableCell', content: [{ type: 'paragraph' }] }, { type: 'tableCell', content: [{ type: 'paragraph' }] }] }] }).run(); break;
-        case 'focus': element.closest('.content-editor-form')?.classList.toggle('editor-focus-mode'); break;
-      }
-      sync();
-    });
-  });
-  sync();
+  const openDialog = (kind: 'media' | 'gallery' | 'callout' | 'cta' | 'embed' | 'link') => {
+    const mediaOptions = media.map((item) => `<option value="${item.id}">${item.alt_tr || item.alt_en || item.path || 'Görsel'}</option>`).join('');
+    dialogTitle.textContent = ({ media: 'Görsel ekle', gallery: 'Galeri ekle', callout: 'Not ekle', cta: 'Buton ekle', embed: 'Video ekle', link: 'Bağlantı ekle' })[kind];
+    fields.innerHTML = kind === 'gallery' ? `<p>Yayına alınan görseller ziyaretçiler için tıklanabilir bir galeride açılır.</p><div class="editor-gallery-picker">${media.map((item) => `<label><input type="checkbox" name="media_ids" value="${item.id}"><img src="/api/media/${item.id}/" alt="" loading="lazy"><span>${item.alt_tr || item.alt_en || item.path || 'Görsel'}</span></label>`).join('')}</div>` : kind === 'media' ? `<label>Medya<select name="media_id" required>${mediaOptions}</select></label><label>Alternatif metin<input name="alt" maxlength="300" required></label><label>Açıklama<input name="caption" maxlength="300"></label>` : kind === 'callout' ? '<label>Tür<select name="tone"><option value="note">Not</option><option value="info">Bilgi</option><option value="warning">Uyarı</option></select></label><label>Başlık<input name="title" maxlength="120" required value="Not"></label>' : kind === 'cta' ? '<label>Buton metni<input name="label" maxlength="120" required></label><label>Bağlantı<input name="href" placeholder="/iletisim/ veya https://" required></label>' : kind === 'link' ? '<label>Bağlantı<input name="href" placeholder="/sayfa/ veya https://" required></label>' : '<label>YouTube veya Vimeo URL<input name="src" type="url" required placeholder="https://www.youtube.com/watch?v=..."></label><label>Başlık<input name="title" maxlength="160" required value="Video"></label>';
+    const form = dialog.querySelector('form')!;
+    form.onsubmit = (event) => { event.preventDefault(); const data = new FormData(form); if (kind === 'media') { const selected = media.find((item) => item.id === data.get('media_id')); if (!selected) return; editor.chain().focus().insertContent({ type: 'mediaImage', attrs: { media_id: selected.id, alt: String(data.get('alt') || selected.alt_tr || selected.alt_en || ''), caption: String(data.get('caption') || '') } }).run(); } if (kind === 'gallery') { const mediaIds = data.getAll('media_ids').map(String); if (!mediaIds.length) return; editor.chain().focus().insertContent({ type: 'mediaGallery', attrs: { media_ids: mediaIds } }).run(); } if (kind === 'callout') editor.chain().focus().insertContent({ type: 'callout', attrs: { tone: String(data.get('tone')), title: String(data.get('title')) }, content: [{ type: 'paragraph' }] }).run(); if (kind === 'cta') editor.chain().focus().insertContent({ type: 'cta', attrs: { label: String(data.get('label')), href: String(data.get('href')) } }).run(); if (kind === 'link') { const href = String(data.get('href') ?? '').trim(); if (!(/^(https?:|mailto:)/i.test(href) || href.startsWith('/'))) return; editor.chain().focus().extendMarkRange('link').setLink({ href }).run(); } if (kind === 'embed') editor.chain().focus().insertContent({ type: 'embed', attrs: { src: normalizeEmbed(String(data.get('src'))), title: String(data.get('title')) } }).run(); dialog.close(); sync(); };
+    dialog.querySelector<HTMLButtonElement>('[data-dialog-cancel]')!.onclick = () => dialog.close(); dialog.showModal(); dialog.querySelector<HTMLElement>('input,select')?.focus();
+  };
+  document.querySelectorAll<HTMLButtonElement>('[data-editor]').forEach((button) => button.addEventListener('click', () => {
+    switch (button.dataset.editor) {
+      case 'paragraph': editor.chain().focus().setParagraph().run(); break; case 'heading2': editor.chain().focus().toggleHeading({ level: 2 }).run(); break; case 'heading3': editor.chain().focus().toggleHeading({ level: 3 }).run(); break; case 'bold': editor.chain().focus().toggleBold().run(); break; case 'italic': editor.chain().focus().toggleItalic().run(); break; case 'link': openDialog('link'); break; case 'undo': editor.chain().focus().undo().run(); break; case 'redo': editor.chain().focus().redo().run(); break; case 'ordered': editor.chain().focus().toggleOrderedList().run(); break; case 'bullet': editor.chain().focus().toggleBulletList().run(); break; case 'quote': editor.chain().focus().toggleBlockquote().run(); break; case 'code': editor.chain().focus().toggleCodeBlock().run(); break; case 'divider': editor.chain().focus().setHorizontalRule().run(); break; case 'gallery': if (media.length) openDialog('gallery'); else window.alert('Önce Medya bölümünden görsel yükleyin.'); break; case 'media': if (media.length) openDialog('media'); else window.alert('Önce Medya bölümünden bir görsel yükleyin.'); break; case 'callout': openDialog('callout'); break; case 'cta': openDialog('cta'); break; case 'embed': openDialog('embed'); break; case 'table': editor.chain().focus().insertContent({ type: 'table', content: [{ type: 'tableRow', content: [{ type: 'tableHeader', content: [{ type: 'paragraph' }] }, { type: 'tableHeader', content: [{ type: 'paragraph' }] }] }, { type: 'tableRow', content: [{ type: 'tableCell', content: [{ type: 'paragraph' }] }, { type: 'tableCell', content: [{ type: 'paragraph' }] }] }] }).run(); break; case 'focus': element.closest('.content-editor-form')?.classList.toggle('editor-focus-mode'); break;
+    } sync();
+  }));
+  sync(); updateStatus();
   output.form?.addEventListener('submit', () => { sync(); dirty = false; updateStatus('Kaydediliyor…'); });
   window.addEventListener('beforeunload', (event) => { if (dirty) event.preventDefault(); });
 }

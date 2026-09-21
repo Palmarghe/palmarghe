@@ -2,7 +2,7 @@ import { safeExternalUrl } from './site';
 
 export type Block = { type: string; text?: string; attrs?: Record<string, unknown>; marks?: { type: string; attrs?: Record<string, unknown> }[]; content?: Block[] };
 export type Document = { type: 'doc'; content: Block[] };
-const blockTypes = new Set(['paragraph','heading','blockquote','bulletList','orderedList','listItem','codeBlock','horizontalRule','text','hardBreak','mediaImage','callout','cta','embed','table','tableRow','tableHeader','tableCell']);
+const blockTypes = new Set(['paragraph','heading','blockquote','bulletList','orderedList','listItem','codeBlock','horizontalRule','text','hardBreak','mediaImage','mediaGallery','callout','cta','embed','table','tableRow','tableHeader','tableCell']);
 const markTypes = new Set(['bold','italic','strike','code','link']);
 const escapeHtml = (text: string) => text.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -25,6 +25,7 @@ function validNode(node: unknown, depth = 0): node is Block {
   if (value.type === 'heading' && ![2,3].includes(Number(value.attrs?.level))) return false;
   if (value.marks?.some((mark) => mark.type === 'link' && !safeLink(String(mark.attrs?.href ?? '')))) return false;
   if (value.type === 'mediaImage' && (!uuid.test(String(value.attrs?.media_id ?? '')) || typeof value.attrs?.alt !== 'string' || value.attrs.alt.length > 300 || (value.attrs?.caption !== undefined && (typeof value.attrs.caption !== 'string' || value.attrs.caption.length > 300)))) return false;
+  if (value.type === 'mediaGallery' && (!Array.isArray(value.attrs?.media_ids) || value.attrs.media_ids.length < 1 || value.attrs.media_ids.length > 12 || new Set(value.attrs.media_ids).size !== value.attrs.media_ids.length || value.attrs.media_ids.some((id) => !uuid.test(String(id))))) return false;
   if (value.type === 'callout' && (!['note','info','warning'].includes(String(value.attrs?.tone ?? '')) || typeof value.attrs?.title !== 'string' || value.attrs.title.length > 120)) return false;
   if (value.type === 'cta' && (!safeLink(String(value.attrs?.href ?? '')) || typeof value.attrs?.label !== 'string' || !String(value.attrs?.label).trim() || String(value.attrs?.label).length > 120)) return false;
   if (value.type === 'embed' && (!safeEmbedUrl(String(value.attrs?.src ?? '')) || (value.attrs?.title !== undefined && (typeof value.attrs.title !== 'string' || value.attrs.title.length > 160)))) return false;
@@ -59,6 +60,7 @@ export function renderDocument(doc: Document): string {
     if (node.type === 'hardBreak') return '<br />';
     if (node.type === 'horizontalRule') return '<hr />';
     if (node.type === 'mediaImage') return `<figure class="content-media"><img src="/api/media/${escapeHtml(String(node.attrs?.media_id))}/" alt="${escapeHtml(String(node.attrs?.alt))}" loading="lazy" />${node.attrs?.caption ? `<figcaption>${escapeHtml(String(node.attrs.caption))}</figcaption>` : ''}</figure>`;
+    if (node.type === 'mediaGallery') { const mediaIds = Array.isArray(node.attrs?.media_ids) ? node.attrs.media_ids : []; return `<section class="content-gallery" aria-label="Görsel galerisi">${mediaIds.map((id, index) => `<a href="/api/media/${escapeHtml(String(id))}/" data-gallery-item><img src="/api/media/${escapeHtml(String(id))}/" alt="Galeri görseli ${index + 1}" loading="lazy" /></a>`).join('')}</section>`; }
     if (node.type === 'callout') return `<aside class="content-callout content-callout--${escapeHtml(String(node.attrs?.tone))}"><strong>${escapeHtml(String(node.attrs?.title))}</strong>${inside}</aside>`;
     if (node.type === 'cta') return `<p class="content-cta"><a class="button" href="${escapeHtml(String(node.attrs?.href))}" rel="noopener noreferrer">${escapeHtml(String(node.attrs?.label))} →</a></p>`;
     if (node.type === 'embed') return `<figure class="content-embed"><iframe src="${escapeHtml(String(node.attrs?.src))}" title="${escapeHtml(String(node.attrs?.title ?? 'Embedded content'))}" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups" referrerpolicy="strict-origin-when-cross-origin"></iframe></figure>`;
