@@ -42,8 +42,20 @@ if (element && output) {
   const commands = [['Metin','paragraph'],['Başlık','heading2'],['Alt başlık','heading3'],['Görsel','media'],['Not','callout'],['CTA','cta'],['YouTube / Vimeo','embed'],['Tablo','table'],['Alıntı','quote'],['Kod','code'],['Ayırıcı','divider']];
   slashMenu.innerHTML = commands.map(([label, command]) => `<button type="button" role="menuitem" data-editor="${command}">${label}</button>`).join('');
   element.parentElement?.append(slashMenu);
-  element.addEventListener('keydown', (event) => { if (event.key === '/' && editor.isEmpty) window.setTimeout(() => { slashMenu.hidden = false; slashMenu.querySelector<HTMLButtonElement>('button')?.focus(); }); if (event.key === 'Escape') slashMenu.hidden = true; });
-  slashMenu.addEventListener('click', (event) => { const command = (event.target as HTMLElement).closest<HTMLButtonElement>('button')?.dataset.editor; slashMenu.hidden = true; if (command) document.querySelector<HTMLButtonElement>(`.editor-toolbar [data-editor="${command}"]`)?.click(); });
+  let slashPosition = 0;
+  element.addEventListener('keydown', (event) => {
+    if (event.key === '/') window.setTimeout(() => {
+      const { from, $from } = editor.state.selection;
+      if ($from.parent.textBetween(0, $from.parentOffset, '\0', '\0').endsWith('/')) { slashPosition = from; slashMenu.hidden = false; slashMenu.querySelector<HTMLButtonElement>('button')?.focus(); }
+    });
+    if (event.key === 'Escape') slashMenu.hidden = true;
+  });
+  slashMenu.addEventListener('keydown', (event) => {
+    const buttons = [...slashMenu.querySelectorAll<HTMLButtonElement>('button')]; const current = buttons.indexOf(document.activeElement as HTMLButtonElement);
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); buttons[(current + (event.key === 'ArrowDown' ? 1 : buttons.length - 1)) % buttons.length]?.focus(); }
+    if (event.key === 'Escape') { slashMenu.hidden = true; editor.commands.focus(); }
+  });
+  slashMenu.addEventListener('click', (event) => { const command = (event.target as HTMLElement).closest<HTMLButtonElement>('button')?.dataset.editor; slashMenu.hidden = true; if (command) { editor.chain().focus().deleteRange({ from: slashPosition - 1, to: slashPosition }).run(); document.querySelector<HTMLButtonElement>(`.editor-toolbar [data-editor="${command}"]`)?.click(); } });
   const dialog = document.createElement('dialog');
   dialog.className = 'editor-block-dialog';
   dialog.innerHTML = '<form method="dialog"><header><strong id="editor-dialog-title"></strong><button value="cancel" aria-label="Kapat">×</button></header><div class="editor-dialog-fields"></div><footer><button value="cancel" type="button" data-dialog-cancel>Vazgeç</button><button value="confirm">Ekle</button></footer></form>';
