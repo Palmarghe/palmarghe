@@ -135,6 +135,10 @@
 .content-editor-form>.button:last-child{border-bottom:1px solid var(--border);border-radius:0 0 .75rem .75rem;margin-bottom:2rem}
 .content-editor-form>.button:last-child{background:var(--text);border-color:var(--text);color:var(--bg);font-weight:700}
 .content-editor-form>.button:last-child:hover,.content-editor-form>.button:last-child:focus-visible{background:var(--accent);border-color:var(--accent);color:#fff}
+.content-editor-form>*{min-width:0}
+.content-editor-form select,.content-editor-form input,.content-editor-form textarea{max-width:100%;min-width:0}
+.editor-action-bar .button-quiet{background:transparent;border-color:var(--border);color:var(--text)}
+.editor-slash-menu[hidden],.editor-bubble-menu[hidden],[data-type-section][hidden]{display:none!important}
 .content-editor-form select,.content-editor-form input,.content-editor-form textarea{border-radius:.45rem}
 .content-editor-form>label:not(.field){display:flex;align-items:center;gap:.65rem;color:#d5d2db;font-size:.9rem}
 .content-editor-form>label:not(.field) input{min-height:auto;width:1.05rem;height:1.05rem}

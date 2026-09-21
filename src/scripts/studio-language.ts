@@ -1,6 +1,6 @@
-const editorForm = document.querySelector<HTMLFormElement>('.content-editor-form');
-
-if (editorForm) {
+function simplifyStudioLanguage() {
+  const editorForm = document.querySelector<HTMLFormElement>('.content-editor-form');
+  if (!editorForm) return;
   const replacements = new Map([
     ['Etiketler (çoklu seçim)', 'Etiketler'],
     ['Kapak görseli', 'Kapak resmi'],
@@ -33,3 +33,6 @@ if (editorForm) {
   const advanced = editorForm.querySelector<HTMLElement>('.advanced-content summary');
   if (advanced) advanced.textContent = 'Google ve paylaşım ayarları';
 }
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', simplifyStudioLanguage, { once: true });
+else simplifyStudioLanguage();
