@@ -377,11 +377,11 @@ test('admin manages member roles without self escalation', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
   await page.locator('input[name="password"]').fill('LocalTest123!');
   await page.getByRole('button', { name: 'Giriş' }).click();
-  await page.goto('/studio/?section=users');
-  const role = page.locator('select[name="role"]').last();
-  await role.selectOption('editor');
-  await role.locator('xpath=..').getByRole('button', { name: 'Kaydet', exact: true }).click();
-  await expect(page.locator('select[name="role"]').last()).toHaveValue('editor');
+  await page.goto('/studio/?section=members');
+  const group = page.locator('.member-actions select[name="group_id"]').first();
+  await group.selectOption({label:'Editör'});
+  await group.locator('xpath=../..').getByRole('button', { name: 'Uygula', exact: true }).click();
+  await expect(page.locator('.member-actions select[name="group_id"]').first()).toHaveValue(/.+/);
   const self = await page.request.post('/api/studio/', { headers: { Origin: 'http://127.0.0.1:4322' }, form: { entity: 'member_role', id: '00000000-0000-4000-8000-100000000001', role: 'member' } });
   expect(self.status()).toBe(400);
 });

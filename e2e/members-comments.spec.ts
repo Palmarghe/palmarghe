@@ -16,12 +16,25 @@ test('admin creates permission groups and manages a Studio membership',async({pa
   await page.getByLabel('Görünen ad').fill('Yeni Studio Üyesi');
   await page.getByLabel('E-posta').fill(email);
   await page.getByLabel('Geçici şifre').fill('MemberTest123!');
-  await page.locator('.member-create select[name="group_id"]').selectOption({label:'Üye'});
+  await page.locator('.member-create select[name="group_id"]').selectOption({label:'Yorum moderatörü'});
   await page.getByRole('button',{name:'Üyeliği oluştur'}).click();
   const card=page.locator('.member-card').filter({hasText:'Yeni Studio Üyesi'});
   await expect(card).toBeVisible();
-  await card.getByText('Üyeliği sil').click();
-  await card.getByRole('button',{name:'Kalıcı olarak sil'}).click();
+  await page.context().clearCookies();
+  await page.goto('/studio/');
+  await page.getByRole('textbox',{name:'Email'}).fill(email);
+  await page.locator('input[name="password"]').fill('MemberTest123!');
+  await page.getByRole('button',{name:'Giriş'}).click();
+  await expect(page.getByRole('navigation').getByRole('link',{name:'Mesajlar'})).toBeVisible();
+  await expect(page.getByRole('navigation').getByRole('link',{name:'İçerikler'})).toHaveCount(0);
+  const denied=await page.request.post('/api/studio/',{headers:{Origin:'http://127.0.0.1:4322'},form:{entity:'content',title:'Yetkisiz içerik',slug:'yetkisiz-icerik',locale:'tr',type:'article',status:'draft',body:'{}'}});
+  expect(denied.status()).toBe(403);
+  await page.context().clearCookies();
+  await loginStudio(page);
+  await page.goto('/studio/?section=members');
+  const cleanupCard=page.locator('.member-card').filter({hasText:'Yeni Studio Üyesi'});
+  await cleanupCard.getByText('Üyeliği sil').click();
+  await cleanupCard.getByRole('button',{name:'Kalıcı olarak sil'}).click();
   await expect(page.locator('.member-card').filter({hasText:'Yeni Studio Üyesi'})).toHaveCount(0);
 });
 

@@ -17,11 +17,15 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (!db) return errorResponse('Service unavailable', 503);
   const { data: { user } } = await db.auth.getUser();
   if (!user) return errorResponse('Unauthorized', 401);
-  const { data: profile } = await db.from('profiles').select('role').eq('id', user.id).single();
+  const { data: profile } = await db.from('profiles').select('role,permission_group_id').eq('id', user.id).single();
   if (!['editor','admin'].includes(profile?.role ?? '')) return errorResponse('Forbidden', 403);
   const form = await request.formData();
   const entity = form.get('entity');
   const operation = String(form.get('operation') ?? 'create');
+  const {data:permissionGroup}=profile?.permission_group_id ? await db.from('permission_groups').select('permissions').eq('id',profile.permission_group_id).single() : {data:null};
+  const permissionMap:Record<string,string>={content:'content',translation:'content',category:'taxonomy',tag:'taxonomy',message:'messages',comment:'messages',appearance:'appearance',homepage:'appearance',social:'appearance',navigation:'navigation',redirect:'navigation'};
+  const requiredPermission=permissionMap[String(entity)];
+  if(profile?.role==='editor'&&requiredPermission&&permissionGroup&&!permissionGroup.permissions?.[requiredPermission]) return errorResponse('Forbidden',403);
   if (entity === 'comment') {
     if (!['admin','editor'].includes(profile?.role ?? '')) return errorResponse('Forbidden',403);
     const id=z.uuid().safeParse(form.get('id'));
@@ -74,8 +78,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       if(localTestRequest(request)) createdId=localAdminCreateUser(parsed.data.email,parsed.data.password,parsed.data.display_name)?.id;
       else if(serviceKey&&serviceUrl){ const service=createClient(serviceUrl,serviceKey,{auth:{persistSession:false}}); const {data,error}=await service.auth.admin.createUser({email:parsed.data.email,password:parsed.data.password,email_confirm:true}); if(error) return errorResponse('Create failed',400); createdId=data.user?.id; }
       if(!createdId) return errorResponse('Account service unavailable',503);
-      const update=await db.from('profiles').update({display_name:parsed.data.display_name}).eq('id',createdId); if(update.error) return errorResponse('Profile setup failed',400);
-      const assigned=await db.rpc('assign_permission_group',{p_user_id:createdId,p_group_id:parsed.data.group_id}); if(assigned.error) return errorResponse('Group setup failed',400);
+      const rollback=async()=>{if(localTestRequest(request))localAdminDeleteUser(createdId!);else if(serviceKey&&serviceUrl)await createClient(serviceUrl,serviceKey,{auth:{persistSession:false}}).auth.admin.deleteUser(createdId!);};
+      const update=await db.from('profiles').update({display_name:parsed.data.display_name}).eq('id',createdId); if(update.error){await rollback();return errorResponse('Profile setup failed',400);}
+      const assigned=await db.rpc('assign_permission_group',{p_user_id:createdId,p_group_id:parsed.data.group_id}); if(assigned.error){await rollback();return errorResponse('Group setup failed',400);}
       return redirectTo(request,'/studio/?section=members');
     }
     if(operation==='delete'){
