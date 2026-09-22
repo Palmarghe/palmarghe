@@ -192,7 +192,7 @@ export function localSupabase(cookies: import('astro').AstroCookies) {
       },
       resetPasswordForEmail: async () => ({ error: null }),
       exchangeCodeForSession: async () => ({ error: { message: 'Local mode does not send email' } }),
-      updateUser: async ({ password }: { password: string }) => { const user = getUser(); if (!user) return { error: { message: 'Unauthorized' } }; user.password = password; return { error: null }; },
+      updateUser: async ({ password, data }: { password?: string; data?: Row }) => { const user = getUser(); if (!user) return { error: { message: 'Unauthorized' } }; if (password) user.password = password; if (data) user.user_metadata = { ...(user.user_metadata ?? {}), ...data }; return { error: null }; },
     },
   };
 }
