@@ -17,7 +17,7 @@ insert into public.permission_groups(name,description,base_role,permissions,prot
 
 alter table public.profiles
   add column bio text check (char_length(bio) <= 500),
-  add column avatar_media_id uuid references public.media(id) on delete set null,
+  add column avatar_key text check (avatar_key is null or avatar_key ~ '^avatar-(0[1-9]|1[0-9]|20)$'),
   add column permission_group_id uuid references public.permission_groups(id) on delete set null;
 
 create policy profile_admin_update on public.profiles for update to authenticated
@@ -58,7 +58,6 @@ create policy comments_staff_update on public.comments for update to authenticat
 drop policy if exists media_public_read on public.media;
 create policy media_public_read on public.media for select using (
   exists(select 1 from public.content_items c where (c.cover_media_id=media.id or c.og_media_id=media.id) and c.status='published' and c.published_at<=now())
-  or exists(select 1 from public.profiles p where p.avatar_media_id=media.id)
 );
 
 drop policy if exists media_storage_public_select on storage.objects;
@@ -66,7 +65,6 @@ create policy media_storage_public_select on storage.objects for select using (
   bucket_id='media' and exists(
     select 1 from public.media m where m.path=name and (
       exists(select 1 from public.content_items c where (c.cover_media_id=m.id or c.og_media_id=m.id) and c.status='published' and c.published_at<=now())
-      or exists(select 1 from public.profiles p where p.avatar_media_id=m.id)
       or exists(select 1 from public.content_items c where c.type='gallery' and c.status in ('published','scheduled') and c.published_at<=now() and c.type_data->'gallery_media_ids' ? m.id::text)
     )
   )
@@ -89,9 +87,9 @@ revoke all on function public.assign_permission_group(uuid,uuid) from public,ano
 grant execute on function public.assign_permission_group(uuid,uuid) to authenticated;
 
 create or replace function public.get_public_comments(p_content_id uuid)
-returns table(id uuid,body text,created_at timestamptz,display_name text,avatar_media_id uuid)
+returns table(id uuid,body text,created_at timestamptz,display_name text,avatar_key text)
 language sql stable security definer set search_path='' as $$
-  select c.id,c.body,c.created_at,coalesce(nullif(p.display_name,''),'Palmarghe üyesi'),p.avatar_media_id
+  select c.id,c.body,c.created_at,coalesce(nullif(p.display_name,''),'Palmarghe üyesi'),p.avatar_key
   from public.comments c join public.profiles p on p.id=c.user_id
   join public.content_items i on i.id=c.content_id
   where c.content_id=p_content_id and c.status='published' and i.status='published' and i.published_at<=now()

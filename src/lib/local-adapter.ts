@@ -16,7 +16,7 @@ const users: Row[] = [
   { id: '00000000-0000-4000-8000-100000000003', email: 'member@example.test', password: 'LocalTest123!', role: 'member' },
 ];
 const tables: Record<TableName, Row[]> = {
-  profiles: users.map(({ id, role }) => ({ id, role, display_name:role === 'admin' ? 'Yerel Yönetici' : null, bio:null, avatar_media_id:null, permission_group_id:`00000000-0000-4000-9000-00000000000${role === 'member' ? 1 : role === 'editor' ? 2 : 3}` })),
+  profiles: users.map(({ id, role },index) => ({ id, role, display_name:role === 'admin' ? 'Yerel Yönetici' : null, bio:null, avatar_key:`avatar-${String(index+1).padStart(2,'0')}`, permission_group_id:`00000000-0000-4000-9000-00000000000${role === 'member' ? 1 : role === 'editor' ? 2 : 3}` })),
   permission_groups: [
     { id:'00000000-0000-4000-9000-000000000001',name:'Üye',description:'Yorum yapabilir.',base_role:'member',permissions:{comment:true},protected:true },
     { id:'00000000-0000-4000-9000-000000000002',name:'Editör',description:'İçerik yönetebilir.',base_role:'editor',permissions:{comment:true,content:true,taxonomy:true,media:true,messages:true},protected:true },
@@ -63,7 +63,7 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
     if (this.table === 'permission_groups') return Boolean(this.user && ['editor','admin'].includes(this.user.role));
     if (this.table === 'comments') return row.status === 'published' || this.user?.role === 'admin' || this.user?.role === 'editor';
     if (this.table === 'account_deletion_requests') return Boolean(this.user && (this.user.id === row.user_id || this.user.role === 'admin'));
-    if (this.table === 'media') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.profiles.some((profile)=>profile.avatar_media_id===row.id) || tables.content_items.some((item) => (item.cover_media_id === row.id || item.type === 'gallery' && Array.isArray(item.type_data?.gallery_media_ids) && item.type_data.gallery_media_ids.includes(row.id)) && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
+    if (this.table === 'media') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => (item.cover_media_id === row.id || item.type === 'gallery' && Array.isArray(item.type_data?.gallery_media_ids) && item.type_data.gallery_media_ids.includes(row.id)) && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
     if (this.table === 'contact_messages') return this.user?.role === 'admin' || this.user?.role === 'editor';
     if (this.table === 'audit_logs') return this.user?.role === 'admin';
     return true;
@@ -120,7 +120,7 @@ export function localSupabase(cookies: import('astro').AstroCookies) {
       if (name === 'get_public_comments') {
         const data = tables.comments.filter((comment) => comment.content_id === args.p_content_id && comment.status === 'published').map((comment) => {
           const author = tables.profiles.find((profile) => profile.id === comment.user_id);
-          return { id:comment.id,body:comment.body,created_at:comment.created_at,display_name:author?.display_name || 'Palmarghe üyesi',avatar_media_id:author?.avatar_media_id ?? null };
+          return { id:comment.id,body:comment.body,created_at:comment.created_at,display_name:author?.display_name || 'Palmarghe üyesi',avatar_key:author?.avatar_key ?? null };
         });
         return { data, error:null };
       }
@@ -201,7 +201,7 @@ export function localInsertContact(data: Row) { tables.contact_messages.push({ i
 export function localAdminCreateUser(email:string,password:string,displayName:string){
   if(users.some((user)=>user.email===email)) return null;
   const user={id:uid(),email,password,role:'member'}; users.push(user);
-  tables.profiles.push({id:user.id,role:'member',display_name:displayName,bio:null,avatar_media_id:null,permission_group_id:'00000000-0000-4000-9000-000000000001',created_at:new Date().toISOString(),updated_at:new Date().toISOString()});
+  tables.profiles.push({id:user.id,role:'member',display_name:displayName,bio:null,avatar_key:'avatar-01',permission_group_id:'00000000-0000-4000-9000-000000000001',created_at:new Date().toISOString(),updated_at:new Date().toISOString()});
   return user;
 }
 export function localAdminDeleteUser(id:string){

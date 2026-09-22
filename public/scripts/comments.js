@@ -15,7 +15,7 @@
     const response = await fetch(`/api/comments/?path=${encodeURIComponent(path)}`,{ credentials:'same-origin' });
     if (!response.ok) { status.textContent = locale === 'tr' ? 'Yorumlar şu anda yüklenemiyor.' : 'Comments are unavailable.'; return; }
     const data = await response.json();
-    list.innerHTML = data.comments.length ? data.comments.map((comment) => `<article class="comment"><div class="comment-avatar">${comment.avatar_media_id ? `<img src="/api/media/${escape(comment.avatar_media_id)}/" alt="" loading="lazy">` : escape(comment.display_name.slice(0,1).toUpperCase())}</div><div><header><strong>${escape(comment.display_name)}</strong><time datetime="${escape(comment.created_at)}">${new Date(comment.created_at).toLocaleDateString(locale === 'tr' ? 'tr-TR' : 'en-US')}</time></header><p>${escape(comment.body).replace(/\n/g,'<br>')}</p></div></article>`).join('') : `<p class="empty-comment">${locale === 'tr' ? 'İlk yorumu siz yazın.' : 'Be the first to comment.'}</p>`;
+    list.innerHTML = data.comments.length ? data.comments.map((comment) => `<article class="comment"><div class="comment-avatar"><img src="/avatars/${escape(comment.avatar_key||'avatar-01')}.webp" alt="" loading="lazy"></div><div><header><strong>${escape(comment.display_name)}</strong><time datetime="${escape(comment.created_at)}">${new Date(comment.created_at).toLocaleDateString(locale === 'tr' ? 'tr-TR' : 'en-US')}</time></header><p>${escape(comment.body).replace(/\n/g,'<br>')}</p></div></article>`).join('') : `<p class="empty-comment">${locale === 'tr' ? 'İlk yorumu siz yazın.' : 'Be the first to comment.'}</p>`;
     status.hidden = true;
     if (data.authenticated) {
       const form = document.createElement('form');
