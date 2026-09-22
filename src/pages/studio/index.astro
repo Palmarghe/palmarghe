@@ -5,7 +5,8 @@ import StudioMemberManagement from '../../components/StudioMemberManagement.astr
 import ClassicEditorToolbar from '../../components/ClassicEditorToolbar.astro';
 const db = supabase(Astro.cookies, Astro.request);
 const user = db ? (await db.auth.getUser()).data.user : null;
-const profile = user && db ? (await db.from('profiles').select('role,permission_group_id').eq('id', user.id).single()).data : null;
+let profile = user && db ? (await db.from('profiles').select('role,permission_group_id').eq('id', user.id).single()).data : null;
+if(!profile&&user&&db) profile=(await db.from('profiles').select('role').eq('id',user.id).single()).data;
 const staff = profile?.role === 'admin' || profile?.role === 'editor';
 const permissionGroup = profile?.permission_group_id && db ? (await db.from('permission_groups').select('permissions').eq('id',profile.permission_group_id).single()).data : null;
 const sectionPermission:Record<string,string>={content:'content',categories:'taxonomy',tags:'taxonomy',media:'media',messages:'messages',comments:'messages',appearance:'appearance',homepage:'appearance',settings:'appearance',navigation:'navigation',redirects:'navigation',members:'members',access:'permissions',audit:'audit'};

@@ -17,7 +17,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (!db) return errorResponse('Service unavailable', 503);
   const { data: { user } } = await db.auth.getUser();
   if (!user) return errorResponse('Unauthorized', 401);
-  const { data: profile } = await db.from('profiles').select('role,permission_group_id').eq('id', user.id).single();
+  let { data: profile } = await db.from('profiles').select('role,permission_group_id').eq('id', user.id).single();
+  if(!profile) profile=(await db.from('profiles').select('role').eq('id',user.id).single()).data;
   if (!['editor','admin'].includes(profile?.role ?? '')) return errorResponse('Forbidden', 403);
   const form = await request.formData();
   const entity = form.get('entity');
