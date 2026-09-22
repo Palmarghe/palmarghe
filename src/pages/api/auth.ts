@@ -76,8 +76,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (permitted === null) return errorResponse('Account service unavailable',503);
   if (!permitted) return errorResponse('Rate limit exceeded',429);
   if (action === 'signup') {
-    if (form.get('consent') !== 'on') return errorResponse('Consent required');
-    const { error } = await db.auth.signUp({ ...parsed.data, options: { emailRedirectTo: new URL('/auth/callback/', request.url).href } });
+    if (form.get('privacy_consent') !== 'on' || form.get('kvkk_consent') !== 'on') return errorResponse('Legal consent required');
+    const { error } = await db.auth.signUp({ ...parsed.data, options: { emailRedirectTo: new URL('/auth/callback/', request.url).href, data: { privacy_consent_at: new Date().toISOString(), kvkk_consent_at: new Date().toISOString() } } });
     if (error) return errorResponse('Sign up unavailable', 400);
     return redirectTo(request, `${account}?notice=verify`);
   }

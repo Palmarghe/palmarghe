@@ -37,6 +37,14 @@ test('social metadata and account disclosure are localized', async ({ page }) =>
   await expect(page.getByRole('heading', { name: 'Kayıt ol' })).toBeHidden();
   await page.getByText('Hesap oluştur', { exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Kayıt ol' })).toBeVisible();
+  const signup = page.locator('form').filter({ has: page.locator('input[value="signup"]') });
+  await expect(signup.locator('input[name="privacy_consent"]')).toHaveAttribute('required','');
+  await expect(signup.locator('input[name="kvkk_consent"]')).toHaveAttribute('required','');
+  await expect(signup.getByRole('link', { name: 'Gizlilik Politikasını' })).toHaveAttribute('href','/privacy/');
+  await expect(signup.getByRole('link', { name: 'KVKK Aydınlatma Metnini' })).toHaveAttribute('href','/kvkk/');
+  await page.goto('/kvkk/');
+  await expect(page.getByRole('heading', { name: 'KVKK Aydınlatma Metni' })).toBeVisible();
+  await page.goto('/account/');
   const password = page.locator('form').filter({ has: page.locator('input[value="login"]') }).locator('input[name="password"]');
   await expect(password).toHaveAttribute('type','password');
   await page.getByRole('button', { name: 'Şifreyi göster' }).first().click();

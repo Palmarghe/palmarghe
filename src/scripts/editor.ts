@@ -147,6 +147,18 @@ if (element && output) {
 
 const studioEditorForm = document.querySelector<HTMLFormElement>('.content-editor-form');
 if (studioEditorForm) {
+  const modeButtons = [...studioEditorForm.querySelectorAll<HTMLButtonElement>('[data-editor-mode]')];
+  const advancedNames = ['tag_ids','status','publish_at','featured','indexable','seo_title','seo_description'];
+  advancedNames.forEach((name) => studioEditorForm.querySelector<HTMLElement>(`[name="${name}"]`)?.closest<HTMLElement>('label')?.classList.add('editor-advanced-setting'));
+  studioEditorForm.querySelectorAll<HTMLElement>('.advanced-content,[data-type-section],.editor-url-details').forEach((item) => item.classList.add('editor-advanced-setting'));
+  const setEditorMode = (mode: 'simple' | 'detailed') => {
+    studioEditorForm.dataset.editorMode = mode;
+    modeButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.editorMode === mode)));
+    try { localStorage.setItem('palmarghe-editor-mode', mode); } catch { /* storage is optional */ }
+  };
+  const savedMode = (() => { try { return localStorage.getItem('palmarghe-editor-mode'); } catch { return null; } })();
+  setEditorMode(savedMode === 'detailed' ? 'detailed' : 'simple');
+  modeButtons.forEach((button) => button.addEventListener('click', () => setEditorMode(button.dataset.editorMode === 'detailed' ? 'detailed' : 'simple')));
   const simpleLabels: Record<string,string> = {
     'Etiketler (çoklu seçim)': 'Etiketler',
     'Kapak görseli': 'Kapak resmi',

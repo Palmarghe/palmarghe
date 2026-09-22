@@ -5,6 +5,7 @@ test.beforeEach(async ({ context }, testInfo) => {
   await context.setExtraHTTPHeaders({ 'CF-Connecting-IP': `198.51.100.${suffix}` });
 });
 const openContentUrl = async (page: import('@playwright/test').Page) => {
+  await page.getByRole('button', { name: 'Detaylı' }).click();
   const details = page.locator('.editor-url-details');
   if (!(await details.getAttribute('open'))) await details.locator('summary').click();
 };
@@ -55,6 +56,11 @@ test('Studio editor exposes keyboard link and searchable slash commands', async 
   await expect(page.getByRole('button', { name: 'Taslak kaydet' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Yayınla' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Zamanla' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Basit' })).toHaveAttribute('aria-pressed','true');
+  await expect(page.locator('input[name="seo_title"]')).toBeHidden();
+  await page.getByRole('button', { name: 'Detaylı' }).click();
+  await expect(page.getByRole('button', { name: 'Detaylı' })).toHaveAttribute('aria-pressed','true');
+  await expect(page.locator('input[name="seo_title"]')).toBeVisible();
   await expect(page.getByText('Belge — Palmarghe Yazı Düzenleyicisi')).toBeVisible();
   const editor = page.locator('#block-editor .tiptap');
   await editor.fill('Blok işlemi');
@@ -168,6 +174,7 @@ test('gallery media is private until publication and retains its caption', async
   const mediaId = await page.locator('.entry-card input[name="id"]').first().inputValue();
   await page.goto('/studio/?section=content');
   await page.locator('input[name="title"]').fill('Türkçe Galeri Testi');
+  await page.getByRole('button', { name: 'Detaylı' }).click();
   await expect(page.locator('input[name="slug"]')).toHaveValue('turkce-galeri-testi');
   await page.locator('.content-editor-form select[name="type"]').selectOption('gallery');
   await page.locator(`input[name="gallery_media_ids"][value="${mediaId}"]`).check();
@@ -197,6 +204,7 @@ test('Studio pairs translations without exposing a UUID field', async ({ page })
   await page.getByRole('button', { name: 'Giriş' }).click();
   await page.goto('/studio/?section=content');
   await expect(page.getByText('Çeviri grup UUID')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Detaylı' }).click();
   await page.locator('input[name="title"]').fill('Bağlantılı Türkçe');
   await page.locator('.content-editor-form select[name="status"]').selectOption('published');
   await page.locator('#block-editor .tiptap').fill('Türkçe içerik.');
