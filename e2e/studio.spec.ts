@@ -55,8 +55,17 @@ test('Studio editor exposes keyboard link and searchable slash commands', async 
   await expect(page.getByRole('button', { name: 'Taslak kaydet' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Yayınla' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Zamanla' })).toBeVisible();
+  await expect(page.getByText('Belge — Palmarghe Yazı Düzenleyicisi')).toBeVisible();
   const editor = page.locator('#block-editor .tiptap');
   await editor.fill('Blok işlemi');
+  await editor.press('Control+A');
+  await page.getByRole('button',{name:'Altı çizili'}).click();
+  await page.getByRole('button',{name:'Ortala'}).click();
+  await expect(editor.locator('u')).toContainText('Blok işlemi');
+  await expect(editor.locator('p')).toHaveAttribute('style',/text-align: center/);
+  await page.getByRole('tab',{name:'Ekle',exact:true}).click();
+  await expect(page.getByRole('button',{name:/Görsel/})).toBeVisible();
+  await page.getByRole('tab',{name:'Giriş',exact:true}).click();
   const blockControls = page.getByRole('toolbar', { name: 'Seçili blok işlemleri' });
   await blockControls.getByRole('button', { name: 'Çoğalt' }).click();
   await expect(editor.locator('p')).toHaveCount(2);

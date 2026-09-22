@@ -3,7 +3,7 @@ import { safeExternalUrl } from './site';
 export type Block = { type: string; text?: string; attrs?: Record<string, unknown>; marks?: { type: string; attrs?: Record<string, unknown> }[]; content?: Block[] };
 export type Document = { type: 'doc'; content: Block[] };
 const blockTypes = new Set(['paragraph','heading','blockquote','bulletList','orderedList','listItem','codeBlock','horizontalRule','text','hardBreak','mediaImage','mediaGallery','callout','cta','embed','table','tableRow','tableHeader','tableCell']);
-const markTypes = new Set(['bold','italic','strike','code','link']);
+const markTypes = new Set(['bold','italic','underline','strike','code','link']);
 const escapeHtml = (text: string) => text.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export function safeEmbedUrl(value: string): boolean {
@@ -51,6 +51,7 @@ export function renderDocument(doc: Document): string {
       for (const mark of node.marks ?? []) {
         if (mark.type === 'bold') text = `<strong>${text}</strong>`;
         if (mark.type === 'italic') text = `<em>${text}</em>`;
+        if (mark.type === 'underline') text = `<u>${text}</u>`;
         if (mark.type === 'strike') text = `<s>${text}</s>`;
         if (mark.type === 'code') text = `<code>${text}</code>`;
         if (mark.type === 'link' && safeLink(String(mark.attrs?.href ?? ''))) text = `<a href="${escapeHtml(String(mark.attrs?.href))}" rel="noopener noreferrer">${text}</a>`;
@@ -70,7 +71,8 @@ export function renderDocument(doc: Document): string {
     if (node.type === 'tableCell') return `<td>${inside}</td>`;
     const tag = node.type === 'heading' ? `h${node.attrs?.level}` : ({ paragraph: 'p', blockquote: 'blockquote', bulletList: 'ul', orderedList: 'ol', listItem: 'li', codeBlock: 'pre' } as Record<string,string>)[node.type];
     if (node.type === 'codeBlock') return `<pre><code>${inside}</code></pre>`;
-    return `<${tag}>${inside}</${tag}>`;
+    const align=['left','center','right','justify'].includes(String(node.attrs?.textAlign))?` style="text-align:${String(node.attrs?.textAlign)}"`:'';
+    return `<${tag}${align}>${inside}</${tag}>`;
   };
   return doc.content.map(render).join('');
 }
