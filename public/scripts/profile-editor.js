@@ -11,6 +11,7 @@
   const form=panel.querySelector('form');const status=panel.querySelector('[data-profile-status]');const avatar=panel.querySelector('[data-avatar] img');
   const render=(key)=>{avatar.src=`/avatars/${key}.webp`;};
   form.addEventListener('change',(event)=>{if(event.target.name==='avatar_key')render(event.target.value);});
-  fetch('/api/profile/',{credentials:'same-origin'}).then((response)=>response.ok?response.json():Promise.reject()).then((profile)=>{form.elements.display_name.value=profile.display_name||'';form.elements.bio.value=profile.bio||'';const key=profile.avatar_key||'avatar-01';const input=form.querySelector(`input[value="${key}"]`);if(input)input.checked=true;render(key);}).catch(()=>{});
+  form.setAttribute('aria-busy','true');
+  fetch('/api/profile/',{credentials:'same-origin'}).then((response)=>response.ok?response.json():Promise.reject()).then((profile)=>{form.elements.display_name.value=profile.display_name||'';form.elements.bio.value=profile.bio||'';const key=profile.avatar_key||'avatar-01';const input=form.querySelector(`input[value="${key}"]`);if(input)input.checked=true;render(key);}).catch(()=>{}).finally(()=>form.setAttribute('aria-busy','false'));
   form.addEventListener('submit',async(event)=>{event.preventDefault();status.textContent=locale==='tr'?'Kaydediliyor…':'Saving…';const response=await fetch('/api/profile/',{method:'POST',body:new FormData(form),credentials:'same-origin'});status.textContent=response.ok?(locale==='tr'?'Profil kaydedildi.':'Profile saved.'):(locale==='tr'?'Profil kaydedilemedi.':'Could not save profile.');});
 })();

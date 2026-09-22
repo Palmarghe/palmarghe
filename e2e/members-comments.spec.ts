@@ -51,11 +51,16 @@ test('only a signed-in member can post a comment',async({page})=>{
   await login.getByRole('textbox',{name:'Email'}).fill('member@example.test'); await login.locator('input[name="password"]').fill('LocalTest123!'); await login.getByRole('button',{name:'Giriş yap'}).click();
   await page.goto('/account/');
   await expect(page.locator('.avatar-picker img')).toHaveCount(20);
+  await expect(page.locator('.profile-card form')).toHaveAttribute('aria-busy','false');
   await page.locator('input[name="avatar_key"][value="avatar-05"]').check({force:true});
   await page.getByLabel('Görünen ad').fill('Yorum Üyesi');
   await page.getByLabel('Kısa tanıtım').fill('Palmarghe topluluk profili.');
-  await page.getByRole('button',{name:'Profili kaydet'}).click();
+  const [profileSaved]=await Promise.all([page.waitForResponse((response)=>response.url().endsWith('/api/profile/')&&response.request().method()==='POST'),page.getByRole('button',{name:'Profili kaydet'}).click()]);
+  expect(profileSaved.ok()).toBeTruthy();
+  expect(profileSaved.request().postData()).toContain('avatar-05');
   await expect(page.locator('[data-profile-status]')).toContainText('Profil kaydedildi');
+  const storedProfile=await page.request.get('/api/profile/');
+  expect((await storedProfile.json()).avatar_key).toBe('avatar-05');
   await page.goto(`/${slug}/`);
   await expect(page.getByRole('heading',{name:'Yorumlar'})).toBeVisible();
   await page.getByLabel('Yorumunuz').fill('Bu içerik için ilk üye yorumu.');
