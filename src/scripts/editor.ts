@@ -147,6 +147,17 @@ if (element && output) {
 
 const studioEditorForm = document.querySelector<HTMLFormElement>('.content-editor-form');
 if (studioEditorForm) {
+  const settingsPanel = document.createElement('aside');
+  settingsPanel.className = 'editor-settings-panel';
+  settingsPanel.setAttribute('aria-label', 'İçerik ayarları');
+  settingsPanel.innerHTML = '<div class="editor-settings-heading"><span>Ayarlar</span><small>Yayın ve sınıflandırma</small></div>';
+  const settingNodes = [...studioEditorForm.children].filter((item) => {
+    if (!(item instanceof HTMLElement)) return false;
+    if (item.matches('.editor-title-field,.editor-deck-field,.classic-editor-shell,.editor-action-bar,.editor-status,input[type="hidden"]')) return false;
+    return item.matches('label,details,[data-type-section],button.button:last-child');
+  });
+  settingNodes.forEach((item) => settingsPanel.append(item));
+  studioEditorForm.querySelector('.editor-action-bar')?.after(settingsPanel);
   const modeButtons = [...studioEditorForm.querySelectorAll<HTMLButtonElement>('[data-editor-mode]')];
   const advancedNames = ['tag_ids','status','publish_at','featured','indexable','seo_title','seo_description'];
   advancedNames.forEach((name) => studioEditorForm.querySelector<HTMLElement>(`[name="${name}"]`)?.closest<HTMLElement>('label')?.classList.add('editor-advanced-setting'));

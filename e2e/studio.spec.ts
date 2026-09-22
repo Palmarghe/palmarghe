@@ -61,7 +61,7 @@ test('Studio editor exposes keyboard link and searchable slash commands', async 
   await page.getByRole('button', { name: 'Detaylı' }).click();
   await expect(page.getByRole('button', { name: 'Detaylı' })).toHaveAttribute('aria-pressed','true');
   await expect(page.locator('input[name="seo_title"]')).toBeVisible();
-  await expect(page.getByText('Belge — Palmarghe Yazı Düzenleyicisi')).toBeVisible();
+  await expect(page.getByText('Yazı araçları')).toBeVisible();
   const editor = page.locator('#block-editor .tiptap');
   await editor.fill('Blok işlemi');
   await editor.press('Control+A');
@@ -71,7 +71,7 @@ test('Studio editor exposes keyboard link and searchable slash commands', async 
   await expect(editor.locator('p')).toHaveAttribute('style',/text-align: center/);
   await page.getByRole('tab',{name:'Ekle',exact:true}).click();
   await expect(page.getByRole('button',{name:/Görsel/})).toBeVisible();
-  await page.getByRole('tab',{name:'Giriş',exact:true}).click();
+  await page.getByRole('tab',{name:'Biçim',exact:true}).click();
   const blockControls = page.getByRole('toolbar', { name: 'Seçili blok işlemleri' });
   await blockControls.getByRole('button', { name: 'Çoğalt' }).click();
   await expect(editor.locator('p')).toHaveCount(2);
