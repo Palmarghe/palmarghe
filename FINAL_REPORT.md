@@ -139,3 +139,4 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Genel bakışa üç mevcut yerleşimin (üst alan, yazı içi, alt alan) modunu, kayıtlı tanıtım başlığını veya AdSense slotunu gösteren reklam kartları eklendi.
 - Her kart doğrudan ilgili düzenleme paneline kayar. Reklam alanları menüsü aynı özet ve üç yerleşimin düzenlenebilir formunu sunar.
 - Canlı Chrome doğrulaması: yerleşim kartları, `#ad-article` kısayolu ve hata içermeyen düzenleyici doğrulandı. Playwright reklam yönetimi senaryosu geçti.
+- Reklam düzenleme formu JavaScript ile sonradan oluşturulmak yerine sunucuda doğrudan oluşturulur; mevcut başlık, açıklama, URL ve çağrı metni her yüklemede alanlarda görünür.
