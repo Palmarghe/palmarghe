@@ -154,3 +154,9 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Ana site HTML yanıtları `private, no-store` ile sunulur; Studio’da kaydedilen reklam ayarı sonraki ana sayfa isteğinde eski HTML önbelleğine takılmaz.
 - Karmaşık test görselleri kaldırıldı. Üst, yazı içi ve alt alan için sade, düz tonlu ve geometrik SVG test yüzeyleri canlı kayıtlara bağlandı.
 - Canlı kontrol: üç alan 1920 px masaüstünde doğru görsel yolu ve 212 px alan yüksekliğiyle yüklendi; ana sayfa, arşiv, hesap ve Studio’da konsol hatası veya yatay taşma görülmedi. `e2e/navigation.spec.ts`: 6/6 geçti.
+
+### Reklam bantları ve doğrulama — 26 Eylül 2026
+
+- Reklam yaratıcı yüzeyi artık dış çerçevenin tamamını kaplar; üst, yazı içi ve alt yerleşimler ana sayfada aynı 1200 px editoryal çizgiye hizalanır.
+- Manuel tanıtım doğrulaması alan bazında açıklanır. Bağlantısız test reklamları için Temalı reklam alanı seçilebilir.
+- Canlı Chrome ölçümü: üç reklam alanı 1200 px genişlikte, içerik yüzeyiyle eşit genişlikte doğrulandı. E2E: `e2e/navigation.spec.ts` 6/6 geçti.
