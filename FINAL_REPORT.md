@@ -217,3 +217,10 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Medya kütüphanesine ad, alternatif metin veya yol üzerinden arama eklendi. İçerik editöründeki yayın kontrolü başlık, kısa açıklama, kategori, kapak görseli ve SEO alanlarını anlık olarak tamamlandı/eksik biçiminde işaretler.
 - Canlı Chrome denetiminde vitrin başlığı ve üst reklam başlığı değiştiğinde önizleme anında güncellendi; form gönderilmedi, production verisi değiştirilmedi.
 - Son doğrulama: `npm run verify` başarılı (Astro 0 tanı, Vitest 14/14, build başarılı); `e2e/navigation.spec.ts` 7/7 geçti. Production Worker sürümü `f33cfda6-1b0f-4b4a-a633-81cf1612df03`.
+
+### Genel Bakış yayın kalitesi — 26 Eylül 2026
+
+- Studio Genel Bakış’a yayınlanan içeriklerin eksik özet, kategori, kapak görseli ve SEO alanlarını gösteren yayın kalitesi listesi eklendi. Her satır ilgili içerik düzenleme ekranına doğrudan gider.
+- Kategori denetimi `content_categories` ilişkisi üzerinden yapılıyor; production şemasında bulunmayan bir alan artık sorgulanmıyor.
+- Canlı Chrome doğrulamasında 11 içerik, 3 taslak ve 8 yayındaki kayıt doğru sayıldı; dört yayın için yalnız kapak eksikliği listelendi.
+- Son doğrulama: `npm run verify` başarılı (Astro 0 tanı, Vitest 14/14, build başarılı). Production Worker sürümü `ba9b347a-da32-49fb-8f3a-e7d2591fef17`.
