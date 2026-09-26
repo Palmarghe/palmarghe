@@ -160,3 +160,9 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Reklam yaratıcı yüzeyi artık dış çerçevenin tamamını kaplar; üst, yazı içi ve alt yerleşimler ana sayfada aynı 1200 px editoryal çizgiye hizalanır.
 - Manuel tanıtım doğrulaması alan bazında açıklanır. Bağlantısız test reklamları için Temalı reklam alanı seçilebilir.
 - Canlı Chrome ölçümü: üç reklam alanı 1200 px genişlikte, içerik yüzeyiyle eşit genişlikte doğrulandı. E2E: `e2e/navigation.spec.ts` 6/6 geçti.
+
+### Ana sayfa ritmi ve Studio erişimi — 26 Eylül 2026
+
+- Kategori alanı beş eşit kolona, altı son yayın ise iki dengeli üçlü satıra yerleştirildi; boş hücrelerden doğan asimetrik görünüm kaldırıldı.
+- Studio sol alanına doğrudan `Ana sayfayı aç` bağlantısı eklendi. Açık temada bağlantı yüzeyi ve metni canlıda doğrulandı.
+- Canlı Chrome denetiminde yatay taşma ve konsol hatası görülmedi. Ana sayfa düzeni ve Studio bağlantısı için Playwright senaryosu eklendi.

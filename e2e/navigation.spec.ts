@@ -104,3 +104,16 @@ test('Studio dashboard exposes current advertising placements and edit shortcuts
   await expect(page.locator('#ad-article')).toHaveClass(/is-editing/);
   await expect(page.locator('select[name="article_mode"]')).toBeFocused();
 });
+test('homepage composition keeps complete editorial grids and Studio links back to the site', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+  await expect(page.locator('.categories .category')).toHaveCount(5);
+  await expect(page.locator('.latest-section .entry-card')).toHaveCount(6);
+  const latestColumns = await page.locator('.latest-section .card-grid').evaluate((element) => getComputedStyle(element).gridTemplateColumns.split(' ').filter((value) => value !== '0px').length);
+  expect(latestColumns).toBe(3);
+  await page.goto('/studio/');
+  await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
+  await page.locator('input[name="password"]').fill('LocalTest123!');
+  await page.getByRole('button', { name: 'Giriş' }).click();
+  await expect(page.getByRole('link', { name: '↗ Ana sayfayı aç' })).toHaveAttribute('href', 'https://palmarghe.com/');
+});
