@@ -121,6 +121,18 @@ test('admin creates a category and publishes content', async ({ page }) => {
   await expect(page.getByText('İçerik doğrulandı.')).toBeVisible();
 });
 
+test('admin can save a simple-mode draft when the URL field is not filled', async ({ page }) => {
+  await page.goto('/studio/');
+  await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
+  await page.locator('input[name="password"]').fill('LocalTest123!');
+  await page.getByRole('button', { name: 'Giriş' }).click();
+  await page.goto('/studio/?section=content');
+  await page.locator('input[name="title"]').fill('Başlıktan URL Üretilen Taslak');
+  await page.locator('#block-editor .tiptap').fill('Sunucu tarafı URL üretimi doğrulandı.');
+  await page.getByRole('button', { name: 'Taslak kaydet' }).click();
+  await expect(page.getByText('Başlıktan URL Üretilen Taslak')).toBeVisible();
+});
+
 test('admin manages tags, appearance, navigation and media', async ({ page }) => {
   await page.goto('/studio/');
   await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
