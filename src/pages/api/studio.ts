@@ -157,20 +157,22 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
   if (entity === 'advertising') {
     if (!hasPermission('appearance')) return errorResponse('Forbidden',403);
+    const advertisingError = (message:string) => redirectTo(request, `/studio/?section=advertising&error=${encodeURIComponent(message)}`);
     const publisherId = String(form.get('publisher_id') ?? '').trim();
     const slots = Object.fromEntries(['header','article','footer'].map((name) => [name, String(form.get(`${name}_slot`) ?? '').trim()]));
-    if ((publisherId && !/^ca-pub-\d{10,20}$/.test(publisherId)) || Object.values(slots).some((slot) => slot && !/^\d{6,20}$/.test(slot))) return errorResponse('Invalid advertising configuration',400);
+    if ((publisherId && !/^ca-pub-\d{10,20}$/.test(publisherId)) || Object.values(slots).some((slot) => slot && !/^\d{6,20}$/.test(slot))) return advertisingError('AdSense yayıncı kimliği veya slot numarası geçerli değil. Slot yalnızca rakamlardan oluşmalıdır.');
     const placements = Object.fromEntries(['header','article','footer'].map((name) => {
       const mode = String(form.get(`${name}_mode`) ?? 'placeholder');
       const title = String(form.get(`${name}_title`) ?? '').trim(); const description = String(form.get(`${name}_description`) ?? '').trim();
       const url = String(form.get(`${name}_url`) ?? '').trim(); const cta = String(form.get(`${name}_cta`) ?? '').trim();
-      return [name,{mode,title,description,url,cta}];
+      const image_url = String(form.get(`${name}_image_url`) ?? '').trim();
+      return [name,{mode,title,description,url,cta,image_url}];
     }));
-    if (Object.values(placements).some((item:any) => !['placeholder','google','manual','off'].includes(item.mode) || item.title.length > 100 || item.description.length > 240 || item.cta.length > 40 || (item.url && !safeExternalUrl(item.url)) || (item.mode === 'manual' && (!item.title || !item.url)))) return errorResponse('Invalid manual advertising configuration',400);
-    if (Object.values(placements).some((item:any) => item.mode === 'google') && (!publisherId || !Object.entries(placements).some(([name,item]:any) => item.mode === 'google' && slots[name]))) return errorResponse('Google advertising needs a publisher ID and matching slot',400);
+    if (Object.values(placements).some((item:any) => !['placeholder','google','manual','off'].includes(item.mode) || item.title.length > 100 || item.description.length > 240 || item.cta.length > 40 || (item.url && !safeExternalUrl(item.url)) || (item.image_url && !(item.image_url.startsWith('/ads/') || safeExternalUrl(item.image_url))) || (item.mode === 'manual' && (!item.title || !item.url)))) return advertisingError('Manuel tanıtım için başlık ve geçerli HTTPS bağlantısı gerekir. Görsel yolu /ads/ ile başlamalı veya HTTPS olmalıdır.');
+    if (Object.values(placements).some((item:any) => item.mode === 'google') && (!publisherId || !Object.entries(placements).some(([name,item]:any) => item.mode === 'google' && slots[name]))) return advertisingError('Google AdSense için geçerli yayıncı kimliği ve ilgili alanın slot numarası gerekir.');
     const enabled = Object.values(placements).some((item:any) => item.mode === 'google');
     const { error } = await db.from('site_settings').upsert({ key:'advertising', value:{enabled,publisher_id:publisherId,slots,placements}, updated_at:new Date().toISOString() });
-    if (error) return errorResponse('Save failed',400);
+    if (error) return advertisingError('Reklam ayarları kaydedilemedi. Lütfen alanları tekrar kontrol et.');
     return redirectTo(request,'/studio/?section=advertising');
   }
   if (entity === 'navigation') {

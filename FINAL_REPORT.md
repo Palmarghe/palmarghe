@@ -142,3 +142,9 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Reklam düzenleme formu JavaScript ile sonradan oluşturulmak yerine sunucuda doğrudan oluşturulur; mevcut başlık, açıklama, URL ve çağrı metni her yüklemede alanlarda görünür.
 - Reklam kartlarının Düzenle kontrolü artık ilgili formu yumuşak kaydırır, alanı vurgular ve gösterim türü seçeneğine odağı taşır.
 - Temalı reklam alanlarında kaydedilen başlık, açıklama ve buton metni artık ana sayfada doğrudan gösterilir; örnek içerik yalnızca alan boş olduğunda kullanılır.
+
+### Reklam görselleri ve hata akışı — 26 Eylül 2026
+
+- Reklam yerleşimleri artık `/ads/` altındaki yerel WebP görsellerini veya HTTPS görsel adreslerini kabul eder ve yayında kapak görseliyle gösterir.
+- Üst, yazı içi ve alt alan için temaya uygun optimize edilmiş test görselleri eklendi ve production reklam kayıtlarına kaydedildi.
+- Geçersiz reklam yapılandırması artık ham API ekranı yerine Studio reklam ekranına Türkçe açıklamayla geri döner.
