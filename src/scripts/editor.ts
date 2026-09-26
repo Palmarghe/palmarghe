@@ -148,7 +148,25 @@ if (element && output) {
     form.requestSubmit();
   }));
   sync(); updateStatus();
-  output.form?.addEventListener('submit', () => { sync(); dirty = false; updateStatus('Kaydediliyor…'); });
+  let submitting = false;
+  output.form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const form = output.form;
+    if (!form || submitting) return;
+    sync();
+    if (!form.reportValidity()) { updateStatus('Eksik veya geçersiz alanları kontrol edin.'); return; }
+    submitting = true;
+    dirty = false;
+    updateStatus(form.querySelector<HTMLSelectElement>('select[name="status"]')?.value === 'published' ? 'Yayınlanıyor…' : 'Kaydediliyor…');
+    try {
+      const response = await fetch(form.action, { method: 'POST', body: new FormData(form), credentials: 'same-origin', headers: { Accept: 'text/html' } });
+      if (!response.ok) throw new Error((await response.text()).slice(0, 240));
+      window.location.assign(response.url);
+    } catch {
+      submitting = false;
+      updateStatus('İçerik kaydedilemedi. Zorunlu alanları ve URL yolunu kontrol edip tekrar deneyin.');
+    }
+  });
   window.addEventListener('beforeunload', (event) => { if (dirty) event.preventDefault(); });
 }
 
