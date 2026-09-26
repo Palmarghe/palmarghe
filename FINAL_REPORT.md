@@ -238,3 +238,8 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Manuel partner bağlantıları tıklanınca mevcut anonim trafik sayacına yerleşim bazında (`/ad/header`, `/ad/article`, `/ad/footer`) olay yazar. IP, tarayıcı bilgisi, hesap kimliği veya hedef URL saklanmaz.
 - Studio > Trafik raporu bu kayıtları Üst alan, Yazı içi alan ve Alt alan reklam tıklaması olarak okunur biçimde gösterir.
 - Son doğrulama: `npm run verify` başarılı; Navigation E2E 8/8 geçti. Production Worker sürümü `b61f827e-ffaf-4064-8226-339634ae24d0`.
+
+### Görsel yükleme iyileştirmesi — 27 Eylül 2026
+
+- İlk ekran ve içerik kapak görselleri `fetchpriority="high"` ile hızlı başlatılır; kart, arama sonucu, görsel akış ve galeri görselleri `decoding="async"` ile ana iş parçacığını daha az meşgul eder.
+- Son doğrulama: `npm run verify` başarılı. Production Worker sürümü `019d2d14-dff5-45ea-9e7e-a94ee2c1cc12`.
