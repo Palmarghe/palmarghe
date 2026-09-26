@@ -176,3 +176,10 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Studio genel bakış ve reklam yönetimi yüzeyleri açık palete taşındı; reklam özeti, başlıklar, kartlar ve düzenleme alanları artık okunur açık yüzey/koyu metin kombinasyonunu kullanıyor.
 - Canlı Chrome ölçümü: ana sayfada yatay taşma yok; reklam alanları 1200 px genişlikte ve 150/164/150 px yüksekliğinde. Studio reklam özeti `#f8f4ee` yüzey, okunur koyu metin ve açık kartlarla yüklendi.
 - Son doğrulama: `npm run verify` başarılı (Astro 0 tanı, Vitest 14/14, build başarılı); `e2e/navigation.spec.ts` 7/7 geçti. Canlı Worker sürümü `364236f3-3055-42e5-b168-ae5cf5e2cb94` olarak doğrulandı.
+
+### Vitrin yönetimi ve reklam kısayolu — 26 Eylül 2026
+
+- Studio Genel Bakış’taki reklam kartlarının kısayolu düzeltildi. Kart, o sayfada bulunmayan bir hedefe kaydırmaya çalışıp tıklamayı iptal etmiyor; canlıda doğrudan ilgili `Reklam alanları` düzenleme paneline gidiyor.
+- Studio > Ana sayfa artık ilk vitrini ayrı bir yönetim alanı olarak sunuyor: görünürlük, TR/EN üst satır, başlık, açıklama ve görsel URL kaydedilebiliyor. Görsel yalnız `/visuals/`, `/api/media/` veya HTTPS adreslerinden kabul edilir; boş değer güvenli varsayılan görsele döner.
+- Varsayılan ilk vitrin kasıtlı olarak daha pasif hâle getirildi: canlı masaüstünde 480 px yükseklik, 80 px başlık ve azaltılmış görsel opaklığıyla yüklendi. Yatay taşma yok.
+- Son doğrulama: `npm run verify` başarılı; `e2e/navigation.spec.ts` 7/7 geçti. Canlı Studio kart yönlendirmesi ve Ana sayfa vitrin kontrolleri Chrome üzerinden doğrulandı.

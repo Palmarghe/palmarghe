@@ -139,15 +139,17 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (entity === 'homepage') {
     if (!hasPermission('appearance')) return errorResponse('Forbidden',403);
     const names = ['now','featured','categories','latest','fm_spotlight','lab_notes','visual_reel','archive_cta'];
-    const order = Object.fromEntries(names.map((name) => [name, name === 'visual_reel' && !form.has(`${name}_order`) ? 7 : Number(form.get(`${name}_order`))]));
-    if (!form.has('visual_reel_order')) order.archive_cta = 8;
+    const order = Object.fromEntries(names.map((name) => [name, Number(form.get(`${name}_order`))]));
     if (new Set(Object.values(order)).size !== names.length || Object.values(order).some((value) => !Array.from({ length: names.length }, (_, index) => index + 1).includes(value))) return errorResponse('Invalid section order');
-    const visible = Object.fromEntries(names.map((name) => [name, name === 'visual_reel' && !form.has(`${name}_visible`) ? true : form.get(`${name}_visible`) === 'on']));
-    const { error } = await db.from('site_settings').upsert({ key: 'homepage', value: { order, visible }, updated_at: new Date().toISOString() });
+    const visible = Object.fromEntries(names.map((name) => [name, form.get(`${name}_visible`) === 'on']));
+    const pick = (name:string, limit:number) => String(form.get(name) ?? '').trim().slice(0,limit);
+    const imageUrl = pick('hero_image_url',500);
+    if (imageUrl && !(/^\/(visuals|api\/media)\//.test(imageUrl) || safeExternalUrl(imageUrl))) return errorResponse('Invalid hero image URL');
+    const hero = { visible: form.get('hero_visible') === 'on', eyebrow_tr:pick('hero_eyebrow_tr',100), eyebrow_en:pick('hero_eyebrow_en',100), title_tr:pick('hero_title_tr',120), title_en:pick('hero_title_en',120), descriptor_tr:pick('hero_descriptor_tr',260), descriptor_en:pick('hero_descriptor_en',260), image_url:imageUrl };
+    const { error } = await db.from('site_settings').upsert({ key: 'homepage', value: { order, visible, hero }, updated_at: new Date().toISOString() });
     if (error) return errorResponse('Save failed',400);
     return redirectTo(request,'/studio/?section=homepage');
-  }
-  if (entity === 'social') {
+  }  if (entity === 'social') {
     if (!hasPermission('appearance')) return errorResponse('Forbidden',403);
     const links = Object.fromEntries(['github','youtube','instagram','x'].map((name) => [name, String(form.get(name) ?? '').trim()]));
     if (Object.values(links).some((url) => url && !safeExternalUrl(url))) return errorResponse('Invalid social URL',400);
@@ -309,3 +311,4 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
   return errorResponse('Invalid entity');
 };
+
