@@ -176,9 +176,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       const url = String(form.get(`${name}_url`) ?? '').trim(); const cta = String(form.get(`${name}_cta`) ?? '').trim();
       const image_url = String(form.get(`${name}_image_url`) ?? '').trim();
       const visible = form.get(`${name}_visible`) === 'on';
-      return [name,{mode,title,description,url,cta,image_url,visible}];
+      const device = String(form.get(`${name}_device`) ?? 'all'); const scope = String(form.get(`${name}_scope`) ?? 'all');
+      const parseDate = (value: FormDataEntryValue | null) => { const text = String(value ?? '').trim(); if (!text) return ''; const date = new Date(text); return Number.isFinite(date.getTime()) ? date.toISOString() : null; };
+      const starts_at = parseDate(form.get(`${name}_starts_at`)); const ends_at = parseDate(form.get(`${name}_ends_at`));
+      return [name,{mode,title,description,url,cta,image_url,visible,device,scope,starts_at,ends_at}];
     }));
-    const invalidPlacement = Object.entries(placements).find(([,item]:any) => !['placeholder','google','manual','off'].includes(item.mode) || item.title.length > 100 || item.description.length > 240 || item.cta.length > 40 || (item.url && !safeExternalUrl(item.url)) || (item.image_url && !(item.image_url.startsWith('/ads/') || safeExternalUrl(item.image_url))) || (item.mode === 'manual' && (!item.title || !item.url)));
+    const invalidPlacement = Object.entries(placements).find(([,item]:any) => !['placeholder','google','manual','off'].includes(item.mode) || !['all','desktop','mobile'].includes(item.device) || !['all','home','content'].includes(item.scope) || item.starts_at === null || item.ends_at === null || (item.starts_at && item.ends_at && Date.parse(item.starts_at) > Date.parse(item.ends_at)) || item.title.length > 100 || item.description.length > 240 || item.cta.length > 40 || (item.url && !safeExternalUrl(item.url)) || (item.image_url && !(item.image_url.startsWith('/ads/') || safeExternalUrl(item.image_url))) || (item.mode === 'manual' && (!item.title || !item.url)));
     if (invalidPlacement) {
       const label = invalidPlacement[0] === 'header' ? 'Üst alan' : invalidPlacement[0] === 'article' ? 'Yazı içi alan' : 'Alt alan';
       return advertisingError(`${label}: manuel tanıtım için başlık ve geçerli HTTPS bağlantısı gerekir. Bağlantısız test için Temalı reklam alanı seçin; görsel yolu /ads/ ile başlamalı veya HTTPS olmalıdır.`);
@@ -319,6 +322,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
   return errorResponse('Invalid entity');
 };
+
 
 
 

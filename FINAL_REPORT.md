@@ -203,3 +203,9 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - İçerik kaydı devam ederken 2,5 saniye sonra sunucu yanıtının beklendiği; 5,5 saniye sonra işlemin birkaç saniye sürebileceği açıkça gösterilir. Hata mesajı sunucunun güvenli, kısa açıklamasını da içerir.
 - Ana sayfa vitrini için Medya kütüphanesinden görsel seçimi eklendi. Seçilen dosya veritabanında doğrulanır ve serbest URL yerine öncelikle kullanılır.
 - Son doğrulama: `npm run verify` başarılı; `e2e/navigation.spec.ts` 7/7 geçti.
+
+### Reklam zamanlama ve hedefleme — 26 Eylül 2026
+
+- Üst, yazı içi ve alt reklam yerleşimleri için bağımsız cihaz hedefi (tüm cihazlar, masaüstü, mobil), sayfa hedefi (tüm sayfalar, yalnız ana sayfa, ana sayfa dışı) ve başlangıç/bitiş zamanı eklendi.
+- Geçersiz tarih, ters tarih aralığı, geçersiz cihaz veya sayfa seçimi sunucuda reddedilir. Geçerli kurallar request anında değerlendirilir; eşleşmeyen reklam HTML üretmez.
+- Son doğrulama: `npm run verify` başarılı; `e2e/navigation.spec.ts` 7/7 geçti. Production Worker sürümü `50b18a60-54b4-47a7-b3c1-f6820716f933`.
