@@ -64,3 +64,12 @@ test('critical live routes emit no browser errors', async ({ page }) => {
   }
   expect(errors).toEqual([]);
 });
+
+test('light theme toggle persists and remains usable on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Menüyü aç' }).click();
+  await page.getByRole('button', { name: 'Açık mod' }).click();
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'light');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
