@@ -89,3 +89,16 @@ test('light theme applies to public search and Studio classic editor', async ({ 
   await expect(page.locator('.classic-menubar')).toHaveCSS('background-color', 'rgb(243, 237, 245)');
   await expect(page.locator('#block-editor')).toHaveCSS('background-color', 'rgb(255, 253, 250)');
 });
+test('Studio dashboard exposes current advertising placements and edit shortcuts', async ({ page }) => {
+  await page.goto('/studio/');
+  await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
+  await page.locator('input[name="password"]').fill('LocalTest123!');
+  await page.getByRole('button', { name: 'Giriş' }).click();
+  await expect(page.locator('.advertising-placement-card')).toHaveCount(3);
+  await expect(page.getByRole('heading', { name: 'Mevcut reklam alanları' })).toBeVisible();
+  await page.goto('/studio/?section=advertising');
+  await expect(page.locator('.manual-ad-placement')).toHaveCount(3);
+  await page.locator('.advertising-placement-card').nth(1).click();
+  await expect(page).toHaveURL(/#ad-article$/);
+  await expect(page.locator('#ad-article')).toBeVisible();
+});

@@ -133,3 +133,9 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - İnce imleç parıltısı yalnızca hassas işaretçi bulunan cihazlarda çalışır; azaltılmış hareket tercihi ve dokunmatik cihazlarda devre dışıdır.
 - Canlı Chrome denetimi: `palmarghe.com` ana sayfa/arama/hesap ve `studio.palmarghe.com/studio/?section=content` açık temada doğrulandı. İncelenen üç sayfada konsol hatası görülmedi.
 - Yerel doğrulama: `npm run verify` başarılı (Astro 0 tanı, Vitest 14/14, üretim derlemesi). Açık tema için Playwright senaryosu eklendi.
+
+### Studio reklam yönetimi — 26 Eylül 2026
+
+- Genel bakışa üç mevcut yerleşimin (üst alan, yazı içi, alt alan) modunu, kayıtlı tanıtım başlığını veya AdSense slotunu gösteren reklam kartları eklendi.
+- Her kart doğrudan ilgili düzenleme paneline kayar. Reklam alanları menüsü aynı özet ve üç yerleşimin düzenlenebilir formunu sunar.
+- Canlı Chrome doğrulaması: yerleşim kartları, `#ad-article` kısayolu ve hata içermeyen düzenleyici doğrulandı. Playwright reklam yönetimi senaryosu geçti.
