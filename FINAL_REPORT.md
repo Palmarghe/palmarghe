@@ -227,3 +227,8 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Kapak denetimi hem medya kütüphanesi seçimini hem de mevcut güvenli kapak URL’sini geçerli kabul edecek şekilde kalibre edildi. Canlı Genel Bakış artık sekiz yayını eksiksiz gösteriyor.
 - Bu kalibrasyonun production Worker sürümü `96f914a2-b278-485c-9139-b37b9ab115ab`.
 - Studio canlı önizleme ve yayın kalite kartı için E2E senaryosu eklendi; toplam navigation E2E kapsamı 8 teste yükseldi ve tamamı geçti.
+
+### Erişilebilirlik tekrar denetimi — 27 Eylül 2026
+
+- Axe ile ana sayfa, İngilizce ana sayfa, iletişim, hesap ve yetkili Studio içerik editörü yeniden tarandı; WCAG 2.0/2.1 A-AA etiketlerinde serious/critical ihlal bulunmadı (5/5).
+- Navigation E2E kapsamı artık Studio yayın kalite denetimini ve kaydetmeden güncellenen vitrin/reklam önizlemelerini kapsıyor (8/8).
