@@ -4,5 +4,7 @@
   const key = 'palmarghe_visitor_id';
   let visitor = localStorage.getItem(key);
   if (!visitor) { visitor = crypto.randomUUID(); localStorage.setItem(key, visitor); }
-  fetch('/api/traffic/', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ path, visitor }), keepalive: true }).catch(() => {});
+  const record = (eventPath) => fetch('/api/traffic/', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ path: eventPath, visitor }), keepalive: true }).catch(() => {});
+  record(path);
+  document.addEventListener('click', (event) => { const link = event.target.closest('[data-promotion-click]'); const placement = link?.getAttribute('data-promotion-click'); if (placement && ['header','article','footer'].includes(placement)) record(/ad/); });
 })();
