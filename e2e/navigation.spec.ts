@@ -101,4 +101,6 @@ test('Studio dashboard exposes current advertising placements and edit shortcuts
   await page.locator('.advertising-placement-card').nth(1).click();
   await expect(page).toHaveURL(/#ad-article$/);
   await expect(page.locator('#ad-article')).toBeVisible();
+  await expect(page.locator('#ad-article')).toHaveClass(/is-editing/);
+  await expect(page.locator('select[name="article_mode"]')).toBeFocused();
 });
