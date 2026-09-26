@@ -141,3 +141,4 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Canlı Chrome doğrulaması: yerleşim kartları, `#ad-article` kısayolu ve hata içermeyen düzenleyici doğrulandı. Playwright reklam yönetimi senaryosu geçti.
 - Reklam düzenleme formu JavaScript ile sonradan oluşturulmak yerine sunucuda doğrudan oluşturulur; mevcut başlık, açıklama, URL ve çağrı metni her yüklemede alanlarda görünür.
 - Reklam kartlarının Düzenle kontrolü artık ilgili formu yumuşak kaydırır, alanı vurgular ve gösterim türü seçeneğine odağı taşır.
+- Temalı reklam alanlarında kaydedilen başlık, açıklama ve buton metni artık ana sayfada doğrudan gösterilir; örnek içerik yalnızca alan boş olduğunda kullanılır.

@@ -10,6 +10,7 @@ const mode = requestedMode === 'off' ? 'placeholder' : requestedMode;
 const publisher = String(config?.publisher_id ?? '');
 const google = mode === 'google' && /^ca-pub-\d{10,20}$/.test(publisher) && /^\d{6,20}$/.test(String(legacySlot ?? ''));
 const manual = mode === 'manual' && String(item.title ?? '').trim() && safeExternalUrl(String(item.url ?? ''));
+const themedCopy = mode === 'placeholder' && String(item.title ?? '').trim();
 const label = locale === 'tr' ? 'REKLAM ALANI' : 'ADVERTISEMENT';
 const samples = {
   header: locale === 'tr' ? ['Lumen Atlas', 'Dijital üretim için seçilmiş araçlar ve yeni fikirler.'] : ['Lumen Atlas', 'Selected tools and new ideas for digital creation.'],
@@ -21,5 +22,6 @@ const samples = {
   <span class="promotion-label">{label}</span>
   {google ? <><ins class="adsbygoogle" style="display:block" data-ad-client={publisher} data-ad-slot={String(legacySlot)} data-ad-format="auto" data-full-width-responsive="true"></ins><script is:inline set:html={`(adsbygoogle=window.adsbygoogle||[]).push({});`}/></>
   : manual ? <a class="promotion-manual" href={String(item.url)} target="_blank" rel="sponsored noopener noreferrer"><strong>{String(item.title)}</strong>{item.description && <small>{String(item.description)}</small>}<span>{String(item.cta ?? (locale === 'tr' ? 'İncele' : 'Explore'))} →</span></a>
+  : themedCopy ? <div class="promotion-placeholder promotion-custom"><strong>{String(item.title)}</strong>{item.description && <small>{String(item.description)}</small>}{item.cta && <span>{String(item.cta)}</span>}</div>
   : <div class="promotion-placeholder promotion-sample"><strong>{samples?.[0]}</strong><small>{samples?.[1]}</small><span>{locale === 'tr' ? 'Partner seçkisi' : 'Partner feature'}</span></div>}
 </aside>
