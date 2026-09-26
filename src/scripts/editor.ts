@@ -189,7 +189,18 @@ if (studioEditorForm) {
   });
   settingNodes.forEach((item) => settingsPanel.append(item));
   studioEditorForm.querySelector('.editor-action-bar')?.after(settingsPanel);
-  const modeButtons = [...studioEditorForm.querySelectorAll<HTMLButtonElement>('[data-editor-mode]')];
+const readiness = document.createElement('section');
+  readiness.className = 'editor-readiness'; readiness.setAttribute('aria-live','polite');
+  const updateReadiness = () => {
+    const missing:string[] = [];
+    const value = (name:string) => String((studioEditorForm.querySelector(`[name="${name}"]`) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null)?.value ?? '').trim();
+    if (!value('title')) missing.push('başlık'); if (!value('excerpt')) missing.push('kısa açıklama'); if (!value('category_id')) missing.push('kategori'); if (!value('cover_media_id')) missing.push('kapak görseli'); if (!value('seo_title')) missing.push('SEO başlığı'); if (!value('seo_description')) missing.push('SEO açıklaması');
+    readiness.innerHTML = `<strong>Yayın kontrolü</strong><span>${missing.length ? `Eksikler: ${missing.join(', ')}` : 'Yayın için gerekli temel alanlar tamam.'}</span>`;
+    readiness.classList.toggle('is-ready', !missing.length);
+  };
+  studioEditorForm.querySelector('.editor-action-bar')?.after(readiness);
+  studioEditorForm.addEventListener('input', updateReadiness); studioEditorForm.addEventListener('change', updateReadiness); updateReadiness();
+    const modeButtons = [...studioEditorForm.querySelectorAll<HTMLButtonElement>('[data-editor-mode]')];
   const advancedNames = ['tag_ids','status','publish_at','featured','indexable','seo_title','seo_description'];
   advancedNames.forEach((name) => studioEditorForm.querySelector<HTMLElement>(`[name="${name}"]`)?.closest<HTMLElement>('label')?.classList.add('editor-advanced-setting'));
   studioEditorForm.querySelectorAll<HTMLElement>('.advanced-content,[data-type-section],.editor-url-details').forEach((item) => item.classList.add('editor-advanced-setting'));
@@ -230,4 +241,5 @@ if (studioEditorForm) {
   const advancedSummary = studioEditorForm.querySelector<HTMLElement>('.advanced-content summary');
   if (advancedSummary) advancedSummary.textContent = 'Google ve paylaşım ayarları';
 }
+
 

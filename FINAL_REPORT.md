@@ -209,3 +209,11 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Üst, yazı içi ve alt reklam yerleşimleri için bağımsız cihaz hedefi (tüm cihazlar, masaüstü, mobil), sayfa hedefi (tüm sayfalar, yalnız ana sayfa, ana sayfa dışı) ve başlangıç/bitiş zamanı eklendi.
 - Geçersiz tarih, ters tarih aralığı, geçersiz cihaz veya sayfa seçimi sunucuda reddedilir. Geçerli kurallar request anında değerlendirilir; eşleşmeyen reklam HTML üretmez.
 - Son doğrulama: `npm run verify` başarılı; `e2e/navigation.spec.ts` 7/7 geçti. Production Worker sürümü `50b18a60-54b4-47a7-b3c1-f6820716f933`.
+
+### Studio canlı önizleme ve yayın hazırlığı — 26 Eylül 2026
+
+- Studio > Ana sayfa vitrini, metin ve görünürlük ayarları yazılırken aynı panelde **Canlı önizleme** olarak güncellenir; kaydetmeden önce başlık, üst satır, açıklama ve modun görünümü kontrol edilebilir.
+- Studio > Reklam alanları ekranına üç yerleşimin başlık, açıklama ve çağrı metnini eşzamanlı gösteren **Canlı önizleme** kartları eklendi. Yerleşim kapalıysa önizleme de soluk görünür.
+- Medya kütüphanesine ad, alternatif metin veya yol üzerinden arama eklendi. İçerik editöründeki yayın kontrolü başlık, kısa açıklama, kategori, kapak görseli ve SEO alanlarını anlık olarak tamamlandı/eksik biçiminde işaretler.
+- Canlı Chrome denetiminde vitrin başlığı ve üst reklam başlığı değiştiğinde önizleme anında güncellendi; form gönderilmedi, production verisi değiştirilmedi.
+- Son doğrulama: `npm run verify` başarılı (Astro 0 tanı, Vitest 14/14, build başarılı); `e2e/navigation.spec.ts` 7/7 geçti. Production Worker sürümü `f33cfda6-1b0f-4b4a-a633-81cf1612df03`.
