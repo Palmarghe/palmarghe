@@ -4,7 +4,10 @@
   const config = window.__palmargheAdvertising || {};
   const placements = config.placements || {};
   [...form.children].forEach((child) => {
-    if (!child.matches('input[type="hidden"], .button')) child.classList.add('advertising-legacy');
+    if (!child.matches('input[type="hidden"], .button')) {
+      child.classList.add('advertising-legacy');
+      child.querySelectorAll('input,select,textarea').forEach((field) => { field.disabled = true; });
+    }
   });
   const section = document.createElement('fieldset');
   section.className = 'manual-ad-editor';

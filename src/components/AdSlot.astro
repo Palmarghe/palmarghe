@@ -11,10 +11,15 @@ const publisher = String(config?.publisher_id ?? '');
 const google = mode === 'google' && /^ca-pub-\d{10,20}$/.test(publisher) && /^\d{6,20}$/.test(String(legacySlot ?? ''));
 const manual = mode === 'manual' && String(item.title ?? '').trim() && safeExternalUrl(String(item.url ?? ''));
 const label = locale === 'tr' ? 'REKLAM ALANI' : 'ADVERTISEMENT';
+const samples = {
+  header: locale === 'tr' ? ['Lumen Atlas', 'Dijital üretim için seçilmiş araçlar ve yeni fikirler.'] : ['Lumen Atlas', 'Selected tools and new ideas for digital creation.'],
+  article: locale === 'tr' ? ['Signal / 26', 'Yaratıcı teknoloji, oyun dünyaları ve bağımsız yayın.'] : ['Signal / 26', 'Creative technology, game worlds and independent publishing.'],
+  footer: locale === 'tr' ? ['Northframe Studio', 'Bir sonraki fikriniz için sakin bir çalışma alanı.'] : ['Northframe Studio', 'A calm workspace for your next idea.'],
+}[placement];
 ---
-<aside class={`ad-slot ad-slot--${placement} ad-slot--${mode}`} aria-label={locale === 'tr' ? 'Reklam alanı' : 'Advertisement area'} data-ad-slot={placement}>
-  <span class="ad-slot-label">{label}</span>
+<aside class={`promotion-slot promotion-slot--${placement} promotion-slot--${mode}`} aria-label={locale === 'tr' ? 'Partner seçkisi' : 'Partner feature'} data-promotion-placement={placement}>
+  <span class="promotion-label">{label}</span>
   {google ? <><ins class="adsbygoogle" style="display:block" data-ad-client={publisher} data-ad-slot={String(legacySlot)} data-ad-format="auto" data-full-width-responsive="true"></ins><script is:inline set:html={`(adsbygoogle=window.adsbygoogle||[]).push({});`}/></>
-  : manual ? <a class="ad-manual" href={String(item.url)} target="_blank" rel="sponsored noopener noreferrer"><strong>{String(item.title)}</strong>{item.description && <small>{String(item.description)}</small>}<span>{String(item.cta ?? (locale === 'tr' ? 'İncele' : 'Explore'))} →</span></a>
-  : <div class="ad-placeholder"><strong>{locale === 'tr' ? 'Burada reklam alanı bulunur' : 'Advertising space'}</strong><small>{locale === 'tr' ? 'Studio’dan Google veya manuel yerleşim seçebilirsiniz.' : 'Choose a Google or manual placement in Studio.'}</small></div>}
+  : manual ? <a class="promotion-manual" href={String(item.url)} target="_blank" rel="sponsored noopener noreferrer"><strong>{String(item.title)}</strong>{item.description && <small>{String(item.description)}</small>}<span>{String(item.cta ?? (locale === 'tr' ? 'İncele' : 'Explore'))} →</span></a>
+  : <div class="promotion-placeholder promotion-sample"><strong>{samples?.[0]}</strong><small>{samples?.[1]}</small><span>{locale === 'tr' ? 'Partner seçkisi' : 'Partner feature'}</span></div>}
 </aside>

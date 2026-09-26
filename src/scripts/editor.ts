@@ -4,6 +4,7 @@ import Link from '@tiptap/extension-link';
 import { BubbleMenu } from '@tiptap/extension-bubble-menu';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
+import { slugFromTitle } from '../lib/slug';
 
 const mediaImage = Node.create({
   name: 'mediaImage', group: 'block', atom: true,
@@ -136,9 +137,15 @@ if (element && output) {
     const select = output.form?.querySelector<HTMLSelectElement>('select[name="status"]');
     if (!select || !status) return;
     if (status === 'scheduled' && !output.form?.querySelector<HTMLInputElement>('input[name="publish_at"]')?.value) { window.alert('Zamanlamak için sağdaki yayın tarihinde bir tarih ve saat seçin.'); return; }
+    const form = output.form;
+    const slug = form?.querySelector<HTMLInputElement>('input[name="slug"]');
+    const title = form?.querySelector<HTMLInputElement>('input[name="title"]');
+    if (slug && !slug.value.trim() && title?.value.trim()) slug.value = slugFromTitle(title.value);
+    sync();
+    if (!form?.reportValidity()) { updateStatus('Eksik veya geçersiz alanları kontrol edin.'); return; }
     select.value = status;
     dirty = false; updateStatus(status === 'published' ? 'Yayınlanıyor…' : status === 'scheduled' ? 'Zamanlanıyor…' : 'Kaydediliyor…');
-    output.form?.requestSubmit();
+    form.requestSubmit();
   }));
   sync(); updateStatus();
   output.form?.addEventListener('submit', () => { sync(); dirty = false; updateStatus('Kaydediliyor…'); });
