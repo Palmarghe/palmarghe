@@ -224,3 +224,5 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Kategori denetimi `content_categories` ilişkisi üzerinden yapılıyor; production şemasında bulunmayan bir alan artık sorgulanmıyor.
 - Canlı Chrome doğrulamasında 11 içerik, 3 taslak ve 8 yayındaki kayıt doğru sayıldı; dört yayın için yalnız kapak eksikliği listelendi.
 - Son doğrulama: `npm run verify` başarılı (Astro 0 tanı, Vitest 14/14, build başarılı). Production Worker sürümü `ba9b347a-da32-49fb-8f3a-e7d2591fef17`.
+- Kapak denetimi hem medya kütüphanesi seçimini hem de mevcut güvenli kapak URL’sini geçerli kabul edecek şekilde kalibre edildi. Canlı Genel Bakış artık sekiz yayını eksiksiz gösteriyor.
+- Bu kalibrasyonun production Worker sürümü `96f914a2-b278-485c-9139-b37b9ab115ab`.
