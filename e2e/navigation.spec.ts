@@ -113,3 +113,21 @@ test('homepage category grid and Studio link remain available', async ({ page })
   await page.getByRole('button', { name: 'Giriş' }).click();
   await expect(page.getByRole('link', { name: '↗ Ana sayfayı aç' })).toHaveAttribute('href', 'https://palmarghe.com/');
 });
+
+test('Studio dashboard reports publication quality and Studio previews update before save', async ({ page }) => {
+  await page.goto('/studio/');
+  await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
+  await page.locator('input[name="password"]').fill('LocalTest123!');
+  await page.getByRole('button', { name: 'Giriş' }).click();
+  await expect(page.locator('.dashboard-quality-control')).toBeVisible();
+  await expect(page.locator('.dashboard-quality-control')).toContainText(/yayın|hazır/i);
+
+  await page.goto('/studio/?section=homepage');
+  const title = page.getByRole('textbox', { name: 'TR başlık' });
+  await title.fill('Yerel önizleme başlığı');
+  await expect(page.locator('[data-homepage-preview]')).toContainText('Yerel önizleme başlığı');
+
+  await page.goto('/studio/?section=advertising');
+  await page.locator('input[name="header_title"]').fill('Yerel reklam önizlemesi');
+  await expect(page.locator('[data-ad-preview]')).toContainText('Yerel reklam önizlemesi');
+});
