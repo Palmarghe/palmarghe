@@ -168,7 +168,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       const title = String(form.get(`${name}_title`) ?? '').trim(); const description = String(form.get(`${name}_description`) ?? '').trim();
       const url = String(form.get(`${name}_url`) ?? '').trim(); const cta = String(form.get(`${name}_cta`) ?? '').trim();
       const image_url = String(form.get(`${name}_image_url`) ?? '').trim();
-      return [name,{mode,title,description,url,cta,image_url}];
+      const visible = form.get(`${name}_visible`) === 'on';
+      return [name,{mode,title,description,url,cta,image_url,visible}];
     }));
     const invalidPlacement = Object.entries(placements).find(([,item]:any) => !['placeholder','google','manual','off'].includes(item.mode) || item.title.length > 100 || item.description.length > 240 || item.cta.length > 40 || (item.url && !safeExternalUrl(item.url)) || (item.image_url && !(item.image_url.startsWith('/ads/') || safeExternalUrl(item.image_url))) || (item.mode === 'manual' && (!item.title || !item.url)));
     if (invalidPlacement) {
@@ -311,4 +312,5 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
   return errorResponse('Invalid entity');
 };
+
 

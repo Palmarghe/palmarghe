@@ -10,9 +10,10 @@
       target.classList.add('is-editing');
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       const control = target.querySelector('select, input');
-      window.setTimeout(() => control?.focus({ preventScroll: true }), 280);
+      control?.focus({ preventScroll: true });
       history.replaceState(null, '', `#${target.id}`);
       if (status) status.textContent = `${target.querySelector('h3')?.textContent || 'Reklam alanı'} düzenlemeye hazır.`;
     });
   }
 })();
+

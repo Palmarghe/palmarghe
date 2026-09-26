@@ -4,6 +4,7 @@ interface Props { placement: 'header' | 'article' | 'footer'; config?: Record<st
 const { placement, config = {}, locale } = Astro.props;
 const legacySlot = config?.slots?.[placement];
 const item = config?.placements?.[placement] ?? {};
+const visible = item.visible !== false;
 // Reserve a themed placement even with older settings that were saved as hidden.
 const requestedMode = item.mode ?? (config?.enabled && legacySlot ? 'google' : 'placeholder');
 const mode = requestedMode === 'off' ? 'placeholder' : requestedMode;
@@ -20,10 +21,11 @@ const samples = {
   footer: locale === 'tr' ? ['Northframe Studio', 'Bir sonraki fikriniz için sakin bir çalışma alanı.'] : ['Northframe Studio', 'A calm workspace for your next idea.'],
 }[placement];
 ---
-<aside class={`promotion-slot promotion-slot--${placement} promotion-slot--${mode}`} aria-label={locale === 'tr' ? 'Partner seçkisi' : 'Partner feature'} data-promotion-placement={placement}>
+{visible && <aside class={`promotion-slot promotion-slot--${placement} promotion-slot--${mode}`} aria-label={locale === 'tr' ? 'Partner seçkisi' : 'Partner feature'} data-promotion-placement={placement}>
   <span class="promotion-label">{label}</span>
   {google ? <><ins class="adsbygoogle" style="display:block" data-ad-client={publisher} data-ad-slot={String(legacySlot)} data-ad-format="auto" data-full-width-responsive="true"></ins><script is:inline set:html={`(adsbygoogle=window.adsbygoogle||[]).push({});`}/></>
   : manual ? <a class="promotion-manual" href={String(item.url)} target="_blank" rel="sponsored noopener noreferrer">{hasImage && <img class="promotion-image" src={imageUrl} alt="" width="1600" height="533" loading="lazy"/>}<strong>{String(item.title)}</strong>{item.description && <small>{String(item.description)}</small>}<span>{String(item.cta ?? (locale === 'tr' ? 'İncele' : 'Explore'))} →</span></a>
   : themedCopy ? <div class="promotion-placeholder promotion-custom">{hasImage && <img class="promotion-image" src={imageUrl} alt="" width="1600" height="533" loading="lazy"/>}<strong>{String(item.title)}</strong>{item.description && <small>{String(item.description)}</small>}{item.cta && <span>{String(item.cta)}</span>}</div>
   : <div class="promotion-placeholder promotion-sample"><strong>{samples?.[0]}</strong><small>{samples?.[1]}</small><span>{locale === 'tr' ? 'Partner seçkisi' : 'Partner feature'}</span></div>}
-</aside>
+</aside>}
+

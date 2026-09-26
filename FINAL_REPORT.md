@@ -183,3 +183,9 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Studio > Ana sayfa artık ilk vitrini ayrı bir yönetim alanı olarak sunuyor: görünürlük, TR/EN üst satır, başlık, açıklama ve görsel URL kaydedilebiliyor. Görsel yalnız `/visuals/`, `/api/media/` veya HTTPS adreslerinden kabul edilir; boş değer güvenli varsayılan görsele döner.
 - Varsayılan ilk vitrin kasıtlı olarak daha pasif hâle getirildi: canlı masaüstünde 480 px yükseklik, 80 px başlık ve azaltılmış görsel opaklığıyla yüklendi. Yatay taşma yok.
 - Son doğrulama: `npm run verify` başarılı; `e2e/navigation.spec.ts` 7/7 geçti. Canlı Studio kart yönlendirmesi ve Ana sayfa vitrin kontrolleri Chrome üzerinden doğrulandı.
+
+### Reklam alanı görünürlük yönetimi — 26 Eylül 2026
+
+- Studio > Reklam alanları ekranında üst, yazı içi ve alt alanın her biri için bağımsız **Bu alanı göster** denetimi eklendi.
+- Kapatılan yerleşim public sitede hiç oluşturulmaz; boş bant ya da gereksiz dikey boşluk bırakmaz. Yerleşimin metin, görsel, bağlantı ve AdSense ayarları saklı kalır; yeniden açıldığında aynen kullanılır.
+- Canlı Studio Chrome denetiminde üç anahtar görünür ve etkin durumda doğrulandı. Son yerel E2E: 7/7 geçti.
