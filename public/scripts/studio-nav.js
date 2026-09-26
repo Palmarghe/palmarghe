@@ -1,4 +1,12 @@
 (() => {
+  const editorPanel = new URLSearchParams(location.search).get('panel') === 'editor';
+  if (editorPanel) document.querySelectorAll('a[href^="/studio/"]').forEach((link) => {
+    const url = new URL(link.href, location.origin);
+    if (url.pathname === '/studio/' && !url.searchParams.has('panel')) {
+      url.searchParams.set('panel', 'editor');
+      link.href = `${url.pathname}?${url.searchParams}`;
+    }
+  });
   const nav = document.querySelector('.admin-side nav');
   if (!nav) return;
   const groups = [...nav.querySelectorAll('.studio-nav-group')];

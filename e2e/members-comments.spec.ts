@@ -21,12 +21,13 @@ test('admin creates permission groups and manages a Studio membership',async({pa
   const card=page.locator('.member-card').filter({hasText:'Yeni Studio Üyesi'});
   await expect(card).toBeVisible();
   await page.context().clearCookies();
-  await page.goto('/studio/');
+  await page.goto('/studio/editor/');
   await page.getByRole('textbox',{name:'Email'}).fill(email);
   await page.locator('input[name="password"]').fill('MemberTest123!');
   await page.getByRole('button',{name:'Giriş'}).click();
-  await expect(page.getByRole('navigation').getByRole('link',{name:'Mesajlar'})).toBeVisible();
-  await expect(page.getByRole('navigation').getByRole('link',{name:'İçerikler'})).toHaveCount(0);
+  await page.goto('/studio/editor/');
+  await expect(page.locator('nav a[href*="section=messages"]')).toHaveCount(1);
+  await expect(page.locator('nav a[href*="section=content"]')).toHaveCount(0);
   const denied=await page.request.post('/api/studio/',{headers:{Origin:'http://127.0.0.1:4322'},form:{entity:'content',title:'Yetkisiz içerik',slug:'yetkisiz-icerik',locale:'tr',type:'article',status:'draft',body:'{}'}});
   expect(denied.status()).toBe(403);
   await page.context().clearCookies();

@@ -29,7 +29,8 @@ export const GET: APIRoute = async ({ request, cookies }) => {
   const { locale, slug } = parsePath(path);
   const { data: content } = await db.from('content_items').select('id').eq('locale', locale).eq('slug', slug).eq('status', 'published').lte('published_at', new Date().toISOString()).single();
   if (!content) return errorResponse('Content unavailable', 404);
-  const { data, error } = await db.rpc('get_content_metrics', { p_content_id: content.id }).maybeSingle();
+  const { data, error } = await db.rpc('get_content_metrics', { p_content_id: content.id });
   if (error) return errorResponse('Metrics unavailable', 503);
-  return Response.json({ reads: Number(data?.reads ?? 0), shares: Number(data?.shares ?? 0) }, { headers: { 'Cache-Control': 'no-store' } });
+  const metric = Array.isArray(data) ? data[0] : data;
+  return Response.json({ reads: Number(metric?.reads ?? 0), shares: Number(metric?.shares ?? 0) }, { headers: { 'Cache-Control': 'no-store' } });
 };

@@ -27,7 +27,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const {data:permissionGroup}=profile?.permission_group_id ? await db.from('permission_groups').select('permissions').eq('id',profile.permission_group_id).single() : {data:null};
   const permissionMap:Record<string,string>={content:'content',translation:'content',category:'taxonomy',tag:'taxonomy',message:'messages',comment:'messages',appearance:'appearance',homepage:'appearance',advertising:'appearance',social:'appearance',navigation:'navigation',redirect:'navigation'};
   const requiredPermission=permissionMap[String(entity)];
-  if(profile?.role==='editor'&&requiredPermission&&permissionGroup&&!permissionGroup.permissions?.[requiredPermission]) return errorResponse('Forbidden',403);
+  const hasPermission=(name:string)=>profile?.role==='admin'||Boolean(permissionGroup?.permissions?.[name]);
+  if(requiredPermission&&!hasPermission(requiredPermission)) return errorResponse('Forbidden',403);
   if (entity === 'comment') {
     if (!['admin','editor'].includes(profile?.role ?? '')) return errorResponse('Forbidden',403);
     const id=z.uuid().safeParse(form.get('id'));
@@ -127,7 +128,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return redirectTo(request,'/studio/?section=users');
   }
   if (entity === 'appearance') {
-    if (profile?.role !== 'admin') return errorResponse('Forbidden', 403);
+    if (!hasPermission('appearance')) return errorResponse('Forbidden', 403);
     const accent = z.enum(['violet','blue','amber']).safeParse(form.get('accent'));
     const radius = z.enum(['sharp','subtle']).safeParse(form.get('radius'));
     if (!accent.success || !radius.success) return errorResponse('Invalid appearance');
@@ -136,7 +137,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return redirectTo(request, '/studio/?section=appearance');
   }
   if (entity === 'homepage') {
-    if (profile?.role !== 'admin') return errorResponse('Forbidden',403);
+    if (!hasPermission('appearance')) return errorResponse('Forbidden',403);
     const names = ['now','featured','categories','latest','fm_spotlight','lab_notes','visual_reel','archive_cta'];
     const order = Object.fromEntries(names.map((name) => [name, name === 'visual_reel' && !form.has(`${name}_order`) ? 7 : Number(form.get(`${name}_order`))]));
     if (!form.has('visual_reel_order')) order.archive_cta = 8;
@@ -147,7 +148,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return redirectTo(request,'/studio/?section=homepage');
   }
   if (entity === 'social') {
-    if (profile?.role !== 'admin') return errorResponse('Forbidden',403);
+    if (!hasPermission('appearance')) return errorResponse('Forbidden',403);
     const links = Object.fromEntries(['github','youtube','instagram','x'].map((name) => [name, String(form.get(name) ?? '').trim()]));
     if (Object.values(links).some((url) => url && !safeExternalUrl(url))) return errorResponse('Invalid social URL',400);
     const { error } = await db.from('site_settings').upsert({ key: 'social', value: links, updated_at: new Date().toISOString() });
@@ -155,7 +156,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return redirectTo(request,'/studio/?section=settings');
   }
   if (entity === 'advertising') {
-    if (profile?.role !== 'admin') return errorResponse('Forbidden',403);
+    if (!hasPermission('appearance')) return errorResponse('Forbidden',403);
     const publisherId = String(form.get('publisher_id') ?? '').trim();
     const slots = Object.fromEntries(['header','article','footer'].map((name) => [name, String(form.get(`${name}_slot`) ?? '').trim()]));
     if ((publisherId && !/^ca-pub-\d{10,20}$/.test(publisherId)) || Object.values(slots).some((slot) => slot && !/^\d{6,20}$/.test(slot))) return errorResponse('Invalid advertising configuration',400);
@@ -173,7 +174,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return redirectTo(request,'/studio/?section=advertising');
   }
   if (entity === 'navigation') {
-    if (profile?.role !== 'admin') return errorResponse('Forbidden', 403);
+    if (!hasPermission('navigation')) return errorResponse('Forbidden', 403);
     const id = z.uuid().safeParse(form.get('id'));
     if (operation === 'delete') {
       if (!id.success) return errorResponse('Invalid id');
@@ -188,7 +189,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return redirectTo(request, '/studio/?section=navigation');
   }
   if (entity === 'redirect') {
-    if (profile?.role !== 'admin') return errorResponse('Forbidden',403);
+    if (!hasPermission('navigation')) return errorResponse('Forbidden',403);
     const id = z.uuid().safeParse(form.get('id'));
     const route = z.string().regex(/^\/(?:[a-z0-9-]+\/)*$/).max(500);
     const parsed = z.object({ source_path: route, target_path: route }).safeParse({ source_path: form.get('source_path'), target_path: form.get('target_path') });

@@ -1,0 +1,10 @@
+---
+import { supabase } from '../../lib/supabase';
+const db = supabase(Astro.cookies, Astro.request);
+const user = db ? (await db.auth.getUser()).data.user : null;
+const profile = user && db ? (await db.from('profiles').select('role').eq('id',user.id).single()).data : null;
+if (!user) return Astro.redirect('/studio/');
+if (profile?.role === 'editor') return Astro.redirect('/studio/?panel=editor&section=dashboard');
+if (profile?.role === 'admin') return Astro.redirect('/studio/');
+return Astro.redirect('/account/?notice=studio-access');
+---
