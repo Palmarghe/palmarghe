@@ -1,6 +1,6 @@
 /** Development-only, in-memory Supabase-shaped adapter for browser and E2E tests. */
 type Row = Record<string, any>;
-type TableName = 'profiles' | 'permission_groups' | 'comments' | 'categories' | 'tags' | 'content_items' | 'content_categories' | 'content_tags' | 'contact_messages' | 'site_settings' | 'navigation' | 'media' | 'redirects' | 'audit_logs' | 'account_deletion_requests' | 'traffic_daily';
+type TableName = 'profiles' | 'permission_groups' | 'comments' | 'categories' | 'tags' | 'content_items' | 'content_categories' | 'content_tags' | 'contact_messages' | 'site_settings' | 'navigation' | 'media' | 'redirects' | 'audit_logs' | 'account_deletion_requests' | 'traffic_daily' | 'traffic_qualified_daily';
 type Filter = (row: Row) => boolean;
 const uid = () => crypto.randomUUID();
 const initialCategories: Row[] = [
@@ -23,7 +23,7 @@ const tables: Record<TableName, Row[]> = {
     { id:'00000000-0000-4000-9000-000000000003',name:'Yönetici',description:'Tam erişim.',base_role:'admin',permissions:{comment:true,content:true,taxonomy:true,media:true,messages:true,appearance:true,navigation:true,members:true,permissions:true,audit:true},protected:true },
   ], comments: [], categories: initialCategories,
   tags: [], content_items: [], content_categories: [], content_tags: [], contact_messages: [],
-  site_settings: [], navigation: [], media: [], redirects: [], audit_logs: [], account_deletion_requests: [], traffic_daily: [],
+  site_settings: [], navigation: [], media: [], redirects: [], audit_logs: [], account_deletion_requests: [], traffic_daily: [], traffic_qualified_daily: [],
 };
 const mediaFiles = new Map<string, Uint8Array>();
 const isTable = (name: string): name is TableName => name in tables;
@@ -173,6 +173,13 @@ export function localSupabase(cookies: import('astro').AstroCookies) {
         if (!/^\/[a-z0-9/-]*$/.test(path)) return { data:null,error:{message:'invalid path'} };
         const row = tables.traffic_daily.find((entry)=>entry.day===day&&entry.path===path);
         if (row) row.pageviews += 1; else tables.traffic_daily.push({day,path,pageviews:1,visitors:1});
+        return { data:null,error:null };
+      }
+      if (name === 'record_qualified_traffic_visit') {
+        const day = new Date().toISOString().slice(0,10); const path = String(args.p_path ?? ''); const source = String(args.p_source ?? '');
+        if (!/^\/[a-z0-9/-]*$/.test(path) || !['organic_search','referral','direct'].includes(source)) return { data:null,error:{message:'invalid traffic event'} };
+        const row = tables.traffic_qualified_daily.find((entry)=>entry.day===day&&entry.path===path&&entry.source===source);
+        if (row) row.pageviews += 1; else tables.traffic_qualified_daily.push({day,path,source,pageviews:1,visitors:1});
         return { data:null,error:null };
       }
       if (name !== 'set_member_role' || actor?.role !== 'admin' || actor.id === args.p_user_id || !['member','editor','admin'].includes(args.p_role)) return { data: null, error: { message: 'permission denied' } };
