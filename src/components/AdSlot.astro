@@ -1,0 +1,12 @@
+---
+interface Props { placement: 'header' | 'article' | 'footer'; config?: Record<string, any>; locale: 'tr' | 'en'; }
+const { placement, config = {}, locale } = Astro.props;
+const slot = config?.slots?.[placement];
+const publisher = String(config?.publisher_id ?? '');
+const enabled = config?.enabled === true && /^ca-pub-\d{10,20}$/.test(publisher) && /^\d{6,20}$/.test(String(slot ?? ''));
+---
+{enabled && <aside class={`ad-slot ad-slot--${placement}`} aria-label={locale === 'tr' ? 'Reklam' : 'Advertisement'} data-ad-slot={placement}>
+  <span>{locale === 'tr' ? 'REKLAM' : 'ADVERTISEMENT'}</span>
+  <ins class="adsbygoogle" style="display:block" data-ad-client={publisher} data-ad-slot={String(slot)} data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script is:inline set:html={`(adsbygoogle=window.adsbygoogle||[]).push({});`}></script>
+</aside>}

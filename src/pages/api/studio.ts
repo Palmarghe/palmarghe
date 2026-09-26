@@ -24,7 +24,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const entity = form.get('entity');
   const operation = String(form.get('operation') ?? 'create');
   const {data:permissionGroup}=profile?.permission_group_id ? await db.from('permission_groups').select('permissions').eq('id',profile.permission_group_id).single() : {data:null};
-  const permissionMap:Record<string,string>={content:'content',translation:'content',category:'taxonomy',tag:'taxonomy',message:'messages',comment:'messages',appearance:'appearance',homepage:'appearance',social:'appearance',navigation:'navigation',redirect:'navigation'};
+  const permissionMap:Record<string,string>={content:'content',translation:'content',category:'taxonomy',tag:'taxonomy',message:'messages',comment:'messages',appearance:'appearance',homepage:'appearance',advertising:'appearance',social:'appearance',navigation:'navigation',redirect:'navigation'};
   const requiredPermission=permissionMap[String(entity)];
   if(profile?.role==='editor'&&requiredPermission&&permissionGroup&&!permissionGroup.permissions?.[requiredPermission]) return errorResponse('Forbidden',403);
   if (entity === 'comment') {
@@ -152,6 +152,17 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const { error } = await db.from('site_settings').upsert({ key: 'social', value: links, updated_at: new Date().toISOString() });
     if (error) return errorResponse('Save failed',400);
     return redirectTo(request,'/studio/?section=settings');
+  }
+  if (entity === 'advertising') {
+    if (profile?.role !== 'admin') return errorResponse('Forbidden',403);
+    const publisherId = String(form.get('publisher_id') ?? '').trim();
+    const slots = Object.fromEntries(['header','article','footer'].map((name) => [name, String(form.get(`${name}_slot`) ?? '').trim()]));
+    if ((publisherId && !/^ca-pub-\d{10,20}$/.test(publisherId)) || Object.values(slots).some((slot) => slot && !/^\d{6,20}$/.test(slot))) return errorResponse('Invalid advertising configuration',400);
+    const enabled = form.get('enabled') === 'on';
+    if (enabled && (!publisherId || !Object.values(slots).some(Boolean))) return errorResponse('Advertising needs a publisher ID and at least one slot',400);
+    const { error } = await db.from('site_settings').upsert({ key:'advertising', value:{enabled,publisher_id:publisherId,slots}, updated_at:new Date().toISOString() });
+    if (error) return errorResponse('Save failed',400);
+    return redirectTo(request,'/studio/?section=advertising');
   }
   if (entity === 'navigation') {
     if (profile?.role !== 'admin') return errorResponse('Forbidden', 403);
