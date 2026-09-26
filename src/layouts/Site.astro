@@ -73,11 +73,12 @@ const adsEnabled = advertising?.enabled === true && /^ca-pub-\d{10,20}$/.test(St
         {customNav.length ? customNav.map((item) => <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined} rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}>{item.label}</a>) : mainNav.map((item) => <a href={pathFor(locale, item.slug)} aria-current={isActive(pathFor(locale,item.slug)) ? 'page' : undefined}>{item[locale]}</a>)}
       </nav>
       <div class="head-actions">
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label={locale === 'tr' ? 'Açık modu aç' : 'Enable light mode'} aria-pressed="false">◐</button>
         <button type="button" aria-label={t.search} class="search-icon" data-search-trigger><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></button>
         <a href={alternatePath ?? pathFor(locale === 'tr' ? 'en' : 'tr')} lang={locale === 'tr' ? 'en' : 'tr'} aria-label={locale === 'tr' ? 'Switch to English' : 'Türkçeye geç'}>{locale === 'tr' ? 'EN' : 'TR'}</a>
         <a href={pathFor(locale, 'account')}>{t.account}</a>
       </div>
-      <div class="mobile-menu"><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label={locale === 'tr' ? 'Menüyü aç' : 'Open menu'}><span></span><span></span><span></span></button><nav id="mobile-nav" aria-label={locale === 'tr' ? 'Mobil menü' : 'Mobile menu'} inert>{customNav.length ? customNav.map((item) => <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined} rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}>{item.label}</a>) : mainNav.map((item) => <a href={pathFor(locale, item.slug)} aria-current={isActive(pathFor(locale,item.slug)) ? 'page' : undefined}>{item[locale]}</a>)}<a href={pathFor(locale,'search')}>{t.search}</a><a href={alternatePath ?? pathFor(locale === 'tr' ? 'en' : 'tr')} lang={locale === 'tr' ? 'en' : 'tr'} aria-label={locale === 'tr' ? 'Switch to English' : 'Türkçeye geç'}>{locale === 'tr' ? 'EN' : 'TR'}</a><a href={pathFor(locale,'account')}>{t.account}</a></nav></div>
+      <div class="mobile-menu"><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label={locale === 'tr' ? 'Menüyü aç' : 'Open menu'}><span></span><span></span><span></span></button><nav id="mobile-nav" aria-label={locale === 'tr' ? 'Mobil menü' : 'Mobile menu'} inert>{customNav.length ? customNav.map((item) => <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined} rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}>{item.label}</a>) : mainNav.map((item) => <a href={pathFor(locale, item.slug)} aria-current={isActive(pathFor(locale,item.slug)) ? 'page' : undefined}>{item[locale]}</a>)}<a href={pathFor(locale,'search')}>{t.search}</a><a href={alternatePath ?? pathFor(locale === 'tr' ? 'en' : 'tr')} lang={locale === 'tr' ? 'en' : 'tr'} aria-label={locale === 'tr' ? 'Switch to English' : 'Türkçeye geç'}>{locale === 'tr' ? 'EN' : 'TR'}</a><a href={pathFor(locale,'account')}>{t.account}</a><button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false">{locale === 'tr' ? 'Açık mod' : 'Light mode'}</button></nav></div>
     </header>
     <AdSlot placement="header" config={advertising} locale={locale}/>
     <main id="main"><slot /></main>
@@ -88,6 +89,7 @@ const adsEnabled = advertising?.enabled === true && /^ca-pub-\d{10,20}$/.test(St
   <script is:inline src="/scripts/search-overlay.js" defer></script>
   <script is:inline src="/scripts/comments.js" defer></script>
   <script is:inline src="/scripts/traffic.js" defer></script>
+  <script is:inline src="/scripts/theme-toggle.js" defer></script>
   {Astro.url.pathname.includes('/account/') && <script is:inline src="/scripts/password-visibility.js" defer></script>}
   {Astro.url.pathname.includes('/account/') && <script is:inline src="/scripts/profile-editor.js" defer></script>}
   </body>

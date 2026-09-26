@@ -159,9 +159,16 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const publisherId = String(form.get('publisher_id') ?? '').trim();
     const slots = Object.fromEntries(['header','article','footer'].map((name) => [name, String(form.get(`${name}_slot`) ?? '').trim()]));
     if ((publisherId && !/^ca-pub-\d{10,20}$/.test(publisherId)) || Object.values(slots).some((slot) => slot && !/^\d{6,20}$/.test(slot))) return errorResponse('Invalid advertising configuration',400);
-    const enabled = form.get('enabled') === 'on';
-    if (enabled && (!publisherId || !Object.values(slots).some(Boolean))) return errorResponse('Advertising needs a publisher ID and at least one slot',400);
-    const { error } = await db.from('site_settings').upsert({ key:'advertising', value:{enabled,publisher_id:publisherId,slots}, updated_at:new Date().toISOString() });
+    const placements = Object.fromEntries(['header','article','footer'].map((name) => {
+      const mode = String(form.get(`${name}_mode`) ?? 'placeholder');
+      const title = String(form.get(`${name}_title`) ?? '').trim(); const description = String(form.get(`${name}_description`) ?? '').trim();
+      const url = String(form.get(`${name}_url`) ?? '').trim(); const cta = String(form.get(`${name}_cta`) ?? '').trim();
+      return [name,{mode,title,description,url,cta}];
+    }));
+    if (Object.values(placements).some((item:any) => !['placeholder','google','manual','off'].includes(item.mode) || item.title.length > 100 || item.description.length > 240 || item.cta.length > 40 || (item.url && !safeExternalUrl(item.url)) || (item.mode === 'manual' && (!item.title || !item.url)))) return errorResponse('Invalid manual advertising configuration',400);
+    if (Object.values(placements).some((item:any) => item.mode === 'google') && (!publisherId || !Object.entries(placements).some(([name,item]:any) => item.mode === 'google' && slots[name]))) return errorResponse('Google advertising needs a publisher ID and matching slot',400);
+    const enabled = Object.values(placements).some((item:any) => item.mode === 'google');
+    const { error } = await db.from('site_settings').upsert({ key:'advertising', value:{enabled,publisher_id:publisherId,slots,placements}, updated_at:new Date().toISOString() });
     if (error) return errorResponse('Save failed',400);
     return redirectTo(request,'/studio/?section=advertising');
   }
