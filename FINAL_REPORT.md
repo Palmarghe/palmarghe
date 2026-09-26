@@ -126,3 +126,10 @@ The homepage, archive/search, related-content cards and article pages render a m
 Chrome inspection of the Palmarghe YouTube Studio channel confirmed the four videos are public and their **Allow embedding** setting is enabled. The player failure originated in Palmarghe's Content Security Policy: `frame-src` excluded both `www.youtube-nocookie.com` and `www.youtube.com`. The Worker policy now permits only those necessary YouTube frame origins in addition to existing approved sources. Live Chrome verification on `/music/anatolian-velocity/` showed its locally served cover, structured editorial body, active `youtube-nocookie` player and no blocked-content notice or console error. Live homepage verification confirmed the refreshed AI, gaming and music image URLs load successfully.
 
 The final local verification run completed with zero Astro diagnostics, 14/14 unit tests and a successful build. Production E2E was re-run after deployment; applicable accessibility, smoke and security-header checks passed during the deployment verification.
+
+### Açık tema bütünlüğü — 26 Eylül 2026
+
+- Genel site, arama katmanı, hesap/profil yüzeyleri, Studio kabuğu ve klasik yazı editörü sıcak açık palete taşındı. Studio kendi alan adı olduğu için tema tercihini kendi alanında da saklayan bir anahtar eklendi.
+- İnce imleç parıltısı yalnızca hassas işaretçi bulunan cihazlarda çalışır; azaltılmış hareket tercihi ve dokunmatik cihazlarda devre dışıdır.
+- Canlı Chrome denetimi: `palmarghe.com` ana sayfa/arama/hesap ve `studio.palmarghe.com/studio/?section=content` açık temada doğrulandı. İncelenen üç sayfada konsol hatası görülmedi.
+- Yerel doğrulama: `npm run verify` başarılı (Astro 0 tanı, Vitest 14/14, üretim derlemesi). Açık tema için Playwright senaryosu eklendi.

@@ -71,3 +71,21 @@ test('six public widths and Studio dashboard have no horizontal overflow', async
     expect(overflow.page <= overflow.viewport, `Studio at ${width}px: ${JSON.stringify(overflow)}`).toBe(true);
   }
 });
+
+test('light theme applies to public search and Studio classic editor', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Açık modu aç' }).click();
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'light');
+  await page.getByRole('button', { name: 'Ara' }).click();
+  await expect(page.locator('#search-overlay')).toHaveCSS('background-color', 'rgb(255, 253, 250)');
+
+  await page.goto('/studio/?section=content');
+  await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
+  await page.locator('input[name="password"]').fill('LocalTest123!');
+  await page.getByRole('button', { name: 'Giriş' }).click();
+  await expect(page.getByRole('heading', { name: 'Genel bakış' })).toBeVisible();
+  await page.goto('/studio/?section=content');
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'light');
+  await expect(page.locator('.classic-menubar')).toHaveCSS('background-color', 'rgb(243, 237, 245)');
+  await expect(page.locator('#block-editor')).toHaveCSS('background-color', 'rgb(255, 253, 250)');
+});
