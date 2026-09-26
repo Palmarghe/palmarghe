@@ -148,3 +148,9 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Reklam yerleşimleri artık `/ads/` altındaki yerel WebP görsellerini veya HTTPS görsel adreslerini kabul eder ve yayında kapak görseliyle gösterir.
 - Üst, yazı içi ve alt alan için temaya uygun optimize edilmiş test görselleri eklendi ve production reklam kayıtlarına kaydedildi.
 - Geçersiz reklam yapılandırması artık ham API ekranı yerine Studio reklam ekranına Türkçe açıklamayla geri döner.
+
+### Reklam yayını ve görsel sadeleştirme — 26 Eylül 2026
+
+- Ana site HTML yanıtları `private, no-store` ile sunulur; Studio’da kaydedilen reklam ayarı sonraki ana sayfa isteğinde eski HTML önbelleğine takılmaz.
+- Karmaşık test görselleri kaldırıldı. Üst, yazı içi ve alt alan için sade, düz tonlu ve geometrik SVG test yüzeyleri canlı kayıtlara bağlandı.
+- Canlı kontrol: üç alan 1920 px masaüstünde doğru görsel yolu ve 212 px alan yüksekliğiyle yüklendi; ana sayfa, arşiv, hesap ve Studio’da konsol hatası veya yatay taşma görülmedi. `e2e/navigation.spec.ts`: 6/6 geçti.
