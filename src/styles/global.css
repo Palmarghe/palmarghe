@@ -353,3 +353,34 @@ main>.promotion-slot--article{width:min(100% - 2rem,1200px);margin:2rem auto}.co
 
 /* Homepage composition: complete grids at common editorial widths. */
 .home-sections{gap:0}.categories{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}.latest-section .card-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.studio-home-link{display:flex;align-items:center;gap:.45rem;margin:.9rem .7rem 0;padding:.58rem .65rem;border:1px solid var(--border);color:var(--text);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;transition:border-color .2s ease,background .2s ease,color .2s ease}.studio-home-link:hover,.studio-home-link:focus-visible{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--text)}body[data-theme="light"] .studio-home-link{background:var(--paper-strong)}@media(max-width:1000px){.latest-section .card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:720px){.latest-section .card-grid{display:flex}}
+
+/* 2026-09 visual calibration: a quieter advertising rhythm and an editorial first viewport. */
+.hero{min-height:clamp(440px,48vw,610px);padding-block:clamp(4.25rem,8vw,7.5rem)}
+.hero-copy{max-width:43rem;padding-left:clamp(.15rem,1.2vw,1rem)}
+.hero-copy::before{content:"";display:block;width:3.25rem;height:1px;margin:0 0 1.15rem;background:linear-gradient(90deg,var(--accent),transparent)}
+.hero h1{max-width:12ch;margin:.85rem 0 1.1rem;font-size:clamp(3rem,6.25vw,6.4rem);line-height:.97;letter-spacing:-.065em}
+.hero p{max-width:45ch;margin:0;font-size:clamp(.94rem,1.22vw,1.1rem);line-height:1.65}
+.hero .eyebrow{font-size:.64rem;letter-spacing:.22em}
+.promotion-slot:has(.promotion-image) .promotion-manual,.promotion-slot:has(.promotion-image) .promotion-custom{min-height:148px;padding:1.45rem clamp(1.2rem,3.2vw,2.4rem);gap:.28rem}
+.promotion-slot--article:has(.promotion-image) .promotion-manual,.promotion-slot--article:has(.promotion-image) .promotion-custom{min-height:162px}
+.promotion-slot:has(.promotion-image) strong{font-size:clamp(1rem,1.55vw,1.38rem);letter-spacing:-.025em}
+.promotion-slot:has(.promotion-image) small{font-size:.82rem;line-height:1.45}
+.promotion-slot:has(.promotion-image)>.promotion-label{top:.7rem;left:.8rem;font-size:.55rem}
+.promotion-slot--header,.promotion-slot--footer{margin-block:1.35rem}
+.home-sections .promotion-slot--article{margin:1.5rem auto}
+body[data-theme="light"] .hero{background:#d8d3d7}
+body[data-theme="light"] .hero-art{filter:brightness(1.18) contrast(.98) saturate(.82)}
+body[data-theme="light"] .hero::after{background:linear-gradient(90deg,rgba(255,253,250,.95) 0%,rgba(255,253,250,.72) 42%,rgba(255,253,250,.14) 78%),linear-gradient(0deg,rgba(255,253,250,.16),transparent 48%)}
+body[data-theme="light"] .hero h1{color:#211c29;text-shadow:none}
+body[data-theme="light"] .hero p{color:#4e4656}
+body[data-theme="light"] .hero .eyebrow{color:#7655a3}
+body[data-theme="light"] .category img,body[data-theme="light"] .entry-card img,body[data-theme="light"] .featured-grid img,body[data-theme="light"] .visual-reel img{filter:brightness(1.12) contrast(.93) saturate(.8)}
+body[data-theme="light"] .category::after{background:linear-gradient(180deg,rgba(255,253,250,.02) 15%,rgba(30,24,38,.58) 100%)}
+body[data-theme="light"] .promotion-slot:has(.promotion-image){border-color:color-mix(in srgb,var(--accent) 26%,var(--chrome-strong));background:var(--paper)}
+body[data-theme="light"] .promotion-manual::after,body[data-theme="light"] .promotion-custom::after{background:linear-gradient(90deg,rgba(28,23,35,.76),rgba(28,23,35,.30) 64%,rgba(28,23,35,.08))}
+body[data-theme="light"] .studio-panel,body[data-theme="light"] .advertising-overview{background:var(--paper-strong);border-color:var(--chrome-strong);box-shadow:0 10px 28px rgba(46,35,62,.055)}
+body[data-theme="light"] .studio-panel h1,body[data-theme="light"] .studio-panel h2,body[data-theme="light"] .advertising-overview h1,body[data-theme="light"] .advertising-overview h2{color:var(--ink)}
+body[data-theme="light"] .studio-panel p,body[data-theme="light"] .advertising-overview p{color:var(--ink-soft)}
+body[data-theme="light"] .advertising-placement-card{background:var(--paper);border-color:var(--chrome-strong)}
+body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-placement{background:var(--paper);border-color:var(--chrome-strong)}
+@media(max-width:600px){.hero{min-height:510px;padding-block:4rem}.hero h1{font-size:clamp(2.85rem,11vw,4.25rem)}.hero-copy{padding-left:0}.promotion-slot:has(.promotion-image) .promotion-manual,.promotion-slot:has(.promotion-image) .promotion-custom{min-height:132px;padding:1.25rem 1.1rem}.promotion-slot--article:has(.promotion-image) .promotion-manual,.promotion-slot--article:has(.promotion-image) .promotion-custom{min-height:146px}}

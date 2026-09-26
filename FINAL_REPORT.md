@@ -167,3 +167,12 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Studio sol alanına doğrudan `Ana sayfayı aç` bağlantısı eklendi. Açık temada bağlantı yüzeyi ve metni canlıda doğrulandı.
 - Canlı Chrome denetiminde yatay taşma ve konsol hatası görülmedi. Ana sayfa düzeni ve Studio bağlantısı için Playwright senaryosu eklendi.
 - Son doğrulama: açık temada ana sayfa arka planı, kategori kartları, reklam alanları ve son yayın kartları uyumlu paletle yüklendi; yatay taşma ve konsol hatası yok. `e2e/navigation.spec.ts` 7/7 geçti.
+
+### Ana vitrin ve açık tema kalibrasyonu — 26 Eylül 2026
+
+- İlk ekranın yüksekliği ve başlık ölçeği yeniden dengelendi; başlık artık daha kısa satır ölçüsü, daha sıkı satır aralığı ve ince vurgu çizgisiyle görselin önüne geçmeden okunuyor.
+- Üst, yazı içi ve alt reklam yüzeyleri sırasıyla 150, 164 ve 150 px'e indirildi. Tümü ana editoryal kolonla aynı 1200 px genişlikte kalıyor.
+- Açık temada kahraman ve yayın görselleri karartılmak yerine parlaklık, kontrast ve doygunluk değerleriyle aydınlatılıyor. Yazı için gereken kontrast kahraman katmanıyla korunuyor.
+- Studio genel bakış ve reklam yönetimi yüzeyleri açık palete taşındı; reklam özeti, başlıklar, kartlar ve düzenleme alanları artık okunur açık yüzey/koyu metin kombinasyonunu kullanıyor.
+- Canlı Chrome ölçümü: ana sayfada yatay taşma yok; reklam alanları 1200 px genişlikte ve 150/164/150 px yüksekliğinde. Studio reklam özeti `#f8f4ee` yüzey, okunur koyu metin ve açık kartlarla yüklendi.
+- Son doğrulama: `npm run verify` başarılı (Astro 0 tanı, Vitest 14/14, build başarılı); `e2e/navigation.spec.ts` 7/7 geçti. Canlı Worker sürümü `364236f3-3055-42e5-b168-ae5cf5e2cb94` olarak doğrulandı.
