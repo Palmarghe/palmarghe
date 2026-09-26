@@ -166,3 +166,4 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Kategori alanı beş eşit kolona, altı son yayın ise iki dengeli üçlü satıra yerleştirildi; boş hücrelerden doğan asimetrik görünüm kaldırıldı.
 - Studio sol alanına doğrudan `Ana sayfayı aç` bağlantısı eklendi. Açık temada bağlantı yüzeyi ve metni canlıda doğrulandı.
 - Canlı Chrome denetiminde yatay taşma ve konsol hatası görülmedi. Ana sayfa düzeni ve Studio bağlantısı için Playwright senaryosu eklendi.
+- Son doğrulama: açık temada ana sayfa arka planı, kategori kartları, reklam alanları ve son yayın kartları uyumlu paletle yüklendi; yatay taşma ve konsol hatası yok. `e2e/navigation.spec.ts` 7/7 geçti.
