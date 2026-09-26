@@ -189,3 +189,10 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Studio > Reklam alanları ekranında üst, yazı içi ve alt alanın her biri için bağımsız **Bu alanı göster** denetimi eklendi.
 - Kapatılan yerleşim public sitede hiç oluşturulmaz; boş bant ya da gereksiz dikey boşluk bırakmaz. Yerleşimin metin, görsel, bağlantı ve AdSense ayarları saklı kalır; yeniden açıldığında aynen kullanılır.
 - Canlı Studio Chrome denetiminde üç anahtar görünür ve etkin durumda doğrulandı. Son yerel E2E: 7/7 geçti.
+
+### Ana sayfa kürasyonu ve yayın temizliği — 26 Eylül 2026
+
+- Studio > Ana sayfa alanına üç vitrin modu eklendi: **Sade vitrin**, **Editoryal** ve **Görselsiz metin**.
+- Aynı ekrandaki içerik kürasyonu ile üç Seçilenler kaydı, bir Spotlight kaydı ve altı Görsel akış kaydı elle belirlenebiliyor. Son yayınlar ve görsel akış seçilmiş/spotlight içeriklerini otomatik hariç tutar.
+- Production denetiminde yayımlanmış `test` kaydı doğrulandı ve güvenli olarak **Taslak** durumuna alındı; yenileme sonrası Studio içeriği ve public ana sayfa üzerinden kontrol edildi.
+- Yerel doğrulama: `npm run verify` başarılı; `e2e/navigation.spec.ts` 7/7 geçti. Production Worker sürümü `6b362098-a23c-4b8f-b4eb-4df7ee1d1fb8` ile Studio vitrin/kürasyon denetimleri Chrome’da doğrulandı.

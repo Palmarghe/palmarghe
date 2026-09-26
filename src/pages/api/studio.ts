@@ -145,8 +145,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const pick = (name:string, limit:number) => String(form.get(name) ?? '').trim().slice(0,limit);
     const imageUrl = pick('hero_image_url',500);
     if (imageUrl && !(/^\/(visuals|api\/media)\//.test(imageUrl) || safeExternalUrl(imageUrl))) return errorResponse('Invalid hero image URL');
-    const hero = { visible: form.get('hero_visible') === 'on', eyebrow_tr:pick('hero_eyebrow_tr',100), eyebrow_en:pick('hero_eyebrow_en',100), title_tr:pick('hero_title_tr',120), title_en:pick('hero_title_en',120), descriptor_tr:pick('hero_descriptor_tr',260), descriptor_en:pick('hero_descriptor_en',260), image_url:imageUrl };
-    const { error } = await db.from('site_settings').upsert({ key: 'homepage', value: { order, visible, hero }, updated_at: new Date().toISOString() });
+    const mode = z.enum(['compact','editorial','text']).safeParse(form.get('hero_mode') ?? 'compact');
+    if (!mode.success) return errorResponse('Invalid hero mode');
+    const hero = { visible: form.get('hero_visible') === 'on', mode: mode.data, eyebrow_tr:pick('hero_eyebrow_tr',100), eyebrow_en:pick('hero_eyebrow_en',100), title_tr:pick('hero_title_tr',120), title_en:pick('hero_title_en',120), descriptor_tr:pick('hero_descriptor_tr',260), descriptor_en:pick('hero_descriptor_en',260), image_url:imageUrl };
+    const uniqueIds = (name:string, maximum:number) => [...new Set(form.getAll(name).map((value) => String(value)).filter((value) => z.uuid().safeParse(value).success))].slice(0,maximum);
+    const curation = { featured_ids: uniqueIds('featured_ids',3), visual_reel_ids: uniqueIds('visual_reel_ids',6), spotlight_id: z.uuid().safeParse(form.get('spotlight_id')).success ? String(form.get('spotlight_id')) : '' };
+    const { error } = await db.from('site_settings').upsert({ key: 'homepage', value: { order, visible, hero, curation }, updated_at: new Date().toISOString() });
     if (error) return errorResponse('Save failed',400);
     return redirectTo(request,'/studio/?section=homepage');
   }  if (entity === 'social') {
@@ -312,5 +316,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
   return errorResponse('Invalid entity');
 };
+
 
 
