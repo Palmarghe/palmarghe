@@ -196,3 +196,10 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Aynı ekrandaki içerik kürasyonu ile üç Seçilenler kaydı, bir Spotlight kaydı ve altı Görsel akış kaydı elle belirlenebiliyor. Son yayınlar ve görsel akış seçilmiş/spotlight içeriklerini otomatik hariç tutar.
 - Production denetiminde yayımlanmış `test` kaydı doğrulandı ve güvenli olarak **Taslak** durumuna alındı; yenileme sonrası Studio içeriği ve public ana sayfa üzerinden kontrol edildi.
 - Yerel doğrulama: `npm run verify` başarılı; `e2e/navigation.spec.ts` 7/7 geçti. Production Worker sürümü `6b362098-a23c-4b8f-b4eb-4df7ee1d1fb8` ile Studio vitrin/kürasyon denetimleri Chrome’da doğrulandı.
+
+### Studio yayın kontrolü ve medya seçimi — 26 Eylül 2026
+
+- Studio Genel Bakış'a taslak, zamanlanmış ve yayındaki içerikleri ayrı filtrelere götüren **Bugünün yayın akışı** kartı eklendi.
+- İçerik kaydı devam ederken 2,5 saniye sonra sunucu yanıtının beklendiği; 5,5 saniye sonra işlemin birkaç saniye sürebileceği açıkça gösterilir. Hata mesajı sunucunun güvenli, kısa açıklamasını da içerir.
+- Ana sayfa vitrini için Medya kütüphanesinden görsel seçimi eklendi. Seçilen dosya veritabanında doğrulanır ve serbest URL yerine öncelikle kullanılır.
+- Son doğrulama: `npm run verify` başarılı; `e2e/navigation.spec.ts` 7/7 geçti.

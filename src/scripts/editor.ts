@@ -157,14 +157,20 @@ if (element && output) {
     if (!form.reportValidity()) { updateStatus('Eksik veya geçersiz alanları kontrol edin.'); return; }
     submitting = true;
     dirty = false;
-    updateStatus(form.querySelector<HTMLSelectElement>('select[name="status"]')?.value === 'published' ? 'Yayınlanıyor…' : 'Kaydediliyor…');
+    const publishing = form.querySelector<HTMLSelectElement>('select[name="status"]')?.value === 'published';
+    updateStatus(publishing ? 'Yayınlanıyor…' : 'Kaydediliyor…');
+    const patience = window.setTimeout(() => updateStatus(publishing ? 'Yayınlanıyor… Sunucu yanıtı bekleniyor.' : 'Kaydediliyor… Sunucu yanıtı bekleniyor.'), 2500);
+    const longWait = window.setTimeout(() => updateStatus('Kaydediliyor… Bu işlem birkaç saniye sürebilir; sayfayı kapatmayın.'), 5500);
     try {
       const response = await fetch(form.action, { method: 'POST', body: new FormData(form), credentials: 'same-origin', headers: { Accept: 'text/html' } });
       if (!response.ok) throw new Error((await response.text()).slice(0, 240));
       window.location.assign(response.url);
-    } catch {
+    } catch (error) {
       submitting = false;
-      updateStatus('İçerik kaydedilemedi. Zorunlu alanları ve URL yolunu kontrol edip tekrar deneyin.');
+      const detail = error instanceof Error && error.message ? ` (${error.message.replace(/<[^>]+>/g, '').slice(0, 140)})` : '';
+      updateStatus(`İçerik kaydedilemedi.${detail}`);
+    } finally {
+      window.clearTimeout(patience); window.clearTimeout(longWait);
     }
   });
   window.addEventListener('beforeunload', (event) => { if (dirty) event.preventDefault(); });
@@ -224,3 +230,4 @@ if (studioEditorForm) {
   const advancedSummary = studioEditorForm.querySelector<HTMLElement>('.advanced-content summary');
   if (advancedSummary) advancedSummary.textContent = 'Google ve paylaşım ayarları';
 }
+

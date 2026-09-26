@@ -143,8 +143,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     if (new Set(Object.values(order)).size !== names.length || Object.values(order).some((value) => !Array.from({ length: names.length }, (_, index) => index + 1).includes(value))) return errorResponse('Invalid section order');
     const visible = Object.fromEntries(names.map((name) => [name, form.get(`${name}_visible`) === 'on']));
     const pick = (name:string, limit:number) => String(form.get(name) ?? '').trim().slice(0,limit);
-    const imageUrl = pick('hero_image_url',500);
-    if (imageUrl && !(/^\/(visuals|api\/media)\//.test(imageUrl) || safeExternalUrl(imageUrl))) return errorResponse('Invalid hero image URL');
+    const requestedImageUrl = pick('hero_image_url',500);
+    const heroMediaId = z.uuid().safeParse(form.get('hero_media_id'));
+    if (requestedImageUrl && !(/^\/(visuals|api\/media)\//.test(requestedImageUrl) || safeExternalUrl(requestedImageUrl))) return errorResponse('Invalid hero image URL');
+    if (heroMediaId.success) { const { data: knownHeroMedia } = await db.from('media').select('id').eq('id',heroMediaId.data).single(); if (!knownHeroMedia) return errorResponse('Invalid hero media'); }
+    const imageUrl = heroMediaId.success ? `/api/media/${heroMediaId.data}/` : requestedImageUrl;
     const mode = z.enum(['compact','editorial','text']).safeParse(form.get('hero_mode') ?? 'compact');
     if (!mode.success) return errorResponse('Invalid hero mode');
     const hero = { visible: form.get('hero_visible') === 'on', mode: mode.data, eyebrow_tr:pick('hero_eyebrow_tr',100), eyebrow_en:pick('hero_eyebrow_en',100), title_tr:pick('hero_title_tr',120), title_en:pick('hero_title_en',120), descriptor_tr:pick('hero_descriptor_tr',260), descriptor_en:pick('hero_descriptor_en',260), image_url:imageUrl };
@@ -316,6 +319,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
   return errorResponse('Invalid entity');
 };
+
 
 
 
