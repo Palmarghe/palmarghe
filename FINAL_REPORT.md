@@ -290,3 +290,10 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Production `content_notifications` tablosunun canlı sözleşmesi (`kind`, `title`, `href`) katalog üzerinden doğrulandı. Takip bildirimleri bu sözleşmeye uygun biçimde `followed_content` kaydı ve içeriğin yerel adresiyle yeniden kuruldu.
 - `202609270031_due_author_follow_notifications.sql`, zamanı gelmiş ama satır güncellemesi almamış zamanlanmış yayınların bildirimlerini ilk sonraki site isteğinde idempotent olarak oluşturur. Production fonksiyon çağrısı başarıyla tamamlandı ve bekleyen yayın olmadığı için `0` bildirim döndürdü.
 - Worker sürümü `cc08e727-870c-442e-914d-0abb297eca75` canlıda; Chrome ana sayfa ve console denetimi hatasız geçti. Yerel takip/yorum E2E 3/3 ve `npm run verify` başarılıdır.
+
+### Güncel production doğrulaması — 27 Eylül 2026
+
+- Test koşucusundaki paylaşılan loopback kimliği, gerçek kullanıcı trafiğini etkilemeden yalnız `LOCAL_TEST_MODE` içinde test bazlı IP ile yalıtıldı. Giriş hız sınırı senaryosu gerçek eşik ile ayrıca çalışmaya devam eder.
+- Yerel doğrulama: `npm run verify` başarıyla tamamlandı; rate-limit E2E 1/1 ve navigation E2E 9/9 geçti.
+- GitHub Actions `Verify` çalışması **#173** (`c8fb855`) başarıyla tamamlandı. Bu çalışmada birim testleri, Astro denetimi, production build ve tüm Playwright paketi geçti.
+- En güncel Cloudflare Worker sürümü `0e140716-8560-4c90-a648-c3b8f3b6ec3a` production’a dağıtıldı. Production smoke paketi, public rotalar, güvenlik başlıkları, altı viewport, console ve mobil menü denetimlerini kapsar; canlı apex yanıtı HTTP 200’dür.
