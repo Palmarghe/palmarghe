@@ -135,6 +135,7 @@ const itemIsSaved = Boolean(savedRows?.length);const structuredData = item ? { '
 ---
 <Site locale={locale} title={title} description={item?.seo_description ?? item?.excerpt ?? categorySeoDescription ?? categoryDescription ?? undefined} alternate={alternatePath} canonicalOverride={item?.canonical_override ?? undefined} noindex={['account','search'].includes(slug) || item?.indexable === false || !valid} structuredData={structuredData} ogImage={item?.og_media_id ? `/api/media/${item.og_media_id}/` : item?.cover_url ?? undefined} ogAlt={item?.title} ogType={item?.type === 'article' ? 'article' : 'website'}>
   {slug === '' && <>
+    {Astro.url.searchParams.get('newsletter') === '1' && <p class="alert wrap">{locale === 'tr' ? 'Bülten listesine kaydın alındı.' : 'You are on the newsletter list.'}</p>}
     {heroVisible && <section class={`hero hero--${heroMode} wrap`} data-hero-editable><img class="hero-art" src={heroImage} alt="" width="1600" height="900" fetchpriority="high" decoding="async"/><div class="hero-copy"><span class="eyebrow">{heroEyebrow}</span><h1>{heroTitle}</h1><p>{heroDescriptor}</p></div></section>}
     {slug === '' && <AdSlot placement="article" config={advertising} locale={locale}/>} 
     <div class="home-sections">
