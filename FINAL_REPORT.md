@@ -262,3 +262,10 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Readers can now save a published item to their reading list. The account page exposes saved items, Studio can create ordered editorial collections, and `/collections/` is public. The footer records a newsletter opt-in through a protected API; this records consent only and does not yet send mail.
 - Studio dashboard now shows the next scheduled publications and overdue scheduling warnings. The public search empty state offers category, content-type and recent-publication discovery paths.
 - Verification: `npm run verify` completed with Astro 0 diagnostics, Vitest 14/14 and a successful build. Navigation E2E passed 8/8; the scheduled-content privacy case passed 1/1. Live Chrome confirmed public search/discovery plus the authenticated Studio collections and schedule views. Cloudflare Worker version `2c65df68-ca74-4ea5-82cc-decae33ac9b9` is deployed.
+
+### İçerik sürüm geçmişi ve güvenli geri yükleme — 27 Eylül 2026
+
+- Supabase production projesinde `202609270027_content_revisions.sql` migration’ı uygulandı. `content_revisions` tablosu, RLS politikaları ve içerik insert/update tetikleyicisi canlı katalog sorgusuyla doğrulandı.
+- Studio içerik düzenleme ekranı artık kaydedilen başlık, metin ve yayın durumu sürümlerini listeler. Yetkili içerik kullanıcıları seçilen sürümü **Bu sürümü geri yükle** adımıyla geri yükleyebilir; geri yükleme de tetikleyici sayesinde yeni bir denetim kaydı üretir.
+- Yerel uçtan uca senaryo yeni taslağı oluşturur, düzenler, ikinci sürümü görür, ilk sürümü geri yükler ve geri dönen başlığı doğrular. `npm run verify` Astro 0 hata/uyarı, Vitest 14/14 ve production build ile geçti. Canlı Chrome Studio kontrolünde sürüm geçmişi paneli ve production editör yüklemesi doğrulandı.
+- Uygulama commit’i `24e31d0` normal biçimde `main` dalına push edildi ve Cloudflare Worker dağıtımı tamamlandı. Production’da henüz değişmemiş içeriklerde panel bilgilendirme durumu görünür; ilk kayıttan sonraki sürümlerde geri yükleme denetimi görünür.
