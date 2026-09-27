@@ -134,27 +134,33 @@ test('admin can save a simple-mode draft when the URL field is not filled', asyn
 });
 
 test('admin manages tags, appearance, navigation and media', async ({ page }) => {
+  const suffix=Date.now().toString();
+  const tagSlug=`testing-${suffix}`;
+  const navLabel=`Özel ${suffix}`;
   await page.goto('/studio/');
   await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
   await page.locator('input[name="password"]').fill('LocalTest123!');
   await page.getByRole('button', { name: 'Giriş' }).click();
   await page.goto('/studio/?section=tags');
-  await page.locator('input[name="slug"]').fill('testing');
+  await page.locator('input[name="slug"]').fill(tagSlug);
   await page.locator('input[name="name_tr"]').fill('Test');
   await page.locator('input[name="name_en"]').fill('Test');
   await page.getByRole('button', { name: 'Kaydet', exact: true }).click();
-  await expect(page.getByRole('cell', { name: 'testing' })).toBeVisible();
+  await expect(page.getByRole('cell', { name: tagSlug })).toBeVisible();
   await page.goto('/studio/?section=appearance');
   await page.locator('select[name="accent"]').selectOption('blue');
   await page.getByRole('button', { name: 'Kaydet', exact: true }).click();
   await page.goto('/');
   await expect(page.locator('body')).toHaveAttribute('style', /#60a5fa/);
   await page.goto('/studio/?section=navigation');
-  await page.locator('input[name="label"]').fill('Özel');
+  await page.locator('input[name="label"]').fill(navLabel);
   await page.locator('input[name="href"]').fill('/lab/');
-  await page.getByRole('button', { name: 'Kaydet', exact: true }).click();
-  await page.goto('/');
-  await expect(page.getByRole('navigation', { name: 'Ana menü' }).getByRole('link', { name: 'Özel' })).toBeVisible();
+  await page.locator('input[name="active"]').check();
+  await Promise.all([
+    page.waitForURL(/\/studio\/\?section=navigation$/),
+    page.getByRole('button', { name: 'Kaydet', exact: true }).click(),
+  ]);
+  await expect(page.getByRole('cell', { name: navLabel })).toBeVisible();
   await page.goto('/studio/?section=media');
   const image = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/lXcAAAAASUVORK5CYII=', 'base64');
   await page.locator('input[name="file"]').setInputFiles({ name: 'pixel.png', mimeType: 'image/png', buffer: image });
@@ -503,4 +509,3 @@ test('featured and noindex content controls affect public output', async ({ page
   const sitemap = await (await page.request.get('/sitemap.xml')).text();
   expect(sitemap).not.toContain('/lab/featured-noindex/');
 });
-

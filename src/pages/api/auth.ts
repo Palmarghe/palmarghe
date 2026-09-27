@@ -10,7 +10,9 @@ const credentials = z.object({ email: z.email().max(254), password: z.string().m
 async function allowed(request: Request, action: string, email: string): Promise<boolean | null> {
   const ip = request.headers.get('cf-connecting-ip') ?? 'unknown';
   const max = action === 'login' ? 10 : 5;
-  if (localTestRequest(request)) return localAuthAllowed(`${ip}:${action}`, 30) && localAuthAllowed(`${ip}:${action}:${email.toLowerCase()}`, max);
+  // The in-memory adapter shares one loopback address across the whole E2E suite.
+  // Keep production limits unchanged while allowing isolated browser contexts to sign in.
+  if (localTestRequest(request)) return localAuthAllowed(`${ip}:${action}`, 1000) && localAuthAllowed(`${ip}:${action}:${email.toLowerCase()}`, 1000);
   const url = import.meta.env.PUBLIC_SUPABASE_URL;
   const key = runtimeSecret('SUPABASE_SERVICE_ROLE_KEY');
   const pepper = runtimeSecret('CONTACT_RATE_PEPPER');
