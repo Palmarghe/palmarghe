@@ -277,3 +277,10 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Public yazar sayfasındaki takip düğmesi mevcut RLS korumalı `content_follows` tablosuna yazılır. Hesap ekranında bildirim merkezi okunmamış sayıyı, bildirimleri ve tekil okunmuş işaretleme işlemini sunar.
 - Production migrations `202609270028_public_author_profiles.sql` ve `202609270029_author_byline.sql` Supabase SQL Editor üzerinden başarıyla uygulandı. İlgili Worker dağıtımlarının son sürümü `fde546c4-21ee-4d9f-973d-0e1c313e277e`; bildirim merkezi dağıtımı `3793d2d6-f88a-44ab-af80-194d8465a022` idi.
 - Yerel doğrulama: Astro typecheck sıfır hata/uyarı, Vitest 14/14 ve public/Studio navigation E2E 9/9 geçti.
+
+### CSP uyumluluğu, takip bildirimleri ve canlı testler — 27 Eylül 2026
+
+- Yazar takip akışı için uçtan uca senaryo eklendi: üye public yazarı takip eder, yazarın ilk yayını bildirim üretir, bildirim içeriğe bağlanır ve okunmuş olarak işaretlenir. Yerel adapter da yayın geçişinden önceki durumu koruyarak production tetikleyicisiyle aynı davranışı verir.
+- Canlı sitenin katı CSP politikasıyla çakışan Service Worker kaydı ve Google AdSense başlatma betiği inline kullanımdan çıkarılarak `/scripts/service-worker-registration.js` ve `/scripts/adsense.js` dosyalarına taşındı. Böylece tema ve PWA kaydı CSP hatası üretmeden çalışır; reklam başlatması da aynı ilkeyle uyumludur.
+- Cloudflare Worker production sürümü `822136ef-9641-4d65-b0a6-ae1132e4e6dd` ile dağıtıldı. Chrome denetiminde ana sayfa eksiksiz yüklendi ve console error kaydı görülmedi.
+- Doğrulama: `npm run verify` (Astro 0 hata/uyarı, Vitest 14/14, build başarılı); yerel takip/yorum E2E 3/3; navigation E2E 9/9; production smoke 5/5 ve production Axe 6/6 geçti.
