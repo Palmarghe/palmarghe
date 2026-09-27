@@ -94,5 +94,5 @@ const adsEnabled = advertising?.enabled === true && /^ca-pub-\d{10,20}$/.test(St
   <script is:inline src="/scripts/cursor-glow.js" defer></script>
   {Astro.url.pathname.includes('/account/') && <script is:inline src="/scripts/password-visibility.js" defer></script>}
   {Astro.url.pathname.includes('/account/') && <script is:inline src="/scripts/profile-editor.js" defer></script>}
-  <script is:inline>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));}</script></body>
+  <script is:inline src="/scripts/service-worker-registration.js" defer></script></body>
 </html>
