@@ -25,7 +25,7 @@ Son güncelleme: 28 Eylül 2026. FAZ 1 uygulanabilir kapsam tamamlandı; harici/
 - [x] Hesap sayfasında uygulama düzeyinde TOTP MFA kaydı, doğrulama ve faktör kaldırma akışı.
 - [ ] Owner ikinci faktörünün gerçek authenticator ile kaydı, zorunlu MFA politikası ve recovery prosedürü.
 - [ ] Cloudflare Access için ödeme kartı, Terms ve olası overage onayı.
-- [ ] Search Console indeksleme ve field Core Web Vitals verisinin olgunlaşması.
+- [ ] Search Console field Core Web Vitals ve organik tıklama verisinin olgunlaşması. 28 Eylül denetiminde sitemap görünür, 22 URL dizinde; 0 organik tıklama ve yeterli CWV alan verisi yok.
 - [ ] İnsan tarafından ekran okuyucu/assistive technology incelemesi.
 
 Bu maddeler FAZ 2 derin incelemesini başlatmayı engellemez. FAZ 2 yeni P0/P1 bulursa yeniden açılacaktır.

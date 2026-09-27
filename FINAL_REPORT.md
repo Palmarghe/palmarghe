@@ -333,3 +333,9 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Hesap ayarlarına authenticator uygulaması için QR kurulum, altı haneli kod doğrulaması ve doğrulanmış faktör kaldırma akışı eklendi. Tarayıcı yalnız kısa süreli QR/manuel kurulum anahtarını görür; Worker bunları saklamaz.
 - `/api/mfa/` yalnız oturum sahibi için çalışır, POST isteklerinde same-origin kontrolü yapar ve doğrulama kodunu sınırlı sayısal biçimde kabul eder. Anonim production isteği 401 döndürerek doğrulandı.
 - Yerel hesap E2E görünürlük ve otomatik kod alanını doğruladı; `npm run verify` sıfır Astro tanısı, Vitest 14/14 ve production build ile geçti. Kapatılan bir kurulum penceresinden kalan doğrulanmamış faktör, yeni QR üretilmeden önce güvenle temizlenir. Canlı Worker sürümü `4d0339a9-5c6f-4cd1-aad2-dd6042254955`dir. Owner’ın gerçek authenticator ile kaydı ve zorunlu MFA politikası güvenli bir operasyonel adım olarak açık kalır.
+
+### Search Console canlı durum denetimi — 28 Eylül 2026
+
+- Google Search Console `sc-domain:palmarghe.com` özelliği açık ve `https://palmarghe.com/sitemap.xml` kaynak olarak görünür. Raporun son güncellemesi 21 Eylül 2026’dır.
+- Google 22 sayfayı dizine eklemiş; 12 sayfa dört beklenen grupta dışarıdadır: canonical alternatif (3), yönlendirme (2), tarandı ancak henüz dizinde değil (4) ve keşfedildi ancak henüz dizinde değil (3). Bu durum canonical/yönlendirme kurallarıyla tutarlıdır; manuel işlem veya güvenlik uyarısı görülmedi.
+- Arama performansında henüz 0 web arama tıklaması, Core Web Vitals bölümünde ise yeterli alan verisi yoktur. Bu iki veri seti gerçek kullanıcı trafiği ve zamanla olgunlaşacak dış metrikler olarak açık kalır.
