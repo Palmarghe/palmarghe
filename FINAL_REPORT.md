@@ -243,3 +243,10 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 
 - İlk ekran ve içerik kapak görselleri `fetchpriority="high"` ile hızlı başlatılır; kart, arama sonucu, görsel akış ve galeri görselleri `decoding="async"` ile ana iş parçacığını daha az meşgul eder.
 - Son doğrulama: `npm run verify` başarılı. Production Worker sürümü `019d2d14-dff5-45ea-9e7e-a94ee2c1cc12`.
+
+### Mobil denetim ve ritim düzeltmesi — 27 Eylül 2026
+
+- 360, 390, 768, 1024, 1440 ve 1920 px ölçülerinde ana sayfa, kategori ve Studio için yatay taşma yeniden denetlendi; Navigation E2E 8/8 geçti.
+- Son yayınlar 720 px altında tek kolonlu, dengeli kart düzenine geçti. Mobil menü bağlantıları en az 44 px, Studio yatay sekmeleri en az 42 px dokunma alanına sahip.
+- 380 px ve altındaki ekranlarda ana vitrin ve reklam dış boşlukları daraltıldı; ilk ekran yüksekliği ve başlık ölçüsü küçük cihazlar için yeniden ölçeklendi.
+- Kalite kartının mobil medya sorgusundaki fazla kapanış düzeltildi. Production Worker sürümü `3880e9b9-a835-453b-959c-e74c1eea56f1`.
