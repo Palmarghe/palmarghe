@@ -443,6 +443,24 @@ test('category hierarchy rejects cycles and supports inactive state', async ({ p
   expect(cycle.status()).toBe(400);
 });
 
+test('content revisions are captured and shown in Studio', async ({ page }) => {
+  await page.goto('/studio/');
+  await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
+  await page.locator('input[name="password"]').fill('LocalTest123!');
+  await page.getByRole('button', { name: 'Giriş' }).click();
+  const created = await page.request.post('/api/studio/', { headers: { Origin: 'http://127.0.0.1:4322' }, form: { entity:'content', title:'Sürüm geçmişi testi', slug:'lab/surum-gecmisi-testi', locale:'tr', type:'article', status:'draft', body:JSON.stringify({ type:'doc', content:[{type:'paragraph',content:[{type:'text',text:'İlk sürüm.'}]}] }) }, maxRedirects:0 });
+  expect(created.status()).toBe(303);
+  await page.goto('/studio/?section=content');
+  const row = page.getByRole('row').filter({ hasText: 'Sürüm geçmişi testi' });
+  await row.getByRole('link', { name: 'Düzenle' }).click();
+  await page.locator('input[name="title"]').fill('Sürüm geçmişi testi güncel');
+  await page.getByRole('button', { name: 'Kaydet', exact: true }).click();
+  await expect(page.getByRole('row').filter({ hasText: 'Sürüm geçmişi testi güncel' })).toBeVisible();
+  await page.getByRole('row').filter({ hasText: 'Sürüm geçmişi testi güncel' }).getByRole('link', { name: 'Düzenle' }).click();
+  await expect(page.getByRole('heading', { name: 'Kaydedilen sürümler' })).toBeVisible();
+  await expect(page.getByText('Sürüm 2')).toBeVisible();
+});
+
 test('public layout fits mobile and tablet viewports', async ({ page }) => {
   for (const width of [390,768]) {
     await page.setViewportSize({ width, height: 844 });
