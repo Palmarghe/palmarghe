@@ -321,3 +321,9 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Service Worker ana sayfa HTML’ini önbellekten sunuyordu; bu nedenle Studio reklam görünürlüğü değişikliği bazı masaüstü oturumlarında gecikiyordu.
 - palmarghe-static-v2 yalnız statik marka/font varlıklarını saklar; SSR belgeleri ve Studio ayarları her gezinmede Worker’dan güncel alınır. Kayıt betiği aktif Service Worker için güncelleme denetimini başlatır.
 - Production Chrome’da, veritabanında kapalı üç reklam alanının eski üst reklam bandı iki yenileme sonrasında kalktı; ana sayfa güncel ayarla render edildi.
+
+### Son bütünleşik doğrulama — 28 Eylül 2026
+
+- Yerel Playwright paketi 40/40 geçti; kritik erişilebilirlik, üyelik ve yorum yetkileri, bildirimler, Studio içerik akışı, mobil menü ve reklam düzenleme kısayollarını kapsar.
+- Production Playwright paketi 11/11 geçti. Canlı `/`, `/en/`, `/contact/`, `/account/`, `/archive/` ve Studio girişinde ciddi veya kritik axe bulgusu yok; public rota, metadata, güvenlik başlıkları ve tarayıcı konsolu denetimleri başarılıdır.
+- Studio genel bakışındaki her reklam kartı artık kaydedilmiş görünürlüğü açıkça `Yayında` ya da `Kapalı · public sitede görünmez` olarak gösterir. Commit `a24aad8`, Worker sürümü `4c1b1f67-8665-4195-957d-ea1d296a1d6a` canlıdadır.

@@ -29,8 +29,8 @@ Canlı `palmarghe.com/`, `/ai/` ve oturum açık `studio.palmarghe.com/studio/` 
 ## Ölçümler ve sınırlar
 
 - Önceki canlı Lighthouse mobile sonucu 99/100/100/100, LCP 2.1 s ve CLS 0 idi. Bu değişiklikler sonrası tekrar ölçüm gereklidir.
-- `npm run verify` 0 typecheck hatası, 11 unit test ve build geçti. 24/24 E2E testi ve `npm audit --omit=dev --audit-level=high` geçti.
-- Salt okunur production Chrome Playwright paketi 12 rota, assetler, güvenlik başlıkları, 404, altı genişlik ve menüyü kapsıyor; 3/3 geçti.
+- 28 Eylül 2026 denetiminde yerel Playwright paketi 40/40 geçti. Bu paket ciddi/ kritik axe denetimleri, Studio içerik alanı, üyelik/yorum yetkileri, bildirimler, mobil menü ve reklam yönetimi kısayollarını kapsar.
+- Production Playwright paketi 11/11 geçti: public rotalar, metadata, varlıklar, güvenlik başlıkları, console denetimi, `/`, `/en/`, `/contact/`, `/account/`, `/archive/` ve Studio girişinde axe kontrolleri başarılıdır.
 - Production içerik tipi örnekleri ve role matrix doğrulandı; custom SMTP ile alan performans verisi dış bağımlılık olarak açık kalır.
 
 
