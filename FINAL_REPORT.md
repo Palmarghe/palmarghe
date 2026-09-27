@@ -300,9 +300,9 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 
 ### Rızalı bülten kaydı — 27 Eylül 2026
 
-- `202609270032_newsletter_consent_rpc.sql` production Supabase’e uygulandı. `newsletter_subscribers` tablosu anonim istemcilere kapalı kalır; yalnız `subscribe_newsletter` RPC’sinin `anon` ve `authenticated` için execute yetkisi vardır.
-- Footer formu artık Gizlilik Politikası bağlantılı açık rıza, görünmeyen bot alanı ve sunucu tarafında sınırlandırılmış kayıt akışı kullanır. Aynı adres tekrar kaydolursa tek kayıt güncellenir.
-- Production endpoint testi 303 başarı yönlendirmesi üretti, denetim e-postası `active` olarak veritabanında doğrulandı ve test sonunda silindi (`remaining = 0`). Worker sürümü `3d2825a5-f2bf-4076-93f9-9716a3667214`; production smoke 5/5 geçti.
+- `202609270032_newsletter_consent_rpc.sql` ile başlayan bülten kaydı, `202609280034_restrict_newsletter_rpc.sql` ile production’da sıkılaştırıldı. `newsletter_subscribers` tablosu anonim istemcilere kapalıdır; `subscribe_newsletter` RPC execute izni yalnız Worker `service_role` içindir.
+- Footer formu artık Gizlilik Politikası bağlantılı açık rıza, görünmeyen bot alanı ve Worker üzerinden veritabanı tabanlı sınırlandırılmış kayıt akışı kullanır. Aynı adres tekrar kaydolursa tek kayıt güncellenir.
+- Production endpoint testi 303 başarı yönlendirmesi üretti, denetim e-postası `active` olarak veritabanında doğrulandı ve test sonunda silindi (`remaining = 0`). İzin sorgusu `anon_execute = false`, `authenticated_execute = false`, `service_execute = true` döndürdü. Worker sürümü `cb0b7ac5-1bd1-4274-8862-49b226ee37e1` canlıdadır.
 
 ### Supabase fonksiyon izinleri — 27 Eylül 2026
 
