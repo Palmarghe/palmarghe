@@ -32,7 +32,7 @@ const adsEnabled = advertising?.enabled === true && /^ca-pub-\d{10,20}$/.test(St
 ---
 <!doctype html>
 <html lang={locale}>
-  <head>
+  <head><link rel="manifest" href="/manifest.webmanifest"/><meta name="theme-color" content="#0b0b0d"/>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0B0B0D" />
@@ -94,5 +94,5 @@ const adsEnabled = advertising?.enabled === true && /^ca-pub-\d{10,20}$/.test(St
   <script is:inline src="/scripts/cursor-glow.js" defer></script>
   {Astro.url.pathname.includes('/account/') && <script is:inline src="/scripts/password-visibility.js" defer></script>}
   {Astro.url.pathname.includes('/account/') && <script is:inline src="/scripts/profile-editor.js" defer></script>}
-  </body>
+  <script is:inline>if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));}</script></body>
 </html>
