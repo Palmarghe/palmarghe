@@ -55,6 +55,48 @@ if (element && output) {
   };
   const sync = () => { output.value = JSON.stringify(editor.getJSON()); updateToolbar(); };
 
+  const templates: Record<string, { label: string; hint: string; content: JSONContent }> = {
+    article: { label: 'Makale', hint: 'Başlık, bağlam, ana fikir ve kapanış', content: { type: 'doc', content: [
+      { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Konu ve bağlam' }] },
+      { type: 'paragraph', content: [{ type: 'text', text: 'Okurun bilmesi gereken temel bağlamı burada kısa ve açık biçimde anlatın.' }] },
+      { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Ana fikir' }] },
+      { type: 'paragraph', content: [{ type: 'text', text: 'Gözleminizi, örneklerinizi ve ayrıntıları buraya ekleyin.' }] },
+      { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Sonuç' }] },
+      { type: 'paragraph', content: [{ type: 'text', text: 'Yazının ana sonucunu ve sonraki adımı özetleyin.' }] },
+    ] } },
+    review: { label: 'İnceleme', hint: 'İlk izlenim, güçlü yönler, sınırlar, karar', content: { type: 'doc', content: [
+      { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'İlk izlenim' }] },
+      { type: 'paragraph', content: [{ type: 'text', text: 'Çalışmanın ne sunduğunu ve kimler için anlamlı olduğunu açıklayın.' }] },
+      { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Öne çıkanlar' }] },
+      { type: 'bulletList', content: [{ type: 'listItem', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Güçlü yön' }] }] }] },
+      { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Karar' }] },
+      { type: 'paragraph', content: [{ type: 'text', text: 'Kime önerildiğini ve nedenini netleştirin.' }] },
+    ] } },
+    guide: { label: 'Rehber', hint: 'Amaç, hazırlık, adımlar ve kontrol listesi', content: { type: 'doc', content: [
+      { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Amaç' }] },
+      { type: 'paragraph', content: [{ type: 'text', text: 'Bu rehberin sonunda okuyucunun ne başaracağını yazın.' }] },
+      { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Hazırlık' }] },
+      { type: 'bulletList', content: [{ type: 'listItem', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Gerekli araç veya bilgi' }] }] }] },
+      { type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Adımlar' }] },
+      { type: 'orderedList', content: [{ type: 'listItem', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'İlk adımı açıkça açıklayın.' }] }] }] },
+    ] } },
+  };
+  const templateControls = document.createElement('div');
+  templateControls.className = 'editor-template-controls';
+  templateControls.setAttribute('role', 'group');
+  templateControls.setAttribute('aria-label', 'İçerik şablonları');
+  templateControls.innerHTML = `<span>Şablonla başla</span>${Object.entries(templates).map(([key, template]) => `<button type="button" data-editor-template="${key}" title="${template.hint}">${template.label}</button>`).join('')}`;
+  element.parentElement?.insertBefore(templateControls, element);
+  templateControls.addEventListener('click', (event) => {
+    const key = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-editor-template]')?.dataset.editorTemplate;
+    if (!key || !templates[key]) return;
+    editor.commands.setContent(templates[key].content);
+    editor.commands.focus('start');
+    dirty = true;
+    updateStatus('Şablon uygulandı · kaydedilmedi');
+    sync();
+  });
+
   const blockControls = document.createElement('div');
   blockControls.className = 'editor-block-controls';
   blockControls.setAttribute('role', 'toolbar');

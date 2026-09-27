@@ -88,6 +88,9 @@ test('light theme applies to public search and Studio classic editor', async ({ 
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'light');
   await expect(page.locator('.classic-menubar')).toHaveCSS('background-color', 'rgb(243, 237, 245)');
   await expect(page.locator('#block-editor')).toHaveCSS('background-color', 'rgb(255, 253, 250)');
+  await expect(page.getByRole('button', { name: 'Makale' })).toBeVisible();
+  await page.getByRole('button', { name: 'Rehber' }).click();
+  await expect.poll(() => page.locator('#body-json').evaluate((element) => (element as HTMLTextAreaElement).value)).toContain('Hazırlık');
 });
 test('Studio dashboard exposes current advertising placements and edit shortcuts', async ({ page }) => {
   await page.goto('/studio/');
