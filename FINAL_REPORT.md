@@ -269,3 +269,11 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Studio içerik düzenleme ekranı artık kaydedilen başlık, metin ve yayın durumu sürümlerini listeler. Yetkili içerik kullanıcıları seçilen sürümü **Bu sürümü geri yükle** adımıyla geri yükleyebilir; geri yükleme de tetikleyici sayesinde yeni bir denetim kaydı üretir.
 - Yerel uçtan uca senaryo yeni taslağı oluşturur, düzenler, ikinci sürümü görür, ilk sürümü geri yükler ve geri dönen başlığı doğrular. `npm run verify` Astro 0 hata/uyarı, Vitest 14/14 ve production build ile geçti. Canlı Chrome Studio kontrolünde sürüm geçmişi paneli ve production editör yüklemesi doğrulandı.
 - Uygulama commit’i `24e31d0` normal biçimde `main` dalına push edildi ve Cloudflare Worker dağıtımı tamamlandı. Production’da henüz değişmemiş içeriklerde panel bilgilendirme durumu görünür; ilk kayıttan sonraki sürümlerde geri yükleme denetimi görünür.
+
+### Topluluk profilleri, takip ve bildirim merkezi — 27 Eylül 2026
+
+- Production’da opt-in public yazar profilleri etkin: profil sahibi geçerli `/authors/<slug>` adresi ve açık görünürlük seçeneği vermedikçe hiçbir profil public değildir. Public sayfa yalnız hazır avatar, görünen ad, bio ve yayınlanmış işleri döndürür.
+- İçerik detayları, yalnız public olan yazarlar için avatar ve profil bağlantısını gösterir. Bu akış dar kapsamlı Supabase RPC’leri kullanır; e-posta, rol ve özel profil alanları istemciye verilmez.
+- Public yazar sayfasındaki takip düğmesi mevcut RLS korumalı `content_follows` tablosuna yazılır. Hesap ekranında bildirim merkezi okunmamış sayıyı, bildirimleri ve tekil okunmuş işaretleme işlemini sunar.
+- Production migrations `202609270028_public_author_profiles.sql` ve `202609270029_author_byline.sql` Supabase SQL Editor üzerinden başarıyla uygulandı. İlgili Worker dağıtımlarının son sürümü `fde546c4-21ee-4d9f-973d-0e1c313e277e`; bildirim merkezi dağıtımı `3793d2d6-f88a-44ab-af80-194d8465a022` idi.
+- Yerel doğrulama: Astro typecheck sıfır hata/uyarı, Vitest 14/14 ve public/Studio navigation E2E 9/9 geçti.
