@@ -440,3 +440,5 @@ body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-p
 @media (max-width:640px){.revision-panel{padding:1rem}.revision-list li>div{align-items:flex-start;flex-direction:column;gap:.18rem}}
 
 .revision-preview dl{display:grid;gap:.6rem;margin:.8rem 0 0}.revision-preview dl div{display:grid;gap:.16rem}.revision-preview dt{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.revision-preview dd{margin:0;white-space:pre-wrap;color:var(--text)}
+
+.account-profile-form{display:grid;gap:1rem;max-width:42rem}.account-avatar-preview{width:6rem;height:6rem;border:1px solid var(--border);border-radius:50%;overflow:hidden;background:var(--panel)}.account-avatar-preview img{width:100%;height:100%;object-fit:cover}

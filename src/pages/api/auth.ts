@@ -38,9 +38,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (action === 'profile') {
     const { data: { user } } = await db.auth.getUser();
     if (!user) return errorResponse('Unauthorized',401);
-    const display_name = z.string().trim().max(100).safeParse(form.get('display_name'));
-    if (!display_name.success) return errorResponse('Invalid name');
-    const { error } = await db.from('profiles').update({ display_name: display_name.data }).eq('id',user.id);
+    const profileInput = z.object({ display_name:z.string().trim().min(2).max(100), bio:z.string().trim().max(500), avatar_key:z.string().regex(/^avatar-(0[1-9]|1[0-9]|20)$/) }).safeParse({ display_name:form.get('display_name'), bio:form.get('bio') ?? '', avatar_key:form.get('avatar_key') ?? 'avatar-01' });
+    if (!profileInput.success) return errorResponse('Invalid profile');
+    const { error } = await db.from('profiles').update(profileInput.data).eq('id',user.id);
     if (error) return errorResponse('Update failed',400);
     return redirectTo(request, account);
   }
