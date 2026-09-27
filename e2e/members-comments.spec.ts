@@ -70,3 +70,47 @@ test('only a signed-in member can post a comment',async({page})=>{
   await expect(comment).toContainText('Yorum Üyesi');
   await expect(comment.locator('img')).toHaveAttribute('src','/avatars/avatar-05.webp');
 });
+
+test('author follows receive a readable publication notification',async({page})=>{
+  await loginStudio(page);
+  await page.goto('/account/');
+  const profile=page.locator('.profile-card form');
+  await expect(profile).toHaveAttribute('aria-busy','false');
+  await profile.locator('input[name="display_name"]').fill('E2E Yazar');
+  await profile.locator('input[name="author_slug"]').fill('e2e-yazar');
+  await profile.locator('input[name="public_profile"]').check();
+  await profile.getByRole('button',{name:'Profili kaydet'}).click();
+  await expect(page.locator('[data-profile-status]')).toContainText('Profil kaydedildi');
+
+  await page.context().clearCookies();
+  await page.goto('/account/');
+  const login=page.locator('form').filter({has:page.locator('input[value="login"]')});
+  await login.getByRole('textbox',{name:'Email'}).fill('member@example.test');
+  await login.locator('input[name="password"]').fill('LocalTest123!');
+  await login.getByRole('button',{name:'Giriş yap'}).click();
+  await page.goto('/authors/e2e-yazar/');
+  const follow=page.getByRole('button',{name:'Takip et'});
+  const [followResponse]=await Promise.all([page.waitForResponse((response)=>response.url().endsWith('/api/library/')&&response.request().method()==='POST'),follow.click()]);
+  expect(followResponse.status(),await followResponse.text()).toBe(200);
+  await expect(page.locator('[data-follow-id]')).toHaveText('Takip ediliyor');
+
+  await page.context().clearCookies();
+  await loginStudio(page);
+  const slug=`takip-bildirimi-${Date.now()}`;
+  const published=await page.request.post('/api/studio/',{headers:{Origin:'http://127.0.0.1:4322'},form:{entity:'content',title:'Takip bildirimi deneyi',slug,locale:'tr',type:'article',status:'published',excerpt:'Takip eden üyeye ulaşan yayın bildirimi.',body:JSON.stringify({type:'doc',content:[{type:'paragraph',content:[{type:'text',text:'Yayınlandı.'}]}]})}});
+  expect(published.ok()).toBeTruthy();
+
+  await page.context().clearCookies();
+  await page.goto('/account/');
+  const memberLogin=page.locator('form').filter({has:page.locator('input[value="login"]')});
+  await memberLogin.getByRole('textbox',{name:'Email'}).fill('member@example.test');
+  await memberLogin.locator('input[name="password"]').fill('LocalTest123!');
+  await memberLogin.getByRole('button',{name:'Giriş yap'}).click();
+  await page.goto('/account/');
+  const notice=page.locator('.account-notifications li').filter({hasText:'Takip bildirimi deneyi'});
+  await expect(notice).toHaveClass(/is-unread/);
+  await expect(notice.getByRole('link')).toHaveAttribute('href',`/${slug}/`);
+  await notice.getByRole('button',{name:'Okundu'}).click();
+  await expect(notice).not.toHaveClass(/is-unread/);
+  await expect(notice.getByRole('button',{name:'Okundu'})).toHaveCount(0);
+});
