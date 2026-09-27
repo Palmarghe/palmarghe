@@ -284,3 +284,9 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Canlı sitenin katı CSP politikasıyla çakışan Service Worker kaydı ve Google AdSense başlatma betiği inline kullanımdan çıkarılarak `/scripts/service-worker-registration.js` ve `/scripts/adsense.js` dosyalarına taşındı. Böylece tema ve PWA kaydı CSP hatası üretmeden çalışır; reklam başlatması da aynı ilkeyle uyumludur.
 - Cloudflare Worker production sürümü `822136ef-9641-4d65-b0a6-ae1132e4e6dd` ile dağıtıldı. Chrome denetiminde ana sayfa eksiksiz yüklendi ve console error kaydı görülmedi.
 - Doğrulama: `npm run verify` (Astro 0 hata/uyarı, Vitest 14/14, build başarılı); yerel takip/yorum E2E 3/3; navigation E2E 9/9; production smoke 5/5 ve production Axe 6/6 geçti.
+
+### Zamanlanmış takipçi bildirimleri — 27 Eylül 2026
+
+- Production `content_notifications` tablosunun canlı sözleşmesi (`kind`, `title`, `href`) katalog üzerinden doğrulandı. Takip bildirimleri bu sözleşmeye uygun biçimde `followed_content` kaydı ve içeriğin yerel adresiyle yeniden kuruldu.
+- `202609270031_due_author_follow_notifications.sql`, zamanı gelmiş ama satır güncellemesi almamış zamanlanmış yayınların bildirimlerini ilk sonraki site isteğinde idempotent olarak oluşturur. Production fonksiyon çağrısı başarıyla tamamlandı ve bekleyen yayın olmadığı için `0` bildirim döndürdü.
+- Worker sürümü `cc08e727-870c-442e-914d-0abb297eca75` canlıda; Chrome ana sayfa ve console denetimi hatasız geçti. Yerel takip/yorum E2E 3/3 ve `npm run verify` başarılıdır.
