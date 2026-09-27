@@ -22,7 +22,8 @@ Son güncelleme: 28 Eylül 2026. FAZ 1 uygulanabilir kapsam tamamlandı; harici/
 ## Harici veya kullanıcı bağımlı kapılar
 
 - [ ] Özel SMTP sağlayıcısı ve gerçek e-posta teslimatı; signup confirmation/reset callback doğrulaması.
-- [ ] Uygulama düzeyinde TOTP MFA kaydı/zorunluluğu ve owner ikinci faktör/recovery kurulumu.
+- [x] Hesap sayfasında uygulama düzeyinde TOTP MFA kaydı, doğrulama ve faktör kaldırma akışı.
+- [ ] Owner ikinci faktörünün gerçek authenticator ile kaydı, zorunlu MFA politikası ve recovery prosedürü.
 - [ ] Cloudflare Access için ödeme kartı, Terms ve olası overage onayı.
 - [ ] Search Console indeksleme ve field Core Web Vitals verisinin olgunlaşması.
 - [ ] İnsan tarafından ekran okuyucu/assistive technology incelemesi.

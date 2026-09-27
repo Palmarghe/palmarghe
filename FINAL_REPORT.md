@@ -327,3 +327,9 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Yerel Playwright paketi 40/40 geçti; kritik erişilebilirlik, üyelik ve yorum yetkileri, bildirimler, Studio içerik akışı, mobil menü ve reklam düzenleme kısayollarını kapsar.
 - Production Playwright paketi 11/11 geçti. Canlı `/`, `/en/`, `/contact/`, `/account/`, `/archive/` ve Studio girişinde ciddi veya kritik axe bulgusu yok; public rota, metadata, güvenlik başlıkları ve tarayıcı konsolu denetimleri başarılıdır.
 - Studio genel bakışındaki her reklam kartı artık kaydedilmiş görünürlüğü açıkça `Yayında` ya da `Kapalı · public sitede görünmez` olarak gösterir. Commit `a24aad8`, Worker sürümü `4c1b1f67-8665-4195-957d-ea1d296a1d6a` canlıdadır.
+
+### Hesapta TOTP MFA kurulumu — 28 Eylül 2026
+
+- Hesap ayarlarına authenticator uygulaması için QR kurulum, altı haneli kod doğrulaması ve doğrulanmış faktör kaldırma akışı eklendi. Tarayıcı yalnız kısa süreli QR/manuel kurulum anahtarını görür; Worker bunları saklamaz.
+- `/api/mfa/` yalnız oturum sahibi için çalışır, POST isteklerinde same-origin kontrolü yapar ve doğrulama kodunu sınırlı sayısal biçimde kabul eder. Anonim production isteği 401 döndürerek doğrulandı.
+- Yerel hesap E2E görünürlük ve otomatik kod alanını doğruladı; `npm run verify` sıfır Astro tanısı, Vitest 14/14 ve production build ile geçti. Canlı Worker sürümü `0501c386-8e51-4fd5-aa79-dda3de938f7e`dir. Owner’ın gerçek authenticator ile kaydı ve zorunlu MFA politikası güvenli bir operasyonel adım olarak açık kalır.
