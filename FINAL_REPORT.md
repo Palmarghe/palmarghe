@@ -255,3 +255,10 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 
 - Gerçek production Worker, Chrome motoruyla 320, 390 ve 430 px görünümde denetlendi. Ana sayfa her üç genişlikte; kategori, arşiv, arama, hesap ve iletişim 390 px’te; Studio giriş ekranı 320/430 px’te yatay taşma olmadan yüklendi.
 - Bu sayfalarda console hatası tespit edilmedi. Mobil düzenleme etkisi production’da doğrulandı.
+
+### Community library, collections and production migration — 27 September 2026
+
+- Supabase production migration `202609270026_community_editorial_foundation.sql` was applied in project `ozztqhiqzchlbxscbwhy`. It adds `content_bookmarks`, `content_follows`, `editorial_collections`, `editorial_collection_items`, `newsletter_subscribers` and `content_notifications`; a catalog query confirmed RLS is enabled on all six tables.
+- Readers can now save a published item to their reading list. The account page exposes saved items, Studio can create ordered editorial collections, and `/collections/` is public. The footer records a newsletter opt-in through a protected API; this records consent only and does not yet send mail.
+- Studio dashboard now shows the next scheduled publications and overdue scheduling warnings. The public search empty state offers category, content-type and recent-publication discovery paths.
+- Verification: `npm run verify` completed with Astro 0 diagnostics, Vitest 14/14 and a successful build. Navigation E2E passed 8/8; the scheduled-content privacy case passed 1/1. Live Chrome confirmed public search/discovery plus the authenticated Studio collections and schedule views. Cloudflare Worker version `2c65df68-ca74-4ea5-82cc-decae33ac9b9` is deployed.
