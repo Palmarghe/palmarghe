@@ -25,7 +25,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const entity = form.get('entity');
   const operation = String(form.get('operation') ?? 'create');
   const {data:permissionGroup}=profile?.permission_group_id ? await db.from('permission_groups').select('permissions').eq('id',profile.permission_group_id).single() : {data:null};
-  const permissionMap:Record<string,string>={content:'content',translation:'content',category:'taxonomy',tag:'taxonomy',message:'messages',comment:'messages',appearance:'appearance',homepage:'appearance',advertising:'appearance',social:'appearance',navigation:'navigation',redirect:'navigation'};
+  const permissionMap:Record<string,string>={collection:'content',content:'content',translation:'content',category:'taxonomy',tag:'taxonomy',message:'messages',comment:'messages',appearance:'appearance',homepage:'appearance',advertising:'appearance',social:'appearance',navigation:'navigation',redirect:'navigation'};
   const requiredPermission=permissionMap[String(entity)];
   const hasPermission=(name:string)=>profile?.role==='admin'||Boolean(permissionGroup?.permissions?.[name]);
   if(requiredPermission&&!hasPermission(requiredPermission)) return errorResponse('Forbidden',403);
@@ -262,7 +262,26 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     if (error) return errorResponse('Save failed', 400);
     return redirectTo(request, '/studio/?section=messages');
   }
-  if (entity === 'content') {
+  if (entity === 'collection') {
+    if (!hasPermission('content')) return errorResponse('Forbidden',403);
+    const id = z.uuid().safeParse(form.get('id'));
+    if (operation === 'delete') {
+      if (!id.success) return errorResponse('Invalid collection',400);
+      const { error } = await db.from('editorial_collections').delete().eq('id',id.data);
+      if (error) return errorResponse('Delete failed',400);
+      return redirectTo(request,'/studio/?section=collections');
+    }
+    const input=z.object({title:z.string().trim().min(2).max(120),slug:z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),locale:z.enum(['tr','en']),description:z.string().trim().max(500),sort_order:z.coerce.number().int().min(0).max(1000),published:z.boolean()}).safeParse({title:form.get('title'),slug:form.get('slug'),locale:form.get('locale'),description:form.get('description')??'',sort_order:form.get('sort_order'),published:form.get('published')==='on'});
+    if(!input.success) return errorResponse('Invalid collection',400);
+    const contentIds=[...new Set(form.getAll('content_ids').map(String).filter((value)=>z.uuid().safeParse(value).success))].slice(0,50);
+    if(contentIds.length){const {data:known}=await db.from('content_items').select('id').in('id',contentIds).eq('status','published');if(known?.length!==contentIds.length)return errorResponse('Invalid collection content',400);}
+    const value={...input.data,updated_at:new Date().toISOString(),created_by:user.id};
+    let collectionId=id.success&&operation==='update'?id.data:'';
+    if(collectionId){const {error}=await db.from('editorial_collections').update(value).eq('id',collectionId);if(error)return errorResponse('Collection save failed',400);}else{const {data,error}=await db.from('editorial_collections').insert(value).select('id').single();if(error||!data)return errorResponse('Collection save failed',400);collectionId=data.id;}
+    const {error:removed}=await db.from('editorial_collection_items').delete().eq('collection_id',collectionId);if(removed)return errorResponse('Collection items failed',400);
+    if(contentIds.length){const {error}=await db.from('editorial_collection_items').insert(contentIds.map((content_id,sort_order)=>({collection_id:collectionId,content_id,sort_order})));if(error)return errorResponse('Collection items failed',400);}
+    return redirectTo(request,'/studio/?section=collections');
+  }  if (entity === 'content') {
     if (operation === 'delete') {
       const id = z.uuid().safeParse(form.get('id'));
       if (!id.success) return errorResponse('Invalid id');

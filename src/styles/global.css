@@ -419,3 +419,9 @@ body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-p
   .hero h1{font-size:clamp(2.35rem,10vw,3.15rem)}
   .promotion-slot{width:calc(100% - 1.5rem)}
 }
+
+.library-button{appearance:none;border:0;background:transparent;padding:0;cursor:pointer;font:inherit}.library-button[aria-pressed="true"]{color:var(--accent)}
+
+.collection-editor fieldset{display:grid;gap:.45rem;margin:1rem 0;padding:1rem;border:1px solid var(--border)}.collection-item-choice{display:flex;gap:.5rem;align-items:flex-start}
+
+.saved-reading-list{display:grid;gap:1px;border:1px solid var(--border)}.saved-reading-list a{display:grid;gap:.25rem;padding:1rem;background:var(--surface)}.saved-reading-list a:hover{background:color-mix(in srgb,var(--accent) 8%,var(--surface))}.saved-reading-list span{font-size:.68rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}.saved-reading-list small{color:var(--muted)}

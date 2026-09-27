@@ -1,6 +1,6 @@
 /** Development-only, in-memory Supabase-shaped adapter for browser and E2E tests. */
 type Row = Record<string, any>;
-type TableName = 'profiles' | 'permission_groups' | 'comments' | 'categories' | 'tags' | 'content_items' | 'content_categories' | 'content_tags' | 'contact_messages' | 'site_settings' | 'navigation' | 'media' | 'redirects' | 'audit_logs' | 'account_deletion_requests' | 'traffic_daily' | 'traffic_qualified_daily';
+type TableName = 'profiles' | 'permission_groups' | 'comments' | 'categories' | 'tags' | 'content_items' | 'content_categories' | 'content_tags' | 'contact_messages' | 'site_settings' | 'navigation' | 'media' | 'redirects' | 'audit_logs' | 'account_deletion_requests' | 'traffic_daily' | 'traffic_qualified_daily' | 'content_bookmarks' | 'content_follows' | 'content_notifications' | 'editorial_collections' | 'editorial_collection_items' | 'newsletter_subscribers';
 type Filter = (row: Row) => boolean;
 const uid = () => crypto.randomUUID();
 const initialCategories: Row[] = [
@@ -23,7 +23,7 @@ const tables: Record<TableName, Row[]> = {
     { id:'00000000-0000-4000-9000-000000000003',name:'Yönetici',description:'Tam erişim.',base_role:'admin',permissions:{comment:true,content:true,taxonomy:true,media:true,messages:true,appearance:true,navigation:true,members:true,permissions:true,audit:true},protected:true },
   ], comments: [], categories: initialCategories,
   tags: [], content_items: [], content_categories: [], content_tags: [], contact_messages: [],
-  site_settings: [], navigation: [], media: [], redirects: [], audit_logs: [], account_deletion_requests: [], traffic_daily: [], traffic_qualified_daily: [],
+  site_settings: [], navigation: [], media: [], redirects: [], audit_logs: [], account_deletion_requests: [], traffic_daily: [], traffic_qualified_daily: [], content_bookmarks: [], content_follows: [], content_notifications: [], editorial_collections: [], editorial_collection_items: [], newsletter_subscribers: [],
 };
 const mediaFiles = new Map<string, Uint8Array>();
 const isTable = (name: string): name is TableName => name in tables;
@@ -62,6 +62,9 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
     if (this.table === 'profiles') return Boolean(this.user && (this.user.id === row.id || this.user.role === 'admin'));
     if (this.table === 'permission_groups') return Boolean(this.user && ['editor','admin'].includes(this.user.role));
     if (this.table === 'comments') return row.status === 'published' || this.user?.role === 'admin' || this.user?.role === 'editor';
+    if (this.table === 'content_bookmarks' || this.table === 'content_follows' || this.table === 'content_notifications') return Boolean(this.user && row.user_id === this.user.id);
+    if (this.table === 'editorial_collections') return row.published || this.user?.role === 'admin' || this.user?.role === 'editor';
+    if (this.table === 'editorial_collection_items') return tables.editorial_collections.some((collection) => collection.id === row.collection_id && (collection.published || this.user?.role === 'admin' || this.user?.role === 'editor'));
     if (this.table === 'account_deletion_requests') return Boolean(this.user && (this.user.id === row.user_id || this.user.role === 'admin'));
     if (this.table === 'media') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => (item.cover_media_id === row.id || item.type === 'gallery' && Array.isArray(item.type_data?.gallery_media_ids) && item.type_data.gallery_media_ids.includes(row.id)) && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
     if (this.table === 'contact_messages') return this.user?.role === 'admin' || this.user?.role === 'editor';
@@ -73,6 +76,9 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
     if (this.table === 'profiles') return this.action === 'update';
     if (this.table === 'permission_groups') return this.user.role === 'admin';
     if (this.table === 'comments') return this.action === 'insert' || this.user.role === 'admin' || this.user.role === 'editor';
+    if (this.table === 'content_bookmarks' || this.table === 'content_follows') return true;
+    if (this.table === 'content_notifications') return this.action === 'update';
+    if (this.table === 'editorial_collections' || this.table === 'editorial_collection_items') return ['admin','editor'].includes(this.user.role);
     if (this.table === 'account_deletion_requests') return this.action === 'insert' || this.user.role === 'admin';
     if (['site_settings','navigation','redirects'].includes(this.table)) return this.user.role === 'admin';
     return ['admin','editor'].includes(this.user.role);
