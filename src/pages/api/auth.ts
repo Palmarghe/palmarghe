@@ -12,7 +12,14 @@ async function allowed(request: Request, action: string, email: string): Promise
   const max = action === 'login' ? 10 : 5;
   // The in-memory adapter shares one loopback address across the whole E2E suite.
   // Keep production limits unchanged while allowing isolated browser contexts to sign in.
-  if (localTestRequest(request)) return localAuthAllowed(`${ip}:${action}`, 1000) && localAuthAllowed(`${ip}:${action}:${email.toLowerCase()}`, 1000);
+  if (localTestRequest(request)) {
+    // Browser contexts in the suite share an implicit loopback IP. Explicit test
+    // addresses still exercise the real per-email limit without bleeding into
+    // unrelated sign-in scenarios.
+    const explicitTestIp = request.headers.has('cf-connecting-ip');
+    const localLimit = explicitTestIp ? max : 1000;
+    return localAuthAllowed(`${ip}:${action}`, explicitTestIp ? 30 : 1000) && localAuthAllowed(`${ip}:${action}:${email.toLowerCase()}`, localLimit);
+  }
   const url = import.meta.env.PUBLIC_SUPABASE_URL;
   const key = runtimeSecret('SUPABASE_SERVICE_ROLE_KEY');
   const pepper = runtimeSecret('CONTACT_RATE_PEPPER');
