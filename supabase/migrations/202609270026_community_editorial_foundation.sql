@@ -45,8 +45,7 @@ create table if not exists public.newsletter_subscribers (
   locale text not null default 'tr' check(locale in ('tr','en')),
   consented_at timestamptz not null default now(),
   status text not null default 'active' check(status in ('active','unsubscribed')),
-  source text not null default 'site' check(char_length(source) <= 80),
-  unique(lower(email))
+  source text not null default 'site' check(char_length(source) <= 80)
 );
 
 create table if not exists public.content_notifications (
@@ -59,6 +58,8 @@ create table if not exists public.content_notifications (
   created_at timestamptz not null default now()
 );
 create index if not exists content_notifications_user_created_idx on public.content_notifications(user_id, created_at desc);
+
+create unique index if not exists newsletter_subscribers_email_unique_idx on public.newsletter_subscribers(lower(email));
 
 alter table public.content_bookmarks enable row level security;
 alter table public.content_follows enable row level security;
