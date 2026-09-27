@@ -438,3 +438,5 @@ body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-p
 .revision-list{margin:1rem 0 0;padding:0;list-style:none;display:grid;gap:.65rem}.revision-list li{border:1px solid var(--border);padding:.8rem 1rem;background:var(--panel)}
 .revision-list li>div{display:flex;gap:.6rem;justify-content:space-between;align-items:baseline}.revision-list span{color:var(--muted);font-size:.82rem}.revision-list p{margin:.35rem 0 0}
 @media (max-width:640px){.revision-panel{padding:1rem}.revision-list li>div{align-items:flex-start;flex-direction:column;gap:.18rem}}
+
+.revision-preview dl{display:grid;gap:.6rem;margin:.8rem 0 0}.revision-preview dl div{display:grid;gap:.16rem}.revision-preview dt{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.revision-preview dd{margin:0;white-space:pre-wrap;color:var(--text)}
