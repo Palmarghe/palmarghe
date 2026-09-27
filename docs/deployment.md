@@ -13,6 +13,6 @@ npx wrangler deploy --config dist/server/wrangler.json
 npx wrangler secret list --name palmarghe
 ```
 
-`wrangler deploy` uzaktaki Worker config'ini yerel üretilen config ile karşılaştırabilir. Deploy sonrasında üç custom domain, Worker Secret'ları, apex/Studio HTTPS ve `www` yönlendirmesini tekrar kontrol edin. `LOCAL_TEST_MODE` yalnız geliştirme ortamında ve loopback test isteğinde etkindir.
+`wrangler deploy` uzaktaki Worker config'ini yerel üretilen config ile karşılaştırabilir. Deploy sonrasında üç custom domain, Worker Secret'ları, apex/Studio HTTPS ve `www` yönlendirmesini tekrar kontrol edin. `LOCAL_TEST_MODE` yalnız geliştirme ortamında ve loopback test isteğinde etkindir. Service Worker yalnız statik dosyaları önbellekler; SSR sayfaları ve Studio ayarları her gezinmede güncel Worker yanıtından gelir.
 
 Turnstile ile gerçek iletişim gönderimi ve Studio gelen kutusuna kaydı doğrulandı. Production member/editor rol matrisi doğrulandı. SMTP/Auth e-posta callback ve reset, gerçek newsletter teslimat sağlayıcısı, Cloudflare Access, Search Console field verileri ve ayrı preview Supabase projesi hâlâ kontrol edilmelidir. Cloudflare Zero Trust Free onboarding ödeme kartı, Terms kabulü ve aylık aşım tahsilatı yetkisi istediği için Access aktivasyonu otomatik yapılmadı.

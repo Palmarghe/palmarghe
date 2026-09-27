@@ -315,3 +315,9 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Production Supabase Auth minimum parola uzunluğu 12’ye çıkarıldı; büyük/küçük harf, rakam ve simge gereksinimi ile parola değişiminde yakın oturum doğrulaması etkinleştirildi.
 - Public kayıt, şifre yenileme ve Studio geçici üye şifresi aynı kurala getirildi. Giriş formu mevcut hesapların oturumunu kesmemek için 8 karakterli eski şifreleri kabul etmeye devam eder.
 - Production Auth config tekrar çekilerek minimum_password_length = 12, password_requirements = lower_upper_letters_digits_symbols ve secure_password_change = true doğrulandı. Navigation E2E 10/10 geçti.
+
+### Reklam görünürlüğü ve Service Worker önbelleği — 28 Eylül 2026
+
+- Service Worker ana sayfa HTML’ini önbellekten sunuyordu; bu nedenle Studio reklam görünürlüğü değişikliği bazı masaüstü oturumlarında gecikiyordu.
+- palmarghe-static-v2 yalnız statik marka/font varlıklarını saklar; SSR belgeleri ve Studio ayarları her gezinmede Worker’dan güncel alınır. Kayıt betiği aktif Service Worker için güncelleme denetimini başlatır.
+- Production Chrome’da, veritabanında kapalı üç reklam alanının eski üst reklam bandı iki yenileme sonrasında kalktı; ana sayfa güncel ayarla render edildi.
