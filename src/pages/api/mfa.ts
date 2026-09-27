@@ -33,6 +33,15 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const action = z.object({ action: z.enum(['enroll', 'verify', 'unenroll']), factorId: z.string().optional(), code: z.string().optional() }).safeParse(body);
   if (!action.success) return errorResponse('Invalid request', 400);
   if (action.data.action === 'enroll') {
+    // A closed setup dialog leaves an unverified factor behind in Supabase.
+    // Remove only those incomplete factors before issuing a fresh QR secret.
+    const { data: existing, error: listError } = await db.auth.mfa.listFactors();
+    if (listError) return unavailable();
+    const incomplete = (existing?.totp ?? []).filter((factor: { status: string }) => factor.status !== 'verified');
+    for (const factor of incomplete) {
+      const { error: removeError } = await db.auth.mfa.unenroll({ factorId: factor.id });
+      if (removeError) return cleanError();
+    }
     const { data, error } = await db.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Palmarghe Authenticator' });
     if (error || !data.totp) return cleanError();
     return Response.json({ factorId: data.id, qrCode: data.totp.qr_code, secret: data.totp.secret });
