@@ -24,7 +24,7 @@ Son güncelleme: 28 Eylül 2026. FAZ 1 uygulanabilir kapsam tamamlandı; harici/
 - [ ] Özel SMTP sağlayıcısı ve gerçek e-posta teslimatı; signup confirmation/reset callback doğrulaması.
 - [x] Hesap sayfasında uygulama düzeyinde TOTP MFA kaydı, doğrulama ve faktör kaldırma akışı.
 - [ ] Owner ikinci faktörünün gerçek authenticator ile kaydı, zorunlu MFA politikası ve recovery prosedürü.
-- [ ] Cloudflare Access için ödeme kartı, Terms ve olası overage onayı.
+- [ ] Cloudflare Access için ödeme kartı, Terms ve olası overage onayı. 28 Eylül denetiminde Wrangler OAuth tokenı Workers/zone işlemlerinde yetkili ancak Access yönetim izni içermiyor; Cloudflare One oturumu ayrıca tamamlanmalı.
 - [ ] Search Console field Core Web Vitals ve organik tıklama verisinin olgunlaşması. 28 Eylül denetiminde sitemap görünür, 22 URL dizinde; 0 organik tıklama ve yeterli CWV alan verisi yok.
 - [ ] İnsan tarafından ekran okuyucu/assistive technology incelemesi.
 

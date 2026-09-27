@@ -339,3 +339,9 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Google Search Console `sc-domain:palmarghe.com` özelliği açık ve `https://palmarghe.com/sitemap.xml` kaynak olarak görünür. Raporun son güncellemesi 21 Eylül 2026’dır.
 - Google 22 sayfayı dizine eklemiş; 12 sayfa dört beklenen grupta dışarıdadır: canonical alternatif (3), yönlendirme (2), tarandı ancak henüz dizinde değil (4) ve keşfedildi ancak henüz dizinde değil (3). Bu durum canonical/yönlendirme kurallarıyla tutarlıdır; manuel işlem veya güvenlik uyarısı görülmedi.
 - Arama performansı son üç ayda 3 gösterim, 0 web arama tıklaması, %0 TO ve ortalama 6. konum gösteriyor; Core Web Vitals bölümünde ise yeterli alan verisi yoktur. Bu iki veri seti gerçek kullanıcı trafiği ve zamanla olgunlaşacak dış metrikler olarak açık kalır.
+
+### Cloudflare Access yetki denetimi — 28 Eylül 2026
+
+- Worker dağıtım OAuth oturumu geçerli ve `wrangler whoami` hesabı doğruluyor; Workers, zone, route ve ilgili dağıtım izinleri mevcut.
+- Aynı token Cloudflare Access yönetim izni içermiyor. Cloudflare One arayüzü de kayıtlı Google profilini gösterse de bu denetimde oturumu tamamlamadı; Access uygulaması/politikası oluşturulmadı.
+- Access’in ödeme kartı, Terms ve muhtemel overage kabulüne bağlı plan adımı kullanıcı hesabında tamamlanmadan bu koruma katmanı etkinleştirilemez.
