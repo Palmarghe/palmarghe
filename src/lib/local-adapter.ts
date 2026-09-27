@@ -123,6 +123,15 @@ export function localSupabase(cookies: import('astro').AstroCookies) {
     from: (name: string) => { if (!isTable(name)) throw new Error('Unknown table'); return new Query(name, getUser()); },
     rpc: async (name: string, args: Row) => {
       const actor = getUser();
+if (name === 'get_public_author') {
+        const profile=tables.profiles.find((entry)=>entry.public_profile && entry.author_slug===args.p_slug);
+        return { data:profile?[{id:profile.id,author_slug:profile.author_slug,display_name:profile.display_name||'Palmarghe',bio:profile.bio??null,avatar_key:profile.avatar_key??null}]:[],error:null };
+      }
+      if (name === 'get_public_author_content') {
+        const profile=tables.profiles.find((entry)=>entry.public_profile && entry.author_slug===args.p_slug);
+        const data=profile?tables.content_items.filter((entry)=>entry.author_id===profile.id&&['published','scheduled'].includes(entry.status)&&entry.published_at&&entry.published_at<=new Date().toISOString()).slice(0,Math.min(Number(args.p_limit)||20,50)):[];
+        return {data,error:null};
+      }
       if (name === 'get_public_comments') {
         const data = tables.comments.filter((comment) => comment.content_id === args.p_content_id && comment.status === 'published').map((comment) => {
           const author = tables.profiles.find((profile) => profile.id === comment.user_id);
