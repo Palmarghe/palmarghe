@@ -114,6 +114,12 @@ test('homepage category grid and Studio link remain available', async ({ page })
   await expect(page.getByRole('link', { name: '↗ Ana sayfayı aç' })).toHaveAttribute('href', 'https://palmarghe.com/');
 });
 
+test('tag directory is reachable and preserves the public layout', async ({ page }) => {
+  await page.goto('/tags/');
+  await expect(page.getByRole('heading', { name: 'Etiketler' })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
 test('Studio dashboard reports publication quality and Studio previews update before save', async ({ page }) => {
   await page.goto('/studio/');
   await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
