@@ -250,3 +250,8 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Son yayınlar 720 px altında tek kolonlu, dengeli kart düzenine geçti. Mobil menü bağlantıları en az 44 px, Studio yatay sekmeleri en az 42 px dokunma alanına sahip.
 - 380 px ve altındaki ekranlarda ana vitrin ve reklam dış boşlukları daraltıldı; ilk ekran yüksekliği ve başlık ölçüsü küçük cihazlar için yeniden ölçeklendi.
 - Kalite kartının mobil medya sorgusundaki fazla kapanış düzeltildi. Production Worker sürümü `3880e9b9-a835-453b-959c-e74c1eea56f1`.
+
+### Mobil production doğrulaması — 27 Eylül 2026
+
+- Gerçek production Worker, Chrome motoruyla 320, 390 ve 430 px görünümde denetlendi. Ana sayfa her üç genişlikte; kategori, arşiv, arama, hesap ve iletişim 390 px’te; Studio giriş ekranı 320/430 px’te yatay taşma olmadan yüklendi.
+- Bu sayfalarda console hatası tespit edilmedi. Mobil düzenleme etkisi production’da doğrulandı.
