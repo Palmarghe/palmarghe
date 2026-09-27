@@ -3,8 +3,8 @@ returns trigger language plpgsql security definer set search_path='' as $$
 begin
   if new.author_id is not null and new.status='published' and new.published_at<=now()
     and (tg_op='INSERT' or old.status is distinct from 'published') then
-    insert into public.content_notifications(user_id,kind,payload)
-    select f.user_id,'author_published',jsonb_build_object('title',new.title,'slug',new.slug,'content_id',new.id)
+    insert into public.content_notifications(user_id,kind,title,href)
+    select f.user_id,'followed_content',new.title,'/' || new.slug || '/'
     from public.content_follows f
     where f.target_kind='author' and f.target_id=new.author_id and f.user_id<>new.author_id;
   end if;

@@ -123,6 +123,17 @@ export function localSupabase(cookies: import('astro').AstroCookies) {
     from: (name: string) => { if (!isTable(name)) throw new Error('Unknown table'); return new Query(name, getUser()); },
     rpc: async (name: string, args: Row) => {
       const actor = getUser();
+      if (name === 'dispatch_due_author_follow_notifications') {
+        let count = 0;
+        for (const item of tables.content_items.filter((entry) => entry.status === 'scheduled' && entry.published_at && entry.published_at <= new Date().toISOString() && entry.author_id)) {
+          for (const follow of tables.content_follows.filter((entry) => entry.target_kind === 'author' && entry.target_id === item.author_id && entry.user_id !== item.author_id)) {
+            const href = `/${item.slug}/`;
+            const exists = tables.content_notifications.some((entry) => entry.user_id === follow.user_id && entry.kind === 'followed_content' && entry.href === href);
+            if (!exists) { tables.content_notifications.push({ id:tables.content_notifications.length+1,user_id:follow.user_id,kind:'followed_content',title:item.title,href,created_at:new Date().toISOString(),read_at:null }); count += 1; }
+          }
+        }
+        return { data: count, error: null };
+      }
 if (name === 'get_public_author') {
         const profile=tables.profiles.find((entry)=>entry.public_profile && entry.author_slug===args.p_slug);
         return { data:profile?[{id:profile.id,author_slug:profile.author_slug,display_name:profile.display_name||'Palmarghe',bio:profile.bio??null,avatar_key:profile.avatar_key??null}]:[],error:null };
@@ -189,7 +200,7 @@ if (name === 'get_public_author') {
           tables.content_revisions.push({ id:uid(), content_id:contentId, revision:1, title:created.title, excerpt:created.excerpt ?? null, body:created.body ?? null, type_data:created.type_data ?? null, status:created.status, changed_by:actor.id, created_at:new Date().toISOString() });
         }
         const publishedItem=tables.content_items.find((item)=>item.id===contentId);
-        if (publishedItem?.status==='published' && publishedItem.author_id && (!existing || !wasPublished)) for (const follow of tables.content_follows.filter((entry)=>entry.target_kind==='author'&&entry.target_id===publishedItem.author_id&&entry.user_id!==publishedItem.author_id)) tables.content_notifications.push({id:tables.content_notifications.length+1,user_id:follow.user_id,kind:'author_published',payload:{title:publishedItem.title,slug:publishedItem.slug,content_id:contentId},created_at:new Date().toISOString(),read_at:null});
+        if (publishedItem?.status==='published' && publishedItem.author_id && (!existing || !wasPublished)) for (const follow of tables.content_follows.filter((entry)=>entry.target_kind==='author'&&entry.target_id===publishedItem.author_id&&entry.user_id!==publishedItem.author_id)) tables.content_notifications.push({id:tables.content_notifications.length+1,user_id:follow.user_id,kind:'followed_content',title:publishedItem.title,href:`/${publishedItem.slug}/`,created_at:new Date().toISOString(),read_at:null});
         tables.content_categories = tables.content_categories.filter((item) => item.content_id !== contentId);
         tables.content_tags = tables.content_tags.filter((item) => item.content_id !== contentId);
         if (category) tables.content_categories.push({ content_id:contentId,category_id:category.id });
