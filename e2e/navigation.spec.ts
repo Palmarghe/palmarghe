@@ -128,7 +128,11 @@ test('Studio dashboard reports publication quality and Studio previews update be
   await page.goto('/studio/');
   await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
   await page.locator('input[name="password"]').fill('LocalTest123!');
-  await page.getByRole('button', { name: 'Giriş' }).click();
+  await Promise.all([
+    page.waitForURL(/\/studio\/\?section=dashboard/),
+    page.getByRole('button', { name: 'Giriş' }).click(),
+  ]);
+  await expect(page.getByRole('heading',{name:'Genel bakış'})).toBeVisible();
   await expect(page.locator('.dashboard-quality-control')).toBeVisible();
   await expect(page.locator('.dashboard-quality-control')).toContainText(/yayın|hazır/i);
 
