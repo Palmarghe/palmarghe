@@ -238,11 +238,12 @@ test('Studio pairs translations without exposing a UUID field', async ({ page })
 
 test('contact validation, bot check and rate limit', async ({ page }) => {
   await page.goto('/contact/');
-  await page.locator('input[name="name"]').fill('Test User');
-  await page.locator('input[name="email"]').fill('test@example.test');
-  await page.locator('textarea[name="message"]').fill('This is a local test message.');
-  await page.locator('input[name="consent"]').check();
-  await page.getByRole('button', { name: 'Gönder' }).click();
+  const contactForm = page.locator('form[action="/api/contact/"]');
+  await contactForm.locator('input[name="name"]').fill('Test User');
+  await contactForm.locator('input[name="email"]').fill('test@example.test');
+  await contactForm.locator('textarea[name="message"]').fill('This is a local test message.');
+  await contactForm.locator('input[name="consent"]').check();
+  await contactForm.getByRole('button', { name: 'Gönder' }).click();
   await expect(page.getByText('Mesaj alındı.')).toBeVisible();
   const base = { name: 'Test', email: 'test@example.test', message: 'Long enough message', locale: 'tr', consent: 'on' };
   const headers = { Origin: 'http://127.0.0.1:4322', 'CF-Connecting-IP': '192.0.2.1' };
