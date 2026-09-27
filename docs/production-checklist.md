@@ -15,6 +15,7 @@ Son güncelleme: 27 Eylül 2026. FAZ 1 uygulanabilir kapsam tamamlandı; harici/
 - [x] Yerel verify: 0 typecheck hatası/uyarı, 11/11 unit, build. Yerel E2E 25/25. Temizlik sonrası production E2E 10/10; altı canlı axe taramasında ciddi/kritik WCAG bulgusu yok.
 - [x] 19 Eylül Lighthouse: Performance 99, Accessibility 100, Best Practices 100, SEO 100; LCP 2.2 sn, CLS 0. Production dependency audit high-severity bulgu vermedi.
 - [x] Normal Git push ve GitHub Actions Verify geçmişi yeşil; her yeni production commit için çalışma sonucu ayrıca kontrol edilir.
+- [x] Bülten kaydı açık rıza, bot tuzağı, hız sınırı ve anonim e-posta okumasına izin vermeyen `subscribe_newsletter` RPC’siyle doğrulandı. Kontrollü production kayıt oluşturuldu, veritabanında görüldü ve silinerek `0` kaldı.
 
 ## Harici veya kullanıcı bağımlı kapılar
 
