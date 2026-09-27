@@ -458,7 +458,11 @@ test('content revisions are captured and shown in Studio', async ({ page }) => {
   await expect(page.getByRole('row').filter({ hasText: 'Sürüm geçmişi testi güncel' })).toBeVisible();
   await page.getByRole('row').filter({ hasText: 'Sürüm geçmişi testi güncel' }).getByRole('link', { name: 'Düzenle' }).click();
   await expect(page.getByRole('heading', { name: 'Kaydedilen sürümler' })).toBeVisible();
-  await expect(page.getByText('Sürüm 2')).toBeVisible();
+  await expect(page.getByText('Sürüm 2', { exact: true })).toBeVisible();
+  const firstRevision = page.locator('.revision-list li').filter({ hasText: 'Sürüm 1' });
+  await firstRevision.getByText('Bu sürümü geri yükle').click();
+  await firstRevision.getByRole('button', { name: 'Sürüm 1 geri yüklensin' }).click();
+  await expect(page.locator('input[name="title"]')).toHaveValue('Sürüm geçmişi testi');
 });
 
 test('public layout fits mobile and tablet viewports', async ({ page }) => {

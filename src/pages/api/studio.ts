@@ -25,7 +25,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const entity = form.get('entity');
   const operation = String(form.get('operation') ?? 'create');
   const {data:permissionGroup}=profile?.permission_group_id ? await db.from('permission_groups').select('permissions').eq('id',profile.permission_group_id).single() : {data:null};
-  const permissionMap:Record<string,string>={collection:'content',content:'content',translation:'content',category:'taxonomy',tag:'taxonomy',message:'messages',comment:'messages',appearance:'appearance',homepage:'appearance',advertising:'appearance',social:'appearance',navigation:'navigation',redirect:'navigation'};
+  const permissionMap:Record<string,string>={collection:'content',content:'content',translation:'content',content_revision:'content',category:'taxonomy',tag:'taxonomy',message:'messages',comment:'messages',appearance:'appearance',homepage:'appearance',advertising:'appearance',social:'appearance',navigation:'navigation',redirect:'navigation'};
   const requiredPermission=permissionMap[String(entity)];
   const hasPermission=(name:string)=>profile?.role==='admin'||Boolean(permissionGroup?.permissions?.[name]);
   if(requiredPermission&&!hasPermission(requiredPermission)) return errorResponse('Forbidden',403);
@@ -281,7 +281,18 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const {error:removed}=await db.from('editorial_collection_items').delete().eq('collection_id',collectionId);if(removed)return errorResponse('Collection items failed',400);
     if(contentIds.length){const {error}=await db.from('editorial_collection_items').insert(contentIds.map((content_id,sort_order)=>({collection_id:collectionId,content_id,sort_order})));if(error)return errorResponse('Collection items failed',400);}
     return redirectTo(request,'/studio/?section=collections');
-  }  if (entity === 'content') {
+  }  if (entity === 'content_revision') {
+    if (operation !== 'restore') return errorResponse('Invalid revision operation',400);
+    const revisionId = z.uuid().safeParse(form.get('revision_id'));
+    const contentId = z.uuid().safeParse(form.get('content_id'));
+    if (!revisionId.success || !contentId.success) return errorResponse('Invalid revision',400);
+    const { data: revision, error: revisionError } = await db.from('content_revisions').select('id,content_id,title,excerpt,body,type_data,status').eq('id',revisionId.data).eq('content_id',contentId.data).single();
+    if (revisionError || !revision) return errorResponse('Revision not found',404);
+    const { error } = await db.from('content_items').update({ title:revision.title, excerpt:revision.excerpt, body:revision.body, type_data:revision.type_data, status:revision.status, updated_at:new Date().toISOString() }).eq('id',contentId.data);
+    if (error) return errorResponse('Revision restore failed',400);
+    return redirectTo(request, `/studio/?section=content&edit=${contentId.data}`);
+  }
+  if (entity === 'content') {
     if (operation === 'delete') {
       const id = z.uuid().safeParse(form.get('id'));
       if (!id.success) return errorResponse('Invalid id');
