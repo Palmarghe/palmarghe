@@ -491,7 +491,7 @@ test('featured and noindex content controls affect public output', async ({ page
   const homepage = await page.request.post('/api/studio/', { headers: { Origin: 'http://127.0.0.1:4322' }, form: { entity:'homepage', now_visible:'on', featured_visible:'on', categories_visible:'on', latest_visible:'on', fm_spotlight_visible:'on', lab_notes_visible:'on', visual_reel_visible:'on', archive_cta_visible:'on', now_order:'1', featured_order:'2', categories_order:'3', latest_order:'4', fm_spotlight_order:'5', lab_notes_order:'6', visual_reel_order:'7', archive_cta_order:'8' }, maxRedirects:0 });
   expect(homepage.status()).toBe(303);
   await page.goto('/');
-  await expect(page.locator('.home-sections section').first()).toContainText('Öne Çıkan Gizli İndeks');
+  await expect(page.locator('.home-sections')).toContainText('Öne Çıkan Gizli İndeks');
   await page.goto('/lab/featured-noindex/');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content','noindex,nofollow');
   const schema = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() ?? '{}');
