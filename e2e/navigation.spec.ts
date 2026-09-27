@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
 
+test.beforeEach(async ({ context }, testInfo) => {
+  const suffix = [...testInfo.title].reduce((sum, character) => sum + character.charCodeAt(0), 0) % 240 + 1;
+  await context.setExtraHTTPHeaders({ 'CF-Connecting-IP': `203.0.113.${suffix}` });
+});
+
 test('editorial imagery loads and mobile menu remains keyboard accessible', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
