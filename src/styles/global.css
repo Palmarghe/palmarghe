@@ -450,3 +450,5 @@ body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-p
 .content-author-link{display:inline-flex;align-items:center;gap:.45rem}.content-author-link img{width:1.75rem;height:1.75rem;border-radius:50%;object-fit:cover}
 
 .follow-button{margin-top:1rem;border:1px solid var(--border);padding:.45rem .7rem;background:transparent;color:var(--text)}.follow-button[aria-pressed='true']{border-color:var(--accent);color:var(--accent)}
+
+.advertising-visibility{font-size:.7rem;font-style:normal;color:var(--muted)}
