@@ -1,6 +1,8 @@
 ---
 import { copy, nav, pathFor, safeExternalUrl, type Locale } from '../lib/site';
-import { supabase } from '../lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+import { localTestRequest, supabase } from '../lib/supabase';
+import { runtimeSecret } from '../lib/runtime-secrets';
 import AdSlot from '../components/AdSlot.astro';
 import '../styles/global.css';
 interface Props { locale: Locale; title?: string; description?: string; alternate?: string; noindex?: boolean; structuredData?: Record<string, unknown>; ogImage?: string; ogAlt?: string; ogType?: 'article' | 'website'; canonicalOverride?: string; }
@@ -14,8 +16,14 @@ const isActive = (href: string) => { const path = new URL(href, 'https://palmarg
 const alternatePath = alternate;
 const db = supabase(Astro.cookies, Astro.request);
 // Scheduled publications become visible at their timestamp without a database write.
-// This idempotent dispatcher creates any pending follower notifications on the next request.
-if (db) await db.rpc('dispatch_due_author_follow_notifications');
+// The idempotent dispatcher runs with the Worker service key, never through a
+// public database function grant. Local E2E keeps using the in-memory adapter.
+if (db && localTestRequest(Astro.request)) await db.rpc('dispatch_due_author_follow_notifications');
+else {
+  const serviceKey = runtimeSecret('SUPABASE_SERVICE_ROLE_KEY');
+  const serviceUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+  if (serviceKey && serviceUrl) await createClient(serviceUrl, serviceKey, { auth: { persistSession: false } }).rpc('dispatch_due_author_follow_notifications');
+}
 const [{ data: dbCategories }, { data: dbNav }, { data: appearanceRow }, { data: socialRow }, { data: advertisingRow }] = db ? await Promise.all([
   db.from('categories').select('slug,name_tr,name_en').is('parent_id',null).eq('active',true).order('sort_order').limit(8),
   db.from('navigation').select('label,href').eq('locale',locale).eq('active',true).order('sort_order').limit(50),
