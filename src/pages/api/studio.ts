@@ -75,7 +75,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     if(profile?.role!=='admin') return errorResponse('Forbidden',403);
     const serviceKey=runtimeSecret('SUPABASE_SERVICE_ROLE_KEY'); const serviceUrl=import.meta.env.PUBLIC_SUPABASE_URL;
     if(operation==='create'){
-      const parsed=z.object({email:z.email().max(254),password:z.string().min(10).max(128),display_name:z.string().trim().min(2).max(100),group_id:z.uuid()}).safeParse({email:form.get('email'),password:form.get('password'),display_name:form.get('display_name'),group_id:form.get('group_id')});
+      const parsed=z.object({email:z.email().max(254),password:z.string().min(12).max(128).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/),display_name:z.string().trim().min(2).max(100),group_id:z.uuid()}).safeParse({email:form.get('email'),password:form.get('password'),display_name:form.get('display_name'),group_id:form.get('group_id')});
       if(!parsed.success) return errorResponse('Invalid member',400);
       let createdId:string|undefined;
       if(localTestRequest(request)) createdId=localAdminCreateUser(parsed.data.email,parsed.data.password,parsed.data.display_name)?.id;
@@ -352,7 +352,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
   return errorResponse('Invalid entity');
 };
-
 
 
 

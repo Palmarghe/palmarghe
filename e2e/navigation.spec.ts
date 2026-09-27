@@ -47,6 +47,8 @@ test('social metadata and account disclosure are localized', async ({ page }) =>
   await expect(signup.locator('input[name="kvkk_consent"]')).toHaveAttribute('required','');
   await expect(signup.getByRole('link', { name: 'Gizlilik Politikasını' })).toHaveAttribute('href','/privacy/');
   await expect(signup.getByRole('link', { name: 'KVKK Aydınlatma Metnini' })).toHaveAttribute('href','/kvkk/');
+  await expect(signup.locator('input[name="password"]')).toHaveAttribute('minlength','12');
+  await expect(signup.locator('input[name="password"]')).toHaveAttribute('pattern', /\[0-9\]/);
   await page.goto('/kvkk/');
   await expect(page.getByRole('heading', { name: 'KVKK Aydınlatma Metni' })).toBeVisible();
   await page.goto('/account/');

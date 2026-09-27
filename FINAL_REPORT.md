@@ -309,3 +309,9 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - `202609270033_restrict_internal_function_execution.sql` production’a uygulandı. `audit_change`, `create_profile`, `rls_auto_enable` ve `notify_author_followers_on_publish` yalnız veritabanı tetikleyicileri olarak kalır; anon veya authenticated REST RPC erişimleri yoktur.
 - Zamanlanmış takipçi bildirimi dağıtıcısının anon execute izni kaldırıldı. SSR, bu idempotent işlemi yalnız Cloudflare Worker `SUPABASE_SERVICE_ROLE_KEY` ile başlatır. Production yetki sorgusu scheduler için `anon_execute = false`, `service_execute = true` verdi.
 - Worker sürümü `a8a59cb4-4f5b-47b7-b0c6-bb5d72d76c9e` canlıda; apex HTTP 200 ve production smoke 5/5 doğrulandı.
+
+### Auth parola politikası — 28 Eylül 2026
+
+- Production Supabase Auth minimum parola uzunluğu 12’ye çıkarıldı; büyük/küçük harf, rakam ve simge gereksinimi ile parola değişiminde yakın oturum doğrulaması etkinleştirildi.
+- Public kayıt, şifre yenileme ve Studio geçici üye şifresi aynı kurala getirildi. Giriş formu mevcut hesapların oturumunu kesmemek için 8 karakterli eski şifreleri kabul etmeye devam eder.
+- Production Auth config tekrar çekilerek minimum_password_length = 12, password_requirements = lower_upper_letters_digits_symbols ve secure_password_change = true doğrulandı. Navigation E2E 10/10 geçti.
