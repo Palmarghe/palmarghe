@@ -187,6 +187,8 @@ if (name === 'get_public_author') {
           tables.content_items.push(created);
           tables.content_revisions.push({ id:uid(), content_id:contentId, revision:1, title:created.title, excerpt:created.excerpt ?? null, body:created.body ?? null, type_data:created.type_data ?? null, status:created.status, changed_by:actor.id, created_at:new Date().toISOString() });
         }
+        const publishedItem=tables.content_items.find((item)=>item.id===contentId);
+        if (publishedItem?.status==='published' && publishedItem.author_id && (!existing || existing.status!=='published')) for (const follow of tables.content_follows.filter((entry)=>entry.target_kind==='author'&&entry.target_id===publishedItem.author_id&&entry.user_id!==publishedItem.author_id)) tables.content_notifications.push({id:tables.content_notifications.length+1,user_id:follow.user_id,kind:'author_published',payload:{title:publishedItem.title,slug:publishedItem.slug,content_id:contentId},created_at:new Date().toISOString(),read_at:null});
         tables.content_categories = tables.content_categories.filter((item) => item.content_id !== contentId);
         tables.content_tags = tables.content_tags.filter((item) => item.content_id !== contentId);
         if (category) tables.content_categories.push({ content_id:contentId,category_id:category.id });
