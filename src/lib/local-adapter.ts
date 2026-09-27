@@ -1,6 +1,6 @@
 /** Development-only, in-memory Supabase-shaped adapter for browser and E2E tests. */
 type Row = Record<string, any>;
-type TableName = 'profiles' | 'permission_groups' | 'comments' | 'categories' | 'tags' | 'content_items' | 'content_categories' | 'content_tags' | 'contact_messages' | 'site_settings' | 'navigation' | 'media' | 'redirects' | 'audit_logs' | 'account_deletion_requests' | 'traffic_daily' | 'traffic_qualified_daily' | 'content_bookmarks' | 'content_follows' | 'content_notifications' | 'editorial_collections' | 'editorial_collection_items' | 'newsletter_subscribers';
+type TableName = 'profiles' | 'permission_groups' | 'comments' | 'categories' | 'tags' | 'content_items' | 'content_categories' | 'content_tags' | 'contact_messages' | 'site_settings' | 'navigation' | 'media' | 'redirects' | 'audit_logs' | 'account_deletion_requests' | 'traffic_daily' | 'traffic_qualified_daily' | 'content_bookmarks' | 'content_follows' | 'content_notifications' | 'editorial_collections' | 'editorial_collection_items' | 'newsletter_subscribers' | 'content_revisions';
 type Filter = (row: Row) => boolean;
 const uid = () => crypto.randomUUID();
 const initialCategories: Row[] = [
@@ -23,7 +23,7 @@ const tables: Record<TableName, Row[]> = {
     { id:'00000000-0000-4000-9000-000000000003',name:'Yönetici',description:'Tam erişim.',base_role:'admin',permissions:{comment:true,content:true,taxonomy:true,media:true,messages:true,appearance:true,navigation:true,members:true,permissions:true,audit:true},protected:true },
   ], comments: [], categories: initialCategories,
   tags: [], content_items: [], content_categories: [], content_tags: [], contact_messages: [],
-  site_settings: [], navigation: [], media: [], redirects: [], audit_logs: [], account_deletion_requests: [], traffic_daily: [], traffic_qualified_daily: [], content_bookmarks: [], content_follows: [], content_notifications: [], editorial_collections: [], editorial_collection_items: [], newsletter_subscribers: [],
+  site_settings: [], navigation: [], media: [], redirects: [], audit_logs: [], account_deletion_requests: [], traffic_daily: [], traffic_qualified_daily: [], content_bookmarks: [], content_follows: [], content_notifications: [], editorial_collections: [], editorial_collection_items: [], newsletter_subscribers: [], content_revisions: [],
 };
 const mediaFiles = new Map<string, Uint8Array>();
 const isTable = (name: string): name is TableName => name in tables;
@@ -166,8 +166,18 @@ export function localSupabase(cookies: import('astro').AstroCookies) {
         const tagIds: string[] = args.p_tag_ids ?? [];
         if (tagIds.length > 20 || new Set(tagIds).size !== tagIds.length || tagIds.some((id) => !tables.tags.some((tag) => tag.id === id))) return { data: null, error: { message: 'unknown or duplicate tag' } };
         const contentId = existing?.id ?? uid();
-        if (existing) Object.assign(existing,args.p_payload,{ updated_at:new Date().toISOString() });
-        else tables.content_items.push({ id:contentId,author_id:actor.id,created_at:new Date().toISOString(),...args.p_payload });
+        if (existing) {
+          const changed = ['title','excerpt','body','type_data','status'].some((key) => JSON.stringify(existing[key]) !== JSON.stringify(args.p_payload[key]));
+          Object.assign(existing,args.p_payload,{ updated_at:new Date().toISOString() });
+          if (changed) {
+            const revision = tables.content_revisions.filter((entry) => entry.content_id === contentId).reduce((maximum,entry) => Math.max(maximum, Number(entry.revision) || 0), 0) + 1;
+            tables.content_revisions.push({ id:uid(), content_id:contentId, revision, title:existing.title, excerpt:existing.excerpt ?? null, body:existing.body ?? null, type_data:existing.type_data ?? null, status:existing.status, changed_by:actor.id, created_at:new Date().toISOString() });
+          }
+        } else {
+          const created = { id:contentId,author_id:actor.id,created_at:new Date().toISOString(),...args.p_payload };
+          tables.content_items.push(created);
+          tables.content_revisions.push({ id:uid(), content_id:contentId, revision:1, title:created.title, excerpt:created.excerpt ?? null, body:created.body ?? null, type_data:created.type_data ?? null, status:created.status, changed_by:actor.id, created_at:new Date().toISOString() });
+        }
         tables.content_categories = tables.content_categories.filter((item) => item.content_id !== contentId);
         tables.content_tags = tables.content_tags.filter((item) => item.content_id !== contentId);
         if (category) tables.content_categories.push({ content_id:contentId,category_id:category.id });

@@ -192,9 +192,10 @@ test('gallery media is private until publication and retains its caption', async
   await page.locator(`input[name="gallery_media_ids"][value="${mediaId}"]`).check();
   await page.locator('#block-editor .tiptap').fill('Galeri metni.');
   await page.getByRole('button', { name: 'Kaydet', exact: true }).click();
+  await page.waitForURL(/\/studio\/\?section=content$/);
   await page.context().clearCookies();
   expect((await page.request.get(`/api/media/${mediaId}/`)).status()).toBe(404);
-  await page.goto('/studio/');
+  await page.goto('/studio/').catch(async () => { await expect(page.getByRole('textbox', { name: 'Email' })).toBeVisible(); });
   await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
   await page.locator('input[name="password"]').fill('LocalTest123!');
   await page.getByRole('button', { name: 'Giriş' }).click();
@@ -202,6 +203,7 @@ test('gallery media is private until publication and retains its caption', async
   await page.getByRole('row').filter({ hasText: 'Türkçe Galeri Testi' }).getByRole('link', { name: 'Düzenle' }).click();
   await page.locator('.content-editor-form select[name="status"]').selectOption('published');
   await page.getByRole('button', { name: 'Kaydet', exact: true }).click();
+  await page.waitForURL(/\/studio\/\?section=content$/);
   await page.context().clearCookies();
   await page.goto('/turkce-galeri-testi/');
   await expect(page.getByRole('img', { name: 'Galeri görseli' })).toBeVisible();
@@ -340,8 +342,10 @@ test('homepage controls hide and reorder sections', async ({ page }) => {
   await page.locator('select[name="now_order"]').selectOption('4');
   await page.locator('select[name="fm_spotlight_order"]').selectOption('5');
   await page.locator('select[name="lab_notes_order"]').selectOption('6');
-  await page.locator('select[name="archive_cta_order"]').selectOption('7');
-  await page.getByRole('button', { name: 'Kaydet', exact: true }).click();
+  await page.locator('select[name="visual_reel_order"]').selectOption('7');
+  await page.locator('select[name="archive_cta_order"]').selectOption('8');
+  await page.getByRole('button', { name: 'Ana sayfayı kaydet', exact: true }).click();
+  await page.waitForURL(/\/studio\/\?section=homepage$/);
   await page.goto('/');
   const sections = page.locator('.home-sections > section');
   expect(await sections.count()).toBeGreaterThan(0);
@@ -465,7 +469,8 @@ test('featured and noindex content controls affect public output', async ({ page
   await page.locator('input[name="indexable"][type="checkbox"]').uncheck();
   await page.locator('#block-editor .tiptap').fill('Deneme metni.');
   await page.getByRole('button', { name: 'Kaydet', exact: true }).click();
-  const homepage = await page.request.post('/api/studio/', { headers: { Origin: 'http://127.0.0.1:4322' }, form: { entity:'homepage', now_visible:'on', featured_visible:'on', categories_visible:'on', latest_visible:'on', fm_spotlight_visible:'on', lab_notes_visible:'on', archive_cta_visible:'on', now_order:'1', featured_order:'2', categories_order:'3', latest_order:'4', fm_spotlight_order:'5', lab_notes_order:'6', archive_cta_order:'7' }, maxRedirects:0 });
+  await expect(page.getByRole('row').filter({ hasText: 'Öne Çıkan Gizli İndeks' })).toBeVisible();
+  const homepage = await page.request.post('/api/studio/', { headers: { Origin: 'http://127.0.0.1:4322' }, form: { entity:'homepage', now_visible:'on', featured_visible:'on', categories_visible:'on', latest_visible:'on', fm_spotlight_visible:'on', lab_notes_visible:'on', visual_reel_visible:'on', archive_cta_visible:'on', now_order:'1', featured_order:'2', categories_order:'3', latest_order:'4', fm_spotlight_order:'5', lab_notes_order:'6', visual_reel_order:'7', archive_cta_order:'8' }, maxRedirects:0 });
   expect(homepage.status()).toBe(303);
   await page.goto('/');
   await expect(page.locator('.home-sections section').first()).toContainText('Öne Çıkan Gizli İndeks');
