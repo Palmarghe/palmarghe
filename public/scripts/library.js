@@ -16,3 +16,5 @@
   });
 })();
 ;(()=>{document.querySelectorAll('[data-notification-read]').forEach((button)=>button.addEventListener('click',async()=>{const response=await fetch('/api/library/',{method:'POST',headers:{'content-type':'application/json'},credentials:'same-origin',body:JSON.stringify({action:'notification_read',notificationId:Number(button.dataset.notificationRead)})});if(response.ok){button.closest('li')?.classList.remove('is-unread');button.remove();}}));})();
+
+;(()=>{document.querySelectorAll('[data-follow-id]').forEach((button)=>button.addEventListener('click',async()=>{const response=await fetch('/api/library/',{method:'POST',headers:{'content-type':'application/json'},credentials:'same-origin',body:JSON.stringify({action:'follow',targetKind:button.dataset.followKind,targetId:button.dataset.followId})});if(response.ok){const data=await response.json();button.textContent=data.following?'Takip ediliyor':'Takip et';button.setAttribute('aria-pressed',String(data.following));}}));})();

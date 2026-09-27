@@ -448,3 +448,5 @@ body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-p
 .author-public-page{display:grid;gap:2rem}.author-public-heading{display:flex;align-items:center;gap:1.5rem;padding:clamp(1.25rem,3vw,2.5rem);border:1px solid var(--border);background:linear-gradient(135deg,var(--panel),color-mix(in srgb,var(--panel) 75%,var(--accent)))}.author-public-heading img{width:7rem;height:7rem;border-radius:50%;object-fit:cover;border:2px solid var(--accent)}.author-public-heading h1{margin:.25rem 0}.author-public-heading p{max-width:62ch;margin:.5rem 0 0;color:var(--muted)}@media(max-width:600px){.author-public-heading{align-items:flex-start;gap:1rem}.author-public-heading img{width:4.5rem;height:4.5rem}}
 
 .content-author-link{display:inline-flex;align-items:center;gap:.45rem}.content-author-link img{width:1.75rem;height:1.75rem;border-radius:50%;object-fit:cover}
+
+.follow-button{margin-top:1rem;border:1px solid var(--border);padding:.45rem .7rem;background:transparent;color:var(--text)}.follow-button[aria-pressed='true']{border-color:var(--accent);color:var(--accent)}
