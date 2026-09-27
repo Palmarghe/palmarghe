@@ -123,6 +123,15 @@ export function localSupabase(cookies: import('astro').AstroCookies) {
     from: (name: string) => { if (!isTable(name)) throw new Error('Unknown table'); return new Query(name, getUser()); },
     rpc: async (name: string, args: Row) => {
       const actor = getUser();
+      if (name === 'subscribe_newsletter') {
+        const email = String(args.p_email ?? '').trim().toLowerCase();
+        const locale = String(args.p_locale ?? '');
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254 || !['tr','en'].includes(locale) || args.p_source !== 'site') return { data:null,error:{message:'invalid newsletter request'} };
+        const existing = tables.newsletter_subscribers.find((entry) => String(entry.email).toLowerCase() === email);
+        if (existing) Object.assign(existing,{locale,source:'site',status:'active',consented_at:new Date().toISOString()});
+        else tables.newsletter_subscribers.push({id:uid(),email,locale,source:'site',status:'active',consented_at:new Date().toISOString()});
+        return { data:null,error:null };
+      }
       if (name === 'dispatch_due_author_follow_notifications') {
         let count = 0;
         for (const item of tables.content_items.filter((entry) => entry.status === 'scheduled' && entry.published_at && entry.published_at <= new Date().toISOString() && entry.author_id)) {

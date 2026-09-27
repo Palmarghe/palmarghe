@@ -129,6 +129,18 @@ test('tag directory is reachable and preserves the public layout', async ({ page
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 
+test('newsletter requires consent and records an explicit subscription', async ({ page }) => {
+  await page.goto('/');
+  const form = page.locator('.newsletter-signup');
+  await expect(form.getByRole('checkbox')).toHaveAttribute('required','');
+  await expect(form.getByRole('link',{name:'Gizlilik Politikasını'})).toHaveAttribute('href','/privacy/');
+  await form.locator('input[name="email"]').fill(`reader-${Date.now()}@example.test`);
+  await form.getByRole('checkbox').check();
+  await form.getByRole('button',{name:'Kaydol'}).click();
+  await expect(page).toHaveURL(/\?newsletter=1$/);
+  await expect(page.getByText('Bülten listesine kaydın alındı.')).toBeVisible();
+});
+
 test('Studio dashboard reports publication quality and Studio previews update before save', async ({ page }) => {
   await page.goto('/studio/');
   await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
