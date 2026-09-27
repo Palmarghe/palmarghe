@@ -15,3 +15,4 @@
     finally { button.disabled = false; }
   });
 })();
+;(()=>{document.querySelectorAll('[data-notification-read]').forEach((button)=>button.addEventListener('click',async()=>{const response=await fetch('/api/library/',{method:'POST',headers:{'content-type':'application/json'},credentials:'same-origin',body:JSON.stringify({action:'notification_read',notificationId:Number(button.dataset.notificationRead)})});if(response.ok){button.closest('li')?.classList.remove('is-unread');button.remove();}}));})();
