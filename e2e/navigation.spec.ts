@@ -124,19 +124,6 @@ test('homepage category grid and Studio link remain available', async ({ page })
   await page.getByRole('button', { name: 'Giriş' }).click();
   await expect(page.getByRole('link', { name: '↗ Ana sayfayı aç' })).toHaveAttribute('href', 'https://palmarghe.com/');
 });
-
-test('signed-in accounts expose the authenticator setup surface', async ({ page }) => {
-  await page.goto('/account/');
-  const login = page.locator('form').filter({ has: page.locator('input[value="login"]') });
-  await login.getByRole('textbox', { name: 'Email' }).fill('member@example.test');
-  await login.locator('input[name="password"]').fill('LocalTest123!');
-  await login.getByRole('button', { name: 'Giriş yap' }).click();
-  await page.goto('/account/');
-  await expect(page.getByRole('heading', { name: 'İki adımlı doğrulama' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Authenticator uygulaması ekle' })).toBeVisible();
-  await expect(page.locator('[data-mfa-dialog] input[name="code"]')).toHaveAttribute('autocomplete', 'one-time-code');
-});
-
 test('tag directory is reachable and preserves the public layout', async ({ page }) => {
   await page.goto('/tags/');
   await expect(page.getByRole('heading', { name: 'Etiketler' })).toBeVisible();

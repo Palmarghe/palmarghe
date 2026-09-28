@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process';
 const astro = 'node_modules/astro/bin/astro.mjs';
-const args = ['dev','--host','127.0.0.1','--port','4322','--ignore-lock'];
+const args = ['dev','--host','127.0.0.1','--port','4322','--force'];
 const child = spawn(process.execPath, [astro,...args], { stdio: 'inherit', env: { ...process.env, LOCAL_TEST_MODE: 'true', ASTRO_DEV_BACKGROUND: '0' } });
 child.on('exit', (code) => { if (code && code !== 0) process.exit(code); });
 const keepAlive = setInterval(() => {}, 1000);

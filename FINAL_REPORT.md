@@ -82,8 +82,7 @@ Before Search Console DNS changes, the Cloudflare zone was exported and the thre
 ## External and user-dependent gates
 
 1. **Custom SMTP and email callbacks:** Supabase custom SMTP is disabled. Real signup mail delivery, confirmation and reset callback cannot be certified without a mail provider and delivery access. Auth password login and role controls were verified independently.
-2. **MFA:** Uygulama düzeyinde TOTP kaydı, doğrulaması ve doğrulanmış faktör kaldırma akışı tamamlandı. Gerçek owner ikinci faktörünün kaydı, recovery prosedürü ve zorunlu MFA politikası bilinçli bir operasyonel karar gerektirir.
-3. **Cloudflare Access:** Cloudflare One oturumu açıldı ve Zero Trust Free seçeneği doğrulandı; ancak etkinleştirme kart bilgisi, Hizmet Koşulları/Gizlilik Politikası kabulü ve ücretsiz kotayı aşan kullanım için ücretlendirme yetkisi istiyor. Bu kullanıcıya ait finansal ve sözleşmesel adımlar tamamlanmadan Access uygulaması/politikası oluşturulamaz. Studio, Access olmadan da server-side Supabase Auth ve staff role ile korunur.
+2. **Cloudflare Access:** Cloudflare One oturumu açıldı ve Zero Trust Free seçeneği doğrulandı; ancak etkinleştirme kart bilgisi, Hizmet Koşulları/Gizlilik Politikası kabulü ve ücretsiz kotayı aşan kullanım için ücretlendirme yetkisi istiyor. Bu kullanıcıya ait finansal ve sözleşmesel adımlar tamamlanmadan Access uygulaması/politikası oluşturulamaz. Studio, Access olmadan da server-side Supabase Auth ve staff role ile korunur.
 4. **Search field data:** The new Search Console property is verified and its sitemap processed. Indexing reports and field Core Web Vitals need Google to collect data over time.
 5. **Manual assistive-technology review:** Automated axe, keyboard navigation E2E, responsive and Lighthouse checks passed, but a human screen reader pass remains.
 
@@ -324,17 +323,15 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 
 ### Son bütünleşik doğrulama — 28 Eylül 2026
 
-- Yerel Playwright paketi 41/41 geçti; kritik erişilebilirlik, üyelik ve yorum yetkileri, bildirimler, Studio içerik akışı, mobil menü, reklam düzenleme kısayolları ve hesap MFA kurulum yüzeyini kapsar.
+- Yerel Playwright paketi 41/41 geçti; kritik erişilebilirlik, üyelik ve yorum yetkileri, bildirimler, Studio içerik akışı, mobil menü ve reklam düzenleme kısayollarını kapsar.
 - Production Playwright paketi 11/11 geçti. Canlı `/`, `/en/`, `/contact/`, `/account/`, `/archive/` ve Studio girişinde ciddi veya kritik axe bulgusu yok; public rota, metadata, güvenlik başlıkları ve tarayıcı konsolu denetimleri başarılıdır.
 - Studio genel bakışındaki her reklam kartı artık kaydedilmiş görünürlüğü açıkça `Yayında` ya da `Kapalı · public sitede görünmez` olarak gösterir. Commit `a24aad8`, Worker sürümü `4c1b1f67-8665-4195-957d-ea1d296a1d6a` canlıdadır.
 
-### Hesapta TOTP MFA kurulumu — 28 Eylül 2026
+### Hesap MFA özelliğinin kaldırılması — 28 Eylül 2026
 
-- Hesap ayarlarına authenticator uygulaması için QR kurulum, altı haneli kod doğrulaması ve doğrulanmış faktör kaldırma akışı eklendi. Tarayıcı yalnız kısa süreli QR/manuel kurulum anahtarını görür; Worker bunları saklamaz.
-- `/api/mfa/` yalnız oturum sahibi için çalışır, POST isteklerinde same-origin kontrolü yapar ve doğrulama kodunu sınırlı sayısal biçimde kabul eder. Anonim production isteği 401 döndürerek doğrulandı.
-- Yerel hesap E2E görünürlük ve otomatik kod alanını doğruladı; `npm run verify` sıfır Astro tanısı, Vitest 14/14 ve production build ile geçti. Kapatılan bir kurulum penceresinden kalan doğrulanmamış faktör, yeni QR üretilmeden önce güvenle temizlenir. Canlı Worker sürümü `4d0339a9-5c6f-4cd1-aad2-dd6042254955`dir. Owner’ın gerçek authenticator ile kaydı ve zorunlu MFA politikası güvenli bir operasyonel adım olarak açık kalır.
-- MFA’nın hem faktör listesi hem de QR/manuel kurulum anahtarı içeren başarılı JSON yanıtları açıkça `Cache-Control: no-store` taşır. Anonim canlı yanıt `private, no-store` ile doğrulandı; production güvenlik E2E’si bu başlığı sürekli denetler. Son Worker sürümü `06345985-5698-42f6-b27d-53b4c20e6f1d`.
-- Cache düzeltmesinden sonraki tam salt okunur production Playwright paketi 11/11 geçti: beş public hesap/keşif rotası ve Studio girişinde axe, public rota/asset/meta kontrolleri, güvenlik başlıkları, konsol hatası ve mobil gezinme kapsandı.
+- Kullanıcı tercihiyle uygulama içi TOTP MFA yüzeyi ve `/api/mfa/` endpointi kaldırıldı. Supabase production TOTP sağlayıcısı da `Disabled` olarak kaydedildi. Mevcut oturumlara, owner/admin hesabına ve kullanıcı profil verilerine dokunulmadı.
+- MFA'ya özgü QR/manuel anahtar istemci betiği, CSS'i ve E2E kontrolleri de kaldırıldı. Hesap güvenliği parola politikası, rate limit, same-origin yazma kontrolleri ve RLS ile korunmaya devam eder.
+- Worker `ed839d3f-7710-4574-88ae-062079262b93` ile dağıtıldı. Yerel paket 40/40, production Playwright paketi 11/11 geçti; canlı Chrome’da owner hesap sayfasında MFA bölümü yok ve `/api/mfa/` 404 döndürüyor.
 
 ### Search Console canlı durum denetimi — 28 Eylül 2026
 

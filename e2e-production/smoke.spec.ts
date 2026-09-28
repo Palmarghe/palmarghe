@@ -31,10 +31,6 @@ test('production privacy and security response headers', async ({ request }) => 
   const preview = await request.get('https://palmarghe.palmarghe.workers.dev/');
   expect(preview.status()).toBe(200);
   expect(preview.headers()['x-robots-tag']).toContain('noindex');
-  const mfa = await request.get('/api/mfa/');
-  expect(mfa.status()).toBe(401);
-  expect(mfa.headers()['cache-control']).toContain('no-store');
-  expect(await mfa.text()).toBe('Unauthorized');
 });
 
 test('live mobile navigation and six viewport widths', async ({ page }) => {
