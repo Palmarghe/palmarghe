@@ -334,6 +334,7 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - `/api/mfa/` yalnız oturum sahibi için çalışır, POST isteklerinde same-origin kontrolü yapar ve doğrulama kodunu sınırlı sayısal biçimde kabul eder. Anonim production isteği 401 döndürerek doğrulandı.
 - Yerel hesap E2E görünürlük ve otomatik kod alanını doğruladı; `npm run verify` sıfır Astro tanısı, Vitest 14/14 ve production build ile geçti. Kapatılan bir kurulum penceresinden kalan doğrulanmamış faktör, yeni QR üretilmeden önce güvenle temizlenir. Canlı Worker sürümü `4d0339a9-5c6f-4cd1-aad2-dd6042254955`dir. Owner’ın gerçek authenticator ile kaydı ve zorunlu MFA politikası güvenli bir operasyonel adım olarak açık kalır.
 - MFA’nın hem faktör listesi hem de QR/manuel kurulum anahtarı içeren başarılı JSON yanıtları açıkça `Cache-Control: no-store` taşır. Anonim canlı yanıt `private, no-store` ile doğrulandı; production güvenlik E2E’si bu başlığı sürekli denetler. Son Worker sürümü `06345985-5698-42f6-b27d-53b4c20e6f1d`.
+- Cache düzeltmesinden sonraki tam salt okunur production Playwright paketi 11/11 geçti: beş public hesap/keşif rotası ve Studio girişinde axe, public rota/asset/meta kontrolleri, güvenlik başlıkları, konsol hatası ve mobil gezinme kapsandı.
 
 ### Search Console canlı durum denetimi — 28 Eylül 2026
 
