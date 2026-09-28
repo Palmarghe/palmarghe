@@ -82,8 +82,8 @@ Before Search Console DNS changes, the Cloudflare zone was exported and the thre
 ## External and user-dependent gates
 
 1. **Custom SMTP and email callbacks:** Supabase custom SMTP is disabled. Real signup mail delivery, confirmation and reset callback cannot be certified without a mail provider and delivery access. Auth password login and role controls were verified independently.
-2. **MFA:** Supabase TOTP is enabled at the provider, but app-level enrollment, enforcement and owner second-factor setup are not complete. Enforcing it on the real owner requires an intentional enrollment and recovery process.
-3. **Cloudflare Access:** Zero Trust onboarding required a payment card, Terms acceptance and authorization for possible overage charges, including on Free. The flow was left for the account owner. Studio still requires server-side Supabase Auth and staff role.
+2. **MFA:** Uygulama düzeyinde TOTP kaydı, doğrulaması ve doğrulanmış faktör kaldırma akışı tamamlandı. Gerçek owner ikinci faktörünün kaydı, recovery prosedürü ve zorunlu MFA politikası bilinçli bir operasyonel karar gerektirir.
+3. **Cloudflare Access:** Cloudflare One oturumu açıldı ve Zero Trust Free seçeneği doğrulandı; ancak etkinleştirme kart bilgisi, Hizmet Koşulları/Gizlilik Politikası kabulü ve ücretsiz kotayı aşan kullanım için ücretlendirme yetkisi istiyor. Bu kullanıcıya ait finansal ve sözleşmesel adımlar tamamlanmadan Access uygulaması/politikası oluşturulamaz. Studio, Access olmadan da server-side Supabase Auth ve staff role ile korunur.
 4. **Search field data:** The new Search Console property is verified and its sitemap processed. Indexing reports and field Core Web Vitals need Google to collect data over time.
 5. **Manual assistive-technology review:** Automated axe, keyboard navigation E2E, responsive and Lighthouse checks passed, but a human screen reader pass remains.
 
@@ -345,5 +345,5 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 ### Cloudflare Access yetki denetimi — 28 Eylül 2026
 
 - Worker dağıtım OAuth oturumu geçerli ve `wrangler whoami` hesabı doğruluyor; Workers, zone, route ve ilgili dağıtım izinleri mevcut.
-- Aynı token Cloudflare Access yönetim izni içermiyor. Cloudflare One arayüzü de kayıtlı Google profilini gösterse de bu denetimde oturumu tamamlamadı; Access uygulaması/politikası oluşturulmadı.
-- Access’in ödeme kartı, Terms ve muhtemel overage kabulüne bağlı plan adımı kullanıcı hesabında tamamlanmadan bu koruma katmanı etkinleştirilemez.
+- Aynı token Cloudflare Access yönetim izni içermiyor. 28 Eylül canlı Chrome denetiminde Cloudflare One oturumu başarıyla açıldı ve Zero Trust Free planı seçildi.
+- Cloudflare etkinleştirme akışı, Free plan için dahi ödeme kartı, Hizmet Koşulları/Gizlilik Politikası kabulü ve ücretsiz kotayı aşan kullanımda ücretlendirme yetkisi isteyen güvenli ödeme ekranında durur. Kart veya sözleşme onayı verilmedi; Access uygulaması/politikası oluşturulmadı.
