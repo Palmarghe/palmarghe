@@ -33,6 +33,7 @@ test('production privacy and security response headers', async ({ request }) => 
   expect(preview.headers()['x-robots-tag']).toContain('noindex');
   const mfa = await request.get('/api/mfa/');
   expect(mfa.status()).toBe(401);
+  expect(mfa.headers()['cache-control']).toContain('no-store');
   expect(await mfa.text()).toBe('Unauthorized');
 });
 

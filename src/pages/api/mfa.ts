@@ -8,6 +8,7 @@ const verificationCode = z.string().trim().regex(/^\d{6,8}$/);
 
 const unavailable = () => errorResponse('MFA service unavailable', 503);
 const cleanError = () => errorResponse('MFA request could not be completed', 400);
+const json = (body: unknown) => Response.json(body, { headers: { 'Cache-Control': 'no-store' } });
 
 export const GET: APIRoute = async ({ request, cookies }) => {
   const db = supabase(cookies, request);
@@ -18,7 +19,7 @@ export const GET: APIRoute = async ({ request, cookies }) => {
   const { data, error } = await db.auth.mfa.listFactors();
   if (error) return unavailable();
   const factors = (data?.totp ?? []).filter((factor: { status: string }) => factor.status === 'verified').map((factor: { id: string; friendly_name?: string; created_at?: string }) => ({ id: factor.id, name: factor.friendly_name ?? 'Authenticator', createdAt: factor.created_at }));
-  return Response.json({ factors });
+  return json({ factors });
 };
 
 export const POST: APIRoute = async ({ request, cookies }) => {
@@ -44,7 +45,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
     const { data, error } = await db.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Palmarghe Authenticator' });
     if (error || !data.totp) return cleanError();
-    return Response.json({ factorId: data.id, qrCode: data.totp.qr_code, secret: data.totp.secret });
+    return json({ factorId: data.id, qrCode: data.totp.qr_code, secret: data.totp.secret });
   }
   const id = factorId.safeParse(action.data.factorId);
   if (!id.success) return errorResponse('Invalid factor', 400);
@@ -53,9 +54,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     if (!code.success) return errorResponse('Enter the 6-digit authenticator code', 400);
     const { error } = await db.auth.mfa.challengeAndVerify({ factorId: id.data, code: code.data });
     if (error) return cleanError();
-    return Response.json({ ok: true });
+    return json({ ok: true });
   }
   const { error } = await db.auth.mfa.unenroll({ factorId: id.data });
   if (error) return cleanError();
-  return Response.json({ ok: true });
+  return json({ ok: true });
 };
