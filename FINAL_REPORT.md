@@ -344,3 +344,8 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Worker dağıtım OAuth oturumu geçerli ve `wrangler whoami` hesabı doğruluyor; Workers, zone, route ve ilgili dağıtım izinleri mevcut.
 - Aynı token Cloudflare Access yönetim izni içermiyor. 28 Eylül canlı Chrome denetiminde Cloudflare One oturumu başarıyla açıldı ve Zero Trust Free planı seçildi.
 - Cloudflare etkinleştirme akışı, Free plan için dahi ödeme kartı, Hizmet Koşulları/Gizlilik Politikası kabulü ve ücretsiz kotayı aşan kullanımda ücretlendirme yetkisi isteyen güvenli ödeme ekranında durur. Kart veya sözleşme onayı verilmedi; Access uygulaması/politikası oluşturulmadı.
+
+### Ana sayfa spotlight etiket eşleşmesi — 28 Eylül 2026
+
+- Studio'da spotlight için seçilen içerik türü artık ana sayfa üst satırına yansır. Otomatik seçim Football Manager içeriğini tercih etmeyi sürdürür; admin başka bir tür seçtiğinde sabit `FM / SPOTLIGHT` etiketi yerine örneğin `LAB / SPOTLIGHT` görünür.
+- Commit `96053a0` normal biçimde `main` dalına push edildi, Worker `c3c953a4-c7f9-4483-bfdd-ad38a7f5b23e` ile dağıtıldı ve canlı Chrome ile doğrulandı.
