@@ -17,6 +17,21 @@ test('public routes, metadata and assets', async ({ page, request }) => {
   await expect(page.getByRole('link', { name: 'Ana sayfa' })).toBeVisible();
 });
 
+test('homepage serves optimized WebP music covers', async ({ page, request }) => {
+  await page.goto('/');
+  const musicCovers = page.locator('img[src*="/visuals/music/"]');
+  await expect(musicCovers.first()).toBeAttached();
+  const sources = await musicCovers.evaluateAll((images) => [...new Set(images.map((image) => (image as HTMLImageElement).getAttribute('src') ?? ''))]);
+  expect(sources.length).toBeGreaterThan(0);
+  expect(sources.every((source) => source.endsWith('.webp'))).toBe(true);
+  for (const source of sources) {
+    const response = await request.get(source);
+    expect(response.status(), source).toBe(200);
+    expect(response.headers()['content-type']).toContain('image/webp');
+    expect(Number(response.headers()['content-length'])).toBeLessThan(300_000);
+  }
+});
+
 test('production privacy and security response headers', async ({ request }) => {
   const home = await request.get('/');
   expect(home.headers()['content-security-policy']).toContain('default-src');
