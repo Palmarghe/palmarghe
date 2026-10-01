@@ -41,3 +41,7 @@ Full webmaster goal remains active. The current matrix proves 32 live sitemap pa
 
 [Localized pages](https://developers.google.com/search/docs/specialty/international/localized-versions), [sitemaps](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap), [Article schema](https://developers.google.com/search/docs/appearance/structured-data/article), [Breadcrumb schema](https://developers.google.com/search/docs/appearance/structured-data/breadcrumb).
 
+
+## GitHub verification
+
+Implementation commit 9726f19: GitHub Actions Verify succeeded, including npm run verify and the full local E2E suite: https://github.com/Palmarghe/palmarghe/actions/runs/36925792440 . Current Windows product coverage is 50 cases across the full run and isolated artifact-cleanup rerun; the clean CI run executes the full suite. The broader audit remains active.
