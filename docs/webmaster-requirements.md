@@ -108,4 +108,18 @@ Kanıt: Astro 0 tanı, unit 39/39, build başarılı; önceki tam local E2E 46/4
 
 Önceki modal commit df3c0b8 Actions success: https://github.com/Palmarghe/palmarghe/actions/runs/36917567481. Ana 40 bölümlük denetim devam ediyor; yeni commit Actions sonucu ayrıca kontrol edilecek.
 
-Remaining measurement/security audit: anon RPC execute permissions allow a client to bypass Worker bot filters. Historic aggregates may contain bot/test activity and wrong attribution; no reliable retroactive correction is claimed. This is an open abuse-boundary review, not an external blocker.
+Historical finding, now closed by migration 202610010035 and actual 42501/Worker-write verification: anon RPC execute permissions previously allowed Worker filter bypass. Historic aggregates may contain bot/test activity and wrong attribution; no reliable retroactive correction is claimed. The direct RPC bypass is closed; retention and statistical limitations remain independent audit work.
+
+
+## Current production state — 1 October 2026, search pointer follow-up
+
+Worker `fb1a8e0d-63ae-4147-bc3e-9efb75dd0b55` is live. Search now uses native pointers throughout its modal: text/caret in the input, pointer on buttons and links, auto on the backdrop. The decorative brand cursor is hidden only while search is open and restored on close. This supersedes the earlier top-layer reparenting implementation below. Mouse and Ctrl+K opening, repeated close/reopen and both themes are covered; real Chrome confirmed input focus, text pointer, accent caret and a live Lamine result.
+
+Production migration `202610010035_measurement_worker_boundary` is applied and journalled. All three measurement RPCs deny anon/authenticated execution and allow the private Worker service role. Worker writes use a peppered IP hash and a 30-request/60-second endpoint rate window; missing configuration or rate-provider errors fail closed. Controlled anonymous RPC calls returned 42501; Worker traffic returned 204, absent-content engagement 404. The reserved QA path was verified 0→1→0 in all four traffic tables. A 31-request absent-content burst returned 30×404 and 1×429, without engagement rows. See `docs/measurement-boundary-2026-10-01.md` for initial fail-closed verification issues and rollback.
+
+Studio pageview totals exclude ad clicks and Studio paths. Daily/path visits are no longer presented as global unique visitors. Attribution and historical-data limitations are displayed; historical rows are preserved. Authenticated Chrome confirmed the deployed labels. Metrics are not certified organic or human traffic.
+
+Verification: Astro 0 diagnostics, unit 46/46, build successful. Full local suite before the pointer follow-up 47/47; added local pointer regression 1/1. Live Chrome search/cursor 8/9 initially, with one obsolete top-layer expectation; the corrected semantic test passed on rerun. Analytics, semantic cursor, security headers and console rerun passed 5/5. The other eight initial search/cursor cases passed, including mobile search, keyboard navigation, network recovery, modal focus/scroll, device/theme and rendered pointer tracking. Previous commit 9870bf0 Actions succeeded: https://github.com/Palmarghe/palmarghe/actions/runs/36918416447. Current CI is checked after push. The broader audit remains active.
+
+Earlier deployment and test counts below are historical evidence, not the current production state.
+

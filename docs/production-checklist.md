@@ -1,6 +1,19 @@
 # Production doğrulama kontrol listesi
 
-## Current measurement correction — 1 October 2026
+## Current production state — 1 October 2026, search pointer follow-up
+
+Worker `fb1a8e0d-63ae-4147-bc3e-9efb75dd0b55` is live. Search now uses native pointers throughout its modal: text/caret in the input, pointer on buttons and links, auto on the backdrop. The decorative brand cursor is hidden only while search is open and restored on close. This supersedes the earlier top-layer reparenting implementation below. Mouse and Ctrl+K opening, repeated close/reopen and both themes are covered; real Chrome confirmed input focus, text pointer, accent caret and a live Lamine result.
+
+Production migration `202610010035_measurement_worker_boundary` is applied and journalled. All three measurement RPCs deny anon/authenticated execution and allow the private Worker service role. Worker writes use a peppered IP hash and a 30-request/60-second endpoint rate window; missing configuration or rate-provider errors fail closed. Controlled anonymous RPC calls returned 42501; Worker traffic returned 204, absent-content engagement 404. The reserved QA path was verified 0→1→0 in all four traffic tables. A 31-request absent-content burst returned 30×404 and 1×429, without engagement rows. See `docs/measurement-boundary-2026-10-01.md` for initial fail-closed verification issues and rollback.
+
+Studio pageview totals exclude ad clicks and Studio paths. Daily/path visits are no longer presented as global unique visitors. Attribution and historical-data limitations are displayed; historical rows are preserved. Authenticated Chrome confirmed the deployed labels. Metrics are not certified organic or human traffic.
+
+Verification: Astro 0 diagnostics, unit 46/46, build successful. Full local suite before the pointer follow-up 47/47; added local pointer regression 1/1. Live Chrome search/cursor 8/9 initially, with one obsolete top-layer expectation; the corrected semantic test passed on rerun. Analytics, semantic cursor, security headers and console rerun passed 5/5. The other eight initial search/cursor cases passed, including mobile search, keyboard navigation, network recovery, modal focus/scroll, device/theme and rendered pointer tracking. Previous commit 9870bf0 Actions succeeded: https://github.com/Palmarghe/palmarghe/actions/runs/36918416447. Current CI is checked after push. The broader audit remains active.
+
+Earlier deployment and test counts below are historical evidence, not the current production state.
+
+
+## Previous measurement correction (historical) — 1 October 2026
 
 Worker `88cfc28d-95da-4cfe-a605-468d49cdba97`. Reklam tıklaması artık RegExp nesnesi yerine /ad/header/, /ad/article/ ve /ad/footer/ string yollarını gönderiyor. Kaynak, API isteğinin kendi Referer başlığından değil ziyaretin giriş referrer bilgisinden tarayıcıda sınıflandırılır. Sunucu yalnız organic_search/referral/direct enum kabul eder; eski istemciler direct olarak işlenir. Ham referrer URL veya arama sorgusu gönderilmez/saklanmaz. 30 dakika hareketsizlik süresi olan sekme içi coarse source, iç gezinmede korunur. Engellenmiş storage kullanımında script çökmez; çift yüklemede dinleyici/ziyaret tekrarlanmaz. Bilinen bot ve webdriver denetimleri engagement yazımlarından da çıkarılır.
 
@@ -52,3 +65,4 @@ Bu maddeler FAZ 2 derin incelemesini başlatmayı engellemez. FAZ 2 yeni P0/P1 b
 Current Worker: `32e04843-2abd-43d1-9ba3-710e1d6afe9d`. Search pointer top-layer synchronization is explicit on opening. Cursor position transition lag and privacy UI conflation are fixed: rendered geometry is checked, mandatory legal notice reading acknowledgements are distinct from newsletter opt-in, and localized contact notice links are present. Legal text and production content are unchanged. Verify: Astro 0 diagnostics, unit 23/23, build passed; full local E2E 46/46 and final local cursor regression passed. Preceding Worker production 36/36. Current pointer matrix: Chrome/Edge 10/10 and WebKit 5/5 passed against production. WebKit was installed after its initial executable-missing result; its successful rerun used a separate output directory. This does not close the full webmaster scope or physical Safari/zoom/assistive-technology/SMTP gates.
 
 Final live pointer matrix: Chrome 5/5, Edge 5/5, WebKit 5/5. Both themes retain visible search controls and native text cursor/caret. Screenshot inspection confirmed the pointer on the search close control. Full production run passed 36 cases; one layout case hit a test-artifact directory collision during parallel runs and passed 1/1 when rerun alone. All 37 production cases therefore passed across the full run and isolated rerun. No product assertion failed in that run.
+

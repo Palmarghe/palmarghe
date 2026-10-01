@@ -14,13 +14,15 @@
 
   const searchDialog = document.querySelector('#search-overlay');
   const syncCursorLayer = () => {
-    if (searchDialog?.open) searchDialog.append(cursor);
-    else document.body.append(cursor);
+    // Native pointers remain reliable across the browser's modal top layer.
+    cursor.hidden = Boolean(searchDialog?.open);
+    if (cursor.parentElement !== document.body) document.body.append(cursor);
   };
   searchDialog?.addEventListener('search-open', () => {
     syncCursorLayer();
     cursor.removeAttribute('data-away');
     cursor.removeAttribute('data-pressed');
+    cursor.removeAttribute('data-keyboard-nav');
   });
   if (searchDialog) new MutationObserver(syncCursorLayer).observe(searchDialog, { attributes: true, attributeFilter: ['open'] });
   new MutationObserver(syncCursorLayer).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });

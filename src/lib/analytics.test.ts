@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const { rpc } = vi.hoisted(() => ({ rpc: vi.fn(async () => ({ error: null })) }));
 vi.mock('./supabase', () => ({ supabase: () => ({ rpc }) }));
+vi.mock('./measurement', () => ({ measurementWriter: async () => ({ db: { rpc }, status: 200 }) }));
 import { POST as trafficPost } from '../pages/api/traffic';
 import { POST as engagementPost } from '../pages/api/engagement';
 
@@ -39,6 +40,12 @@ function client(referrer = '', options: { automated?: boolean; blockedStorage?: 
   return { context, requests, storage, click: (placement: string) => events.click?.({ target: new Element(placement) }) };
 }
 describe('privacy-minimized measurement scripts', () => {
+  it('does not track Studio previews', () => {
+    const harness = client();
+    harness.context.location.pathname = '/studio/preview/example/';
+    runInNewContext(trafficScript, harness.context);
+    expect(harness.requests).toEqual([]);
+  });
   it.each([
     ['https://www.google.com/search?q=private-query', 'organic_search'],
     ['https://www.google.com.tr/search?q=private-query', 'organic_search'],
@@ -88,6 +95,10 @@ async function post(handler: typeof trafficPost, body: object, userAgent = 'Chro
 }
 describe('measurement endpoint boundary', () => {
   beforeEach(() => rpc.mockClear());
+  it('ignores Studio measurement events without RPC writes', async () => {
+    expect((await post(trafficPost, { path: '/studio/preview/example/', visitor })).status).toBe(204);
+    expect(rpc).not.toHaveBeenCalled();
+  });
   it('forwards validated entry source rather than classifying the same-site API referrer', async () => {
     expect((await post(trafficPost, { path: '/', visitor, source: 'organic_search' })).status).toBe(204);
     expect(rpc).toHaveBeenCalledWith('record_qualified_traffic_visit', { p_path: '/', p_visitor_id: visitor, p_source: 'organic_search' });

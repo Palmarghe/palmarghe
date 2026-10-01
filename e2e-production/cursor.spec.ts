@@ -1,26 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { measureCursorTracking } from '../e2e/helpers/cursor';
+import { verifySearchPointers } from '../e2e/helpers/search-pointer';
 
-test('search opening keeps the pointer in the visible top layer without another mouse move', async ({ page }) => {
-  await page.goto('/');
-  const cursor = page.locator('[data-brand-cursor]');
-  for (const theme of ['dark', 'light']) {
-    await page.evaluate(value => document.body.dataset.theme = value, theme);
-    for (let attempt = 0; attempt < 2; attempt++) {
-      await page.locator('.head-actions [data-search-trigger]').click();
-      await expect(page.locator('#search-overlay')).toBeVisible();
-      await expect(cursor).toHaveCSS('opacity', '1');
-      expect(await cursor.evaluate(element => element.parentElement?.id)).toBe('search-overlay');
-      const bounds = await cursor.boundingBox();
-      expect(bounds).not.toBeNull();
-      expect(bounds!.x).toBeGreaterThanOrEqual(0);
-      expect(bounds!.y).toBeGreaterThanOrEqual(0);
-      await page.locator('[data-search-close]').hover();
-      await expect(cursor).toHaveCSS('opacity', '1');
-      await page.screenshot({ path: `test-results/search-pointer-${theme}.png` });
-      await page.keyboard.press('Escape');
-    }
-  }
+test('search retains native pointers and caret for mouse and keyboard opening', async ({ page }) => {
+  await verifySearchPointers(page);
 });
 
 test('Palmarghe pointer has semantic states across reading, links, controls and search', async ({ page }) => {
@@ -65,13 +48,13 @@ test('Palmarghe pointer has semantic states across reading, links, controls and 
   await page.mouse.click(point.x, point.y);
   await expect(page.locator('#search-overlay')).toBeVisible();
   await expect(page.locator('html')).toHaveClass(/search-overlay-open/);
-  await expect.poll(() => cursor.evaluate(element => element.parentElement?.id)).toBe('search-overlay');
-  await expect(cursor).toHaveCSS('opacity', '1');
+  await expect(cursor).toBeHidden();
+  await expect(cursor).toBeHidden();
   await expect(cursor).not.toHaveAttribute('data-away', '');
   const closeButton = page.locator('#search-overlay [data-search-close]');
   await closeButton.hover();
   await expect(cursor).toHaveAttribute('data-state', 'button');
-  await expect(cursor).toHaveCSS('opacity', '1');
+  await expect(cursor).toBeHidden();
   const input = page.locator('#search-overlay input[name="q"]');
   await expect(input).toBeFocused();
   await input.hover();

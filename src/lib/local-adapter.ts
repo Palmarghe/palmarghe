@@ -42,6 +42,7 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
   eq(field: string, value: any) { this.filters.push((row) => row[field] === value); return this; }
   in(field: string, values: any[]) { this.filters.push((row) => values.includes(row[field])); return this; }
   lte(field: string, value: any) { this.filters.push((row) => row[field] <= value); return this; }
+  gte(field: string, value: any) { this.filters.push((row) => row[field] >= value); return this; }
   is(field: string, value: any) { this.filters.push((row) => row[field] === value); return this; }
   or(filter: string) {
     const terms = filter.split(',').map((part) => { const match = part.match(/^([a-z_]+)\.ilike\.%(.*)%$/); return match ? { field: match[1], value: match[2].toLowerCase() } : null; }).filter(Boolean) as { field: string; value: string }[];
@@ -279,10 +280,10 @@ export function localContactAllowed(key: string) {
   return next.count <= 5;
 }
 const localAuthRate = new Map<string, { start: number; count: number }>();
-export function localAuthAllowed(key: string, max: number) {
+export function localAuthAllowed(key: string, max: number, windowSeconds = 900) {
   const now = Date.now();
   const current = localAuthRate.get(key);
-  const next = !current || now-current.start > 15*60*1000 ? { start: now, count: 1 } : { start: current.start, count: current.count+1 };
+  const next = !current || now-current.start > windowSeconds*1000 ? { start: now, count: 1 } : { start: current.start, count: current.count+1 };
   localAuthRate.set(key,next);
   return next.count <= max;
 }

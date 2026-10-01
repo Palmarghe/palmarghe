@@ -1,5 +1,6 @@
 (() => {
   const path = location.pathname;
+  if (path.startsWith('/studio/')) return;
   if (!/^\/[a-z0-9/-]*$/.test(path) || !crypto?.randomUUID || navigator.webdriver || location.search.includes('verify=') || location.search.includes('e2e=')) return;
   if (document.documentElement.dataset.trafficInstalled) return;
   document.documentElement.dataset.trafficInstalled = 'true';

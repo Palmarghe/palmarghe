@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { supabase } from '../../lib/supabase';
 import { errorResponse, sameOrigin } from '../../lib/security';
 import { parsePath } from '../../lib/site';
+import { measurementWriter } from '../../lib/measurement';
 
 const payload = z.object({ path: z.string().regex(/^\/[a-z0-9/-]*$/).max(500), event: z.enum(['read','share']) });
 
@@ -11,10 +12,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const input = payload.safeParse(await request.json().catch(() => null));
   if (!input.success) return errorResponse('Invalid engagement event', 400);
   if (/bot\b|crawler|spider|slurp|headless|lighthouse|pagespeed|facebookexternalhit|preview|prerender|curl|wget/i.test(request.headers.get('user-agent') ?? '')) return new Response(null, { status: 204, headers: { 'Cache-Control': 'no-store' } });
-  const db = supabase(cookies, request);
-  if (!db) return errorResponse('Service unavailable', 503);
   const { locale, slug } = parsePath(input.data.path);
   if (!slug) return errorResponse('Content unavailable', 404);
+  const { db, status } = await measurementWriter(cookies, request, 'engagement');
+  if (status !== 200 || !db) return errorResponse(status === 429 ? 'Rate limit exceeded' : 'Service unavailable', status);
   const { data: content } = await db.from('content_items').select('id').eq('locale', locale).eq('slug', slug).eq('status', 'published').lte('published_at', new Date().toISOString()).single();
   if (!content) return errorResponse('Content unavailable', 404);
   const { error } = await db.rpc('record_content_engagement', { p_content_id: content.id, p_event: input.data.event });
