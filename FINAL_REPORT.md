@@ -5,7 +5,7 @@
 ### Mobile button and logo follow-up
 
 - Mobile buttons wrap long labels and remain bounded by their containers. Filter rows, dialog footers, spotlight actions and editor actions wrap; search/form children can shrink. Newsletter email and submit controls share narrow widths without pushing the button off-screen.
-- Normal mobile logo clicks now retain native homepage navigation. The portal counter survives those navigations in session storage; only the fifth rapid homepage tap intercepts navigation to reveal the portal.
+- Mobile logo clicks on other pages retain native homepage navigation. On the homepage, a single tap reloads home after a 450 ms multi-tap detection window; five rapid taps cancel that pending navigation and reveal the portal. No persistent counter is stored.
 - Local navigation E2E 13/13 passed, including button bounds on five public routes at 320 px, homepage navigation and preserved portal interaction. Astro 0 diagnostics, Vitest 14/14 and build passed.
 
 - Public navigation now groups categories into two columns and search/language/account/theme into a single compact tools row. Desktop links use responsive spacing and a separate utility area. Mobile panel height is tested below 350 px.

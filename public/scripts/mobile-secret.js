@@ -1,15 +1,21 @@
 (() => {
   const brand = document.querySelector('.site-header .brand');
   if (!brand) return;
+  let taps = 0;
+  let lastTap = 0;
+  let homeTimer;
   brand.addEventListener('click', (event) => {
     if (!matchMedia('(max-width: 900px) and (pointer: coarse)').matches || location.pathname !== '/') return;
     const now = Date.now();
-    let previous = {};
-    try { previous = JSON.parse(sessionStorage.getItem('palmarghe-portal-taps') || '{}'); } catch {}
-    const taps = now - (previous.time || 0) < 2500 ? (previous.count || 0) + 1 : 1;
-    try { sessionStorage.setItem('palmarghe-portal-taps', JSON.stringify({ count: taps < 5 ? taps : 0, time: now })); } catch {}
-    if (taps < 5) return;
+    taps = now - lastTap < 600 ? taps + 1 : 1;
+    lastTap = now;
     event.preventDefault();
+    clearTimeout(homeTimer);
+    if (taps < 5) {
+      homeTimer = setTimeout(() => { location.href = brand.href; }, 450);
+      return;
+    }
+    taps = 0;
     let dialog = document.querySelector('.mobile-secret');
     if (!dialog) {
       dialog = document.createElement('dialog');

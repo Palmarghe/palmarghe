@@ -183,10 +183,7 @@ test('mobile portal is exclusive to touch devices and closes accessibly', async 
   const page = await context.newPage();
   await page.goto('/');
   const brand = page.locator('.site-header .brand');
-  for (let tap = 0; tap < 5; tap++) {
-    await brand.tap();
-    await page.waitForLoadState('load');
-  }
+  for (let tap = 0; tap < 5; tap++) await brand.tap();
   await expect(page.locator('.mobile-secret')).toBeVisible();
   await page.getByRole('button', { name: 'Dünyaya dön' }).click();
   await expect(page.locator('.mobile-secret')).toBeHidden();
@@ -207,8 +204,7 @@ test('mobile action buttons stay within the viewport and logo returns home', asy
   await page.goto('/account/');
   await page.locator('.site-header .brand').tap();
   await expect(page).toHaveURL('http://127.0.0.1:4322/');
-  await page.locator('.site-header .brand').tap();
-  await page.waitForLoadState('load');
+  await Promise.all([page.waitForEvent('load'), page.locator('.site-header .brand').tap()]);
   await expect(page.locator('.mobile-secret')).toHaveCount(0);
   await context.close();
 });

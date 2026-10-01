@@ -13,10 +13,7 @@ test('live compact mobile menu and secret portal', async ({ browser }) => {
   const result = await new AxeBuilder({ page }).analyze();
   expect(result.violations.filter(v => ['serious', 'critical'].includes(v.impact ?? ''))).toEqual([]);
   await page.getByRole('button', { name: 'Menüyü kapat' }).click();
-  for (let i = 0; i < 5; i++) {
-    await page.locator('.site-header .brand').tap();
-    await page.waitForLoadState('load');
-  }
+  for (let i = 0; i < 5; i++) await page.locator('.site-header .brand').tap();
   await expect(page.locator('.mobile-secret')).toBeVisible();
   await page.getByRole('button', { name: 'Dünyaya dön' }).click();
   await expect(page.locator('.mobile-secret')).toBeHidden();
