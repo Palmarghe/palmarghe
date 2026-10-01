@@ -1,8 +1,11 @@
 (() => {
   const article = document.querySelector('.content-detail');
   if (!article) return;
+  if (document.documentElement.dataset.engagementInstalled) return;
+  document.documentElement.dataset.engagementInstalled = 'true';
   const path = location.pathname;
-  const send = (event) => fetch('/api/engagement/', {
+  const automated = navigator.webdriver || /bot\b|crawler|spider|slurp|headless|lighthouse|pagespeed|preview|prerender/i.test(navigator.userAgent) || /[?&](verify|e2e)=/.test(location.search);
+  const send = (event) => automated ? Promise.resolve() : fetch('/api/engagement/', {
     method: 'POST', credentials: 'same-origin', keepalive: true,
     headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ path, event }),
   }).catch(() => {});

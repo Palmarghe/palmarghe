@@ -3,19 +3,9 @@ import { z } from 'zod';
 import { supabase } from '../../lib/supabase';
 import { errorResponse, sameOrigin } from '../../lib/security';
 
-const payload = z.object({ path: z.string().regex(/^\/[a-z0-9/-]*$/).max(500), visitor: z.uuid() });
+const payload = z.object({ path: z.string().regex(/^\/[a-z0-9/-]*$/).max(500), visitor: z.uuid(), source: z.enum(['organic_search', 'referral', 'direct']).default('direct') });
 
 const botUserAgent = /bot\b|crawler|spider|slurp|headless|lighthouse|pagespeed|facebookexternalhit|preview|prerender|curl|wget/i;
-const searchReferrer = /(^|\.)(google|bing|yandex|duckduckgo|baidu)\./i;
-
-function acquisitionSource(referrer: string | null) {
-  if (!referrer) return 'direct';
-  try {
-    const host = new URL(referrer).hostname;
-    if (searchReferrer.test(host)) return 'organic_search';
-    return 'referral';
-  } catch { return 'direct'; }
-}
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   if (!sameOrigin(request)) return errorResponse('Invalid origin', 403);
@@ -31,7 +21,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const { error: qualifiedError } = await db.rpc('record_qualified_traffic_visit', {
     p_path: input.data.path,
     p_visitor_id: input.data.visitor,
-    p_source: acquisitionSource(request.headers.get('referer')),
+    // Only the coarse entry classification is sent, never the raw referrer URL.
+    // Browser-reported attribution is not proof that a visitor is human.
+    p_source: input.data.source,
   });
   if (qualifiedError) return errorResponse('Traffic unavailable', 503);
   return new Response(null, { status: 204, headers: { 'Cache-Control': 'no-store' } });

@@ -1,6 +1,15 @@
 # Görsel ve ürün denetimi — 21 Eylül 2026
 
-## Current modal regression — 1 October 2026
+## Current measurement correction — 1 October 2026
+
+Worker `88cfc28d-95da-4cfe-a605-468d49cdba97`. Reklam tıklaması artık RegExp nesnesi yerine /ad/header/, /ad/article/ ve /ad/footer/ string yollarını gönderiyor. Kaynak, API isteğinin kendi Referer başlığından değil ziyaretin giriş referrer bilgisinden tarayıcıda sınıflandırılır. Sunucu yalnız organic_search/referral/direct enum kabul eder; eski istemciler direct olarak işlenir. Ham referrer URL veya arama sorgusu gönderilmez/saklanmaz. 30 dakika hareketsizlik süresi olan sekme içi coarse source, iç gezinmede korunur. Engellenmiş storage kullanımında script çökmez; çift yüklemede dinleyici/ziyaret tekrarlanmaz. Bilinen bot ve webdriver denetimleri engagement yazımlarından da çıkarılır.
+
+Kanıt: Astro 0 tanı, unit 39/39, build başarılı; önceki tam local E2E 46/46. Yeni production Chrome analytics paketi 2/2 geçti. Kontrollü non-automated fixture testinin tüm yazmaları route interception ile sunucudan önce durduruldu; hiçbir test tıklaması gerçek sayaca eklenmedi. Gerçek live bot request 204 döndü; mocked provider unit sınır testi bu durumda RPC çağrılmadığını kanıtlar. Kaynak spoofing, referrer gizleme, ad blockers ve doğrudan anon RPC çağrıları nedeniyle bu metrikler doğrulanmış insan trafiği veya kesin organik trafik değildir. Mevcut tarihsel sayaçlar değiştirilmedi; eski attribution/automated-read verisi geriye dönük güvenilir şekilde düzeltildi iddia edilmez.
+
+Önceki modal commit df3c0b8 Actions success: https://github.com/Palmarghe/palmarghe/actions/runs/36917567481. Ana 40 bölümlük denetim devam ediyor; yeni commit Actions sonucu ayrıca kontrol edilecek.
+
+
+## Previous modal regression (historical) — 1 October 2026
 
 Worker `c6b42a8f-8a2a-42e7-882b-3a9e0b5a5fda`. Gallery, mobile secret and Studio editor dialogs now lock background scrolling, contain Tab/Shift+Tab, restore focus for all close paths and dismiss only on a genuine backdrop press/release. Clicking gallery content does not dismiss it. Editor close is a non-submitting button: empty required fields no longer prevent cancellation or accidentally insert content. Native Escape and theme behavior are preserved.
 

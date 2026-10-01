@@ -10,6 +10,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (!sameOrigin(request)) return errorResponse('Invalid origin', 403);
   const input = payload.safeParse(await request.json().catch(() => null));
   if (!input.success) return errorResponse('Invalid engagement event', 400);
+  if (/bot\b|crawler|spider|slurp|headless|lighthouse|pagespeed|facebookexternalhit|preview|prerender|curl|wget/i.test(request.headers.get('user-agent') ?? '')) return new Response(null, { status: 204, headers: { 'Cache-Control': 'no-store' } });
   const db = supabase(cookies, request);
   if (!db) return errorResponse('Service unavailable', 503);
   const { locale, slug } = parsePath(input.data.path);

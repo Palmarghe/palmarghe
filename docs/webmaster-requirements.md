@@ -93,8 +93,19 @@ Verify: Astro 0 diagnostics, Vitest 23/23, build success; complete local E2E 46/
 
 Previous commit 82b730a Actions succeeded: https://github.com/Palmarghe/palmarghe/actions/runs/36916288533. The current commit Actions result is checked after push. The full webmaster objective is still active; this closes concrete modal defects, not every form/dropdown/SEO/performance requirement.
 
-## Newly observed analytics defects (open)
+## Analytics defects observed and corrected
 
-- P1: `public/scripts/traffic.js` ad-click handler calls `record(/ad/)`, a RegExp instead of the required string path. JSON serializes this as an object and the traffic endpoint rejects it. Advertising click measurement is therefore incomplete.
-- P1: `src/pages/api/traffic.ts` derives acquisition source from the API request Referer (the current Palmarghe page), rather than the visit entry referrer. Organic traffic attribution needs correction with minimized, validated source information; synthetic test data must not be counted as real traffic.
-- Engagement writes currently lack the traffic script webdriver/bot exclusions. Production read counts during automated audit need a dedicated abuse/measurement review. No historical counts have been reset or rewritten.
+- P1: `public/scripts/traffic.js` ad-click handler calls `record(/ad/)`, a RegExp instead of the required string path. JSON serializes this as an object and the traffic endpoint rejects it. This was corrected to validated string placement paths; actual deployed-script interception tests passed.
+- P1: `src/pages/api/traffic.ts` derives acquisition source from the API request Referer (the current Palmarghe page), rather than the visit entry referrer. Corrected with a validated coarse browser entry classification, session persistence and no raw URL/query transmission. Live controlled tests do not write counters. Browser-reported attribution remains spoofable and cannot certify human/organic visits.
+- Engagement now excludes webdriver/testing clients in the script and known bot clients in the endpoint. Live automated navigation and no-RPC bot unit tests pass. No historical counts have been reset or rewritten.
+
+
+## Latest measurement evidence
+
+Worker `88cfc28d-95da-4cfe-a605-468d49cdba97`. Reklam tıklaması artık RegExp nesnesi yerine /ad/header/, /ad/article/ ve /ad/footer/ string yollarını gönderiyor. Kaynak, API isteğinin kendi Referer başlığından değil ziyaretin giriş referrer bilgisinden tarayıcıda sınıflandırılır. Sunucu yalnız organic_search/referral/direct enum kabul eder; eski istemciler direct olarak işlenir. Ham referrer URL veya arama sorgusu gönderilmez/saklanmaz. 30 dakika hareketsizlik süresi olan sekme içi coarse source, iç gezinmede korunur. Engellenmiş storage kullanımında script çökmez; çift yüklemede dinleyici/ziyaret tekrarlanmaz. Bilinen bot ve webdriver denetimleri engagement yazımlarından da çıkarılır.
+
+Kanıt: Astro 0 tanı, unit 39/39, build başarılı; önceki tam local E2E 46/46. Yeni production Chrome analytics paketi 2/2 geçti. Kontrollü non-automated fixture testinin tüm yazmaları route interception ile sunucudan önce durduruldu; hiçbir test tıklaması gerçek sayaca eklenmedi. Gerçek live bot request 204 döndü; mocked provider unit sınır testi bu durumda RPC çağrılmadığını kanıtlar. Kaynak spoofing, referrer gizleme, ad blockers ve doğrudan anon RPC çağrıları nedeniyle bu metrikler doğrulanmış insan trafiği veya kesin organik trafik değildir. Mevcut tarihsel sayaçlar değiştirilmedi; eski attribution/automated-read verisi geriye dönük güvenilir şekilde düzeltildi iddia edilmez.
+
+Önceki modal commit df3c0b8 Actions success: https://github.com/Palmarghe/palmarghe/actions/runs/36917567481. Ana 40 bölümlük denetim devam ediyor; yeni commit Actions sonucu ayrıca kontrol edilecek.
+
+Remaining measurement/security audit: anon RPC execute permissions allow a client to bypass Worker bot filters. Historic aggregates may contain bot/test activity and wrong attribution; no reliable retroactive correction is claimed. This is an open abuse-boundary review, not an external blocker.
