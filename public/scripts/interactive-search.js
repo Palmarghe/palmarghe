@@ -5,6 +5,7 @@
     returnFocus = trigger;
     document.querySelector('.menu-toggle[aria-expanded="true"]')?.click();
     if (!dialog.open) dialog.showModal();
+    document.documentElement.classList.add('search-overlay-open');
     trigger.setAttribute('aria-expanded', 'true');
     dialog.querySelector('input').focus();
     dialog.dispatchEvent(new Event('search-open'));
@@ -12,6 +13,7 @@
   document.querySelectorAll('[data-search-trigger]').forEach(trigger => trigger.addEventListener('click', event => { event.preventDefault(); open(trigger); }));
   dialog?.querySelector('[data-search-close]').addEventListener('click', () => dialog.close());
   dialog?.addEventListener('close', () => {
+    document.documentElement.classList.remove('search-overlay-open');
     returnFocus?.setAttribute('aria-expanded', 'false');
     (returnFocus?.closest('#mobile-nav') ? document.querySelector('.menu-toggle') : returnFocus)?.focus();
   });

@@ -8,6 +8,8 @@ test('live search is interactive, image-led and filterable on mobile', async ({ 
   await page.getByRole('navigation', { name: 'Mobil menü' }).getByRole('link', { name: 'Ara' }).click();
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
+  await expect(page.locator('html')).toHaveClass(/search-overlay-open/);
+  await expect(dialog.getByRole('searchbox')).toHaveCSS('cursor', 'text');
   await dialog.getByRole('searchbox').fill('Lamine Yamal');
   const result = dialog.getByRole('link', { name: /FM26: Lamine Yamal için sağ kanat oyun planı/ });
   await expect(result).toBeVisible({ timeout: 10000 });
@@ -20,6 +22,7 @@ test('live search is interactive, image-led and filterable on mobile', async ({ 
   await expect(dialog.getByRole('link', { name: /FM26: Lamine Yamal/ })).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(dialog).toBeHidden();
+  await expect(page.locator('html')).not.toHaveClass(/search-overlay-open/);
   await context.close();
 });
 
@@ -28,7 +31,9 @@ test('desktop command key, arrow navigation and full search page work', async ({
   await page.keyboard.press('Control+k');
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
+  await expect(page.locator('html')).toHaveClass(/search-overlay-open/);
   const input = dialog.getByRole('searchbox');
+  await expect(input).toHaveCSS('cursor', 'text');
   await input.fill('Lamine Yamal');
   const result = dialog.getByRole('link', { name: /FM26: Lamine Yamal için sağ kanat oyun planı/ });
   await expect(result).toBeVisible({ timeout: 10000 });

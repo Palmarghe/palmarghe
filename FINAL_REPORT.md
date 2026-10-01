@@ -8,6 +8,11 @@
 - Doğrulama: `npm run verify` — Astro 0 tanı, Vitest 14/14 ve production build başarılı. `npm run test:e2e:production -- e2e-production/search.spec.ts --reporter=list` canlı production Chrome/Playwright üzerinde 2/2 geçti. Mobil ekran görüntüsü `test-results/search-mobile-production.png` ile incelendi. Worker dağıtımları `a7704b35-2b8f-4959-a7cf-2c3676deebe7` ve görsel etiket erişilebilirliği düzeltmesi `6bdf87ed-ec4e-40fc-a5a2-2416a8adc04a` production'a dağıtıldı.
 - GitHub Actions `Verify` son mevcut commit `bbb0884` için yeşildi. Bu rapor satırı ve ilişkili uygulama/test dosyaları aşağıdaki commit ile normal `main` push'ına hazırlanmıştır; push sonrası CI sonucu ayrıca güncellenecektir.
 
+### Arama penceresinde fare imleci — 1 Ekim 2026
+
+- Arama penceresi tarayıcının top layer katmanında açıldığında özel Palmarghe imleci pencerenin arkasında kalıp kaybolabiliyordu; sayfanın özel imleç kuralı da açık kaldığından yerel imleç görünmüyordu. Pencere açıldığında yerel fare/yazı imleci geri gelir, kapandığında özel imleç davranışı eski haline döner.
+- Worker `e5d69029-8ea8-47e4-9963-4a3059243d8e` ile production'a dağıtıldı. Canlı Chrome/Playwright mobil ve masaüstü arama E2E 2/2 geçti; arama input'unun odak ve metin imleci, Esc ile kapanma ve sınıf temizliği doğrulandı. `npm run verify` Astro 0 tanı, Vitest 14/14 ve build ile başarılıdır.
+
 ## Latest delivery — 1 October 2026: compact mobile navigation
 
 ### Mobile button and logo follow-up
