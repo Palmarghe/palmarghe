@@ -1,0 +1,93 @@
+(() => {
+  const dialog = document.querySelector('#search-overlay');
+  let returnFocus;
+  const open = trigger => {
+    returnFocus = trigger;
+    document.querySelector('.menu-toggle[aria-expanded="true"]')?.click();
+    if (!dialog.open) dialog.showModal();
+    trigger.setAttribute('aria-expanded', 'true');
+    dialog.querySelector('input').focus();
+    dialog.dispatchEvent(new Event('search-open'));
+  };
+  document.querySelectorAll('[data-search-trigger]').forEach(trigger => trigger.addEventListener('click', event => { event.preventDefault(); open(trigger); }));
+  dialog?.querySelector('[data-search-close]').addEventListener('click', () => dialog.close());
+  dialog?.addEventListener('close', () => {
+    returnFocus?.setAttribute('aria-expanded', 'false');
+    (returnFocus?.closest('#mobile-nav') ? document.querySelector('.menu-toggle') : returnFocus)?.focus();
+  });
+  document.addEventListener('keydown', event => {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k' && !event.target?.matches('input,textarea,[contenteditable="true"]')) {
+      event.preventDefault(); open(document.querySelector('.head-actions [data-search-trigger]'));
+    }
+  });
+  document.querySelectorAll('[data-live-search]').forEach(root => {
+    const input = root.querySelector('input[name="q"]'), results = root.querySelector('[data-search-results]'), status = root.querySelector('[data-search-status]');
+    const form = root.querySelector('form'), select = root.querySelector('select[name="type"]');
+    const english = root.dataset.locale === 'en';
+    const labels = english ? {article:'Article',project:'Project',fm_mod:'FM Mod',gallery:'Gallery',lab_entry:'Lab'} : {article:'Yazı',project:'Proje',fm_mod:'FM Mod',gallery:'Galeri',lab_entry:'Lab'};
+    let type = select?.value || '', timer, controller, version = 0, selected = -1;
+    status.hidden = false; results.hidden = false;
+    root.querySelectorAll('[data-search-fallback]').forEach(el => { el.hidden = true; });
+    const appendText = (parent, text, term) => {
+      const value = String(text || ''), language = english ? 'en' : 'tr';
+      const start = term ? value.toLocaleLowerCase(language).indexOf(term.toLocaleLowerCase(language)) : -1;
+      if (start < 0) { parent.textContent = value; return; }
+      parent.append(value.slice(0,start));
+      const mark = document.createElement('mark'); mark.textContent = value.slice(start,start + term.length);
+      parent.append(mark,value.slice(start + term.length));
+    };
+    const render = (items,q) => {
+      selected = -1; results.replaceChildren();
+      for (const item of items) {
+        const link = document.createElement('a'); link.className = 'instant-search-result'; link.dataset.searchResult = '';
+        link.href = `${english ? '/en/' : '/'}${String(item.slug).split('/').map(encodeURIComponent).join('/')}/`;
+        const image = document.createElement('img');
+        const source = item.cover_media_id ? `/api/media/${encodeURIComponent(item.cover_media_id)}/` : item.cover_url;
+        try { const url = new URL(source || '/visuals/og-default.webp',location.origin); if (url.origin === location.origin || url.protocol === 'https:') image.src = url.href; } catch {}
+        image.alt = ''; image.width = 104; image.height = 78; image.loading = 'lazy';
+        const copy = document.createElement('div'), meta = document.createElement('span'), title = document.createElement('strong'), excerpt = document.createElement('small');
+        meta.className = 'eyebrow'; meta.textContent = labels[item.type] || item.type;
+        appendText(title,item.title,q); appendText(excerpt,item.excerpt,q);
+        copy.append(meta,title,excerpt); link.append(image,copy); results.append(link);
+      }
+      status.textContent = items.length ? (q ? `${items.length} ${english ? 'results' : 'sonuç'}` : (english ? 'Latest publications' : 'Son yayınlar')) : (english ? 'No results. Try another phrase or type.' : 'Sonuç yok. Başka bir kelime veya yayın türü dene.');
+      if (!items.length) { const empty = document.createElement('a'); empty.className = 'search-empty-link'; empty.href = english ? '/en/archive/' : '/archive/'; empty.textContent = english ? 'Explore the archive →' : 'Arşivi keşfet →'; results.append(empty); }
+    };
+    const search = (immediate = false) => {
+      clearTimeout(timer); controller?.abort(); const current = ++version, q = input.value.trim(); selected = -1;
+      results.setAttribute('aria-busy','true');
+      if (q.length === 1) { results.replaceChildren(); results.removeAttribute('aria-busy'); status.textContent = english ? 'Enter at least two characters.' : 'En az iki karakter yaz.'; return; }
+      status.textContent = english ? 'Searching…' : 'Aranıyor…';
+      timer = setTimeout(async () => {
+        const active = new AbortController(); controller = active;
+        try {
+          const response = await fetch(`/api/search/?locale=${english ? 'en' : 'tr'}&q=${encodeURIComponent(q)}&type=${encodeURIComponent(type)}`,{signal:active.signal});
+          if (!response.ok) throw new Error('Unavailable');
+          const payload = await response.json(); if (current !== version) return;
+          render(payload.results || [],q);
+          const full = root.querySelector('a.text-link');
+          if (full) full.href = `${english ? '/en' : ''}/search/?q=${encodeURIComponent(q)}&type=${encodeURIComponent(type)}`;
+          if (root !== dialog) { const url = new URL(location.href); q ? url.searchParams.set('q',q) : url.searchParams.delete('q'); type ? url.searchParams.set('type',type) : url.searchParams.delete('type'); history.replaceState(null,'',url); }
+        } catch { if (!active.signal.aborted && current === version) { results.replaceChildren(); status.textContent = english ? 'Search is unavailable. Please try again.' : 'Aramaya ulaşılamadı. Yeniden dene.'; } }
+        finally { if (current === version) results.removeAttribute('aria-busy'); }
+      },immediate ? 0 : 220);
+    };
+    input.addEventListener('input',() => search());
+    form.addEventListener('submit',event => { event.preventDefault(); search(true); });
+    select?.addEventListener('change',() => { type = select.value; search(true); });
+    root.querySelectorAll('[data-search-type]').forEach(button => button.addEventListener('click',() => {
+      type = button.dataset.searchType;
+      root.querySelectorAll('[data-search-type]').forEach(b => b.setAttribute('aria-pressed',String(b === button)));
+      search(true);
+    }));
+    root.addEventListener('keydown',event => {
+      if (!['ArrowDown','ArrowUp'].includes(event.key) || !(event.target === input || event.target.closest('[data-search-result]'))) return;
+      const links = [...results.querySelectorAll('[data-search-result]')]; if (!links.length) return;
+      event.preventDefault();
+      if (event.key === 'ArrowUp' && selected <= 0) { selected = -1; input.focus(); return; }
+      selected = (selected + (event.key === 'ArrowDown' ? 1 : -1) + links.length) % links.length; links[selected].focus();
+    });
+    if (root === dialog) { root.addEventListener('search-open',() => search(true)); root.addEventListener('close',() => { clearTimeout(timer); controller?.abort(); version++; }); }
+    else search(true);
+  });
+})();

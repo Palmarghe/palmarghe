@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 740" role="img" aria-labelledby="title desc">
+<title id="title">Lamine Yamal için sağ kanat yerleşimi</title><desc id="desc">Örnek taktik şeması: sağ çizgide Yamal, iç koridorda sekiz numara ve geride destek beki. Yamal içeri kat ederken sekiz numara öne hareket eder.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="none" stroke="#c4b5fd" stroke-width="1.5"/></marker></defs>
+<rect width="1200" height="740" rx="24" fill="#141417"/>
+<text x="58" y="68" fill="#b6a2df" font-family="Arial" font-size="17" letter-spacing="4">PALMARGHE / TAKTİK DEFTERİ</text>
+<text x="58" y="118" fill="#f3f1ea" font-family="Arial" font-size="34">Sağ çizgiyi aç. İç koridoru paylaş.</text>
+<g transform="translate(58 160)" stroke="#64786c" stroke-width="2" fill="none"><rect width="720" height="520" rx="8" fill="#1e3028"/><path d="M0 260H720M360 0V75M0 0H210V165H510V0M280 0V65H440V0"/><circle cx="360" cy="260" r="68"/><path d="M0 65H720M0 130H720M0 195H720M0 325H720M0 390H720M0 455H720" stroke="#ffffff08" stroke-width="64"/>
+<rect x="530" y="80" width="150" height="370" rx="8" fill="#8b5cf615" stroke="#a78bfa" stroke-dasharray="8 8"/>
+<path d="M640 220Q620 130 490 95" stroke="#c4b5fd" stroke-width="4" marker-end="url(#arrow)"/>
+<path d="M480 315L475 180" stroke="#c4b5fd" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M630 415L640 285" stroke="#889b90" stroke-width="3" stroke-dasharray="9 9" marker-end="url(#arrow)"/>
+<g fill="#8b5cf6" stroke="#e9ddff"><circle cx="640" cy="220" r="28"/><circle cx="480" cy="315" r="25" fill="#33483c"/><circle cx="630" cy="415" r="25" fill="#33483c"/><circle cx="355" cy="95" r="25" fill="#33483c"/></g>
+<g fill="#fff" stroke="none" font-family="Arial" font-size="21" text-anchor="middle"><text x="640" y="228">Y</text><text x="480" y="323">8</text><text x="630" y="423">B</text><text x="355" y="103">9</text></g></g>
+<g font-family="Arial" fill="#f3f1ea"><text x="840" y="213" font-size="21">01 / YAMAL</text><text x="840" y="250" font-size="18" fill="#aaa7b3">Çizgide top alır.</text><text x="840" y="280" font-size="18" fill="#aaa7b3">İçeri kat için alan arar.</text><text x="840" y="355" font-size="21">02 / SEKİZ NUMARA</text><text x="840" y="392" font-size="18" fill="#aaa7b3">Aynı alanı doldurmaz.</text><text x="840" y="422" font-size="18" fill="#aaa7b3">Koşusuyla seçeneği artırır.</text><text x="840" y="497" font-size="21">03 / DESTEK BEKİ</text><text x="840" y="534" font-size="18" fill="#aaa7b3">Pas istasyonu olur.</text><text x="840" y="564" font-size="18" fill="#aaa7b3">Geçiş güvenliğini korur.</text><text x="840" y="652" font-size="14" fill="#b6a2df">ÖRNEK KURGU / OYUN EKRAN GÖRÜNTÜSÜ DEĞİL</text></g></svg>

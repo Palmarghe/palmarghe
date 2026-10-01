@@ -1,5 +1,13 @@
 # Palmarghe V1 Final Report
 
+## Güncel arama ve FM26 editoryal yayını — 1 Ekim 2026
+
+- Public arama masaüstü ve mobilde aynı temalı, anlık sonuç veren bir arayüze dönüştürüldü. Tür filtresi, görsel sonuç kartları, eşleşme vurgusu, klavye ile gezinme, `Ctrl/Cmd+K`, mobil menüden arama ve tüm sonuçlar sayfası çalışıyor. Arama metni DOM'a güvenli metin olarak eklenir; sonuç isteği iptal/eski yanıt denetimi ve loading, hata, boş sonuç durumları içerir. İngilizce/boş sorgular ve içerik türü filtresi API tarafından işlenir.
+- Production Supabase'e, arama ve yayın akışını denemek için indeks dışı bir FM26 örnek yazısı eklendi: `/fm/lamine-yamal-fm26/`. Üretim testinde mobil ve masaüstü araması yazıyı buldu; karttan yazıya geçiş, `noindex` durumu ve iki görselin HTTP üzerinden yüklenmesi doğrulandı. Yayın içeriği Studio'dan düzenlenebilir/arşivlenebilir.
+- Oyuncu fotoğrafı Biso'nun Wikimedia Commons'taki gerçek fotoğrafıdır ve makalede fotoğrafçı/lisans künyesi görünür. Özgün SVG/PNG taktik şeması açıklayıcı bir editoryal illüstrasyon olarak etiketlenmiştir. Oyuncunun doğrulanmamış FM puanları, bonservis bedeli veya oynanmış simülasyon sonucu uydurulmamıştır. Görsel kaynak ve yeniden üretilebilir yapılandırılmış içerik `docs/editorial-assets.md`, `docs/fm26-example-document.json`, `docs/fm26-example-publication.sql` ve `scripts/prepare-fm26-example.mjs` içinde kayıtlıdır.
+- Doğrulama: `npm run verify` — Astro 0 tanı, Vitest 14/14 ve production build başarılı. `npm run test:e2e:production -- e2e-production/search.spec.ts --reporter=list` canlı production Chrome/Playwright üzerinde 2/2 geçti. Mobil ekran görüntüsü `test-results/search-mobile-production.png` ile incelendi. Worker dağıtımları `a7704b35-2b8f-4959-a7cf-2c3676deebe7` ve görsel etiket erişilebilirliği düzeltmesi `6bdf87ed-ec4e-40fc-a5a2-2416a8adc04a` production'a dağıtıldı.
+- GitHub Actions `Verify` son mevcut commit `bbb0884` için yeşildi. Bu rapor satırı ve ilişkili uygulama/test dosyaları aşağıdaki commit ile normal `main` push'ına hazırlanmıştır; push sonrası CI sonucu ayrıca güncellenecektir.
+
 ## Latest delivery — 1 October 2026: compact mobile navigation
 
 ### Mobile button and logo follow-up
