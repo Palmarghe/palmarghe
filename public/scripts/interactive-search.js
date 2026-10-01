@@ -46,6 +46,7 @@
         const image = document.createElement('img');
         const source = item.cover_media_id ? `/api/media/${encodeURIComponent(item.cover_media_id)}/` : item.cover_url;
         try { const url = new URL(source || '/visuals/og-default.webp',location.origin); if (url.origin === location.origin || url.protocol === 'https:') image.src = url.href; } catch {}
+        if (typeof item.cover_srcset === 'string') { image.srcset = item.cover_srcset; image.sizes = '(max-width: 600px) 64px, 104px'; }
         image.alt = ''; image.width = 104; image.height = 78; image.loading = 'lazy';
         const copy = document.createElement('div'), meta = document.createElement('span'), title = document.createElement('strong'), excerpt = document.createElement('small');
         meta.className = 'eyebrow'; meta.textContent = labels[item.type] || item.type;

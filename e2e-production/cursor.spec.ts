@@ -42,11 +42,18 @@ test('Palmarghe pointer has semantic states across reading, links, controls and 
   await page.mouse.click(point.x, point.y);
   await expect(page.locator('#search-overlay')).toBeVisible();
   await expect(page.locator('html')).toHaveClass(/search-overlay-open/);
-  await expect(page.locator('#search-overlay input[name="q"]')).toHaveCSS('cursor', 'text');
-  const underlyingPointer = await page.evaluate(({ x, y }) => getComputedStyle(document.elementFromPoint(x, y)!).cursor, point);
-  expect(underlyingPointer).not.toBe('none');
+  await expect.poll(() => cursor.evaluate(element => element.parentElement?.id)).toBe('search-overlay');
+  const closeButton = page.locator('#search-overlay [data-search-close]');
+  await closeButton.hover();
+  await expect(cursor).toHaveAttribute('data-state', 'button');
+  await expect(cursor).toHaveCSS('opacity', '1');
+  const input = page.locator('#search-overlay input[name="q"]');
+  await input.hover();
+  await expect(input).toHaveCSS('cursor', 'text');
+  await expect(input).toHaveCSS('caret-color', 'rgb(139, 92, 246)');
   await page.keyboard.press('Escape');
   await expect(page.locator('html')).not.toHaveClass(/search-overlay-open/);
+  await expect.poll(() => cursor.evaluate(element => element.parentElement === document.body)).toBe(true);
 });
 
 test('cursor adapts to theme, device scale, reduced motion and touch input', async ({ browser }) => {
@@ -72,6 +79,7 @@ test('cursor adapts to theme, device scale, reduced motion and touch input', asy
   const reducedPage = await reduced.newPage();
   await reducedPage.goto('/');
   await expect(reducedPage.locator('[data-brand-cursor]')).toHaveCount(0);
+  await expect(reducedPage.locator('html')).toHaveCSS('scroll-behavior', 'auto');
   await reduced.close();
 
   const touch = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true });

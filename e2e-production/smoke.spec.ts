@@ -24,12 +24,36 @@ test('homepage serves optimized WebP music covers', async ({ page, request }) =>
   const sources = await musicCovers.evaluateAll((images) => [...new Set(images.map((image) => (image as HTMLImageElement).getAttribute('src') ?? ''))]);
   expect(sources.length).toBeGreaterThan(0);
   expect(sources.every((source) => source.endsWith('.webp'))).toBe(true);
+  const srcsets = await musicCovers.evaluateAll((images) => images.map((image) => (image as HTMLImageElement).srcset));
+  expect(srcsets.every((srcset) => /480w/.test(srcset) && /960w/.test(srcset) && /1440w/.test(srcset))).toBe(true);
   for (const source of sources) {
     const response = await request.get(source);
     expect(response.status(), source).toBe(200);
     expect(response.headers()['content-type']).toContain('image/webp');
     expect(Number(response.headers()['content-length'])).toBeLessThan(300_000);
   }
+  for (const stem of ['anatolian-sub-ritual', 'anatolian-velocity', 'kara-yol', 'sevenfold-thunder']) {
+    for (const width of [480, 960]) {
+      const source = `/visuals/music/${stem}-${width}.webp`;
+      const response = await request.get(source);
+      expect(response.status(), source).toBe(200);
+      expect(response.headers()['content-type']).toContain('image/webp');
+      expect(Number(response.headers()['content-length'])).toBeLessThan(120_000);
+    }
+  }
+});
+
+test('homepage identifies the Palmarghe publisher and website in structured data', async ({ page }) => {
+  for (const route of ['/', '/en/']) {
+    await page.goto(route);
+    const schemas = await page.locator('script[type="application/ld+json"]').evaluateAll((scripts) => scripts.map((script) => JSON.parse(script.textContent ?? '{}')));
+    const graph = schemas.flatMap((schema) => Array.isArray(schema['@graph']) ? schema['@graph'] : [schema]);
+    expect(graph.find((schema) => schema['@type'] === 'Organization')).toMatchObject({ '@id': 'https://palmarghe.com/#organization', name: 'Palmarghe' });
+    expect(graph.find((schema) => schema['@type'] === 'WebSite')).toMatchObject({ '@id': 'https://palmarghe.com/#website', inLanguage: ['tr', 'en'] });
+  }
+  await page.goto('/fm/lamine-yamal-fm26/');
+  const article = await page.locator('script[type="application/ld+json"]').evaluate((script) => JSON.parse(script.textContent ?? '{}'));
+  expect(article).toMatchObject({ '@type': 'Article', headline: 'FM26: Lamine Yamal için sağ kanat oyun planı', url: 'https://palmarghe.com/fm/lamine-yamal-fm26/' });
 });
 
 test('production privacy and security response headers', async ({ request }) => {
@@ -48,13 +72,16 @@ test('production privacy and security response headers', async ({ request }) => 
   expect(preview.headers()['x-robots-tag']).toContain('noindex');
 });
 
-test('live mobile navigation and six viewport widths', async ({ page }) => {
-  for (const width of [360,390,768,1024,1440,1920]) {
+test('live layouts fit all target widths and key form routes', async ({ page }) => {
+  test.setTimeout(90000);
+  for (const width of [320,360,375,390,430,768,1024,1280,1440,1920]) {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto('/');
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `home ${width}`).toBe(true);
-    await page.goto('/ai/');
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `category ${width}`).toBe(true);
+    const routes = ['/', '/ai/'];
+    if ([320,390,768,1440].includes(width)) routes.push('/archive/', '/search/', '/contact/', '/account/');
+    for (const route of routes) {
+      await page.goto(route, { waitUntil: 'domcontentloaded' });
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${route} at ${width}px`).toBe(true);
+    }
   }
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');

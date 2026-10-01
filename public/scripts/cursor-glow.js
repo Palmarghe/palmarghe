@@ -12,6 +12,14 @@
   document.body.append(cursor);
   document.documentElement.classList.add('has-brand-cursor');
 
+  const searchDialog = document.querySelector('#search-overlay');
+  const syncCursorLayer = () => {
+    if (searchDialog?.open) searchDialog.append(cursor);
+    else document.body.append(cursor);
+  };
+  new MutationObserver(syncCursorLayer).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  searchDialog?.addEventListener('close', syncCursorLayer);
+
   let frame = 0;
   let x = -80;
   let y = -80;

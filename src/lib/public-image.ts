@@ -5,6 +5,13 @@ const optimizedImageVariants: Record<string, string> = {
   '/visuals/music/sevenfold-thunder.png': '/visuals/music/sevenfold-thunder.webp',
 };
 
+const responsiveImageSets: Record<string, string> = {
+  '/visuals/music/anatolian-sub-ritual.png': '/visuals/music/anatolian-sub-ritual',
+  '/visuals/music/anatolian-velocity.png': '/visuals/music/anatolian-velocity',
+  '/visuals/music/kara-yol.png': '/visuals/music/kara-yol',
+  '/visuals/music/sevenfold-thunder.png': '/visuals/music/sevenfold-thunder',
+};
+
 /** Point public music artwork at its visually equivalent, smaller WebP rendition. */
 export function publicImageUrl(value: string | null | undefined): string | undefined {
   if (!value) return undefined;
@@ -21,5 +28,20 @@ export function publicImageUrl(value: string | null | undefined): string | undef
     return source.href;
   } catch {
     return value;
+  }
+}
+
+/** Return responsive candidates only for local assets with generated renditions. */
+export function publicImageSrcSet(value: string | null | undefined): string | undefined {
+  if (!value) return undefined;
+
+  try {
+    const source = new URL(value, 'https://palmarghe.com');
+    if (source.origin !== 'https://palmarghe.com') return undefined;
+    const base = responsiveImageSets[source.pathname];
+    if (!base) return undefined;
+    return `${base}-480.webp 480w, ${base}-960.webp 960w, ${base}.webp 1440w`;
+  } catch {
+    return undefined;
   }
 }

@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { supabase } from '../../lib/supabase';
-import { publicImageUrl } from '../../lib/public-image';
+import { publicImageSrcSet, publicImageUrl } from '../../lib/public-image';
 
 export const GET: APIRoute = async ({ request, cookies }) => {
   const url = new URL(request.url);
@@ -16,5 +16,5 @@ export const GET: APIRoute = async ({ request, cookies }) => {
   if (types.includes(type)) search = search.eq('type', type);
   const { data, error } = await search;
   if (error) return Response.json({ results: [] }, { status: 503, headers: { 'cache-control': 'no-store' } });
-  return Response.json({ results: (data ?? []).map((entry: { cover_url: string | null; [key: string]: unknown }) => ({ ...entry, cover_url: publicImageUrl(entry.cover_url) ?? null })) }, { headers: { 'cache-control': 'no-store' } });
+  return Response.json({ results: (data ?? []).map((entry: { cover_url: string | null; [key: string]: unknown }) => ({ ...entry, cover_url: publicImageUrl(entry.cover_url) ?? null, cover_srcset: publicImageSrcSet(entry.cover_url) })) }, { headers: { 'cache-control': 'no-store' } });
 };

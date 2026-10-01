@@ -40,6 +40,26 @@ const customNav: { label: string; href: string }[] = dbNav ?? [];
 const accent = ({ violet: '#8b5cf6', blue: '#60a5fa', amber: '#fbbf24' } as Record<string,string>)[appearanceRow?.value?.accent] ?? '#8b5cf6';
 const radius = appearanceRow?.value?.radius === 'subtle' ? '4px' : '0px';
 const socialLinks = socialPlatforms.map((platform) => ({ ...platform, url: String(socialRow?.value?.[platform.key] ?? '') })).filter(({url}) => safeExternalUrl(url));
+const pageStructuredData = structuredData ?? (['/', '/en'].includes(activePath) ? {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': 'https://palmarghe.com/#organization',
+      name: 'Palmarghe',
+      url: 'https://palmarghe.com/',
+      ...(socialLinks.length ? { sameAs: socialLinks.map(({url}) => url) } : {}),
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://palmarghe.com/#website',
+      name: 'Palmarghe',
+      url: 'https://palmarghe.com/',
+      inLanguage: ['tr', 'en'],
+      publisher: { '@id': 'https://palmarghe.com/#organization' },
+    },
+  ],
+} : undefined);
 const advertising = advertisingRow?.value ?? {};
 const adsEnabled = advertising?.enabled === true && /^ca-pub-\d{10,20}$/.test(String(advertising?.publisher_id ?? ''));
 ---
@@ -69,7 +89,7 @@ const adsEnabled = advertising?.enabled === true && /^ca-pub-\d{10,20}$/.test(St
     <meta name="twitter:description" content={description ?? t.descriptor} />
     <meta name="twitter:image" content={socialImage} />
     <meta name="twitter:image:alt" content={ogAlt ?? title ?? 'Palmarghe'} />
-    {structuredData && <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData).replace(/</g,'\\u003c')}></script>}
+    {pageStructuredData && <script is:inline type="application/ld+json" set:html={JSON.stringify(pageStructuredData).replace(/</g,'\\u003c')}></script>}
     <noscript><style>@media(max-width:900px){.mobile-menu #mobile-nav{top:calc(100% + 10px);right:0;left:auto;display:grid;min-width:min(280px,calc(100vw - 32px));max-height:calc(100dvh - 110px);overflow:auto;opacity:1;visibility:visible;pointer-events:auto;transform:none;box-shadow:0 22px 50px rgba(0,0,0,.35)}}</style></noscript>
     {adsEnabled && <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${advertising.publisher_id}`} crossorigin="anonymous"></script>}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
