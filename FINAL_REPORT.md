@@ -444,4 +444,3 @@ pm run verify Astro 0 tanı, Vitest 14/14 ve production build ile başarılı; n
 - Astro 0 tanı, Vitest 14/14, production build ve navigation E2E 11/11 başarılı. Canlı Chrome’da YouTube bağlantısı boş görünür metin ve SVG ile doğrulandı; açık tema değişimi ve taşma kontrolü geçti.
 
 Final live pointer matrix: Chrome 5/5, Edge 5/5, WebKit 5/5. Both themes retain visible search controls and native text cursor/caret. Screenshot inspection confirmed the pointer on the search close control. Full production run passed 36 cases; one layout case hit a test-artifact directory collision during parallel runs and passed 1/1 when rerun alone. All 37 production cases therefore passed across the full run and isolated rerun. No product assertion failed in that run.
-

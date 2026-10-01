@@ -122,4 +122,3 @@ Studio pageview totals exclude ad clicks and Studio paths. Daily/path visits are
 Verification: Astro 0 diagnostics, unit 46/46, build successful. Full local suite before the pointer follow-up 47/47; added local pointer regression 1/1. Live Chrome search/cursor 8/9 initially, with one obsolete top-layer expectation; the corrected semantic test passed on rerun. Analytics, semantic cursor, security headers and console rerun passed 5/5. The other eight initial search/cursor cases passed, including mobile search, keyboard navigation, network recovery, modal focus/scroll, device/theme and rendered pointer tracking. Previous commit 9870bf0 Actions succeeded: https://github.com/Palmarghe/palmarghe/actions/runs/36918416447. Current CI is checked after push. The broader audit remains active.
 
 Earlier deployment and test counts below are historical evidence, not the current production state.
-

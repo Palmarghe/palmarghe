@@ -55,3 +55,5 @@ Verification: Astro 0 diagnostics, unit 46/46, build successful. Full local suit
 
 Earlier deployment and test counts below are historical evidence, not the current production state.
 
+
+CI evidence for implementation commit 6cd8261: https://github.com/Palmarghe/palmarghe/actions/runs/36922353594 (status checked separately after push).
