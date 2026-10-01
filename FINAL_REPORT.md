@@ -356,3 +356,8 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - Yerel doğrulama: 
 pm run verify Astro 0 tanı, Vitest 14/14 ve production build ile başarılı; navigation Playwright paketi 11/11 geçti. Bu paket public/Studio yatay taşma, açık tema, klasik editör, reklam kısayolu, ana sayfa/studio erişimi ve yeni imleç davranışını kapsar.
 
+
+### Araç zinciri güvenlik stabilizasyonu — 1 Ekim 2026
+
+- Cloudflare Vite eklentisi, Wrangler, Miniflare, Workerd ve undici kilit sürümleri güvenlik düzeltmeleri içeren sürümlere yükseltildi. `npm audit --omit=dev --audit-level=high` sonucu 0 vulnerability'dir.
+- Güncelleme sonrası `npm run verify` Astro 0 tanı, Vitest 14/14 ve production build ile başarılı; yerel navigation Playwright paketi 11/11 geçti.
