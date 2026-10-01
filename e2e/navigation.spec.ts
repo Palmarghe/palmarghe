@@ -15,6 +15,8 @@ test('editorial imagery loads and mobile menu remains keyboard accessible', asyn
   await menu.click();
   await expect(page.getByRole('button', { name: 'Menüyü kapat' })).toHaveAttribute('aria-expanded', 'true');
   await expect(page.getByRole('navigation', { name: 'Mobil menü' })).toBeVisible();
+  const panel = await page.locator('#mobile-nav').boundingBox();
+  expect(panel?.height).toBeLessThan(350);
   await page.keyboard.press('Escape');
   await expect(page.getByRole('button', { name: 'Menüyü aç' })).toHaveAttribute('aria-expanded', 'false');
   await expect(page.getByRole('navigation', { name: 'Mobil menü' })).toBeHidden();
@@ -72,6 +74,10 @@ test('six public widths and Studio dashboard have no horizontal overflow', async
   await page.getByRole('button', { name: 'Giriş' }).click();
   await expect(page.getByRole('heading', { name: 'Genel bakış' })).toBeVisible();
   await expect(page.getByRole('link', { name: /İçerik oluştur/ })).toBeVisible();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.getByLabel('Studio bölümü').selectOption({ label: 'Reklam alanları' });
+  await expect(page).toHaveURL(/section=advertising/);
+  await expect(page.getByLabel('Studio bölümü')).toBeVisible();
   for (const width of [360,390,768,1024,1440,1920]) {
     await page.setViewportSize({ width, height: 900 });
     const overflow = await page.evaluate(() => ({ page: document.documentElement.scrollWidth, viewport: window.innerWidth, elements: [...document.querySelectorAll('*')].filter((element) => element.getBoundingClientRect().right > window.innerWidth + 1).slice(0,6).map((element) => `${element.tagName}.${element.className}`) }));
@@ -170,4 +176,16 @@ test('Studio dashboard reports publication quality and Studio previews update be
   await page.goto('/studio/?section=advertising');
   await page.locator('input[name="header_title"]').fill('Yerel reklam önizlemesi');
   await expect(page.locator('[data-ad-preview]')).toContainText('Yerel reklam önizlemesi');
+});
+
+test('mobile portal is exclusive to touch devices and closes accessibly', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const page = await context.newPage();
+  await page.goto('/');
+  const brand = page.locator('.site-header .brand');
+  for (let tap = 0; tap < 5; tap++) await brand.tap();
+  await expect(page.locator('.mobile-secret')).toBeVisible();
+  await page.getByRole('button', { name: 'Dünyaya dön' }).click();
+  await expect(page.locator('.mobile-secret')).toBeHidden();
+  await context.close();
 });

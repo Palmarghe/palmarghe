@@ -366,7 +366,10 @@ test('social settings and translated content alternate', async ({ page }) => {
   await page.locator('input[name="github"]').fill('https://github.com/Palmarghe');
   await page.getByRole('button', { name: 'Kaydet', exact: true }).click();
   await page.goto('/');
-  await expect(page.getByRole('navigation', { name: 'Footer' }).getByRole('link', { name: 'github' })).toHaveAttribute('rel','noopener noreferrer');
+  const socialLink = page.getByRole('navigation', { name: 'Sosyal medya' }).getByRole('link', { name: 'GitHub', exact: true });
+  await expect(socialLink).toHaveAttribute('rel','noopener noreferrer');
+  await expect(socialLink.locator('svg')).toHaveCount(1);
+  await expect(socialLink).toHaveText('');
   const group = crypto.randomUUID();
   await page.goto('/studio/?section=content');
   await expect(page.getByText('Çeviri grup UUID')).toHaveCount(0);

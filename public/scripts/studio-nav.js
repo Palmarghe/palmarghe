@@ -9,6 +9,25 @@
   });
   const nav = document.querySelector('.admin-side nav');
   if (!nav) return;
+  const switcher = document.createElement('label');
+  switcher.className = 'studio-mobile-switcher';
+  switcher.append(document.createTextNode('Studio bölümü'));
+  const select = document.createElement('select');
+  nav.querySelectorAll('.studio-nav-group').forEach((group) => {
+    const options = document.createElement('optgroup');
+    options.label = group.querySelector(':scope > span')?.textContent ?? '';
+    group.querySelectorAll('a').forEach((link) => {
+      const option = document.createElement('option');
+      option.value = link.href;
+      option.textContent = link.textContent;
+      option.selected = link.getAttribute('aria-current') === 'page';
+      options.append(option);
+    });
+    select.append(options);
+  });
+  select.addEventListener('change', () => { location.href = select.value; });
+  switcher.append(select);
+  nav.after(switcher);
   const groups = [...nav.querySelectorAll('.studio-nav-group')];
   const compact = () => matchMedia('(min-width: 901px)').matches;
   groups.forEach((group) => {

@@ -475,3 +475,37 @@ body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-p
 .footer-social a:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-2px);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
 .footer-social svg{display:block;width:20px;height:20px}
 @media(max-width:600px){.footer-bottom .footer-social{margin-left:0;justify-content:flex-start}}
+
+/* Compact navigation: one consistent panel instead of a long stack. */
+@media(max-width:900px){
+ .mobile-menu{position:static}
+ .site-header{position:relative}
+ .mobile-menu #mobile-nav{position:absolute;left:0;right:0;top:calc(100% + 8px);width:100%;min-width:0;max-height:calc(100dvh - 110px);overflow:auto;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:0 18px 50px #0003;z-index:30}
+ .mobile-nav-sections{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem}
+ .mobile-menu #mobile-nav .mobile-nav-sections a{min-height:48px;padding:.65rem .75rem;border:1px solid var(--border);border-radius:6px;font-size:.88rem}
+ .mobile-nav-tools{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.4rem;padding-top:.8rem;margin-top:.8rem;border-top:1px solid var(--border)}
+ .mobile-menu #mobile-nav .mobile-nav-tools a,.mobile-menu #mobile-nav .theme-toggle{display:flex;justify-content:center;align-items:center;min-height:44px;padding:.4rem;margin:0;font-size:.8rem;border:1px solid var(--border);border-radius:6px}
+ .mobile-menu #mobile-nav .theme-toggle{font-size:0}
+ .mobile-menu #mobile-nav .theme-toggle::after{content:'◐';font-size:1.25rem}
+ .admin-side{display:grid;grid-template-columns:1fr auto;gap:.65rem;align-items:center;padding:1rem}
+ .admin-side .brand{grid-column:1;grid-row:1}
+ .admin-side .studio-theme-toggle{grid-column:2;grid-row:1;margin:0;width:44px;justify-content:center}
+ .admin-side .studio-theme-toggle::after,body[data-theme="light"] .admin-side .studio-theme-toggle::after{content:none}
+ .admin-side .studio-home-link{grid-column:1/-1;margin:0;min-height:44px}
+ .admin-side:has(.studio-mobile-switcher) nav{display:none}
+ .studio-mobile-switcher{grid-column:1/-1;display:grid;gap:.35rem;color:var(--muted);font-size:.8rem}
+ .studio-mobile-switcher select{width:100%;max-width:100%;color:var(--text)}
+ .admin-main{min-width:0;padding:1.5rem 1rem}
+ .admin-table{display:block;overflow-x:auto;max-width:100%}
+ .editor-action-bar{flex-wrap:wrap}
+ .footer-bottom>nav{gap:.8rem}
+ .footer-bottom .footer-social{gap:.45rem}
+}
+@media(min-width:901px){.studio-mobile-switcher{display:none}.site-header{gap:clamp(1rem,2vw,2rem)}.desktop-nav{gap:clamp(.7rem,1.4vw,1.5rem);align-items:center}.desktop-nav a{white-space:nowrap}.head-actions{gap:.8rem;padding-left:1rem;border-left:1px solid var(--border)}}
+.mobile-secret{width:min(90vw,380px);padding:2rem;border:1px solid var(--border);border-radius:18px;background:var(--surface);color:var(--text);text-align:center;overflow:hidden}
+.mobile-secret::backdrop{background:#090610b3;backdrop-filter:blur(8px)}
+.mobile-secret h2{font-size:1.7rem;margin:1rem 0 .6rem}
+.mobile-secret p{color:var(--muted);font-size:.9rem}
+.secret-portal{height:130px;display:grid;place-items:center}
+.secret-portal span{display:block;width:80px;height:100px;border:3px solid var(--accent);border-radius:50% 50% 5px 5px;box-shadow:0 0 30px color-mix(in srgb,var(--accent) 45%,transparent),inset 0 0 25px color-mix(in srgb,var(--accent) 25%,transparent);transform:perspective(300px) rotateY(-18deg);animation:portal-breathe 3s ease-in-out infinite}
+@keyframes portal-breathe{50%{transform:perspective(300px) rotateY(18deg);box-shadow:0 0 55px color-mix(in srgb,var(--accent) 55%,transparent)}}

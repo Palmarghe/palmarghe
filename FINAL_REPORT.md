@@ -1,5 +1,14 @@
 # Palmarghe V1 Final Report
 
+## Latest delivery — 1 October 2026: compact mobile navigation
+
+- Public navigation now groups categories into two columns and search/language/account/theme into a single compact tools row. Desktop links use responsive spacing and a separate utility area. Mobile panel height is tested below 350 px.
+- Mobile Studio uses a native grouped section selector instead of a horizontally scrolling navigation strip. Advertising navigation was verified in the authenticated production Chrome session. Tables scroll within their container, editor actions wrap, and the mobile theme control uses a single icon. The original navigation remains available if JavaScript is unavailable.
+- The homepage logo reveals a themed “pocket portal” after five rapid taps on a touch phone. It is exclusive to mobile touch devices, restores focus when closed, supports both themes and respects reduced motion.
+- Previous social SVG icons remain in the footer; the stale social E2E selector was corrected to validate the new accessible icon navigation, safe link attributes and absence of visible names.
+- Validation: Astro check has zero diagnostics, Vitest 14/14 and build passed. Navigation E2E 12/12 passed; full local suite passed 41 other cases and the corrected social case passed separately. Production Chrome E2E 13/13 passed, including axe, console/security checks, six viewport sizes, mobile navigation and desktop exclusion of the secret portal. Live Chrome also verified the compact public panel and authenticated Studio section switching.
+- Earlier sections below are historical delivery records; their Worker IDs and publication populations describe those dates.
+
 ## Status — 21 September 2026
 
 **FAZ 1 applicable scope complete; only external or user-dependent gates remain.** The public site and Studio run on Cloudflare Workers with Supabase production. The existing Astro architecture and local/GitHub history were preserved. FAZ 2 deep review may proceed. This status does not claim that the external gates below have passed.
