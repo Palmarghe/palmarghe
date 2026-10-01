@@ -1,6 +1,6 @@
 import { test,expect } from '@playwright/test';
 
-const loginStudio=async(page:import('@playwright/test').Page)=>{ await page.goto('/studio/'); await page.getByRole('textbox',{name:'Email'}).fill('admin@example.test'); await page.locator('input[name="password"]').fill('LocalTest123!'); await page.getByRole('button',{name:'Giriş'}).click(); };
+const loginStudio=async(page:import('@playwright/test').Page)=>{ await page.goto('/studio/'); await page.getByRole('textbox',{name:'Email'}).fill('admin@example.test'); await page.locator('input[name="password"]').fill('LocalTest123!'); await page.getByRole('button',{name:'Giriş'}).click(); await expect(page.getByRole('heading',{name:'Genel bakış'})).toBeVisible(); };
 
 test('admin creates permission groups and manages a Studio membership',async({page})=>{
   await loginStudio(page);
@@ -25,7 +25,8 @@ test('admin creates permission groups and manages a Studio membership',async({pa
   await page.getByRole('textbox',{name:'Email'}).fill(email);
   await page.locator('input[name="password"]').fill('MemberTest123!');
   await page.getByRole('button',{name:'Giriş'}).click();
-  await page.goto('/studio/editor/');
+  await expect(page.getByRole('heading',{name:'Genel bakış'})).toBeVisible();
+  await expect(page).toHaveURL(/\/studio\/\?panel=editor&section=dashboard$/);
   await expect(page.locator('nav a[href*="section=messages"]')).toHaveCount(1);
   await expect(page.locator('nav a[href*="section=content"]')).toHaveCount(0);
   const denied=await page.request.post('/api/studio/',{headers:{Origin:'http://127.0.0.1:4322'},form:{entity:'content',title:'Yetkisiz içerik',slug:'yetkisiz-icerik',locale:'tr',type:'article',status:'draft',body:'{}'}});

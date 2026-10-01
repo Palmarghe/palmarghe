@@ -1,6 +1,17 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 1 October 2026, search pointer follow-up
+## Current production state — 2 October 2026, SEO and Studio login audit
+
+Worker `14c7f7e5-ea26-432b-868c-00855db99a00` is live. Exact publication lookup fixes older-entry 404s while preserving draft/schedule boundaries. Nested taxonomy URLs, reciprocal language links, blank metadata fallback, sitemap category/collection coverage, deduplication and canonical exclusion are corrected. Base pages have localized descriptions; BreadcrumbList and real content cover/public-author data are present. Studio editor login reaches its existing editor entry point. Role/write permissions are preserved.
+
+Astro 0 diagnostics, unit 55/55, build successful. Final local full run 49/50 with one artifact-directory collision; gallery rerun 1/1 passed after output directories were separated. Final live Chrome 5/5 includes all 32 sitemap URLs, metadata/language/breadcrumb matrix, schema/route/assets/headers/console. Real Chrome confirmed Music language switching. Google validates the Music breadcrumb and FM26 Article/Breadcrumb; QA noindex and optional-author warning remain intentional. No production content/account was created or deleted. Exact evidence and remaining limits: `docs/seo-routing-audit-2026-10-01.md`.
+
+Migration 202610010035 and native search pointers remain active. Previous commits 6cd8261/bc96d20 Actions both passed: https://github.com/Palmarghe/palmarghe/actions/runs/36922407546. This release CI is checked after push. Full 40-section objective remains active.
+
+Earlier releases and counts below are historical evidence.
+
+
+## Previous production state — 1 October 2026, search pointer follow-up (historical)
 
 Worker `fb1a8e0d-63ae-4147-bc3e-9efb75dd0b55` is live. Search now uses native pointers throughout its modal: text/caret in the input, pointer on buttons and links, auto on the backdrop. The decorative brand cursor is hidden only while search is open and restored on close. This supersedes the earlier top-layer reparenting implementation below. Mouse and Ctrl+K opening, repeated close/reopen and both themes are covered; real Chrome confirmed input focus, text pointer, accent caret and a live Lamine result.
 

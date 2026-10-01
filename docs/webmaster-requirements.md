@@ -42,8 +42,8 @@ Kaynak: `C:\Users\Palmarghe\.codex\attachments\060efb3f-064b-466b-bac2-cf1bafe94
 | 19 | LCP<2.5s, INP<200ms, CLS<0.1, JS/CSS/third-party/API | Son Lighthouse responsive varyantlar/embed ertelemesi öncesi. Güncel profil, bundle/unused kaynak ve interaction ölçümü gerekli; saha INP verisi dış kapı. |
 | 20 | Minimal font/weight, display/preload/subset/CLS | Self-hosted font mevcut; yüklenen gerçek dosyalar ve font swap etkisi ölçülecek. |
 | 21 | Asset cache, dinamik no-stale, CDN | Middleware HTML/API no-store; fingerprint immutable build kanıtı var. Diğer statik yolların header matrisi gerekli. |
-| 22 | Title/description/canonical/hreflang/robots/sitemap/OG/headings | Production smoke kapsar; tüm sitemap URL'leri için uniqueness, language pairing ve indeks kuralları matrisi gerekli. |
-| 23 | Doğru schema ve Rich Results uyumu | Organization/WebSite/Article smoke var; uygun sayfa türü/Breadcrumb/Video şemaları ve resmi validator kanıtı açık. |
+| 22 | Title/description/canonical/hreflang/robots/sitemap/OG/headings | 32 canlı sitemap URL'sinde uniqueness, reciprocal language pairing, canonical/index rules, tek h1 ve OG/Twitter metadata matrisi geçti. Müzik ve nested taxonomy keşfi düzeltildi. Query cap, public-author sitemap discovery ve canonical-translation kombinasyonları açık; docs/seo-routing-audit-2026-10-01.md. |
+| 23 | Doğru schema ve Rich Results uyumu | Organization/WebSite/Article ve 32 sayfa breadcrumb matrisi geçti. Google Music breadcrumb ile FM26 Article/Breadcrumb geçerli; QA noindex ve optional public-author uyarısı korunuyor. Video/profile schema applicability açık. |
 | 24 | OG/Twitter alanları, oran/çözünürlük/fallback | OG fallback mevcut; tüm önemli sayfa türleri ve gerçek görsel ölçüleri incelenecek. |
 | 25 | 404/search/navigation, güvenli 500/API/network mesajı | 404 kodu ve search network tests var; diğer server/API hata senaryoları gerekli. |
 | 26 | XSS/CSRF/injection/session/rate/uploads/redirect/headers/cookies | Middleware başlıkları, Zod/RLS ve güvenlik testleri var. Runtime cookie/Origin/endpoints kapsamı açık. Vimeo CSP uyumu kontrollü canlı iframe ve header testiyle kapatıldı. |
@@ -78,9 +78,9 @@ Kaynak: `C:\Users\Palmarghe\.codex\attachments\060efb3f-064b-466b-bac2-cf1bafe94
 SMTP gerçek teslimat/reset callback, Search Console saha verisinin olgunlaşması ve manuel assistive-technology/hukuki inceleme dış veya kullanıcı bağımlı kapılardır. Bunların varlığı uygulanabilir kod ve test işlerini durdurmaz. Cloudflare Access aktivasyonu ödeme/terms bağımlı mevcut dış kapıdır; ana hedefte MFA yeniden ekleme isteği yoktur.
 
 
-## Latest follow-up — 1 October 2026
+## Historical follow-up — 1 October 2026
 
-Current Worker: `32e04843-2abd-43d1-9ba3-710e1d6afe9d`. Search pointer top-layer synchronization is explicit on opening. Cursor position transition lag and privacy UI conflation are fixed: rendered geometry is checked, mandatory legal notice reading acknowledgements are distinct from newsletter opt-in, and localized contact notice links are present. Legal text and production content are unchanged. Verify: Astro 0 diagnostics, unit 23/23, build passed; full local E2E 46/46 and final local cursor regression passed. Preceding Worker production 36/36. Current pointer matrix: Chrome/Edge 10/10 and WebKit 5/5 passed against production. WebKit was installed after its initial executable-missing result; its successful rerun used a separate output directory. This does not close the full webmaster scope or physical Safari/zoom/assistive-technology/SMTP gates.
+Historical Worker: `32e04843-2abd-43d1-9ba3-710e1d6afe9d`. Search pointer top-layer synchronization is explicit on opening. Cursor position transition lag and privacy UI conflation are fixed: rendered geometry is checked, mandatory legal notice reading acknowledgements are distinct from newsletter opt-in, and localized contact notice links are present. Legal text and production content are unchanged. Verify: Astro 0 diagnostics, unit 23/23, build passed; full local E2E 46/46 and final local cursor regression passed. Preceding Worker production 36/36. Current pointer matrix: Chrome/Edge 10/10 and WebKit 5/5 passed against production. WebKit was installed after its initial executable-missing result; its successful rerun used a separate output directory. This does not close the full webmaster scope or physical Safari/zoom/assistive-technology/SMTP gates.
 
 Final live pointer matrix: Chrome 5/5, Edge 5/5, WebKit 5/5. Both themes retain visible search controls and native text cursor/caret. Screenshot inspection confirmed the pointer on the search close control. Full production run passed 36 cases; one layout case hit a test-artifact directory collision during parallel runs and passed 1/1 when rerun alone. All 37 production cases therefore passed across the full run and isolated rerun. No product assertion failed in that run.
 
@@ -100,7 +100,7 @@ Previous commit 82b730a Actions succeeded: https://github.com/Palmarghe/palmargh
 - Engagement now excludes webdriver/testing clients in the script and known bot clients in the endpoint. Live automated navigation and no-RPC bot unit tests pass. No historical counts have been reset or rewritten.
 
 
-## Latest measurement evidence
+## Historical measurement evidence
 
 Worker `88cfc28d-95da-4cfe-a605-468d49cdba97`. Reklam tıklaması artık RegExp nesnesi yerine /ad/header/, /ad/article/ ve /ad/footer/ string yollarını gönderiyor. Kaynak, API isteğinin kendi Referer başlığından değil ziyaretin giriş referrer bilgisinden tarayıcıda sınıflandırılır. Sunucu yalnız organic_search/referral/direct enum kabul eder; eski istemciler direct olarak işlenir. Ham referrer URL veya arama sorgusu gönderilmez/saklanmaz. 30 dakika hareketsizlik süresi olan sekme içi coarse source, iç gezinmede korunur. Engellenmiş storage kullanımında script çökmez; çift yüklemede dinleyici/ziyaret tekrarlanmaz. Bilinen bot ve webdriver denetimleri engagement yazımlarından da çıkarılır.
 
@@ -111,7 +111,7 @@ Kanıt: Astro 0 tanı, unit 39/39, build başarılı; önceki tam local E2E 46/4
 Historical finding, now closed by migration 202610010035 and actual 42501/Worker-write verification: anon RPC execute permissions previously allowed Worker filter bypass. Historic aggregates may contain bot/test activity and wrong attribution; no reliable retroactive correction is claimed. The direct RPC bypass is closed; retention and statistical limitations remain independent audit work.
 
 
-## Current production state — 1 October 2026, search pointer follow-up
+## Historical production state — 1 October 2026, search pointer follow-up
 
 Worker `fb1a8e0d-63ae-4147-bc3e-9efb75dd0b55` is live. Search now uses native pointers throughout its modal: text/caret in the input, pointer on buttons and links, auto on the backdrop. The decorative brand cursor is hidden only while search is open and restored on close. This supersedes the earlier top-layer reparenting implementation below. Mouse and Ctrl+K opening, repeated close/reopen and both themes are covered; real Chrome confirmed input focus, text pointer, accent caret and a live Lamine result.
 
@@ -122,3 +122,13 @@ Studio pageview totals exclude ad clicks and Studio paths. Daily/path visits are
 Verification: Astro 0 diagnostics, unit 46/46, build successful. Full local suite before the pointer follow-up 47/47; added local pointer regression 1/1. Live Chrome search/cursor 8/9 initially, with one obsolete top-layer expectation; the corrected semantic test passed on rerun. Analytics, semantic cursor, security headers and console rerun passed 5/5. The other eight initial search/cursor cases passed, including mobile search, keyboard navigation, network recovery, modal focus/scroll, device/theme and rendered pointer tracking. Previous commit 9870bf0 Actions succeeded: https://github.com/Palmarghe/palmarghe/actions/runs/36918416447. Current CI is checked after push. The broader audit remains active.
 
 Earlier deployment and test counts below are historical evidence, not the current production state.
+
+## Current production state — 2 October 2026, SEO and Studio login audit
+
+Worker `14c7f7e5-ea26-432b-868c-00855db99a00` is live. Exact publication lookup fixes older-entry 404s while preserving draft/schedule boundaries. Nested taxonomy URLs, reciprocal language links, blank metadata fallback, sitemap category/collection coverage, deduplication and canonical exclusion are corrected. Base pages have localized descriptions; BreadcrumbList and real content cover/public-author data are present. Studio editor login reaches its existing editor entry point. Role/write permissions are preserved.
+
+Astro 0 diagnostics, unit 55/55, build successful. Final local full run 49/50 with one artifact-directory collision; gallery rerun 1/1 passed after output directories were separated. Final live Chrome 5/5 includes all 32 sitemap URLs, metadata/language/breadcrumb matrix, schema/route/assets/headers/console. Real Chrome confirmed Music language switching. Google validates the Music breadcrumb and FM26 Article/Breadcrumb; QA noindex and optional-author warning remain intentional. No production content/account was created or deleted. Exact evidence and remaining limits: `docs/seo-routing-audit-2026-10-01.md`.
+
+Migration 202610010035 and native search pointers remain active. Previous commits 6cd8261/bc96d20 Actions both passed: https://github.com/Palmarghe/palmarghe/actions/runs/36922407546. This release CI is checked after push. Full 40-section objective remains active.
+
+Earlier releases and counts below are historical evidence.

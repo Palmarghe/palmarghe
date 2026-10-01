@@ -52,7 +52,10 @@ test('homepage identifies the Palmarghe publisher and website in structured data
     expect(graph.find((schema) => schema['@type'] === 'WebSite')).toMatchObject({ '@id': 'https://palmarghe.com/#website', inLanguage: ['tr', 'en'] });
   }
   await page.goto('/fm/lamine-yamal-fm26/');
-  const article = await page.locator('script[type="application/ld+json"]').evaluate((script) => JSON.parse(script.textContent ?? '{}'));
+  const article = await page.locator('script[type="application/ld+json"]').evaluate((script) => {
+    const schema=JSON.parse(script.textContent ?? '{}');
+    return schema['@graph']?.find((entry:{'@type':string})=>entry['@type']==='Article') ?? schema;
+  });
   expect(article).toMatchObject({ '@type': 'Article', headline: 'FM26: Lamine Yamal için sağ kanat oyun planı', url: 'https://palmarghe.com/fm/lamine-yamal-fm26/' });
 });
 

@@ -99,9 +99,13 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return redirectTo(request, `${account}?notice=verify`);
   }
   if (action === 'login') {
-    const { error } = await db.auth.signInWithPassword(parsed.data);
+    const { data, error } = await db.auth.signInWithPassword(parsed.data);
     if (error) return errorResponse('Invalid credentials', 400);
-    return redirectTo(request, form.get('next') === 'studio' ? '/studio/' : account);
+    if (form.get('next') === 'studio') {
+      const { data: profile } = data?.user ? await db.from('profiles').select('role').eq('id',data.user.id).single() : { data: null };
+      return redirectTo(request, profile?.role === 'editor' ? '/studio/editor/' : '/studio/');
+    }
+    return redirectTo(request, account);
   }
   return errorResponse('Invalid action');
 };

@@ -10,6 +10,14 @@ export interface ContentItem {
   seo_title: string | null; seo_description: string | null; canonical_override: string | null; og_media_id: string | null; translation_group: string | null; indexable: boolean;
 }
 
+export async function publishedBySlug(cookies: AstroCookies, request: Request, locale: Locale, slug: string): Promise<ContentItem | undefined> {
+  const db = supabase(cookies, request);
+  if (!db) return undefined;
+  const { data, error } = await db.from('content_items').select('*').eq('locale', locale).eq('slug', slug).in('status', ['published', 'scheduled']).lte('published_at', new Date().toISOString()).limit(1);
+  if (error) { console.error('Published detail query failed:', error.code); return undefined; }
+  return data?.[0] as ContentItem | undefined;
+}
+
 export async function published(cookies: AstroCookies, request: Request, locale: Locale, limit = 30): Promise<ContentItem[]> {
   const db = supabase(cookies, request);
   if (!db) return [];

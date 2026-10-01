@@ -3,7 +3,8 @@ import Site from '../layouts/Site.astro';
 import FMModDetail from '../components/FMModDetail.astro';
 import AdSlot from '../components/AdSlot.astro';
 import { copy, contentTypeLabel, nav, parsePath, pathFor, safeExternalUrl } from '../lib/site';
-import { published, type ContentItem } from '../lib/content';
+import { published, publishedBySlug, type ContentItem } from '../lib/content';
+import { categoryPath, pageDescription } from '../lib/seo';
 import { supabase, localTestRequest } from '../lib/supabase';
 import { parseDocument, renderDocument, type Block } from '../lib/blocks';
 import { publicImageSrcSet, publicImageUrl } from '../lib/public-image';
@@ -14,7 +15,7 @@ const localMode = localTestRequest(Astro.request);
 const basePages = ['', 'ai', 'gaming', 'fm', 'fm/fm26', 'lab', 'archive', 'about', 'contact', 'search', 'account', 'privacy', 'kvkk', 'collections', 'tags', 'authors'];
 const items = await published(Astro.cookies, Astro.request, locale);
 let item: ContentItem | undefined;
-if (!basePages.includes(slug)) item = items.find((entry) => entry.slug === slug);
+if (!basePages.includes(slug)) item = items.find((entry) => entry.slug === slug) ?? await publishedBySlug(Astro.cookies, Astro.request, locale, slug);
 const categoryDb = supabase(Astro.cookies, Astro.request);
 const { data: rootCategories } = categoryDb ? await categoryDb.from('categories').select('id,slug,name_tr,name_en,parent_id,description_tr,description_en,seo').eq('active',true).order('sort_order').limit(100) : { data: null };
 const { data: advertisingRow } = categoryDb ? await categoryDb.from('site_settings').select('value').eq('key','advertising').single() : { data: null };
@@ -38,7 +39,7 @@ const { data: publicTagLinks } = selectedPublicTag && categoryDb ? await categor
 const publicTagIds = new Set((publicTagLinks ?? []).map((link:{content_id:string}) => link.content_id));
 const publicTagItems = selectedPublicTag ? items.filter((entry) => publicTagIds.has(entry.id)) : [];
 const allCategories: { id: string; slug: string; name_tr: string; name_en: string; parent_id: string | null; description_tr: string | null; description_en: string | null; seo: Record<string, unknown> }[] = rootCategories ?? [];
-const dbCategory = allCategories.find((entry) => entry.slug === slug);
+const dbCategory = allCategories.find((entry) => categoryPath(entry, allCategories) === slug);
 const categoryFallback: Record<string,{tr:string;en:string}> = {
   ai: {tr:'Yapay zekâ ile görsel üretim, hareketli anlatım ve üretim süreçlerinden seçilen çalışmalar.',en:'Selected work in AI image making, moving image and creative process.'},
   gaming: {tr:'Oyun dünyalarına, deneyimlerine ve üretimlerine dair notlar ve projeler.',en:'Notes and projects around game worlds, experiences and making.'},
@@ -46,8 +47,8 @@ const categoryFallback: Record<string,{tr:string;en:string}> = {
   lab: {tr:'Küçük prototipler, arayüz denemeleri ve açık uçlu dijital fikirler.',en:'Small prototypes, interface experiments and open-ended digital ideas.'},
 };
 const categoryDescription = dbCategory?.[locale === 'tr' ? 'description_tr' : 'description_en'] || categoryFallback[slug]?.[locale] || undefined;
-const categorySeoTitle = typeof dbCategory?.seo?.[`title_${locale}`] === 'string' ? String(dbCategory.seo[`title_${locale}`]) : undefined;
-const categorySeoDescription = typeof dbCategory?.seo?.[`description_${locale}`] === 'string' ? String(dbCategory.seo[`description_${locale}`]) : undefined;
+const categorySeoTitle = typeof dbCategory?.seo?.[`title_${locale}`] === 'string' ? String(dbCategory.seo[`title_${locale}`]).trim() || undefined : undefined;
+const categorySeoDescription = typeof dbCategory?.seo?.[`description_${locale}`] === 'string' ? String(dbCategory.seo[`description_${locale}`]).trim() || undefined : undefined;
 const valid = basePages.includes(slug) || Boolean(item) || Boolean(dbCategory) || Boolean(selectedPublicCollection) || Boolean(selectedPublicTag) || Boolean(selectedPublicAuthor);
 if (!valid) Astro.response.status = 404;
 const titleMap: Record<string, string> = { ai: 'AI', gaming: 'Gaming', fm: 'Football Manager', 'fm/fm26': 'FM26', lab: 'Lab', archive: locale === 'tr' ? 'Arşiv' : 'Archive', about: t.about, contact: t.contact, search: t.search, account: t.account, privacy: t.privacy, kvkk: locale === 'tr' ? 'KVKK Aydınlatma Metni' : 'Personal Data Notice', collections: locale === 'tr' ? 'Koleksiyonlar' : 'Collections', tags: locale === 'tr' ? 'Etiketler' : 'Tags' };
@@ -60,7 +61,10 @@ const breadcrumbText = ['Palmarghe', ...breadcrumbParts.map((part,index) => {
 })].join(' / ');
 const { data: counterpart } = item?.translation_group && categoryDb ? await categoryDb.from('content_items').select('slug').eq('translation_group',item.translation_group).eq('locale',locale === 'tr' ? 'en' : 'tr').in('status',['published','scheduled']).lte('published_at',new Date().toISOString()).limit(1) : { data: null };
 const alternate = counterpart?.[0]?.slug;
-const alternatePath = alternate ? pathFor(locale === 'tr' ? 'en' : 'tr', alternate) : !item ? pathFor(locale === 'tr' ? 'en' : 'tr', basePages.includes(slug) ? slug : '') : undefined;
+const otherLocale = locale === 'tr' ? 'en' : 'tr';
+const { data: alternateCollection } = selectedPublicCollection && categoryDb ? await categoryDb.from('editorial_collections').select('slug').eq('slug',collectionSlug).eq('locale',otherLocale).eq('published',true).limit(1) : { data: null };
+const alternatePath = alternate ? pathFor(otherLocale, alternate) : !item && valid && (basePages.includes(slug) || dbCategory || selectedPublicTag || selectedPublicAuthor || alternateCollection?.length) ? pathFor(otherLocale,slug) : undefined;
+const metadataDescription = item?.seo_description?.trim() || item?.excerpt?.trim() || selectedPublicCollection?.description?.trim() || selectedPublicAuthor?.bio?.trim() || categorySeoDescription?.trim() || categoryDescription?.trim() || pageDescription(locale,slug,title);
 const query = Astro.url.searchParams.get('q')?.trim().slice(0, 100) ?? '';
 const searchType = Astro.url.searchParams.get('type') ?? '';
 const contentTypes: ContentItem['type'][] = ['article','project','fm_mod','gallery','lab_entry'];
@@ -147,13 +151,34 @@ const itemCategories = (itemCategoryLinks ?? []).map((link: {category_id:string}
 const { data: relatedTagLinks } = itemTagLinks?.length && categoryDb ? await categoryDb.from('content_tags').select('content_id,tag_id').in('tag_id',itemTagLinks.map((link:{tag_id:string})=>link.tag_id)) : { data: null };
 const relatedTagIds = new Set((relatedTagLinks ?? []).filter((link:{content_id:string})=>link.content_id !== item?.id).map((link:{content_id:string})=>link.content_id));
 const relatedItems = item ? [...items.filter((entry) => relatedTagIds.has(entry.id)), ...items.filter((entry) => entry.id !== item.id && !relatedTagIds.has(entry.id) && (entry.type === item.type || entry.slug.split('/')[0] === item.slug.split('/')[0]))].slice(0,3) : [];
-const categoryHref = (entry: typeof allCategories[number]) => pathFor(locale, entry.parent_id ? `${allCategories.find((parent) => parent.id === entry.parent_id)?.slug ?? ''}/${entry.slug}` : entry.slug);
+const categoryHref = (entry: typeof allCategories[number]) => pathFor(locale, categoryPath(entry, allCategories) ?? entry.slug);
 const { data: itemTagRows } = itemTagLinks?.length && categoryDb ? await categoryDb.from('tags').select('id,slug,name_tr,name_en').in('id',itemTagLinks.map((link: {tag_id:string}) => link.tag_id)) : { data: null };
 const itemViewer = item && categoryDb ? (await categoryDb.auth.getUser()).data.user : null;
 const { data: savedRows } = item && itemViewer && categoryDb ? await categoryDb.from('content_bookmarks').select('content_id').eq('user_id',itemViewer.id).eq('content_id',item.id).limit(1) : { data: null };
-const itemIsSaved = Boolean(savedRows?.length);const structuredData = item ? { '@context': 'https://schema.org', '@type': item.type === 'article' ? 'Article' : 'CreativeWork', headline: item.title, description: item.excerpt ?? undefined, inLanguage: locale, datePublished: item.published_at ?? undefined, url: new URL(pathFor(locale,item.slug),'https://palmarghe.com').href, publisher: { '@type':'Organization', name:'Palmarghe' } } : undefined;
+const itemIsSaved = Boolean(savedRows?.length);
+const pageUrl = new URL(pathFor(locale,slug),'https://palmarghe.com').href;
+const breadcrumbEntries = valid && slug && !['account','search'].includes(slug) ? [
+  { name:'Palmarghe', url:new URL(pathFor(locale),'https://palmarghe.com').href },
+  ...breadcrumbParts.map((part,index) => {
+    const ancestorPath = breadcrumbParts.slice(0,index+1).join('/');
+    const ancestorCategory = allCategories.find(entry => categoryPath(entry,allCategories) === ancestorPath);
+    const isCurrent = index === breadcrumbParts.length-1;
+    if (!isCurrent && !ancestorCategory && !basePages.includes(ancestorPath)) return undefined;
+    return { name:isCurrent ? item?.title ?? title ?? part : ancestorCategory?.[locale === 'tr' ? 'name_tr' : 'name_en'] ?? titleMap[ancestorPath] ?? part, url:new URL(pathFor(locale,ancestorPath),'https://palmarghe.com').href };
+  }).filter((entry):entry is {name:string;url:string} => Boolean(entry)),
+] : [];
+const breadcrumbSchema = breadcrumbEntries.length > 1 ? { '@type':'BreadcrumbList', itemListElement:breadcrumbEntries.map((entry,index) => ({'@type':'ListItem',position:index+1,name:entry.name,item:entry.url})) } : undefined;
+const contentSchema = item ? {
+  '@type':item.type === 'article' ? 'Article' : 'CreativeWork', headline:item.title, description:item.excerpt ?? undefined,
+  inLanguage:locale, datePublished:item.published_at ?? undefined, url:pageUrl,
+  mainEntityOfPage:{'@type':'WebPage','@id':pageUrl},
+  ...(item.cover_url ? {image:new URL(publicImageUrl(item.cover_url)!,'https://palmarghe.com').href} : {}),
+  ...(itemAuthor?.display_name ? {author:{'@type':'Person',name:itemAuthor.display_name,...(itemAuthor.author_slug ? {url:new URL(pathFor(locale,`authors/${itemAuthor.author_slug}`),'https://palmarghe.com').href} : {})}} : {}),
+  publisher:{'@type':'Organization',name:'Palmarghe',url:'https://palmarghe.com/'},
+} : undefined;
+const structuredData = contentSchema || breadcrumbSchema ? {'@context':'https://schema.org','@graph':[contentSchema,breadcrumbSchema].filter(Boolean)} : undefined;
 ---
-<Site locale={locale} title={title} description={item?.seo_description ?? item?.excerpt ?? categorySeoDescription ?? categoryDescription ?? undefined} alternate={alternatePath} canonicalOverride={item?.canonical_override ?? undefined} noindex={['account','search'].includes(slug) || item?.indexable === false || !valid} structuredData={structuredData} ogImage={item?.og_media_id ? `/api/media/${item.og_media_id}/` : publicImageUrl(item?.cover_url)} ogAlt={item?.title} ogType={item?.type === 'article' ? 'article' : 'website'}>
+<Site locale={locale} title={title} description={metadataDescription} alternate={alternatePath} canonicalOverride={item?.canonical_override ?? undefined} noindex={['account','search'].includes(slug) || item?.indexable === false || !valid} structuredData={structuredData} ogImage={item?.og_media_id ? `/api/media/${item.og_media_id}/` : publicImageUrl(item?.cover_url)} ogAlt={item?.title} ogType={item?.type === 'article' ? 'article' : 'website'}>
   {String(slug) === '' && <>
     {Astro.url.searchParams.get('newsletter') === '1' && <p class="alert wrap">{locale === 'tr' ? 'Bülten listesine kaydın alındı.' : 'You are on the newsletter list.'}</p>}
     {heroVisible && <section class={`hero hero--${heroMode} wrap`} data-hero-editable><img class="hero-art" src={heroImage} alt="" width="1600" height="900" fetchpriority="high" decoding="async"/><div class="hero-copy"><span class="eyebrow">{heroEyebrow}</span><h1>{heroTitle}</h1><p>{heroDescriptor}</p></div></section>}

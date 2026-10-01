@@ -1,0 +1,1759 @@
+{
+  "capturedAt": "2026-10-01T20:54:19.076Z",
+  "sitemapUrls": [
+    "https://palmarghe.com/",
+    "https://palmarghe.com/ai/",
+    "https://palmarghe.com/gaming/",
+    "https://palmarghe.com/fm/",
+    "https://palmarghe.com/fm/fm26/",
+    "https://palmarghe.com/lab/",
+    "https://palmarghe.com/archive/",
+    "https://palmarghe.com/about/",
+    "https://palmarghe.com/contact/",
+    "https://palmarghe.com/privacy/",
+    "https://palmarghe.com/kvkk/",
+    "https://palmarghe.com/collections/",
+    "https://palmarghe.com/tags/",
+    "https://palmarghe.com/music/",
+    "https://palmarghe.com/en/",
+    "https://palmarghe.com/en/ai/",
+    "https://palmarghe.com/en/gaming/",
+    "https://palmarghe.com/en/fm/",
+    "https://palmarghe.com/en/fm/fm26/",
+    "https://palmarghe.com/en/lab/",
+    "https://palmarghe.com/en/archive/",
+    "https://palmarghe.com/en/about/",
+    "https://palmarghe.com/en/contact/",
+    "https://palmarghe.com/en/privacy/",
+    "https://palmarghe.com/en/kvkk/",
+    "https://palmarghe.com/en/collections/",
+    "https://palmarghe.com/en/tags/",
+    "https://palmarghe.com/en/music/",
+    "https://palmarghe.com/music/sevenfold-thunder/",
+    "https://palmarghe.com/music/anatolian-sub-ritual/",
+    "https://palmarghe.com/music/anatolian-velocity/",
+    "https://palmarghe.com/music/kara-yol/"
+  ],
+  "rows": [
+    {
+      "requestedUrl": "https://palmarghe.com/",
+      "status": 200,
+      "url": "https://palmarghe.com/",
+      "lang": "tr",
+      "title": "Palmarghe",
+      "description": "Yapay zekâ, oyunlar, Football Manager ve dijital deneyler.",
+      "canonical": "https://palmarghe.com/",
+      "headings": [
+        "Dijital işler için bir yayın alanı."
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/"
+        },
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "https://palmarghe.com/#organization",
+              "name": "Palmarghe",
+              "url": "https://palmarghe.com/",
+              "sameAs": [
+                "https://www.youtube.com/@palmarghe",
+                "https://instagram.com/kaanerkay"
+              ]
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://palmarghe.com/#website",
+              "name": "Palmarghe",
+              "url": "https://palmarghe.com/",
+              "inLanguage": [
+                "tr",
+                "en"
+              ],
+              "publisher": {
+                "@id": "https://palmarghe.com/#organization"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/ai/",
+      "status": 200,
+      "url": "https://palmarghe.com/ai/",
+      "lang": "tr",
+      "title": "Yapay zekâ — Palmarghe",
+      "description": "Yapay zekâ ile görsel üretim, hareketli anlatım ve üretim süreçlerinden seçilen çalışmalar.",
+      "canonical": "https://palmarghe.com/ai/",
+      "headings": [
+        "Yapay zekâ"
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/ai/"
+        },
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/ai/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/ai/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Yapay zekâ",
+                  "item": "https://palmarghe.com/ai/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/gaming/",
+      "status": 200,
+      "url": "https://palmarghe.com/gaming/",
+      "lang": "tr",
+      "title": "Oyunlar — Palmarghe",
+      "description": "Oyun dünyalarına, deneyimlerine ve üretimlerine dair notlar ve projeler.",
+      "canonical": "https://palmarghe.com/gaming/",
+      "headings": [
+        "Oyunlar"
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/gaming/"
+        },
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/gaming/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/gaming/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Oyunlar",
+                  "item": "https://palmarghe.com/gaming/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/fm/",
+      "status": 200,
+      "url": "https://palmarghe.com/fm/",
+      "lang": "tr",
+      "title": "Football Manager — Palmarghe",
+      "description": "Football Manager için modlar, taktikler ve proje notları.",
+      "canonical": "https://palmarghe.com/fm/",
+      "headings": [
+        "Football Manager"
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/fm/"
+        },
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/fm/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/fm/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Football Manager",
+                  "item": "https://palmarghe.com/fm/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/fm/fm26/",
+      "status": 200,
+      "url": "https://palmarghe.com/fm/fm26/",
+      "lang": "tr",
+      "title": "FM26 — Palmarghe",
+      "description": "Football Manager 26 için Palmarghe yayınları, modları ve taktik çalışmalarını keşfet.",
+      "canonical": "https://palmarghe.com/fm/fm26/",
+      "headings": [
+        "FM26"
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/fm/fm26/"
+        },
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/fm/fm26/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/fm/fm26/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Football Manager",
+                  "item": "https://palmarghe.com/fm/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "FM26",
+                  "item": "https://palmarghe.com/fm/fm26/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/lab/",
+      "status": 200,
+      "url": "https://palmarghe.com/lab/",
+      "lang": "tr",
+      "title": "Lab — Palmarghe",
+      "description": "Küçük prototipler, arayüz denemeleri ve açık uçlu dijital fikirler.",
+      "canonical": "https://palmarghe.com/lab/",
+      "headings": [
+        "Lab"
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/lab/"
+        },
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/lab/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/lab/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Lab",
+                  "item": "https://palmarghe.com/lab/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/archive/",
+      "status": 200,
+      "url": "https://palmarghe.com/archive/",
+      "lang": "tr",
+      "title": "Arşiv — Palmarghe",
+      "description": "Palmarghe yayın arşivi: yazıları, projeleri, FM modlarını ve dijital deneyleri tür, kategori ve yıla göre keşfet.",
+      "canonical": "https://palmarghe.com/archive/",
+      "headings": [
+        "Arşiv"
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/archive/"
+        },
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/archive/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/archive/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Arşiv",
+                  "item": "https://palmarghe.com/archive/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/about/",
+      "status": 200,
+      "url": "https://palmarghe.com/about/",
+      "lang": "tr",
+      "title": "Hakkında — Palmarghe",
+      "description": "Palmarghe hakkında: yapay zekâ, oyunlar, Football Manager ve dijital üretim üzerine bağımsız yayın alanı.",
+      "canonical": "https://palmarghe.com/about/",
+      "headings": [
+        "Hakkında"
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/about/"
+        },
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/about/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/about/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Hakkında",
+                  "item": "https://palmarghe.com/about/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/contact/",
+      "status": 200,
+      "url": "https://palmarghe.com/contact/",
+      "lang": "tr",
+      "title": "İletişim — Palmarghe",
+      "description": "Palmarghe ile iletişime geç: sorularını, önerilerini ve iş birliği mesajlarını güvenli iletişim formundan ilet.",
+      "canonical": "https://palmarghe.com/contact/",
+      "headings": [
+        "İletişim"
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/contact/"
+        },
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/contact/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/contact/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "İletişim",
+                  "item": "https://palmarghe.com/contact/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/privacy/",
+      "status": 200,
+      "url": "https://palmarghe.com/privacy/",
+      "lang": "tr",
+      "title": "Gizlilik — Palmarghe",
+      "description": "Palmarghe gizlilik politikası: kişisel verilerin işlenmesi ve web sitesinin veri uygulamaları hakkında bilgi.",
+      "canonical": "https://palmarghe.com/privacy/",
+      "headings": [
+        "Gizlilik"
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/privacy/"
+        },
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/privacy/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/privacy/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Gizlilik",
+                  "item": "https://palmarghe.com/privacy/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/kvkk/",
+      "status": 200,
+      "url": "https://palmarghe.com/kvkk/",
+      "lang": "tr",
+      "title": "KVKK Aydınlatma Metni — Palmarghe",
+      "description": "Palmarghe kişisel veri aydınlatma metni: veri işleme ve ilgili kişi hakları hakkında mevcut bilgilendirme.",
+      "canonical": "https://palmarghe.com/kvkk/",
+      "headings": [
+        "KVKK Aydınlatma Metni"
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/kvkk/"
+        },
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/kvkk/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/kvkk/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "KVKK Aydınlatma Metni",
+                  "item": "https://palmarghe.com/kvkk/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/collections/",
+      "status": 200,
+      "url": "https://palmarghe.com/collections/",
+      "lang": "tr",
+      "title": "Koleksiyonlar — Palmarghe",
+      "description": "Palmarghe editoryal koleksiyonları: ortak bir bağlamda bir araya getirilen yayınları keşfet.",
+      "canonical": "https://palmarghe.com/collections/",
+      "headings": [
+        "Koleksiyonlar"
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/collections/"
+        },
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/collections/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/collections/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Koleksiyonlar",
+                  "item": "https://palmarghe.com/collections/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/tags/",
+      "status": 200,
+      "url": "https://palmarghe.com/tags/",
+      "lang": "tr",
+      "title": "Etiketler — Palmarghe",
+      "description": "Palmarghe konu etiketleri: ilgilendiğin başlıklarla bağlantılı yazılara ve çalışmalara ulaş.",
+      "canonical": "https://palmarghe.com/tags/",
+      "headings": [
+        "Etiketler"
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/tags/"
+        },
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/tags/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/tags/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Etiketler",
+                  "item": "https://palmarghe.com/tags/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/music/",
+      "status": 200,
+      "url": "https://palmarghe.com/music/",
+      "lang": "tr",
+      "title": "Müzik — Palmarghe",
+      "description": "Palmarghe imzalı elektronik ve Anadolu esintili ses denemeleri.",
+      "canonical": "https://palmarghe.com/music/",
+      "headings": [
+        "Müzik"
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/music/"
+        },
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/music/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/music/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Müzik",
+                  "item": "https://palmarghe.com/music/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/en/",
+      "status": 200,
+      "url": "https://palmarghe.com/en/",
+      "lang": "en",
+      "title": "Palmarghe",
+      "description": "AI, games, Football Manager, and digital experiments.",
+      "canonical": "https://palmarghe.com/en/",
+      "headings": [
+        "A space for digital work."
+      ],
+      "alternates": [
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/"
+        },
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": "https://palmarghe.com/#organization",
+              "name": "Palmarghe",
+              "url": "https://palmarghe.com/",
+              "sameAs": [
+                "https://www.youtube.com/@palmarghe",
+                "https://instagram.com/kaanerkay"
+              ]
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://palmarghe.com/#website",
+              "name": "Palmarghe",
+              "url": "https://palmarghe.com/",
+              "inLanguage": [
+                "tr",
+                "en"
+              ],
+              "publisher": {
+                "@id": "https://palmarghe.com/#organization"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/en/ai/",
+      "status": 200,
+      "url": "https://palmarghe.com/en/ai/",
+      "lang": "en",
+      "title": "AI — Palmarghe",
+      "description": "Selected work in AI image making, moving image and creative process.",
+      "canonical": "https://palmarghe.com/en/ai/",
+      "headings": [
+        "AI"
+      ],
+      "alternates": [
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/ai/"
+        },
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/ai/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/ai/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/en/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "AI",
+                  "item": "https://palmarghe.com/en/ai/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/en/gaming/",
+      "status": 200,
+      "url": "https://palmarghe.com/en/gaming/",
+      "lang": "en",
+      "title": "Gaming — Palmarghe",
+      "description": "Notes and projects around game worlds, experiences and making.",
+      "canonical": "https://palmarghe.com/en/gaming/",
+      "headings": [
+        "Gaming"
+      ],
+      "alternates": [
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/gaming/"
+        },
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/gaming/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/gaming/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/en/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Gaming",
+                  "item": "https://palmarghe.com/en/gaming/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/en/fm/",
+      "status": 200,
+      "url": "https://palmarghe.com/en/fm/",
+      "lang": "en",
+      "title": "Football Manager — Palmarghe",
+      "description": "Mods, tactics and project notes for Football Manager.",
+      "canonical": "https://palmarghe.com/en/fm/",
+      "headings": [
+        "Football Manager"
+      ],
+      "alternates": [
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/fm/"
+        },
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/fm/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/fm/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/en/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Football Manager",
+                  "item": "https://palmarghe.com/en/fm/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/en/fm/fm26/",
+      "status": 200,
+      "url": "https://palmarghe.com/en/fm/fm26/",
+      "lang": "en",
+      "title": "FM26 — Palmarghe",
+      "description": "Explore Palmarghe publications, mods and tactical work for Football Manager 26.",
+      "canonical": "https://palmarghe.com/en/fm/fm26/",
+      "headings": [
+        "FM26"
+      ],
+      "alternates": [
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/fm/fm26/"
+        },
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/fm/fm26/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/fm/fm26/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/en/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Football Manager",
+                  "item": "https://palmarghe.com/en/fm/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "FM26",
+                  "item": "https://palmarghe.com/en/fm/fm26/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/en/lab/",
+      "status": 200,
+      "url": "https://palmarghe.com/en/lab/",
+      "lang": "en",
+      "title": "Lab — Palmarghe",
+      "description": "Small prototypes, interface experiments and open-ended digital ideas.",
+      "canonical": "https://palmarghe.com/en/lab/",
+      "headings": [
+        "Lab"
+      ],
+      "alternates": [
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/lab/"
+        },
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/lab/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/lab/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/en/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Lab",
+                  "item": "https://palmarghe.com/en/lab/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/en/archive/",
+      "status": 200,
+      "url": "https://palmarghe.com/en/archive/",
+      "lang": "en",
+      "title": "Archive — Palmarghe",
+      "description": "Explore the Palmarghe publication archive: articles, projects, FM mods and digital experiments by type, category and year.",
+      "canonical": "https://palmarghe.com/en/archive/",
+      "headings": [
+        "Archive"
+      ],
+      "alternates": [
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/archive/"
+        },
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/archive/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/archive/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/en/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Archive",
+                  "item": "https://palmarghe.com/en/archive/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/en/about/",
+      "status": 200,
+      "url": "https://palmarghe.com/en/about/",
+      "lang": "en",
+      "title": "About — Palmarghe",
+      "description": "About Palmarghe, an independent publication covering AI, games, Football Manager and digital making.",
+      "canonical": "https://palmarghe.com/en/about/",
+      "headings": [
+        "About"
+      ],
+      "alternates": [
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/about/"
+        },
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/about/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/about/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/en/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "About",
+                  "item": "https://palmarghe.com/en/about/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/en/contact/",
+      "status": 200,
+      "url": "https://palmarghe.com/en/contact/",
+      "lang": "en",
+      "title": "Contact — Palmarghe",
+      "description": "Contact Palmarghe with questions, suggestions and collaboration enquiries through the secure contact form.",
+      "canonical": "https://palmarghe.com/en/contact/",
+      "headings": [
+        "Contact"
+      ],
+      "alternates": [
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/contact/"
+        },
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/contact/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/contact/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/en/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Contact",
+                  "item": "https://palmarghe.com/en/contact/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/en/privacy/",
+      "status": 200,
+      "url": "https://palmarghe.com/en/privacy/",
+      "lang": "en",
+      "title": "Privacy — Palmarghe",
+      "description": "Palmarghe privacy policy: information about personal data processing and the website’s data practices.",
+      "canonical": "https://palmarghe.com/en/privacy/",
+      "headings": [
+        "Privacy"
+      ],
+      "alternates": [
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/privacy/"
+        },
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/privacy/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/privacy/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/en/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Privacy",
+                  "item": "https://palmarghe.com/en/privacy/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/en/kvkk/",
+      "status": 200,
+      "url": "https://palmarghe.com/en/kvkk/",
+      "lang": "en",
+      "title": "Personal Data Notice — Palmarghe",
+      "description": "Palmarghe personal data notice: existing information about data processing and data subject rights.",
+      "canonical": "https://palmarghe.com/en/kvkk/",
+      "headings": [
+        "Personal Data Notice"
+      ],
+      "alternates": [
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/kvkk/"
+        },
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/kvkk/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/kvkk/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/en/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Personal Data Notice",
+                  "item": "https://palmarghe.com/en/kvkk/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/en/collections/",
+      "status": 200,
+      "url": "https://palmarghe.com/en/collections/",
+      "lang": "en",
+      "title": "Collections — Palmarghe",
+      "description": "Explore Palmarghe editorial collections: publications brought together around a shared context.",
+      "canonical": "https://palmarghe.com/en/collections/",
+      "headings": [
+        "Collections"
+      ],
+      "alternates": [
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/collections/"
+        },
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/collections/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/collections/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/en/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Collections",
+                  "item": "https://palmarghe.com/en/collections/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/en/tags/",
+      "status": 200,
+      "url": "https://palmarghe.com/en/tags/",
+      "lang": "en",
+      "title": "Tags — Palmarghe",
+      "description": "Browse Palmarghe topic tags to find related articles and work.",
+      "canonical": "https://palmarghe.com/en/tags/",
+      "headings": [
+        "Tags"
+      ],
+      "alternates": [
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/tags/"
+        },
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/tags/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/tags/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/en/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Tags",
+                  "item": "https://palmarghe.com/en/tags/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/en/music/",
+      "status": 200,
+      "url": "https://palmarghe.com/en/music/",
+      "lang": "en",
+      "title": "Music — Palmarghe",
+      "description": "Palmarghe electronic and Anatolian-influenced sound experiments.",
+      "canonical": "https://palmarghe.com/en/music/",
+      "headings": [
+        "Music"
+      ],
+      "alternates": [
+        {
+          "lang": "en",
+          "href": "https://palmarghe.com/en/music/"
+        },
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/music/"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://palmarghe.com/music/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/og-default.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/en/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Music",
+                  "item": "https://palmarghe.com/en/music/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/music/sevenfold-thunder/",
+      "status": 200,
+      "url": "https://palmarghe.com/music/sevenfold-thunder/",
+      "lang": "tr",
+      "title": "Sevenfold Thunder | Karadeniz Horon ve Techno | Palmarghe — Palmarghe",
+      "description": "Sevenfold Thunder: Karadeniz horon ritimleri, derin bas ve techno prodüksiyonunu bir araya getiren Palmarghe elektronik müzik çalışması.",
+      "canonical": "https://palmarghe.com/music/sevenfold-thunder/",
+      "headings": [
+        "Sevenfold Thunder | Karadeniz Horon ve Techno | Palmarghe"
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/music/sevenfold-thunder/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/music/sevenfold-thunder.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "CreativeWork",
+              "headline": "Sevenfold Thunder: Karadeniz Horon Ritmi ve Techno",
+              "description": "Karadeniz horon ritimlerini derin bas, kırık perküsiyon ve gece atmosferiyle birleştiren özgün Palmarghe elektronik müzik yayını.",
+              "inLanguage": "tr",
+              "datePublished": "2026-09-01T12:00:00+00:00",
+              "url": "https://palmarghe.com/music/sevenfold-thunder/",
+              "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://palmarghe.com/music/sevenfold-thunder/"
+              },
+              "image": "https://palmarghe.com/visuals/music/sevenfold-thunder.webp",
+              "publisher": {
+                "@type": "Organization",
+                "name": "Palmarghe",
+                "url": "https://palmarghe.com/"
+              }
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Müzik",
+                  "item": "https://palmarghe.com/music/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Sevenfold Thunder: Karadeniz Horon Ritmi ve Techno",
+                  "item": "https://palmarghe.com/music/sevenfold-thunder/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/music/anatolian-sub-ritual/",
+      "status": 200,
+      "url": "https://palmarghe.com/music/anatolian-sub-ritual/",
+      "lang": "tr",
+      "title": "Anatolian Sub Ritual | Karanlık Anadolu Elektronik Müziği | Palmarghe — Palmarghe",
+      "description": "Anatolian Sub Ritual: Anadolu esintili karanlık elektronik müzik, törensel ritim ve düşük frekans dokusunu bir araya getiriyor.",
+      "canonical": "https://palmarghe.com/music/anatolian-sub-ritual/",
+      "headings": [
+        "Anatolian Sub Ritual | Karanlık Anadolu Elektronik Müziği | Palmarghe"
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/music/anatolian-sub-ritual/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/music/anatolian-sub-ritual.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "CreativeWork",
+              "headline": "Anatolian Sub Ritual: Karanlık Anadolu Elektronik Müziği",
+              "description": "Anadolu’nun törensel dokusundan yola çıkan; düşük frekans, boşluk ve ritim üzerine kurulu karanlık elektronik müzik denemesi.",
+              "inLanguage": "tr",
+              "datePublished": "2026-09-01T12:00:00+00:00",
+              "url": "https://palmarghe.com/music/anatolian-sub-ritual/",
+              "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://palmarghe.com/music/anatolian-sub-ritual/"
+              },
+              "image": "https://palmarghe.com/visuals/music/anatolian-sub-ritual.webp",
+              "publisher": {
+                "@type": "Organization",
+                "name": "Palmarghe",
+                "url": "https://palmarghe.com/"
+              }
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Müzik",
+                  "item": "https://palmarghe.com/music/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Anatolian Sub Ritual: Karanlık Anadolu Elektronik Müziği",
+                  "item": "https://palmarghe.com/music/anatolian-sub-ritual/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/music/anatolian-velocity/",
+      "status": 200,
+      "url": "https://palmarghe.com/music/anatolian-velocity/",
+      "lang": "tr",
+      "title": "Anatolian Velocity | Epik Anadolu Elektronik Müzik | Palmarghe — Palmarghe",
+      "description": "Anatolian Velocity: epik Anadolu elektronik müziği, sinematik atmosfer ve modern prodüksiyon üzerine Palmarghe yayını.",
+      "canonical": "https://palmarghe.com/music/anatolian-velocity/",
+      "headings": [
+        "Anatolian Velocity | Epik Anadolu Elektronik Müzik | Palmarghe"
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/music/anatolian-velocity/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/music/anatolian-velocity.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "CreativeWork",
+              "headline": "Anatolian Velocity: Epik Anadolu Elektronik Müzik",
+              "description": "Epik Anadolu melodik izlerini modern elektronik prodüksiyonla buluşturan; yolculuk, tempo ve geniş sinematik alan hissi taşıyan çalışma.",
+              "inLanguage": "tr",
+              "datePublished": "2026-09-01T12:00:00+00:00",
+              "url": "https://palmarghe.com/music/anatolian-velocity/",
+              "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://palmarghe.com/music/anatolian-velocity/"
+              },
+              "image": "https://palmarghe.com/visuals/music/anatolian-velocity.webp",
+              "publisher": {
+                "@type": "Organization",
+                "name": "Palmarghe",
+                "url": "https://palmarghe.com/"
+              }
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Müzik",
+                  "item": "https://palmarghe.com/music/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Anatolian Velocity: Epik Anadolu Elektronik Müzik",
+                  "item": "https://palmarghe.com/music/anatolian-velocity/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "requestedUrl": "https://palmarghe.com/music/kara-yol/",
+      "status": 200,
+      "url": "https://palmarghe.com/music/kara-yol/",
+      "lang": "tr",
+      "title": "Kara Yol | Karanlık Anadolu Techno | Palmarghe — Palmarghe",
+      "description": "Kara Yol: koyu bas, mekanik ritim ve Anadolu ses dokularıyla kurulan Palmarghe karanlık techno parçası.",
+      "canonical": "https://palmarghe.com/music/kara-yol/",
+      "headings": [
+        "Kara Yol | Karanlık Anadolu Techno | Palmarghe"
+      ],
+      "alternates": [
+        {
+          "lang": "tr",
+          "href": "https://palmarghe.com/music/kara-yol/"
+        }
+      ],
+      "ogImage": "https://palmarghe.com/visuals/music/kara-yol.webp",
+      "schema": [
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "CreativeWork",
+              "headline": "Kara Yol: Karanlık Anadolu Techno Atmosferi",
+              "description": "Gece yolculuğu hissini koyu baslar, mekanik ritimler ve Anadolu esintili ses dokularıyla kuran özgün techno parçası.",
+              "inLanguage": "tr",
+              "datePublished": "2026-09-01T12:00:00+00:00",
+              "url": "https://palmarghe.com/music/kara-yol/",
+              "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://palmarghe.com/music/kara-yol/"
+              },
+              "image": "https://palmarghe.com/visuals/music/kara-yol.webp",
+              "publisher": {
+                "@type": "Organization",
+                "name": "Palmarghe",
+                "url": "https://palmarghe.com/"
+              }
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Palmarghe",
+                  "item": "https://palmarghe.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Müzik",
+                  "item": "https://palmarghe.com/music/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Kara Yol: Karanlık Anadolu Techno Atmosferi",
+                  "item": "https://palmarghe.com/music/kara-yol/"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

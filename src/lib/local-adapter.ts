@@ -246,7 +246,7 @@ if (name === 'get_public_author') {
         const user = users.find((entry) => entry.email === email && entry.password === password);
         if (!user) return { error: { message: 'Invalid credentials' } };
         cookies.set('pg_mock_user', user.id, { path: '/', httpOnly: true, sameSite: 'lax' });
-        return { error: null };
+        return { data: { user }, error: null };
       },
       signOut: async () => { cookies.delete('pg_mock_user', { path: '/' }); return { error: null }; },
       signUp: async ({ email, password, options }: { email: string; password: string; options?: { data?: Row } }) => {

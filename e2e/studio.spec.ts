@@ -547,7 +547,7 @@ test('featured and noindex content controls affect public output', async ({ page
   await page.goto('/lab/featured-noindex/');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content','noindex,nofollow');
   const schema = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() ?? '{}');
-  expect(schema.headline).toBe('Öne Çıkan Gizli İndeks');
+  expect(schema['@graph'].find((entry:{'@type':string})=>entry['@type']==='Article').headline).toBe('Öne Çıkan Gizli İndeks');
   const sitemap = await (await page.request.get('/sitemap.xml')).text();
   expect(sitemap).not.toContain('/lab/featured-noindex/');
 });
