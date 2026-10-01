@@ -82,14 +82,19 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const parsed = loginCredentials.safeParse({ email: form.get('email'), password: form.get('password') });
   if (!parsed.success) return errorResponse('Invalid credentials', 400);
   if (action !== 'login' && action !== 'signup') return errorResponse('Invalid action');
+  if (action === 'signup' && (form.get('privacy_acknowledgement') !== 'on' || form.get('kvkk_acknowledgement') !== 'on')) {
+    return errorResponse(locale === 'tr'
+      ? 'Hesap oluşturmadan önce Gizlilik Politikası ve KVKK Aydınlatma Metnini okuyup iki kutuyu da onaylayın.'
+      : 'Read the Privacy Policy and Personal Data Notice and acknowledge both before creating an account.');
+  }
   const permitted = await allowed(request,action,parsed.data.email);
   if (permitted === null) return errorResponse('Account service unavailable',503);
   if (!permitted) return errorResponse('Rate limit exceeded',429);
   if (action === 'signup') {
     const password = newPassword.safeParse(parsed.data.password);
     if (!password.success) return errorResponse('Use a 12+ character password with upper/lowercase letters, a number and a symbol',400);
-    if (form.get('privacy_consent') !== 'on' || form.get('kvkk_consent') !== 'on') return errorResponse('Legal consent required');
-    const { error } = await db.auth.signUp({ ...parsed.data, password: password.data, options: { emailRedirectTo: new URL('/auth/callback/', request.url).href, data: { privacy_consent_at: new Date().toISOString(), kvkk_consent_at: new Date().toISOString() } } });
+    const acknowledgedAt = new Date().toISOString();
+    const { error } = await db.auth.signUp({ ...parsed.data, password: password.data, options: { emailRedirectTo: new URL('/auth/callback/', request.url).href, data: { privacy_notice_acknowledged_at: acknowledgedAt, kvkk_notice_acknowledged_at: acknowledgedAt, notice_ui_version: '2026-10-01' } } });
     if (error) return errorResponse('Sign up unavailable', 400);
     return redirectTo(request, `${account}?notice=verify`);
   }

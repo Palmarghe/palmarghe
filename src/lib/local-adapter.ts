@@ -248,8 +248,8 @@ if (name === 'get_public_author') {
         return { error: null };
       },
       signOut: async () => { cookies.delete('pg_mock_user', { path: '/' }); return { error: null }; },
-      signUp: async ({ email, password }: { email: string; password: string }) => {
-        if (!users.some((user) => user.email === email)) { const user = { id: uid(), email, password, role: 'member' }; users.push(user); tables.profiles.push({ id: user.id, role: 'member' }); }
+      signUp: async ({ email, password, options }: { email: string; password: string; options?: { data?: Row } }) => {
+        if (!users.some((user) => user.email === email)) { const user = { id: uid(), email, password, role: 'member', user_metadata: options?.data ?? {} }; users.push(user); tables.profiles.push({ id: user.id, role: 'member' }); }
         return { error: null };
       },
       resetPasswordForEmail: async () => ({ error: null }),

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { measureCursorTracking } from './helpers/cursor';
 
 test.beforeEach(async ({ context }, testInfo) => {
   const suffix = [...testInfo.title].reduce((sum, character) => sum + character.charCodeAt(0), 0) % 240 + 1;
@@ -55,8 +56,8 @@ test('social metadata and account disclosure are localized', async ({ page }) =>
   await page.getByText('Hesap oluştur', { exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Kayıt ol' })).toBeVisible();
   const signup = page.locator('form').filter({ has: page.locator('input[value="signup"]') });
-  await expect(signup.locator('input[name="privacy_consent"]')).toHaveAttribute('required','');
-  await expect(signup.locator('input[name="kvkk_consent"]')).toHaveAttribute('required','');
+  await expect(signup.locator('input[name="privacy_acknowledgement"]')).toHaveAttribute('required','');
+  await expect(signup.locator('input[name="kvkk_acknowledgement"]')).toHaveAttribute('required','');
   await expect(signup.getByRole('link', { name: 'Gizlilik Politikasını' })).toHaveAttribute('href','/privacy/');
   await expect(signup.getByRole('link', { name: 'KVKK Aydınlatma Metnini' })).toHaveAttribute('href','/kvkk/');
   await expect(signup.locator('input[name="password"]')).toHaveAttribute('minlength','12');
@@ -68,6 +69,29 @@ test('social metadata and account disclosure are localized', async ({ page }) =>
   await expect(password).toHaveAttribute('type','password');
   await page.getByRole('button', { name: 'Şifreyi göster' }).first().click();
   await expect(password).toHaveAttribute('type','text');
+});
+
+test('signup requires both notice acknowledgements and creates an account after acknowledgement', async ({ page }) => {
+  await page.goto('/account/');
+  await page.getByText('Hesap oluştur', { exact: true }).click();
+  const signup = page.locator('form').filter({ has: page.locator('input[value="signup"]') });
+  const email = `notice-qa-${Date.now()}@example.test`;
+  await signup.locator('input[name="email"]').fill(email);
+  await signup.locator('input[name="password"]').fill('LocalTest123!');
+  await signup.getByRole('button', { name: 'Kayıt ol', exact: true }).click();
+  await expect(page).not.toHaveURL(/notice=verify/);
+  await expect(signup.locator('input[name="privacy_acknowledgement"]')).not.toBeChecked();
+  const rejected = await page.request.post('/api/auth/', { headers: { Origin: 'http://127.0.0.1:4322' }, form: { action: 'signup', email, password: 'LocalTest123!', locale: 'tr' }, maxRedirects: 0 });
+  expect(rejected.status()).toBe(400);
+  await signup.locator('input[name="privacy_acknowledgement"]').check();
+  await signup.locator('input[name="kvkk_acknowledgement"]').check();
+  await signup.getByRole('button', { name: 'Kayıt ol', exact: true }).click();
+  await expect(page).toHaveURL(/notice=verify/);
+  const login = page.locator('form').filter({ has: page.locator('input[value="login"]') });
+  await login.locator('input[name="email"]').fill(email);
+  await login.locator('input[name="password"]').fill('LocalTest123!');
+  await login.getByRole('button', { name: 'Giriş yap', exact: true }).click();
+  await expect(page.getByText(email, { exact: true })).toBeVisible();
 });
 
 test('six public widths and Studio dashboard have no horizontal overflow', async ({ page }) => {
@@ -120,6 +144,8 @@ test('brand cursor is enabled for fine pointers and keeps text inputs usable', a
   await page.goto('/');
   await expect(page.locator('[data-brand-cursor]')).toHaveCount(1);
   await expect.poll(() => page.evaluate(() => document.documentElement.classList.contains('has-brand-cursor'))).toBe(true);
+  const tracking = await measureCursorTracking(page);
+  expect(tracking.maximumError, JSON.stringify(tracking)).toBeLessThanOrEqual(1);
   await page.locator('.head-actions [data-search-trigger]').click();
   const search = page.locator('#search-overlay');
   const cursor = page.locator('[data-brand-cursor]');

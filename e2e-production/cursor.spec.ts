@@ -1,4 +1,27 @@
 import { test, expect } from '@playwright/test';
+import { measureCursorTracking } from '../e2e/helpers/cursor';
+
+test('search opening keeps the pointer in the visible top layer without another mouse move', async ({ page }) => {
+  await page.goto('/');
+  const cursor = page.locator('[data-brand-cursor]');
+  for (const theme of ['dark', 'light']) {
+    await page.evaluate(value => document.body.dataset.theme = value, theme);
+    for (let attempt = 0; attempt < 2; attempt++) {
+      await page.locator('.head-actions [data-search-trigger]').click();
+      await expect(page.locator('#search-overlay')).toBeVisible();
+      await expect(cursor).toHaveCSS('opacity', '1');
+      expect(await cursor.evaluate(element => element.parentElement?.id)).toBe('search-overlay');
+      const bounds = await cursor.boundingBox();
+      expect(bounds).not.toBeNull();
+      expect(bounds!.x).toBeGreaterThanOrEqual(0);
+      expect(bounds!.y).toBeGreaterThanOrEqual(0);
+      await page.locator('[data-search-close]').hover();
+      await expect(cursor).toHaveCSS('opacity', '1');
+      await page.screenshot({ path: `test-results/search-pointer-${theme}.png` });
+      await page.keyboard.press('Escape');
+    }
+  }
+});
 
 test('Palmarghe pointer has semantic states across reading, links, controls and search', async ({ page }) => {
   await page.goto('/fm/lamine-yamal-fm26/');
@@ -113,7 +136,7 @@ test('forms retain native text and checkbox pointers while rapid mouse moves sta
   await expect(message).toHaveCSS('cursor', 'text');
   await expect(cursor).toHaveAttribute('data-state', 'native');
 
-  const consent = page.locator('.contact-content input[name="consent"]');
+  const consent = page.locator('.contact-content input[name="privacy_acknowledgement"]');
   await consent.hover();
   await expect(consent).toHaveCSS('cursor', 'pointer');
   await expect(cursor).toHaveAttribute('data-state', 'native');
@@ -124,4 +147,15 @@ test('forms retain native text and checkbox pointers while rapid mouse moves sta
   await page.mouse.move(1280, 120);
   await expect.poll(() => cursor.evaluate(element => element.style.getPropertyValue('--cursor-x'))).toBe('1280px');
   await expect.poll(() => cursor.evaluate(element => element.style.getPropertyValue('--cursor-y'))).toBe('120px');
+});
+
+test('rendered cursor reaches the pointer within one animation frame', async ({ page }) => {
+  await page.goto('/');
+  for (const theme of ['dark', 'light']) {
+    await page.evaluate(value => { document.body.dataset.theme = value; }, theme);
+    const measurements = await measureCursorTracking(page);
+    console.log(`Cursor render measurement (${theme}): ${JSON.stringify(measurements)}`);
+    test.info().annotations.push({ type: 'cursor-frame-measurement', description: JSON.stringify({ theme, ...measurements }) });
+    expect(measurements.maximumError, JSON.stringify(measurements)).toBeLessThanOrEqual(1);
+  }
 });

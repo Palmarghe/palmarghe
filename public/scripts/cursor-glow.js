@@ -17,6 +17,12 @@
     if (searchDialog?.open) searchDialog.append(cursor);
     else document.body.append(cursor);
   };
+  searchDialog?.addEventListener('search-open', () => {
+    syncCursorLayer();
+    cursor.removeAttribute('data-away');
+    cursor.removeAttribute('data-pressed');
+  });
+  if (searchDialog) new MutationObserver(syncCursorLayer).observe(searchDialog, { attributes: true, attributeFilter: ['open'] });
   new MutationObserver(syncCursorLayer).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
   searchDialog?.addEventListener('close', syncCursorLayer);
 

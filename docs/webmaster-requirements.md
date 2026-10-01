@@ -14,8 +14,8 @@ Kaynak: `C:\Users\Palmarghe\.codex\attachments\060efb3f-064b-466b-bac2-cf1bafe94
 ## Kodla doğrulanan kusurlar ve durumları
 
 1. **Kapatıldı — Vimeo gömme:** `src/lib/blocks.ts` HTTPS `player.vimeo.com/video/` kabul eder; `src/middleware.ts` CSP `frame-src` Vimeo içermez. Kabul edilen player production'da tarayıcı tarafından engellenebilir. CSP yalnız güvenilir `player.vimeo.com` ile uyumlu hale getirildi. Canlı Chrome kontrollü player yanıtı gerçek iframe içinde render edildi; production header testi de geçti. Kusur kapatıldı. Gerçek üçüncü taraf videonun erişilebilirliği/erişim durumu bu kontrollü testin kapsamı değildir.
-2. **P2 — İmleç takip gecikmesi:** `src/styles/global.css` `.brand-cursor` konum transform'una `--cursor-speed:180ms` transition uygular. RAF koordinat testleri ekrandaki gerçek gecikmeyi kanıtlamaz. Konum takibi ile durum animasyonunu ayırıp gerçek bounding rectangle/frametime doğrulaması gerekir.
-3. **P2 — Gizlilik UI:** kayıt formu KVKK aydınlatmasını işleme onayıyla aynı zorunlu checkbox metninde sunar; hedefin 28. maddesi bu ayrımı ister. Hukuki metin değişmeden teknik acknowledgement/consent modeli ve sunucu doğrulaması incelenmeli. İletişim formunun aydınlatma checkbox'ında doğrudan gizlilik bağlantısı yok.
+2. **Kapatıldı — İmleç takip gecikmesi:** Konum transition kaldırıldı; press animasyonu iç SVG üzerine taşındı. Kontrollü 40-event rendered bounding-box ölçümünde Chrome/Edge iki temada maksimum hata 0 px. Fiziksel donanım FPS/latency iddiası değildir.
+3. **Kapatıldı — Gizlilik UI:** Hukuki metin değişmeden kayıt formunda iki zorunlu okuma acknowledgement alanı ve sunucu doğrulaması uygulandı. İletişim formuna lokalize gizlilik bağlantısı eklendi. Unit/local accepted path ve production invalid request/axe testleri geçti; SMTP teslimatı bu kanıtın kapsamında değildir.
 
 ## Tam kapsamın kapanması için gereken kanıt
 
@@ -76,3 +76,10 @@ Kaynak: `C:\Users\Palmarghe\.codex\attachments\060efb3f-064b-466b-bac2-cf1bafe94
 ## Dış kapılar
 
 SMTP gerçek teslimat/reset callback, Search Console saha verisinin olgunlaşması ve manuel assistive-technology/hukuki inceleme dış veya kullanıcı bağımlı kapılardır. Bunların varlığı uygulanabilir kod ve test işlerini durdurmaz. Cloudflare Access aktivasyonu ödeme/terms bağımlı mevcut dış kapıdır; ana hedefte MFA yeniden ekleme isteği yoktur.
+
+
+## Latest follow-up — 1 October 2026
+
+Current Worker: `32e04843-2abd-43d1-9ba3-710e1d6afe9d`. Search pointer top-layer synchronization is explicit on opening. Cursor position transition lag and privacy UI conflation are fixed: rendered geometry is checked, mandatory legal notice reading acknowledgements are distinct from newsletter opt-in, and localized contact notice links are present. Legal text and production content are unchanged. Verify: Astro 0 diagnostics, unit 23/23, build passed; full local E2E 46/46 and final local cursor regression passed. Preceding Worker production 36/36. Current pointer matrix: Chrome/Edge 10/10 and WebKit 5/5 passed against production. WebKit was installed after its initial executable-missing result; its successful rerun used a separate output directory. This does not close the full webmaster scope or physical Safari/zoom/assistive-technology/SMTP gates.
+
+Final live pointer matrix: Chrome 5/5, Edge 5/5, WebKit 5/5. Both themes retain visible search controls and native text cursor/caret. Screenshot inspection confirmed the pointer on the search close control. Full production run passed 36 cases; one layout case hit a test-artifact directory collision during parallel runs and passed 1/1 when rerun alone. All 37 production cases therefore passed across the full run and isolated rerun. No product assertion failed in that run.

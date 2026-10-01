@@ -457,7 +457,7 @@ body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-p
 .advertising-visibility{font-size:.7rem;font-style:normal;color:var(--muted)}
 
 /* Palmarghe cursor: offset crop marks frame a small P-shaped editorial index. */
-:root{--cursor-size:22px;--cursor-hover-size:26px;--cursor-press-scale:.92;--cursor-speed:180ms;--cursor-ease:cubic-bezier(.2,.7,.25,1);--cursor-layer:90}
+:root{--cursor-size:22px;--cursor-hover-size:26px;--cursor-press-scale:.92;--cursor-press-speed:100ms;--cursor-speed:180ms;--cursor-ease:cubic-bezier(.2,.7,.25,1);--cursor-layer:90}
 @media (pointer:fine) and (hover:hover) and (prefers-reduced-motion:no-preference){
   .has-brand-cursor a,.has-brand-cursor button,.has-brand-cursor summary,.has-brand-cursor [role="button"]{cursor:none}
   .has-brand-cursor input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="checkbox"]):not([type="radio"]):not([type="reset"]),.has-brand-cursor textarea,.has-brand-cursor [contenteditable="true"]{cursor:text}
@@ -470,8 +470,8 @@ body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-p
   .has-brand-cursor:has(dialog[open]),.has-brand-cursor:has(dialog[open]) *{cursor:auto}
   .has-brand-cursor:has(dialog[open]) a,.has-brand-cursor:has(dialog[open]) button{cursor:pointer}
   .has-brand-cursor:has(dialog[open]) input,.has-brand-cursor:has(dialog[open]) textarea{cursor:text}
-  .brand-cursor{--cursor-x:-80px;--cursor-y:-80px;position:fixed;z-index:var(--cursor-layer);left:0;top:0;width:var(--cursor-size);height:var(--cursor-size);display:grid;place-items:center;pointer-events:none;transform:translate3d(var(--cursor-x),var(--cursor-y),0) translate(-50%,-50%);color:var(--text);opacity:1;transition:opacity var(--cursor-speed) ease,transform var(--cursor-speed) var(--cursor-ease);will-change:transform}
-  .brand-cursor svg{display:block;width:100%;height:100%;overflow:visible}
+  .brand-cursor{--cursor-x:-80px;--cursor-y:-80px;position:fixed;z-index:var(--cursor-layer);left:0;top:0;width:var(--cursor-size);height:var(--cursor-size);display:grid;place-items:center;pointer-events:none;transform:translate3d(var(--cursor-x),var(--cursor-y),0) translate(-50%,-50%);color:var(--text);opacity:1;transition:opacity var(--cursor-speed) ease;will-change:transform}
+  .brand-cursor svg{display:block;width:100%;height:100%;overflow:visible;transition:transform var(--cursor-press-speed) var(--cursor-ease)}
   .brand-cursor path{fill:none;stroke:currentColor;stroke-width:1.15;stroke-linecap:square;stroke-linejoin:miter;vector-effect:non-scaling-stroke}
   .brand-cursor .cursor-corner{transform-box:fill-box;transform-origin:center;transition:transform var(--cursor-speed) var(--cursor-ease),stroke var(--cursor-speed) ease}
   .brand-cursor .cursor-mark{stroke:var(--accent);stroke-width:1.35}
@@ -491,7 +491,7 @@ body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-p
   .has-brand-cursor[data-cursor-state="text"] .content-detail p,.has-brand-cursor[data-cursor-state="text"] .content-detail li,.has-brand-cursor[data-cursor-state="text"] .content-detail blockquote,.has-brand-cursor[data-cursor-state="text"] .page-content p,.has-brand-cursor[data-cursor-state="text"] .page-content li,.has-brand-cursor[data-cursor-state="text"] .page-content blockquote,.has-brand-cursor[data-cursor-state="text"] .page-content h1,.has-brand-cursor[data-cursor-state="text"] .page-content h2,.has-brand-cursor[data-cursor-state="text"] .page-content h3{cursor:text}
   .brand-cursor[data-state="loading"] svg{animation:cursor-calibrate 850ms linear infinite}
   .brand-cursor[data-state="drag"]{width:30px;transform:translate3d(var(--cursor-x),var(--cursor-y),0) translate(-50%,-50%) scaleX(1.2)}
-  .brand-cursor[data-pressed]{transform:translate3d(var(--cursor-x),var(--cursor-y),0) translate(-50%,-50%) scale(var(--cursor-press-scale))}
+  .brand-cursor[data-pressed] svg{transform:scale(var(--cursor-press-scale))}
   body[data-theme="light"] .brand-cursor{color:var(--text)}
 }
 @keyframes cursor-calibrate{to{transform:rotate(360deg)}}

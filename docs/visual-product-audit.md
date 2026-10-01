@@ -85,3 +85,10 @@ Canlı `palmarghe.com/`, `/ai/` ve oturum açık `studio.palmarghe.com/studio/` 
 - AI, oyun, FM26 ve Lab için dört özgün WebP kapak üretildi. Bunlar production Storage'a iki dilli alt metinlerle kaydedildi ve her kategoriye ait gerçek, yapılandırılmış bir örnek yayında kullanıldı.
 - Studio ayar rayındaki teknik etiketler ilk kez içerik girecek kullanıcı için sadeleştirildi. Gizli slash menüsünün görünmesi, uzun medya adlarının yatay taşması ve 360 px dolu ana sayfa taşması canlı Chrome denetimlerinde bulundu ve kapatıldı.
 - Son Worker sürümü `2d7742d9-8c0d-476c-a8c6-2568489c3144`; production Playwright 10/10 geçti. Altı genişlikte yatay taşma yok, canlı axe taramalarında ciddi veya kritik bulgu yok ve kritik rotalarda tarayıcı konsol hatası yok.
+
+
+## Latest follow-up — 1 October 2026
+
+Current Worker: `32e04843-2abd-43d1-9ba3-710e1d6afe9d`. Search pointer top-layer synchronization is explicit on opening. Cursor position transition lag and privacy UI conflation are fixed: rendered geometry is checked, mandatory legal notice reading acknowledgements are distinct from newsletter opt-in, and localized contact notice links are present. Legal text and production content are unchanged. Verify: Astro 0 diagnostics, unit 23/23, build passed; full local E2E 46/46 and final local cursor regression passed. Preceding Worker production 36/36. Current pointer matrix: Chrome/Edge 10/10 and WebKit 5/5 passed against production. WebKit was installed after its initial executable-missing result; its successful rerun used a separate output directory. This does not close the full webmaster scope or physical Safari/zoom/assistive-technology/SMTP gates.
+
+Final live pointer matrix: Chrome 5/5, Edge 5/5, WebKit 5/5. Both themes retain visible search controls and native text cursor/caret. Screenshot inspection confirmed the pointer on the search close control. Full production run passed 36 cases; one layout case hit a test-artifact directory collision during parallel runs and passed 1/1 when rerun alone. All 37 production cases therefore passed across the full run and isolated rerun. No product assertion failed in that run.
