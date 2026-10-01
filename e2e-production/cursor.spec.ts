@@ -94,3 +94,31 @@ test('cursor adapts to theme, device scale, reduced motion and touch input', asy
   await expect(touchPage.locator('[data-brand-cursor]')).toHaveCount(0);
   await touch.close();
 });
+
+test('forms retain native text and checkbox pointers while rapid mouse moves stay in sync', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto('/contact/');
+  const cursor = page.locator('[data-brand-cursor]');
+  const name = page.locator('input[name="name"]');
+  await name.hover();
+  await expect(name).toHaveCSS('cursor', 'text');
+  await expect(cursor).toHaveAttribute('data-state', 'native');
+  await expect(cursor).toHaveCSS('opacity', '0');
+
+  const message = page.locator('textarea[name="message"]');
+  await message.hover();
+  await expect(message).toHaveCSS('cursor', 'text');
+  await expect(cursor).toHaveAttribute('data-state', 'native');
+
+  const consent = page.locator('.contact-content input[name="consent"]');
+  await consent.hover();
+  await expect(consent).toHaveCSS('cursor', 'pointer');
+  await expect(cursor).toHaveAttribute('data-state', 'native');
+
+  await page.mouse.move(24, 28);
+  await page.mouse.move(380, 260);
+  await page.mouse.move(960, 680);
+  await page.mouse.move(1280, 120);
+  await expect.poll(() => cursor.evaluate(element => element.style.getPropertyValue('--cursor-x'))).toBe('1280px');
+  await expect.poll(() => cursor.evaluate(element => element.style.getPropertyValue('--cursor-y'))).toBe('120px');
+});

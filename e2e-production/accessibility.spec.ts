@@ -4,13 +4,34 @@ import AxeBuilder from '@axe-core/playwright';
 for (const path of ['/', '/en/', '/contact/', '/account/', '/archive/']) {
   test(`live ${path} has no serious WCAG violations`, async ({ page }) => {
     await page.goto(path);
-    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa']).analyze();
     expect(results.violations.filter((item) => ['serious', 'critical'].includes(item.impact ?? '')), JSON.stringify(results.violations, null, 2)).toEqual([]);
   });
 }
 
 test('live Studio sign-in has no serious WCAG violations', async ({ page }) => {
   await page.goto('https://studio.palmarghe.com/studio/');
-  const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+  const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa']).analyze();
+  expect(results.violations.filter((item) => ['serious', 'critical'].includes(item.impact ?? '')), JSON.stringify(results.violations, null, 2)).toEqual([]);
+});
+
+for (const path of ['/', '/en/', '/contact/', '/account/', '/archive/']) {
+  test(`live light theme ${path} has no serious WCAG 2.2 violations`, async ({ page }) => {
+    await page.goto(path);
+    await page.locator('[data-theme-toggle]').first().click();
+    await expect(page.locator('body')).toHaveAttribute('data-theme', 'light');
+    await page.waitForTimeout(250);
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa']).analyze();
+    expect(results.violations.filter((item) => ['serious', 'critical'].includes(item.impact ?? '')), JSON.stringify(results.violations, null, 2)).toEqual([]);
+  });
+}
+
+test('live mobile light theme navigation has no serious WCAG 2.2 violations', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Menüyü aç' }).click();
+  await page.getByRole('button', { name: 'Açık mod' }).click();
+  await page.waitForTimeout(250);
+  const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa']).analyze();
   expect(results.violations.filter((item) => ['serious', 'critical'].includes(item.impact ?? '')), JSON.stringify(results.violations, null, 2)).toEqual([]);
 });
