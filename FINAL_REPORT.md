@@ -1,6 +1,17 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 2 October 2026, SEO and Studio login audit
+## Current production state — 2 October 2026, performance audit
+
+Worker `9cea5697-c203-415f-8fc0-c5eaeab9846c` is live. Existing category artwork now has smaller responsive WebP renditions; five independent public page reads run together without changing RLS, publication filters, cookies or no-store HTML. Four category downloads fell about 80% in the captured mobile profile. Editorial content and originals are preserved.
+
+Verify: Astro 0 diagnostics, unit 55/55, build successful; affected local E2E 6/6; final production E2E 6/6, including 32 sitemap URLs, two-theme category checks, assets, schema, headers and console. Image-only production smoke previously passed 10/10 including all ten viewport widths. Real Chrome confirmed loaded images and final page reload. Native search-pointer regression passed.
+
+Final lab samples: mobile home 96 / LCP 2.531 s / CLS 0 / TBT 0; mobile QA article 94 / LCP 2.892 s / CLS 0.0113 / TBT 0. Earlier image-only home measured 98 / 2.106 s and desktop 98 / 0.963 s. These are individual lab observations, not field INP or a broad performance pass. Mobile LCP remains open. Evidence, methods, timing variance and rollback: `docs/performance-audit-2026-10-02.md` and `docs/performance-lab-2026-10-02.json`.
+
+Previous docs commit 26e56cb Actions succeeded: https://github.com/Palmarghe/palmarghe/actions/runs/36926330194 . Current release Actions is checked after push. Migration 202610010035, SEO/login and native search-pointer fixes remain active. The complete 40-section audit remains active.
+
+
+## Previous production state — 2 October 2026, SEO and Studio login audit (historical)
 
 Worker `14c7f7e5-ea26-432b-868c-00855db99a00` is live. Exact publication lookup fixes older-entry 404s while preserving draft/schedule boundaries. Nested taxonomy URLs, reciprocal language links, blank metadata fallback, sitemap category/collection coverage, deduplication and canonical exclusion are corrected. Base pages have localized descriptions; BreadcrumbList and real content cover/public-author data are present. Studio editor login reaches its existing editor entry point. Role/write permissions are preserved.
 

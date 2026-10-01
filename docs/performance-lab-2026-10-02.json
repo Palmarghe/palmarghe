@@ -1,0 +1,526 @@
+[
+  {
+    "name": "home-mobile",
+    "lighthouseVersion": "13.5.0",
+    "fetchTime": "2026-10-01T21:10:36.070Z",
+    "url": "https://palmarghe.com/?verify=lighthouse",
+    "settings": {
+      "output": [
+        "json"
+      ],
+      "maxWaitForFcp": 30000,
+      "maxWaitForLoad": 45000,
+      "pauseAfterFcpMs": 1000,
+      "pauseAfterLoadMs": 1000,
+      "networkQuietThresholdMs": 1000,
+      "cpuQuietThresholdMs": 1000,
+      "formFactor": "mobile",
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "throttlingMethod": "simulate",
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+      "auditMode": false,
+      "gatherMode": false,
+      "clearStorageTypes": [
+        "file_systems",
+        "shader_cache",
+        "service_workers",
+        "cache_storage"
+      ],
+      "disableStorageReset": false,
+      "debugNavigation": false,
+      "channel": "cli",
+      "usePassiveGathering": false,
+      "disableFullPageScreenshot": false,
+      "skipAboutBlank": false,
+      "blankPage": "about:blank",
+      "ignoreStatusCode": false,
+      "locale": "en-US",
+      "blockedUrlPatterns": null,
+      "additionalTraceCategories": null,
+      "extraHeaders": null,
+      "precomputedLanternData": null,
+      "onlyAudits": null,
+      "onlyCategories": null,
+      "skipAudits": null
+    },
+    "scores": {
+      "performance": 0.96,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1,
+      "agentic-browsing": 1
+    },
+    "metrics": {
+      "first-contentful-paint": 1669.7099999999998,
+      "largest-contentful-paint": 2505.2340000000004,
+      "total-blocking-time": 0,
+      "cumulative-layout-shift": 0,
+      "total-byte-weight": 774318,
+      "server-response-time": 731
+    },
+    "imageSavings": 399813,
+    "categoryRequests": [
+      {
+        "url": "https://palmarghe.com/visuals/editorial-ai.webp",
+        "transferSize": 53262
+      },
+      {
+        "url": "https://palmarghe.com/visuals/editorial-gaming.webp",
+        "transferSize": 125999
+      },
+      {
+        "url": "https://palmarghe.com/visuals/editorial-fm.webp",
+        "transferSize": 97337
+      },
+      {
+        "url": "https://palmarghe.com/visuals/editorial-lab.webp",
+        "transferSize": 84393
+      }
+    ]
+  },
+  {
+    "name": "home-mobile-after",
+    "lighthouseVersion": "13.5.0",
+    "fetchTime": "2026-10-01T21:13:53.799Z",
+    "url": "https://palmarghe.com/?verify=lighthouse",
+    "settings": {
+      "output": [
+        "json"
+      ],
+      "maxWaitForFcp": 30000,
+      "maxWaitForLoad": 45000,
+      "pauseAfterFcpMs": 1000,
+      "pauseAfterLoadMs": 1000,
+      "networkQuietThresholdMs": 1000,
+      "cpuQuietThresholdMs": 1000,
+      "formFactor": "mobile",
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "throttlingMethod": "simulate",
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+      "auditMode": false,
+      "gatherMode": false,
+      "clearStorageTypes": [
+        "file_systems",
+        "shader_cache",
+        "service_workers",
+        "cache_storage"
+      ],
+      "disableStorageReset": false,
+      "debugNavigation": false,
+      "channel": "cli",
+      "usePassiveGathering": false,
+      "disableFullPageScreenshot": false,
+      "skipAboutBlank": false,
+      "blankPage": "about:blank",
+      "ignoreStatusCode": false,
+      "locale": "en-US",
+      "blockedUrlPatterns": null,
+      "additionalTraceCategories": null,
+      "extraHeaders": null,
+      "precomputedLanternData": null,
+      "onlyAudits": null,
+      "onlyCategories": null,
+      "skipAudits": null
+    },
+    "scores": {
+      "performance": 0.98,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1,
+      "agentic-browsing": 1
+    },
+    "metrics": {
+      "first-contentful-paint": 1732.3304999999998,
+      "largest-contentful-paint": 2105.8635,
+      "total-blocking-time": 0,
+      "cumulative-layout-shift": 0,
+      "total-byte-weight": 502684,
+      "server-response-time": 773
+    },
+    "imageSavings": 143576,
+    "categoryRequests": [
+      {
+        "url": "https://palmarghe.com/visuals/editorial-ai-480.webp",
+        "transferSize": 10646
+      },
+      {
+        "url": "https://palmarghe.com/visuals/editorial-gaming-480.webp",
+        "transferSize": 22347
+      },
+      {
+        "url": "https://palmarghe.com/visuals/editorial-fm-480.webp",
+        "transferSize": 23701
+      },
+      {
+        "url": "https://palmarghe.com/visuals/editorial-lab-480.webp",
+        "transferSize": 14955
+      }
+    ]
+  },
+  {
+    "name": "home-desktop",
+    "lighthouseVersion": "13.5.0",
+    "fetchTime": "2026-10-01T21:14:57.163Z",
+    "url": "https://palmarghe.com/?verify=lighthouse",
+    "settings": {
+      "output": [
+        "json"
+      ],
+      "maxWaitForFcp": 30000,
+      "maxWaitForLoad": 45000,
+      "pauseAfterFcpMs": 1000,
+      "pauseAfterLoadMs": 1000,
+      "networkQuietThresholdMs": 1000,
+      "cpuQuietThresholdMs": 1000,
+      "formFactor": "desktop",
+      "throttling": {
+        "rttMs": 40,
+        "throughputKbps": 10240,
+        "requestLatencyMs": 0,
+        "downloadThroughputKbps": 0,
+        "uploadThroughputKbps": 0,
+        "cpuSlowdownMultiplier": 1
+      },
+      "throttlingMethod": "simulate",
+      "screenEmulation": {
+        "mobile": false,
+        "width": 1350,
+        "height": 940,
+        "deviceScaleFactor": 1,
+        "disabled": false
+      },
+      "emulatedUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
+      "auditMode": false,
+      "gatherMode": false,
+      "clearStorageTypes": [
+        "file_systems",
+        "shader_cache",
+        "service_workers",
+        "cache_storage"
+      ],
+      "disableStorageReset": false,
+      "debugNavigation": false,
+      "channel": "cli",
+      "usePassiveGathering": false,
+      "disableFullPageScreenshot": false,
+      "skipAboutBlank": false,
+      "blankPage": "about:blank",
+      "ignoreStatusCode": false,
+      "locale": "en-US",
+      "blockedUrlPatterns": null,
+      "additionalTraceCategories": null,
+      "extraHeaders": null,
+      "precomputedLanternData": null,
+      "onlyAudits": null,
+      "onlyCategories": null,
+      "skipAudits": null
+    },
+    "scores": {
+      "performance": 0.98,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1,
+      "agentic-browsing": 1
+    },
+    "metrics": {
+      "first-contentful-paint": 574.606,
+      "largest-contentful-paint": 962.719,
+      "total-blocking-time": 0,
+      "cumulative-layout-shift": 0,
+      "total-byte-weight": 337689,
+      "server-response-time": 631
+    },
+    "imageSavings": 43834,
+    "categoryRequests": [
+      {
+        "url": "https://palmarghe.com/visuals/editorial-ai-480.webp",
+        "transferSize": 10643
+      },
+      {
+        "url": "https://palmarghe.com/visuals/editorial-gaming-480.webp",
+        "transferSize": 22345
+      },
+      {
+        "url": "https://palmarghe.com/visuals/editorial-fm-480.webp",
+        "transferSize": 23691
+      },
+      {
+        "url": "https://palmarghe.com/visuals/editorial-lab-480.webp",
+        "transferSize": 14948
+      }
+    ]
+  },
+  {
+    "name": "article-mobile",
+    "lighthouseVersion": "13.5.0",
+    "fetchTime": "2026-10-01T21:15:15.056Z",
+    "url": "https://palmarghe.com/fm/lamine-yamal-fm26/?verify=lighthouse",
+    "settings": {
+      "output": [
+        "json"
+      ],
+      "maxWaitForFcp": 30000,
+      "maxWaitForLoad": 45000,
+      "pauseAfterFcpMs": 1000,
+      "pauseAfterLoadMs": 1000,
+      "networkQuietThresholdMs": 1000,
+      "cpuQuietThresholdMs": 1000,
+      "formFactor": "mobile",
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "throttlingMethod": "simulate",
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+      "auditMode": false,
+      "gatherMode": false,
+      "clearStorageTypes": [
+        "file_systems",
+        "shader_cache",
+        "service_workers",
+        "cache_storage"
+      ],
+      "disableStorageReset": false,
+      "debugNavigation": false,
+      "channel": "cli",
+      "usePassiveGathering": false,
+      "disableFullPageScreenshot": false,
+      "skipAboutBlank": false,
+      "blankPage": "about:blank",
+      "ignoreStatusCode": false,
+      "locale": "en-US",
+      "blockedUrlPatterns": null,
+      "additionalTraceCategories": null,
+      "extraHeaders": null,
+      "precomputedLanternData": null,
+      "onlyAudits": null,
+      "onlyCategories": null,
+      "skipAudits": null
+    },
+    "scores": {
+      "performance": 0.93,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 0.69,
+      "agentic-browsing": 1
+    },
+    "metrics": {
+      "first-contentful-paint": 1720.5679999999998,
+      "largest-contentful-paint": 2993.2019999999998,
+      "total-blocking-time": 0,
+      "cumulative-layout-shift": 0.01130670527173648,
+      "total-byte-weight": 335735,
+      "server-response-time": 997
+    },
+    "imageSavings": 59114,
+    "categoryRequests": []
+  },
+  {
+    "name": "home-mobile-final",
+    "lighthouseVersion": "13.5.0",
+    "fetchTime": "2026-10-01T21:19:10.232Z",
+    "url": "https://palmarghe.com/?verify=lighthouse",
+    "settings": {
+      "output": [
+        "json"
+      ],
+      "maxWaitForFcp": 30000,
+      "maxWaitForLoad": 45000,
+      "pauseAfterFcpMs": 1000,
+      "pauseAfterLoadMs": 1000,
+      "networkQuietThresholdMs": 1000,
+      "cpuQuietThresholdMs": 1000,
+      "formFactor": "mobile",
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "throttlingMethod": "simulate",
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+      "auditMode": false,
+      "gatherMode": false,
+      "clearStorageTypes": [
+        "file_systems",
+        "shader_cache",
+        "service_workers",
+        "cache_storage"
+      ],
+      "disableStorageReset": false,
+      "debugNavigation": false,
+      "channel": "cli",
+      "usePassiveGathering": false,
+      "disableFullPageScreenshot": false,
+      "skipAboutBlank": false,
+      "blankPage": "about:blank",
+      "ignoreStatusCode": false,
+      "locale": "en-US",
+      "blockedUrlPatterns": null,
+      "additionalTraceCategories": null,
+      "extraHeaders": null,
+      "precomputedLanternData": null,
+      "onlyAudits": null,
+      "onlyCategories": null,
+      "skipAudits": null
+    },
+    "scores": {
+      "performance": 0.96,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1,
+      "agentic-browsing": 1
+    },
+    "metrics": {
+      "first-contentful-paint": 1683.8449999999998,
+      "largest-contentful-paint": 2531.2909999999997,
+      "total-blocking-time": 0,
+      "cumulative-layout-shift": 0,
+      "total-byte-weight": 505082,
+      "server-response-time": 499
+    },
+    "imageSavings": 143576,
+    "categoryRequests": [
+      {
+        "url": "https://palmarghe.com/visuals/editorial-ai-480.webp",
+        "transferSize": 10640
+      },
+      {
+        "url": "https://palmarghe.com/visuals/editorial-gaming-480.webp",
+        "transferSize": 22345
+      },
+      {
+        "url": "https://palmarghe.com/visuals/editorial-fm-480.webp",
+        "transferSize": 23696
+      },
+      {
+        "url": "https://palmarghe.com/visuals/editorial-lab-480.webp",
+        "transferSize": 14955
+      }
+    ]
+  },
+  {
+    "name": "article-mobile-final",
+    "lighthouseVersion": "13.5.0",
+    "fetchTime": "2026-10-01T21:19:27.744Z",
+    "url": "https://palmarghe.com/fm/lamine-yamal-fm26/?verify=lighthouse",
+    "settings": {
+      "output": [
+        "json"
+      ],
+      "maxWaitForFcp": 30000,
+      "maxWaitForLoad": 45000,
+      "pauseAfterFcpMs": 1000,
+      "pauseAfterLoadMs": 1000,
+      "networkQuietThresholdMs": 1000,
+      "cpuQuietThresholdMs": 1000,
+      "formFactor": "mobile",
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "throttlingMethod": "simulate",
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+      "auditMode": false,
+      "gatherMode": false,
+      "clearStorageTypes": [
+        "file_systems",
+        "shader_cache",
+        "service_workers",
+        "cache_storage"
+      ],
+      "disableStorageReset": false,
+      "debugNavigation": false,
+      "channel": "cli",
+      "usePassiveGathering": false,
+      "disableFullPageScreenshot": false,
+      "skipAboutBlank": false,
+      "blankPage": "about:blank",
+      "ignoreStatusCode": false,
+      "locale": "en-US",
+      "blockedUrlPatterns": null,
+      "additionalTraceCategories": null,
+      "extraHeaders": null,
+      "precomputedLanternData": null,
+      "onlyAudits": null,
+      "onlyCategories": null,
+      "skipAudits": null
+    },
+    "scores": {
+      "performance": 0.94,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 0.69,
+      "agentic-browsing": 1
+    },
+    "metrics": {
+      "first-contentful-paint": 1675.1270000000002,
+      "largest-contentful-paint": 2891.8530000000005,
+      "total-blocking-time": 0,
+      "cumulative-layout-shift": 0.01130670527173648,
+      "total-byte-weight": 335765,
+      "server-response-time": 480
+    },
+    "imageSavings": 59114,
+    "categoryRequests": []
+  }
+]

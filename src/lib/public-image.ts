@@ -38,6 +38,10 @@ export function publicImageSrcSet(value: string | null | undefined): string | un
   try {
     const source = new URL(value, 'https://palmarghe.com');
     if (source.origin !== 'https://palmarghe.com') return undefined;
+    if (/^\/visuals\/editorial-(ai|gaming|fm|lab)\.webp$/.test(source.pathname)) {
+      const base = source.pathname.slice(0, -5);
+      return `${base}-480.webp 480w, ${base}-768.webp 768w, ${base}-960.webp 960w, ${base}.webp 1440w`;
+    }
     const base = responsiveImageSets[source.pathname];
     if (!base) return undefined;
     return `${base}-480.webp 480w, ${base}-960.webp 960w, ${base}.webp 1440w`;

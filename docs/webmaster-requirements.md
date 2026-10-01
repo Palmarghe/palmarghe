@@ -132,3 +132,7 @@ Astro 0 diagnostics, unit 55/55, build successful. Final local full run 49/50 wi
 Migration 202610010035 and native search pointers remain active. Previous commits 6cd8261/bc96d20 Actions both passed: https://github.com/Palmarghe/palmarghe/actions/runs/36922407546. Implementation commit 9726f19: GitHub Actions Verify succeeded, including npm run verify and the full local E2E suite: https://github.com/Palmarghe/palmarghe/actions/runs/36925792440 . Current Windows product coverage is 50 cases across the full run and isolated artifact-cleanup rerun; the clean CI run executes the full suite. The broader audit remains active. Full 40-section objective remains active.
 
 Earlier releases and counts below are historical evidence.
+
+## Performance progress — 2 October 2026
+
+Worker `9cea5697-c203-415f-8fc0-c5eaeab9846c`: responsive category renditions and five independent read batching deployed. Verify 55/55; affected local 6/6, final production 6/6. Full evidence in `docs/performance-audit-2026-10-02.md`. Mobile LCP remains open (final home 2.531 s; QA article 2.892 s); zero TBT is not INP. This advances requirements 18–21/36 without closing them or shrinking the objective. Previous goal turn verified the live native search pointer regression and yielded current runtime evidence; this turn changes deployed code and adds measured evidence.
