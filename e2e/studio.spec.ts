@@ -81,7 +81,22 @@ test('Studio editor exposes keyboard link and searchable slash commands', async 
   await editor.press('Control+A');
   await editor.press('Control+K');
   await expect(page.getByRole('dialog', { name: 'Bağlantı ekle' })).toBeVisible();
+  const linkDialog = page.getByRole('dialog', { name: 'Bağlantı ekle' });
+  await expect(page.locator('html')).toHaveCSS('overflow', 'hidden');
+  await linkDialog.getByRole('button', { name: 'Ekle', exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expect(linkDialog.getByRole('button', { name: 'Kapat', exact: true })).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
+  await expect(linkDialog.getByRole('button', { name: 'Ekle', exact: true })).toBeFocused();
+  await linkDialog.getByRole('button', { name: 'Kapat', exact: true }).click();
+  await expect(linkDialog).toBeHidden();
+  await expect(editor).toBeFocused();
+  await expect(editor.locator('a')).toHaveCount(0);
+  await expect(page.locator('html')).not.toHaveCSS('overflow', 'hidden');
+  await editor.press('Control+K');
+  await expect(linkDialog).toBeVisible();
   await page.keyboard.press('Escape');
+  await expect(editor).toBeFocused();
   await editor.fill('');
   await editor.pressSequentially('/tab');
   await expect(page.getByRole('menu', { name: 'Blok ekle' })).toBeVisible();
@@ -215,6 +230,30 @@ test('gallery media is private until publication and retains its caption', async
   await expect(page.getByRole('img', { name: 'Galeri görseli' })).toBeVisible();
   await expect(page.getByText('Test galerisi açıklaması')).toBeVisible();
   expect((await page.request.get(`/api/media/${mediaId}/`)).status()).toBe(200);
+  const galleryLink = page.locator('[data-gallery-lightbox]').first();
+  const dialog = page.locator('[data-gallery-dialog]');
+  const close = dialog.locator('[data-gallery-close]');
+  for (const theme of ['dark', 'light']) {
+    await page.evaluate(value => document.body.dataset.theme = value, theme);
+    await galleryLink.click();
+    await expect(dialog).toBeVisible();
+    await expect(page.locator('html')).toHaveCSS('overflow', 'hidden');
+    await expect(close).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(close).toBeFocused();
+    await page.keyboard.press('Shift+Tab');
+    await expect(close).toBeFocused();
+    await dialog.locator('[data-gallery-image]').click();
+    await expect(dialog).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(dialog).toBeHidden();
+    await expect(galleryLink).toBeFocused();
+    await expect(page.locator('html')).not.toHaveCSS('overflow', 'hidden');
+    await galleryLink.click();
+    await page.mouse.click(1, 1);
+    await expect(dialog).toBeHidden();
+    await expect(galleryLink).toBeFocused();
+  }
 });
 
 test('Studio pairs translations without exposing a UUID field', async ({ page }) => {

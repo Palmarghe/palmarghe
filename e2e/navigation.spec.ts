@@ -248,8 +248,15 @@ test('mobile portal is exclusive to touch devices and closes accessibly', async 
   const brand = page.locator('.site-header .brand');
   for (let tap = 0; tap < 5; tap++) await brand.tap();
   await expect(page.locator('.mobile-secret')).toBeVisible();
+  await expect(page.locator('html')).toHaveCSS('overflow', 'hidden');
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', { name: 'Dünyaya dön' })).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
+  await expect(page.getByRole('button', { name: 'Dünyaya dön' })).toBeFocused();
   await page.getByRole('button', { name: 'Dünyaya dön' }).click();
   await expect(page.locator('.mobile-secret')).toBeHidden();
+  await expect(brand).toBeFocused();
+  await expect(page.locator('html')).not.toHaveCSS('overflow', 'hidden');
   await context.close();
 });
 

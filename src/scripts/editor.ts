@@ -149,20 +149,43 @@ if (element && output) {
 
   const dialog = document.createElement('dialog');
   dialog.className = 'editor-block-dialog'; dialog.setAttribute('aria-labelledby', 'editor-dialog-title');
-  dialog.innerHTML = '<form method="dialog"><header><strong id="editor-dialog-title"></strong><button value="cancel" aria-label="Kapat">×</button></header><div class="editor-dialog-fields"></div><footer><button value="cancel" type="button" data-dialog-cancel>Vazgeç</button><button value="confirm">Ekle</button></footer></form>';
+  dialog.innerHTML = '<form method="dialog"><header><strong id="editor-dialog-title"></strong><button type="button" data-dialog-cancel aria-label="Kapat">×</button></header><div class="editor-dialog-fields"></div><footer><button value="cancel" type="button" data-dialog-cancel>Vazgeç</button><button value="confirm">Ekle</button></footer></form>';
   document.body.append(dialog);
+  let dialogTrigger: HTMLElement | null = null;
+  dialog.addEventListener('close', () => {
+    document.documentElement.classList.remove('editor-modal-open');
+    if (dialogTrigger?.isConnected) dialogTrigger.focus();
+  });
+  dialog.querySelectorAll<HTMLButtonElement>('[data-dialog-cancel]').forEach(button => button.addEventListener('click', () => dialog.close()));
+  dialog.addEventListener('keydown', event => {
+    if (event.key !== 'Tab') return;
+    const controls = [...dialog.querySelectorAll<HTMLElement>('a[href],button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled)')].filter(control => control.getClientRects().length > 0);
+    const first = controls[0], last = controls[controls.length - 1];
+    if (first && (event.shiftKey ? document.activeElement === first : document.activeElement === last)) {
+      event.preventDefault(); (event.shiftKey ? last : first).focus();
+    }
+  });
+  let backdropPress = false;
+  const outsideDialog = (event: PointerEvent) => {
+    const bounds = dialog.getBoundingClientRect();
+    return event.target === dialog && (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom);
+  };
+  dialog.addEventListener('pointerdown', event => { backdropPress = outsideDialog(event); });
+  dialog.addEventListener('pointerup', event => { if (backdropPress && outsideDialog(event)) dialog.close(); backdropPress = false; });
+  dialog.addEventListener('pointercancel', () => { backdropPress = false; });
   const fields = dialog.querySelector<HTMLElement>('.editor-dialog-fields')!;
   const dialogTitle = dialog.querySelector<HTMLElement>('#editor-dialog-title')!;
   const normalizeEmbed = (value: string) => { try { const url = new URL(value); if (url.hostname.includes('youtu')) { const id = url.searchParams.get('v') || url.pathname.split('/').filter(Boolean).pop(); return id ? `https://www.youtube-nocookie.com/embed/${id}` : value; } if (url.hostname === 'vimeo.com') { const id = url.pathname.split('/').filter(Boolean).pop(); return id ? `https://player.vimeo.com/video/${id}` : value; } return value; } catch { return value; } };
   const escapeText = (value: unknown) => String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\"', '&quot;').replaceAll("'", '&#39;');
   const openDialog = (kind: 'media' | 'gallery' | 'callout' | 'cta' | 'embed' | 'link' | 'table') => {
+    dialogTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const mediaPicker = media.map((item, index) => `<label data-media-label><input type="radio" name="media_id" value="${escapeText(item.id)}" ${index === 0 ? 'checked' : ''} required><img src="/api/media/${escapeText(item.id)}/" alt="" loading="lazy"><span>${escapeText(item.alt_tr || item.alt_en || item.path || 'Görsel')}</span></label>`).join('');
     dialogTitle.textContent = ({ media: 'Görsel ekle', gallery: 'Galeri ekle', callout: 'Not ekle', cta: 'Buton ekle', embed: 'Video ekle', link: 'Bağlantı ekle', table: 'Tablo ekle' })[kind];
     fields.innerHTML = kind === 'table' ? '<label>Satır<input name="rows" type="number" min="1" max="10" value="3" required></label><label>Sütun<input name="columns" type="number" min="1" max="8" value="2" required></label>' : kind === 'media' ? `<label>Medya ara<input type="search" name="media_search" placeholder="Görsellerde ara"></label><div class="editor-gallery-picker editor-media-picker">${mediaPicker}</div><a class="text-link" href="/studio/?section=media">Medya kütüphanesini aç →</a><label>Alternatif metin<input name="alt" maxlength="300" required></label><label>Açıklama<input name="caption" maxlength="300"></label>` : kind === 'gallery' ? `<p>Yayına alınan görseller ziyaretçiler için tıklanabilir bir galeride açılır.</p><div class="editor-gallery-picker">${media.map((item) => `<label><input type="checkbox" name="media_ids" value="${item.id}"><img src="/api/media/${item.id}/" alt="" loading="lazy"><span>${item.alt_tr || item.alt_en || item.path || 'Görsel'}</span></label>`).join('')}</div>` : kind === 'callout' ? '<label>Tür<select name="tone"><option value="note">Not</option><option value="info">Bilgi</option><option value="warning">Uyarı</option></select></label><label>Başlık<input name="title" maxlength="120" required value="Not"></label>' : kind === 'cta' ? '<label>Buton metni<input name="label" maxlength="120" required></label><label>Bağlantı<input name="href" placeholder="/iletisim/ veya https://" required></label><label>Stil<select name="style"><option value="primary">Vurgu</option><option value="secondary">İkincil</option><option value="text">Metin bağlantısı</option></select></label>' : kind === 'link' ? '<label>Bağlantı<input name="href" placeholder="/sayfa/ veya https://" required></label>' : '<label>YouTube veya Vimeo URL<input name="src" type="url" required placeholder="https://www.youtube.com/watch?v=..."></label><label>Başlık<input name="title" maxlength="160" required value="Video"></label>';
     const form = dialog.querySelector('form')!;
     form.onsubmit = (event) => { event.preventDefault(); const data = new FormData(form); if (kind === 'media') { const selected = media.find((item) => item.id === data.get('media_id')); if (!selected) return; editor.chain().focus().insertContent({ type: 'mediaImage', attrs: { media_id: selected.id, alt: String(data.get('alt') || selected.alt_tr || selected.alt_en || ''), caption: String(data.get('caption') || '') } }).run(); } if (kind === 'gallery') { const mediaIds = data.getAll('media_ids').map(String); if (!mediaIds.length) return; editor.chain().focus().insertContent({ type: 'mediaGallery', attrs: { media_ids: mediaIds } }).run(); } if (kind === 'callout') editor.chain().focus().insertContent({ type: 'callout', attrs: { tone: String(data.get('tone')), title: String(data.get('title')) }, content: [{ type: 'paragraph' }] }).run(); if (kind === 'cta') editor.chain().focus().insertContent({ type: 'cta', attrs: { label: String(data.get('label')), href: String(data.get('href')), style: String(data.get('style')) } }).run(); if (kind === 'link') { const href = String(data.get('href') ?? '').trim(); if (!(/^(https?:|mailto:)/i.test(href) || href.startsWith('/'))) return; editor.chain().focus().extendMarkRange('link').setLink({ href }).run(); } if (kind === 'embed') editor.chain().focus().insertContent({ type: 'embed', attrs: { src: normalizeEmbed(String(data.get('src'))), title: String(data.get('title')) } }).run(); if (kind === 'table') { const rows = Math.max(1, Math.min(10, Number(data.get('rows')) || 3)); const columns = Math.max(1, Math.min(8, Number(data.get('columns')) || 2)); editor.chain().focus().insertContent({ type: 'table', content: Array.from({ length: rows }, (_, row) => ({ type: 'tableRow', content: Array.from({ length: columns }, () => ({ type: row === 0 ? 'tableHeader' : 'tableCell', content: [{ type: 'paragraph' }] })) })) }).run(); } dialog.close(); sync(); };
     dialog.querySelector<HTMLInputElement>('input[name="media_search"]')?.addEventListener('input', (event) => { const term = ((event.currentTarget as HTMLInputElement).value || '').toLocaleLowerCase('tr'); dialog.querySelectorAll<HTMLElement>('[data-media-label]').forEach((label) => { label.hidden = !label.textContent?.toLocaleLowerCase('tr').includes(term); }); });
-    dialog.querySelector<HTMLButtonElement>('[data-dialog-cancel]')!.onclick = () => dialog.close(); dialog.showModal(); dialog.querySelector<HTMLElement>('input,select')?.focus();
+    dialog.showModal(); document.documentElement.classList.add('editor-modal-open'); dialog.querySelector<HTMLElement>('input,select')?.focus();
   };
   document.querySelectorAll<HTMLButtonElement>('[data-editor]').forEach((button) => button.addEventListener('click', () => {
     switch (button.dataset.editor) {

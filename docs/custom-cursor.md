@@ -1,5 +1,14 @@
 # Palmarghe editorial pointer
 
+## Current modal regression — 1 October 2026
+
+Worker `c6b42a8f-8a2a-42e7-882b-3a9e0b5a5fda`. Gallery, mobile secret and Studio editor dialogs now lock background scrolling, contain Tab/Shift+Tab, restore focus for all close paths and dismiss only on a genuine backdrop press/release. Clicking gallery content does not dismiss it. Editor close is a non-submitting button: empty required fields no longer prevent cancellation or accidentally insert content. Native Escape and theme behavior are preserved.
+
+Verify: Astro 0 diagnostics, Vitest 23/23, build success; complete local E2E 46/46. Relevant production modal/navigation/cursor tests passed 10/10. The real local gallery publication flow passed; the deployed gallery asset and CSS were tested at 390/1440 px in both themes with a controlled DOM fixture, because no gallery item is currently published. Fixture does not write production content. Mobile portal live tests cover wheel scroll, keyboard loop, backdrop/Escape, focus restore and serious/critical axe in both themes. Authenticated live Chrome Studio verified empty-link cancellation, focus loop and restore, scroll lock, desktop dark and 390 px mobile light (dialog bounds 19–371 px). No content was saved.
+
+Previous commit 82b730a Actions succeeded: https://github.com/Palmarghe/palmarghe/actions/runs/36916288533. The current commit Actions result is checked after push. The full webmaster objective is still active; this closes concrete modal defects, not every form/dropdown/SEO/performance requirement.
+
+
 ## Design choice
 
 Three directions were weighed before changing the cursor:

@@ -4,7 +4,7 @@ Kaynak: `C:\Users\Palmarghe\.codex\attachments\060efb3f-064b-466b-bac2-cf1bafe94
 
 1 Ekim 2026 itibarıyla önceki turn somut ilerlemeydi: imleç kırpılması düzeltildi, deploy edildi ve production/Actions doğrulandı. Bu tur modal etkileşimi ve yeni kanıt kaydı ekler. Ana hedefin tamamlanması henüz kanıtlanmış değildir. Tarihsel rapor, yeşil test veya dosyanın varlığı tek başına geniş kapsamı tamamlamaz.
 
-## Doğrudan doğrulanan son değişiklik
+## Önceki release kanıtı (tarihsel)
 
 - Worker `ef4359fe-d4c6-4c34-aa22-231ccaca1b63`: arama arka plan scroll kilidi, Tab/Shift+Tab döngüsü, backdrop kapanışı, focus restore.
 - `npm run verify`: Astro 0 tanı, Vitest 18/18, build başarılı.
@@ -32,7 +32,7 @@ Kaynak: `C:\Users\Palmarghe\.codex\attachments\060efb3f-064b-466b-bac2-cf1bafe94
 | 9 | Kart varyantları, oran, erişilebilir tam kart, nested links | Kart kodu/testleri mevcut; bütün varyantların markup/hover/odak incelemesi açık. |
 | 10 | Ortak primary/secondary/ghost, loading/disabled/active/focus | CSS ve submit davranışları var; tüm button sınıflarının state matrisi gerekli. |
 | 11 | Form state'leri, gerçek label, alan hatası, double-submit | Birim/Studio testleri mevcut; public ve Studio form türleri başına hata/başarı/loading kanıtı gerekli. |
-| 12 | Bütün modal/dropdown: Esc, backdrop, trap, restore, lock, ARIA | Search son dört kombinasyon doğrulandı. Gallery/editor/mobile-secret modalı ve dropdown'lar ayrı incelenecek. |
+| 12 | Bütün modal/dropdown: Esc, backdrop, trap, restore, lock, ARIA | Search doğrulandı. Gallery/editor/mobile-secret scroll lock, trap, tüm close yollarında restore ve backdrop düzeltmeleri local 46/46, ilgili live 10/10 ve authenticated Chrome Studio ile doğrulandı. Dropdown/ribbon/slash tüm klavye varyantları ayrıca açık. |
 | 13 | Search debounce, keyboard, Enter, Esc, clear, loading/no-result | Production arama 4 test geçti; açık clear eylemi/native clear çapraz tarayıcı kapsamı henüz eşlenmedi. |
 | 14 | Login/signup/reset/logout/session, password visibility, return URL | Auth UI ve password script var; SMTP/reset dış kapı, güncel return URL ve bütün hata durumları açık. |
 | 15 | WCAG 2.2 AA: bütün semantic/keyboard/focus/contrast/motion alanları | Axe ciddi/kritik sonuçları yalnız otomatik alt kapsamı kanıtlar. Manuel klavye, tüm ihlal seviyeleri ve assistive technology incelemesi açık. |
@@ -48,7 +48,7 @@ Kaynak: `C:\Users\Palmarghe\.codex\attachments\060efb3f-064b-466b-bac2-cf1bafe94
 | 25 | 404/search/navigation, güvenli 500/API/network mesajı | 404 kodu ve search network tests var; diğer server/API hata senaryoları gerekli. |
 | 26 | XSS/CSRF/injection/session/rate/uploads/redirect/headers/cookies | Middleware başlıkları, Zod/RLS ve güvenlik testleri var. Runtime cookie/Origin/endpoints kapsamı açık. Vimeo CSP uyumu kontrollü canlı iframe ve header testiyle kapatıldı. |
 | 27 | Spam koruması/validation/honeypot/timing/rate | Turnstile, newsletter honeypot ve rate limit kodu var; her yazma formunun abuse matrisi gerekli. |
-| 28 | Aydınlatma/consent ayrımı, minimum veri, link/erişim/silme UX | Mevcut metinler korunacak. Signup checkbox ayrımı ve contact privacy link kusurları açık; hukuki inceleme dış kapı. |
+| 28 | Aydınlatma/consent ayrımı, minimum veri, link/erişim/silme UX | Mevcut metinler korunacak. Signup okuma acknowledgement ayrımı ve lokalize contact privacy link kusurları kapatıldı; hukuki inceleme dış kapı. |
 | 29 | Her async işlemde loading/error/success | Search/network kanıtı güçlü; diğer async/save/media/profile/auth işlemleri ayrı eşlenecek. |
 | 30 | Empty/error açıklaması ve doğru eylem | Birkaç empty-state testi var; tüm public/Studio listelerinin error/empty varyantları gerekli. |
 | 31 | Sade/hizalı/okunur mobile footer | Social icon değişikliği mevcut; iki tema/on-width footer kanıtı eşlenecek. |
@@ -58,7 +58,7 @@ Kaynak: `C:\Users\Palmarghe\.codex\attachments\060efb3f-064b-466b-bac2-cf1bafe94
 | 35 | Duplicate tracking/privacy/events/maliyet | Mevcut traffic script ve filtreli sayaç var; runtime istek/olay sayısı ve veri minimizasyonu incelenecek. |
 | 36 | Desktop/mobile/keyboard/theme/language/auth/form/search/404/network/no-JS/build/console/a11y/perf | Her test dosyasının hangi gereksinimi kapsadığı eşlenmeli; geniş test toplamı bütün durumları kendiliğinden kanıtlamaz. |
 | 37 | Her değişiklik için fayda/maliyet/a11y/mobile/theme/SEO/gereklilik | Son modal düzeltmesi doğrudan kullanıcı kusurunu giderir; gelecekteki her değişiklik aynı değerlendirmeye tabidir. |
-| 38 | P0/P1 önce, sonra P2/P3 | Vimeo P1 kusuru kapatıldı; cursor takibi ve privacy UI P2. Önce gerçek kullanıcı kusurları kapatılacak. |
+| 38 | P0/P1 önce, sonra P2/P3 | Vimeo, cursor takip gecikmesi ve privacy UI kusurları kapatıldı. Yeni analytics kusurları aşağıda. Önce gerçek kullanıcı kusurları kapatılacak. |
 | 39 | İstenen kategori başlıklarında kısa final rapor | FINAL_REPORT mevcut; ana hedef tamamlanınca istenen final formatı ve tüm kontrol kanıtları gerekir. |
 | 40 | Kimliği koruyarak profesyonel/ölçülü/içerik odaklı sonuç | Görsel/teknik bütün kapsam kapanmadan sonuç iddiası yapılamaz. |
 
@@ -66,7 +66,7 @@ Kaynak: `C:\Users\Palmarghe\.codex\attachments\060efb3f-064b-466b-bac2-cf1bafe94
 
 Üç konsept ve seçilen crop-mark/P geometrisi `docs/custom-cursor.md` içinde. Semantik state sistemi, touch/reduced-motion initialize engeli, native text/checkbox fallback, tema ve modal testleri mevcut. Aşağıdakiler henüz tamamlanma kanıtı değildir:
 
-- Konum transition gecikmesi ve gerçek 60fps/paint/frame ölçümü.
+- Konum transition gecikmesi kapatıldı; gerçek fiziksel cihaz 60fps/paint/frame profili henüz tamamlanmadı.
 - Firefox: Windows Playwright executable başlatılamadı. Bu site başarısı olarak sayılamaz; farklı çalışan runtime gerekir.
 - Safari engine WebKit sonucu gerçek Safari cihaz/tarayıcı sonucunun yerine kullanılamaz.
 - 125% viewport benzetimi gerçek browser zoom matrisi yerine kullanılamaz.
@@ -83,3 +83,18 @@ SMTP gerçek teslimat/reset callback, Search Console saha verisinin olgunlaşmas
 Current Worker: `32e04843-2abd-43d1-9ba3-710e1d6afe9d`. Search pointer top-layer synchronization is explicit on opening. Cursor position transition lag and privacy UI conflation are fixed: rendered geometry is checked, mandatory legal notice reading acknowledgements are distinct from newsletter opt-in, and localized contact notice links are present. Legal text and production content are unchanged. Verify: Astro 0 diagnostics, unit 23/23, build passed; full local E2E 46/46 and final local cursor regression passed. Preceding Worker production 36/36. Current pointer matrix: Chrome/Edge 10/10 and WebKit 5/5 passed against production. WebKit was installed after its initial executable-missing result; its successful rerun used a separate output directory. This does not close the full webmaster scope or physical Safari/zoom/assistive-technology/SMTP gates.
 
 Final live pointer matrix: Chrome 5/5, Edge 5/5, WebKit 5/5. Both themes retain visible search controls and native text cursor/caret. Screenshot inspection confirmed the pointer on the search close control. Full production run passed 36 cases; one layout case hit a test-artifact directory collision during parallel runs and passed 1/1 when rerun alone. All 37 production cases therefore passed across the full run and isolated rerun. No product assertion failed in that run.
+
+
+## Current modal evidence
+
+Worker `c6b42a8f-8a2a-42e7-882b-3a9e0b5a5fda`. Gallery, mobile secret and Studio editor dialogs now lock background scrolling, contain Tab/Shift+Tab, restore focus for all close paths and dismiss only on a genuine backdrop press/release. Clicking gallery content does not dismiss it. Editor close is a non-submitting button: empty required fields no longer prevent cancellation or accidentally insert content. Native Escape and theme behavior are preserved.
+
+Verify: Astro 0 diagnostics, Vitest 23/23, build success; complete local E2E 46/46. Relevant production modal/navigation/cursor tests passed 10/10. The real local gallery publication flow passed; the deployed gallery asset and CSS were tested at 390/1440 px in both themes with a controlled DOM fixture, because no gallery item is currently published. Fixture does not write production content. Mobile portal live tests cover wheel scroll, keyboard loop, backdrop/Escape, focus restore and serious/critical axe in both themes. Authenticated live Chrome Studio verified empty-link cancellation, focus loop and restore, scroll lock, desktop dark and 390 px mobile light (dialog bounds 19–371 px). No content was saved.
+
+Previous commit 82b730a Actions succeeded: https://github.com/Palmarghe/palmarghe/actions/runs/36916288533. The current commit Actions result is checked after push. The full webmaster objective is still active; this closes concrete modal defects, not every form/dropdown/SEO/performance requirement.
+
+## Newly observed analytics defects (open)
+
+- P1: `public/scripts/traffic.js` ad-click handler calls `record(/ad/)`, a RegExp instead of the required string path. JSON serializes this as an object and the traffic endpoint rejects it. Advertising click measurement is therefore incomplete.
+- P1: `src/pages/api/traffic.ts` derives acquisition source from the API request Referer (the current Palmarghe page), rather than the visit entry referrer. Organic traffic attribution needs correction with minimized, validated source information; synthetic test data must not be counted as real traffic.
+- Engagement writes currently lack the traffic script webdriver/bot exclusions. Production read counts during automated audit need a dedicated abuse/measurement review. No historical counts have been reset or rewritten.

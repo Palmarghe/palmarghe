@@ -22,10 +22,30 @@ test('live compact mobile menu and secret portal', async ({ browser }) => {
   await page.keyboard.press('Escape');
   await expect(page.getByRole('button', { name: 'Menüyü aç' })).toBeFocused();
   await expect(page.locator('body')).not.toHaveCSS('position', 'fixed');
-  for (let i = 0; i < 5; i++) await page.locator('.site-header .brand').tap();
-  await expect(page.locator('.mobile-secret')).toBeVisible();
-  await page.getByRole('button', { name: 'Dünyaya dön' }).click();
-  await expect(page.locator('.mobile-secret')).toBeHidden();
+  for (const theme of ['dark', 'light']) {
+    await page.evaluate(value => document.body.dataset.theme = value, theme);
+    for (let i = 0; i < 5; i++) await page.locator('.site-header .brand').tap();
+    await expect(page.locator('.mobile-secret')).toBeVisible();
+    await expect(page.locator('html')).toHaveCSS('overflow', 'hidden');
+    const close = page.getByRole('button', { name: 'Dünyaya dön' });
+    await page.keyboard.press('Tab');
+    await expect(close).toBeFocused();
+    await page.keyboard.press('Shift+Tab');
+    await expect(close).toBeFocused();
+    const scroll = await page.evaluate(() => scrollY);
+    await page.mouse.wheel(0, 500);
+    await page.waitForTimeout(150);
+    expect(await page.evaluate(() => scrollY)).toBe(scroll);
+    const result = await new AxeBuilder({ page }).analyze();
+    expect(result.violations.filter(v => ['serious', 'critical'].includes(v.impact ?? ''))).toEqual([]);
+    await page.keyboard.press('Escape');
+    await expect(page.locator('.mobile-secret')).toBeHidden();
+    await expect(page.locator('.site-header .brand')).toBeFocused();
+    await expect(page.locator('html')).not.toHaveCSS('overflow', 'hidden');
+    for (let i = 0; i < 5; i++) await page.locator('.site-header .brand').tap();
+    await page.mouse.click(1, 1);
+    await expect(page.locator('.mobile-secret')).toBeHidden();
+  }
   await context.close();
 });
 

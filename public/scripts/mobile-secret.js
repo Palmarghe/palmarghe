@@ -23,8 +23,26 @@
       dialog.setAttribute('aria-labelledby', 'secret-title');
       dialog.innerHTML = '<div class="secret-portal" aria-hidden="true"><span></span></div><h2 id="secret-title">Cep boyutunda bir evren.</h2><p>Palmarghe’nin gizli portalını buldun. Büyük fikirler bazen küçük ekranlarda başlar.</p><form method="dialog"><button class="button">Dünyaya dön</button></form>';
       document.body.append(dialog);
-      dialog.addEventListener('close', () => brand.focus());
+      dialog.addEventListener('close', () => {
+        document.documentElement.classList.remove('secret-modal-open');
+        brand.focus();
+      });
+      dialog.addEventListener('keydown', event => {
+        if (event.key === 'Tab') { event.preventDefault(); dialog.querySelector('button').focus(); }
+      });
+      let backdropPress = false;
+      const outside = event => {
+        const bounds = dialog.getBoundingClientRect();
+        return event.target === dialog && (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom);
+      };
+      dialog.addEventListener('pointerdown', event => { backdropPress = outside(event); });
+      dialog.addEventListener('pointerup', event => {
+        if (backdropPress && outside(event)) dialog.close();
+        backdropPress = false;
+      });
+      dialog.addEventListener('pointercancel', () => { backdropPress = false; });
     }
     dialog.showModal();
+    document.documentElement.classList.add('secret-modal-open');
   });
 })();
