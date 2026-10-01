@@ -105,7 +105,10 @@ test('brand cursor is enabled for fine pointers and keeps text inputs usable', a
   await expect(page.locator('[data-brand-cursor]')).toHaveCount(1);
   await expect.poll(() => page.evaluate(() => document.documentElement.classList.contains('has-brand-cursor'))).toBe(true);
   await page.goto('/account/');
-  await expect(page.locator('input[name="email"]').first()).toHaveCSS('cursor', 'auto');
+  const email = page.locator('input[name="email"]').first();
+  await expect(email).toHaveCSS('cursor', 'auto');
+  await email.evaluate((element) => element.dispatchEvent(new PointerEvent('pointerover', { bubbles: true })));
+  await expect(page.locator('[data-brand-cursor]')).toHaveAttribute('data-editing', '');
 });
 
 test('Studio dashboard exposes current advertising placements and edit shortcuts', async ({ page }) => {

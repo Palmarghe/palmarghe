@@ -463,6 +463,7 @@ body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-p
   .brand-cursor i{position:absolute;inset:-7px;border:1px solid color-mix(in srgb,var(--text) 24%,transparent);border-radius:50%;opacity:.72}
   .brand-cursor[data-active]{width:42px;height:42px}
   .brand-cursor[data-active] span{transform:rotate(90deg) scale(1.16)}
+  .brand-cursor[data-editing]{opacity:0}
   .brand-cursor[data-pressed]{width:24px;height:24px}
   body[data-theme="light"] .brand-cursor{filter:drop-shadow(0 2px 8px rgb(31 28 39 / .16))}
 }

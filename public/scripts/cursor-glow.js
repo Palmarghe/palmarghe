@@ -13,6 +13,7 @@
   let x = -80;
   let y = -80;
   const interactive = 'a, button, summary, [role="button"], input:not([type="hidden"]), select, textarea, [contenteditable="true"]';
+  const editable = 'input:not([type="hidden"]), select, textarea, [contenteditable="true"]';
   const update = () => {
     cursor.style.setProperty('--cursor-x', `${x}px`);
     cursor.style.setProperty('--cursor-y', `${y}px`);
@@ -25,7 +26,11 @@
     y = event.clientY;
     if (!frame) frame = requestAnimationFrame(update);
   }, { passive: true });
-  addEventListener('pointerover', (event) => cursor.toggleAttribute('data-active', Boolean((event.target instanceof Element) && event.target.closest(interactive))), { passive: true });
+  addEventListener('pointerover', (event) => {
+    const target = event.target instanceof Element ? event.target : null;
+    cursor.toggleAttribute('data-active', Boolean(target?.closest(interactive)));
+    cursor.toggleAttribute('data-editing', Boolean(target?.closest(editable)));
+  }, { passive: true });
   addEventListener('pointerdown', () => cursor.setAttribute('data-pressed', ''), { passive: true });
   addEventListener('pointerup', () => cursor.removeAttribute('data-pressed'), { passive: true });
   addEventListener('blur', () => cursor.removeAttribute('data-pressed'));
