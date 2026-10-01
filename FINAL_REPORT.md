@@ -366,3 +366,8 @@ pm run verify Astro 0 tanı, Vitest 14/14 ve production build ile başarılı; n
 
 - Yalnız test amacıyla oluşturulan `test`, `Production QA taslağı` ve `Deneme` kayıtları production veritabanında silinmeden `archived` durumuna alındı; `Deneme` kaydının öne çıkarma işareti de kapatıldı.
 - Studio içerik listesi üç kaydı `Arşivlendi` olarak gösteriyor. Public `/test/`, `/deneme/` ve `/qa-production-draft/` rotaları 404 dönüyor; editoryal yayın kayıtları korunuyor.
+
+### Müzik dışındaki deneme yayınlarının arşivlenmesi — 1 Ekim 2026
+
+- Kullanıcının içerik kapsamını netleştirmesi üzerine Müzik kategorisi dışındaki dört yayındaki AI, oyun, FM ve Lab içeriği silinmeden arşivlendi ve öne çıkarma kapatıldı. Daha önce arşivlenen üç test kaydı korunuyor.
+- Müzik kategorisinin dört içeriği yayında kaldı. Arşivlenen dört public URL 404, dört müzik URL’si 200 olarak doğrulandı. Geri dönüş Studio üzerinden yayın durumunu yeniden seçerek yapılabilir.
