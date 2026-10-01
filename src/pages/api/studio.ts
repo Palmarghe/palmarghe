@@ -1,3 +1,4 @@
+import { socialPlatforms } from '../../lib/social';
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
 import { supabase } from '../../lib/supabase';
@@ -158,7 +159,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return redirectTo(request,'/studio/?section=homepage');
   }  if (entity === 'social') {
     if (!hasPermission('appearance')) return errorResponse('Forbidden',403);
-    const links = Object.fromEntries(['github','youtube','instagram','x'].map((name) => [name, String(form.get(name) ?? '').trim()]));
+    const links = Object.fromEntries(socialPlatforms.map(({key}) => [key, String(form.get(key) ?? '').trim()]));
     if (Object.values(links).some((url) => url && !safeExternalUrl(url))) return errorResponse('Invalid social URL',400);
     const { error } = await db.from('site_settings').upsert({ key: 'social', value: links, updated_at: new Date().toISOString() });
     if (error) return errorResponse('Save failed',400);

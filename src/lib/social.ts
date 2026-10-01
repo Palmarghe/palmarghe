@@ -1,0 +1,22 @@
+// Shared catalog keeps Studio settings and public icons in sync.
+export const socialPlatforms = [
+  { key: 'github', label: 'GitHub', path: 'M9 19c-4 1-4-2-6-2m12 5v-4c0-1-.3-2-1-2.5 3-.4 6-1.5 6-6a5 5 0 0 0-1.5-3.5 5 5 0 0 0-.1-3.5S17 2 14 4a13 13 0 0 0-4 0C7 2 5.5 2.5 5.5 2.5a5 5 0 0 0-.1 3.5A5 5 0 0 0 4 9.5c0 4.5 3 5.6 6 6-.7.5-1 1.5-1 2.5v4' },
+  { key: 'youtube', label: 'YouTube', path: 'M21 7a3 3 0 0 0-2-2C16 4.5 8 4.5 5 5a3 3 0 0 0-2 2c-.5 3-.5 7 0 10a3 3 0 0 0 2 2c3 .5 11 .5 14 0a3 3 0 0 0 2-2c.5-3 .5-7 0-10ZM10 9l5 3-5 3Z' },
+  { key: 'instagram', label: 'Instagram', path: 'M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4Zm9 9a4 4 0 1 1-8 0 4 4 0 0 1 8 0Zm1-5h.01' },
+  { key: 'x', label: 'X', path: 'M4 3h4l12 18h-4ZM20 3 4 21' },
+  { key: 'facebook', label: 'Facebook', path: 'M14 22v-9h3l.5-4H14V7c0-1 .5-2 2-2h2V2h-3c-4 0-5 2-5 5v2H7v4h3v9' },
+  { key: 'tiktok', label: 'TikTok', path: 'M14 3v12a5 5 0 1 1-5-5v4a1.5 1.5 0 1 0 1.5 1.5V3h3.5c0 3 2 5 5 5v4a9 9 0 0 1-5-2' },
+  { key: 'linkedin', label: 'LinkedIn', path: 'M4 9v12m0-18v.01M9 21V9h4v2c1-3 7-3 7 2v8m-7-10v10' },
+  { key: 'threads', label: 'Threads', path: 'M19 6C15 0 3 2 3 12s12 13 17 6c4-7-7-12-10-6-2 5 8 6 7-2-.5-6-6-6-8-3' },
+  { key: 'bluesky', label: 'Bluesky', path: 'M12 11C8 5 2 1 2 7c0 5 1 6 6 6-7 1-4 9 0 7 2-1 3-3 4-5 1 2 2 4 4 5 4 2 7-6 0-7 5 0 6-1 6-6 0-6-6-2-10 4Z' },
+  { key: 'mastodon', label: 'Mastodon', path: 'M20 15V7c0-6-16-6-16 0v9c0 5 5 7 11 5v-3c-5 1-8 0-8-3 4 1 10 1 13 0ZM8 12V7c0-2 4-2 4 1v4m0-4c0-3 4-3 4-1v5' },
+  { key: 'reddit', label: 'Reddit', path: 'M7 10a9 9 0 0 1 10 0m-10 0c-6-3-7 4-3 5m13-5c6-3 7 4 3 5M12 9l2-6 5 1m3 0a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM21 15c0 8-18 8-18 0s18-8 18 0ZM8 14h.01M16 14h.01M8 18c2 2 6 2 8 0' },
+  { key: 'discord', label: 'Discord', path: 'M8 4 5 5C3 9 2 14 3 18l4 2 2-3m7-13 3 1c2 4 3 9 2 13l-4 2-2-3M7 16c3 2 7 2 10 0M9 11v2m6-2v2M8 4l1 2h6l1-2' },
+  { key: 'twitch', label: 'Twitch', path: 'M4 3h18v13l-6 5h-5l-4 3v-3H2V7Zm5 2v11h5v3l3-3h3V5ZM12 8v5m5-5v5' },
+  { key: 'pinterest', label: 'Pinterest', path: 'M8 22 11 9m-1 6c7 6 13-7 6-11-8-5-17 7-10 12m5-7c-2 6 4 8 5 3' },
+  { key: 'telegram', label: 'Telegram', path: 'm2 10 20-7-4 18-6-5-4 4v-6Zm6 4L19 6l-7 10' },
+  { key: 'whatsapp', label: 'WhatsApp', path: 'M21 11a9 9 0 0 1-13 8l-6 2 2-6A9 9 0 1 1 21 11ZM8 7c-3 4 5 11 8 8l-3-2-1 1-3-3 1-1Z' },
+  { key: 'spotify', label: 'Spotify', path: 'M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0ZM6 9c4-2 8-1 12 1M7 13c3-1 6-1 10 1M8 17c3-1 5-1 8 0' },
+  { key: 'soundcloud', label: 'SoundCloud', path: 'M2 12v5m3-7v8m3-9v9m3-10v10m3 0h5a3 3 0 1 0-1-6c0-6-8-7-8-1' },
+  { key: 'medium', label: 'Medium', path: 'M14 12a6 6 0 1 1-12 0 6 6 0 0 1 12 0ZM20 12c0 8-4 8-4 0s4-8 4 0ZM23 7v10' },
+] as const;

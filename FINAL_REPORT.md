@@ -371,3 +371,9 @@ pm run verify Astro 0 tanı, Vitest 14/14 ve production build ile başarılı; n
 
 - Kullanıcının içerik kapsamını netleştirmesi üzerine Müzik kategorisi dışındaki dört yayındaki AI, oyun, FM ve Lab içeriği silinmeden arşivlendi ve öne çıkarma kapatıldı. Daha önce arşivlenen üç test kaydı korunuyor.
 - Müzik kategorisinin dört içeriği yayında kaldı. Arşivlenen dört public URL 404, dört müzik URL’si 200 olarak doğrulandı. Geri dönüş Studio üzerinden yayın durumunu yeniden seçerek yapılabilir.
+
+### Tema uyumlu sosyal medya ikonları — 1 Ekim 2026
+
+- Alt bardaki sosyal medya isimleri, ekran okuyucu adlarını koruyan yalnız SVG ikon bağlantılarına dönüştürüldü. İkonlar tema renklerini kullanır; 44 px dokunma alanı, klavye odağı ve mor hover vurgusu vardır.
+- Studio > Ayarlar sosyal bağlantı kataloğu 19 platforma genişletildi. Yalnız HTTPS adresi tanımlanmış hesaplar public alt barda gösterilir. Mevcut YouTube hesabı korunmuştur.
+- Astro 0 tanı, Vitest 14/14, production build ve navigation E2E 11/11 başarılı. Canlı Chrome’da YouTube bağlantısı boş görünür metin ve SVG ile doğrulandı; açık tema değişimi ve taşma kontrolü geçti.
