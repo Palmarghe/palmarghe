@@ -100,6 +100,14 @@ test('light theme applies to public search and Studio classic editor', async ({ 
   await editor.fill('Klasik editör denetimi.');
   await expect.poll(() => page.locator('#body-json').evaluate((element) => (element as HTMLTextAreaElement).value)).toContain('Klasik editör denetimi.');
 });
+test('brand cursor is enabled for fine pointers and keeps text inputs usable', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('[data-brand-cursor]')).toHaveCount(1);
+  await expect.poll(() => page.evaluate(() => document.documentElement.classList.contains('has-brand-cursor'))).toBe(true);
+  await page.goto('/account/');
+  await expect(page.locator('input[name="email"]').first()).toHaveCSS('cursor', 'auto');
+});
+
 test('Studio dashboard exposes current advertising placements and edit shortcuts', async ({ page }) => {
   await page.goto('/studio/');
   await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');

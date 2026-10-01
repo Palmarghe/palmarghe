@@ -349,3 +349,10 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 
 - Studio'da spotlight için seçilen içerik türü artık ana sayfa üst satırına yansır. Otomatik seçim Football Manager içeriğini tercih etmeyi sürdürür; admin başka bir tür seçtiğinde sabit `FM / SPOTLIGHT` etiketi yerine örneğin `LAB / SPOTLIGHT` görünür.
 - Commit `96053a0` normal biçimde `main` dalına push edildi, Worker `c3c953a4-c7f9-4483-bfdd-ad38a7f5b23e` ile dağıtıldı ve canlı Chrome ile doğrulandı.
+
+### Tema uyumlu imleç ve yüzey stabilizasyonu — 1 Ekim 2026
+
+- Public site ve Studio için yalnız fine-pointer cihazlarda çalışan Palmarghe monogramlı imleç katmanı eklendi. Bağlantı ve buton üzerinde nazikçe genişler; mobil, reduced-motion tercihi ve yazı düzenleme alanlarında devre dışı kalarak dokunma/klavye/metin girişini etkilemez.
+- Yerel doğrulama: 
+pm run verify Astro 0 tanı, Vitest 14/14 ve production build ile başarılı; navigation Playwright paketi 11/11 geçti. Bu paket public/Studio yatay taşma, açık tema, klasik editör, reklam kısayolu, ana sayfa/studio erişimi ve yeni imleç davranışını kapsar.
+

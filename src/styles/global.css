@@ -452,3 +452,17 @@ body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-p
 .follow-button{margin-top:1rem;border:1px solid var(--border);padding:.45rem .7rem;background:transparent;color:var(--text)}.follow-button[aria-pressed='true']{border-color:var(--accent);color:var(--accent)}
 
 .advertising-visibility{font-size:.7rem;font-style:normal;color:var(--muted)}
+
+/* Fine-pointer enhancement: the ordinary text caret stays intact in writing controls. */
+@media (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .has-brand-cursor, .has-brand-cursor a, .has-brand-cursor button, .has-brand-cursor summary, .has-brand-cursor [role="button"]{cursor:none}
+  .has-brand-cursor input, .has-brand-cursor textarea, .has-brand-cursor select, .has-brand-cursor [contenteditable="true"]{cursor:auto}
+  .brand-cursor{--cursor-x:-80px;--cursor-y:-80px;position:fixed;z-index:9999;left:0;top:0;width:30px;height:30px;pointer-events:none;transform:translate3d(calc(var(--cursor-x) - 50%),calc(var(--cursor-y) - 50%),0);transition:width .16s ease,height .16s ease,opacity .16s ease;mix-blend-mode:normal}
+  .brand-cursor::before{content:"";position:absolute;inset:4px;border:1px solid color-mix(in srgb,var(--accent) 84%,var(--text));border-radius:50%;box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 12%,transparent),0 8px 24px color-mix(in srgb,var(--accent) 22%,transparent)}
+  .brand-cursor span{position:absolute;inset:11px;background:var(--accent);clip-path:polygon(0 0,100% 0,100% 72%,72% 72%,72% 100%,0 100%);transition:transform .16s ease}
+  .brand-cursor i{position:absolute;inset:-7px;border:1px solid color-mix(in srgb,var(--text) 24%,transparent);border-radius:50%;opacity:.72}
+  .brand-cursor[data-active]{width:42px;height:42px}
+  .brand-cursor[data-active] span{transform:rotate(90deg) scale(1.16)}
+  .brand-cursor[data-pressed]{width:24px;height:24px}
+  body[data-theme="light"] .brand-cursor{filter:drop-shadow(0 2px 8px rgb(31 28 39 / .16))}
+}
