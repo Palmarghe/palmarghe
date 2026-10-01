@@ -183,9 +183,32 @@ test('mobile portal is exclusive to touch devices and closes accessibly', async 
   const page = await context.newPage();
   await page.goto('/');
   const brand = page.locator('.site-header .brand');
-  for (let tap = 0; tap < 5; tap++) await brand.tap();
+  for (let tap = 0; tap < 5; tap++) {
+    await brand.tap();
+    await page.waitForLoadState('load');
+  }
   await expect(page.locator('.mobile-secret')).toBeVisible();
   await page.getByRole('button', { name: 'Dünyaya dön' }).click();
   await expect(page.locator('.mobile-secret')).toBeHidden();
+  await context.close();
+});
+
+test('mobile action buttons stay within the viewport and logo returns home', async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 320, height: 740 }, isMobile: true, hasTouch: true });
+  const page = await context.newPage();
+  for (const route of ['/', '/account/', '/contact/', '/search/', '/archive/']) {
+    await page.goto(route);
+    const outside = await page.locator('button,.button').evaluateAll(elements => elements.filter(el => {
+      const r = el.getBoundingClientRect();
+      return r.width > 0 && r.height > 0 && (r.left < -1 || r.right > innerWidth + 1);
+    }).map(el => el.textContent));
+    expect(outside, route).toEqual([]);
+  }
+  await page.goto('/account/');
+  await page.locator('.site-header .brand').tap();
+  await expect(page).toHaveURL('http://127.0.0.1:4322/');
+  await page.locator('.site-header .brand').tap();
+  await page.waitForLoadState('load');
+  await expect(page.locator('.mobile-secret')).toHaveCount(0);
   await context.close();
 });

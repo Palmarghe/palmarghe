@@ -2,6 +2,12 @@
 
 ## Latest delivery — 1 October 2026: compact mobile navigation
 
+### Mobile button and logo follow-up
+
+- Mobile buttons wrap long labels and remain bounded by their containers. Filter rows, dialog footers, spotlight actions and editor actions wrap; search/form children can shrink. Newsletter email and submit controls share narrow widths without pushing the button off-screen.
+- Normal mobile logo clicks now retain native homepage navigation. The portal counter survives those navigations in session storage; only the fifth rapid homepage tap intercepts navigation to reveal the portal.
+- Local navigation E2E 13/13 passed, including button bounds on five public routes at 320 px, homepage navigation and preserved portal interaction. Astro 0 diagnostics, Vitest 14/14 and build passed.
+
 - Public navigation now groups categories into two columns and search/language/account/theme into a single compact tools row. Desktop links use responsive spacing and a separate utility area. Mobile panel height is tested below 350 px.
 - Mobile Studio uses a native grouped section selector instead of a horizontally scrolling navigation strip. Advertising navigation was verified in the authenticated production Chrome session. Tables scroll within their container, editor actions wrap, and the mobile theme control uses a single icon. The original navigation remains available if JavaScript is unavailable.
 - The homepage logo reveals a themed “pocket portal” after five rapid taps on a touch phone. It is exclusive to mobile touch devices, restores focus when closed, supports both themes and respects reduced motion.

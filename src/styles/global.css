@@ -509,3 +509,14 @@ body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-p
 .secret-portal{height:130px;display:grid;place-items:center}
 .secret-portal span{display:block;width:80px;height:100px;border:3px solid var(--accent);border-radius:50% 50% 5px 5px;box-shadow:0 0 30px color-mix(in srgb,var(--accent) 45%,transparent),inset 0 0 25px color-mix(in srgb,var(--accent) 25%,transparent);transform:perspective(300px) rotateY(-18deg);animation:portal-breathe 3s ease-in-out infinite}
 @keyframes portal-breathe{50%{transform:perspective(300px) rotateY(18deg);box-shadow:0 0 55px color-mix(in srgb,var(--accent) 55%,transparent)}}
+@media(max-width:600px){
+ button,.button,[role="button"]{max-width:100%;white-space:normal;overflow-wrap:anywhere;min-width:0}
+ .field,.search-overlay-head label,.studio-filters label,.newsletter-signup span{min-width:0;max-width:100%}
+ .field input,.field select,.field textarea,.studio-filters input{min-width:0;max-width:100%}
+ .studio-filters,.editor-block-dialog footer,.section-heading,.spotlight a{flex-wrap:wrap}
+ .editor-action-bar>*{min-width:0;max-width:100%}
+ .editor-slash-menu{min-width:0;max-width:calc(100vw - 48px)}
+ .editor-slash-menu button{gap:.5rem}
+ .newsletter-signup span input{flex:1;min-width:0;width:0}
+ .newsletter-signup span button{flex-shrink:0}
+}
