@@ -1,6 +1,7 @@
 (() => {
   const dialog = document.querySelector('#search-overlay');
   let returnFocus;
+  let backdropPress = false;
   const open = trigger => {
     returnFocus = trigger;
     document.querySelector('.menu-toggle[aria-expanded="true"]')?.click();
@@ -12,7 +13,14 @@
   };
   document.querySelectorAll('[data-search-trigger]').forEach(trigger => trigger.addEventListener('click', event => { event.preventDefault(); open(trigger); }));
   dialog?.querySelector('[data-search-close]').addEventListener('click', () => dialog.close());
+  dialog?.addEventListener('pointerdown', event => { backdropPress = event.target === dialog; });
+  dialog?.addEventListener('pointerup', event => {
+    if (backdropPress && event.target === dialog) dialog.close();
+    backdropPress = false;
+  });
+  dialog?.addEventListener('pointercancel', () => { backdropPress = false; });
   dialog?.addEventListener('close', () => {
+    backdropPress = false;
     document.documentElement.classList.remove('search-overlay-open');
     returnFocus?.setAttribute('aria-expanded', 'false');
     (returnFocus?.closest('#mobile-nav') ? document.querySelector('.menu-toggle') : returnFocus)?.focus();
@@ -84,6 +92,15 @@
       search(true);
     }));
     root.addEventListener('keydown',event => {
+      if (root === dialog && event.key === 'Tab') {
+        const controls = [...root.querySelectorAll('a[href],button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),[tabindex="0"]')]
+          .filter(element => element.getClientRects().length > 0 && !element.closest('[hidden]'));
+        const first = controls[0], last = controls[controls.length - 1];
+        if (first && (event.shiftKey ? document.activeElement === first : document.activeElement === last)) {
+          event.preventDefault();
+          (event.shiftKey ? last : first).focus();
+        }
+      }
       if (!['ArrowDown','ArrowUp'].includes(event.key) || !(event.target === input || event.target.closest('[data-search-result]'))) return;
       const links = [...results.querySelectorAll('[data-search-result]')]; if (!links.length) return;
       event.preventDefault();

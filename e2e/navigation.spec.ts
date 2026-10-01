@@ -135,6 +135,25 @@ test('brand cursor is enabled for fine pointers and keeps text inputs usable', a
   await expect(page.locator('[data-brand-cursor]')).toHaveAttribute('data-state', 'native');
 });
 
+test('search locks background scrolling and restores focus after backdrop dismissal', async ({ page }) => {
+  await page.goto('/');
+  const trigger = page.locator('.head-actions [data-search-trigger]');
+  await trigger.click();
+  const dialog = page.getByRole('dialog');
+  await expect(page.locator('html')).toHaveCSS('overflow', 'hidden');
+  await page.keyboard.press('Shift+Tab');
+  await expect.poll(() => dialog.evaluate(element => element.contains(document.activeElement))).toBe(true);
+  const initialScroll = await page.evaluate(() => scrollY);
+  await page.mouse.move(5, 5);
+  await page.mouse.wheel(0, 600);
+  await page.waitForTimeout(200);
+  expect(await page.evaluate(() => scrollY)).toBe(initialScroll);
+  await page.mouse.click(5, 5);
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await expect(page.locator('html')).not.toHaveClass(/search-overlay-open/);
+});
+
 test('Studio dashboard exposes current advertising placements and edit shortcuts', async ({ page }) => {
   await page.goto('/studio/');
   await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');

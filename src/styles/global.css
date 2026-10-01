@@ -504,7 +504,7 @@ body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-p
 .footer-social a:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-2px);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
 .footer-social svg{display:block;width:20px;height:20px}
 @media(max-width:600px){.footer-bottom .footer-social{margin-left:0;justify-content:flex-start}}
-html.mobile-navigation-open{overflow:hidden;overscroll-behavior:none}
+html.mobile-navigation-open,html.search-overlay-open{overflow:hidden;overscroll-behavior:none}
 
 /* Compact navigation: one consistent panel instead of a long stack. */
 @media(max-width:900px){

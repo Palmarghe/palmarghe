@@ -1,5 +1,11 @@
 # Görsel ve ürün denetimi — 21 Eylül 2026
 
+## Arama modal gereksinimleri — 1 Ekim 2026
+
+- Hedefin 12. maddesine karşı incelemede arama açıkken arka plan scroll kilidi ve kart dışına tıklayarak kapanma eksikti. `search-overlay-open` sırasında viewport scroll kilitlenir; yalnız kart dışında başlayan ve biten pointer hareketi modalı kapatır. Kart içinde başlayıp dışarı taşan seçim hareketi kapanma tetiklemez.
+- Native dialog tek başına Shift+Tab odağını kartta tutmadı; ilk/son görünür kontrol arasında açık bir Tab döngüsü eklendi. Kapanınca desktop arama düğmesine veya mobil menü açma düğmesine odak geri döner.
+- Yerel hedefli test 3/3, build/18 birim testi ve production Chrome arama/imleç testleri 7/7 geçti. Modalın açık hali 390/1440 px ve dark/light kombinasyonlarında ciddi/kritik axe ihlali olmadan doğrulandı. Worker `5bedffcc-72a7-4e7d-af5a-0dc964a5edfa` yayında. Önceki tam paket sayıları önceki sürümün kanıtıdır.
+
 ## Arama açılışında imleç — 1 Ekim 2026
 
 - Canlı sitede arama simgesine tıklanınca özel imleç kaybolabiliyordu: imleç küçük dialog kutusuna taşınıyor, kutunun dışındaki viewport koordinatlarında kırpılıyordu. Tam ekran, şeffaf native dialog yüzeyi ve ayrı kaydırılabilir arama kartı kullanıldı. Input modal açılınca odaklanır; metin alanında tarayıcının I-beam imleci ve tema vurgulu caret kullanılır.

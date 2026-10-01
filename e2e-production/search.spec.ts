@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 test('live search is interactive, image-led and filterable on mobile', async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
@@ -57,6 +58,38 @@ test('desktop command key, arrow navigation and full search page work', async ({
   for (const image of await articleImages.all()) {
     await image.scrollIntoViewIfNeeded();
     await expect.poll(() => image.evaluate((node: HTMLImageElement) => node.complete && node.naturalWidth > 0)).toBe(true);
+  }
+});
+
+test('search locks the page, traps focus and restores it after backdrop dismissal in both themes and layouts', async ({ page }) => {
+  test.setTimeout(60000);
+  for (const width of [390, 1440]) {
+    for (const theme of ['dark', 'light']) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/');
+      await page.evaluate(value => { document.body.dataset.theme = value; }, theme);
+      if (width < 900) await page.getByRole('button', { name: 'Menüyü aç' }).click();
+      const trigger = width < 900
+        ? page.getByRole('navigation', { name: 'Mobil menü' }).getByRole('link', { name: 'Ara', exact: true })
+        : page.locator('.head-actions [data-search-trigger]');
+      await trigger.click();
+      const dialog = page.getByRole('dialog');
+      await expect(dialog.getByRole('searchbox')).toBeFocused();
+      const accessibility = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+      expect(accessibility.violations.filter(item => ['serious', 'critical'].includes(item.impact ?? '')), JSON.stringify(accessibility.violations)).toEqual([]);
+      await expect(page.locator('html')).toHaveCSS('overflow', 'hidden');
+      await page.keyboard.press('Shift+Tab');
+      await expect.poll(() => dialog.evaluate(element => element.contains(document.activeElement))).toBe(true);
+      const initialScroll = await page.evaluate(() => scrollY);
+      await page.mouse.move(5, 5);
+      await page.mouse.wheel(0, 600);
+      await page.waitForTimeout(200);
+      expect(await page.evaluate(() => scrollY)).toBe(initialScroll);
+      await page.mouse.click(5, 5);
+      await expect(dialog).toBeHidden();
+      await expect(width < 900 ? page.getByRole('button', { name: 'Menüyü aç' }) : trigger).toBeFocused();
+      await expect(page.locator('html')).not.toHaveClass(/search-overlay-open/);
+    }
   }
 });
 
