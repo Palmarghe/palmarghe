@@ -1,5 +1,11 @@
 # Görsel ve ürün denetimi — 21 Eylül 2026
 
+## Vimeo/CSP ve kapsam kanıtı — 1 Ekim 2026
+
+- Blok doğrulayıcı `player.vimeo.com/video/` kabul ettiği halde middleware CSP frame-src alanı Vimeo'yu engelliyordu. Yalnız güvenilir player hostu CSP'ye eklendi. Gerçek production response politikası altında Playwright kontrollü HTTPS player yanıtı iframe içinde render edildi; hiçbir production içerik kaydı değişmedi. Harici videonun availability/erişilebilirlik sonucu iddia edilmez.
+- Güncel Worker `ef4359fe-d4c6-4c34-aa22-231ccaca1b63`: production tam E2E 33/33; 27 rota iki tema axe, açık search modal dört kombinasyon, responsive ve console dahil. Verify 0 Astro tanısı, 18/18 unit ve build ile geçti.
+- Ana hedefin 40 bölümü ve ek custom cursor kapsamı `docs/webmaster-requirements.md` içinde eşlendi. Cursor konum transition gecikmesi ve aydınlatma/consent UI ayrımı açık kusur olarak kayıtlıdır. Tam hedef tamamlanmış sayılmaz.
+
 ## Arama modal gereksinimleri — 1 Ekim 2026
 
 - Hedefin 12. maddesine karşı incelemede arama açıkken arka plan scroll kilidi ve kart dışına tıklayarak kapanma eksikti. `search-overlay-open` sırasında viewport scroll kilitlenir; yalnız kart dışında başlayan ve biten pointer hareketi modalı kapatır. Kart içinde başlayıp dışarı taşan seçim hareketi kapanma tetiklemez.

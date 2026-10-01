@@ -68,6 +68,7 @@ test('video embeds connect only after an explicit accessible action', async ({ p
 test('production privacy and security response headers', async ({ request }) => {
   const home = await request.get('/');
   expect(home.headers()['content-security-policy']).toContain('default-src');
+  expect(home.headers()['content-security-policy'].split(';').find(directive => directive.trim().startsWith('frame-src '))).toContain('https://player.vimeo.com');
   expect(home.headers()['x-content-type-options']).toBe('nosniff');
   const account = await request.get('/account/');
   expect(account.headers()['cache-control']).toContain('no-store');
@@ -79,6 +80,15 @@ test('production privacy and security response headers', async ({ request }) => 
   const preview = await request.get('https://palmarghe.palmarghe.workers.dev/');
   expect(preview.status()).toBe(200);
   expect(preview.headers()['x-robots-tag']).toContain('noindex');
+});
+
+test('trusted Vimeo embeds are permitted by the live CSP using a controlled player response', async ({ page }) => {
+  const playerUrl = 'https://player.vimeo.com/video/123456789';
+  await page.route(playerUrl, route => route.fulfill({ contentType: 'text/html', body: '<h1>Controlled Vimeo player response</h1>' }));
+  await page.goto('/music/sevenfold-thunder/');
+  await page.locator('[data-content-embed]').evaluate((element, source) => { (element as HTMLElement).dataset.embedSrc = source; }, playerUrl);
+  await page.getByRole('button', { name: /Videoyu yükle:/ }).click();
+  await expect(page.frameLocator('.content-embed iframe').getByRole('heading', { name: 'Controlled Vimeo player response' })).toBeVisible();
 });
 
 test('live layouts fit all target widths and key form routes', async ({ page }) => {
