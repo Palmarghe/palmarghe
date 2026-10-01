@@ -10,15 +10,25 @@ test('editorial imagery loads and mobile menu remains keyboard accessible', asyn
   await page.goto('/');
   await expect(page.locator('.hero-art')).toBeVisible();
   await expect(page.locator('.category img')).toHaveCount(4);
-  const menu = page.getByRole('button', { name: 'Menüyü aç' });
-  await expect(menu).toBeVisible();
-  await menu.click();
+  const menuToggle = page.getByRole('button', { name: 'Menüyü aç' });
+  await expect(menuToggle).toBeVisible();
+  await menuToggle.click();
   await expect(page.getByRole('button', { name: 'Menüyü kapat' })).toHaveAttribute('aria-expanded', 'true');
-  await expect(page.getByRole('navigation', { name: 'Mobil menü' })).toBeVisible();
+  const menu = page.getByRole('navigation', { name: 'Mobil menü' });
+  await expect(menu).toBeVisible();
+  const firstLink = menu.getByRole('link').first();
+  await expect(firstLink).toBeFocused();
+  await expect(page.locator('body')).toHaveCSS('position', 'fixed');
+  await page.keyboard.press('Shift+Tab');
+  await expect(menu.getByRole('button', { name: 'Açık mod' })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(firstLink).toBeFocused();
   const panel = await page.locator('#mobile-nav').boundingBox();
   expect(panel?.height).toBeLessThan(350);
   await page.keyboard.press('Escape');
   await expect(page.getByRole('button', { name: 'Menüyü aç' })).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.getByRole('button', { name: 'Menüyü aç' })).toBeFocused();
+  await expect(page.locator('body')).not.toHaveCSS('position', 'fixed');
   await expect(page.getByRole('navigation', { name: 'Mobil menü' })).toBeHidden();
 });
 
@@ -112,9 +122,9 @@ test('brand cursor is enabled for fine pointers and keeps text inputs usable', a
   await expect.poll(() => page.evaluate(() => document.documentElement.classList.contains('has-brand-cursor'))).toBe(true);
   await page.goto('/account/');
   const email = page.locator('input[name="email"]').first();
-  await expect(email).toHaveCSS('cursor', 'auto');
+  await expect(email).toHaveCSS('cursor', 'text');
   await email.evaluate((element) => element.dispatchEvent(new PointerEvent('pointerover', { bubbles: true })));
-  await expect(page.locator('[data-brand-cursor]')).toHaveAttribute('data-editing', '');
+  await expect(page.locator('[data-brand-cursor]')).toHaveAttribute('data-state', 'native');
 });
 
 test('Studio dashboard exposes current advertising placements and edit shortcuts', async ({ page }) => {

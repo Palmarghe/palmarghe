@@ -1,5 +1,13 @@
 # Palmarghe V1 Final Report
 
+## Current production state — 1 October 2026
+
+The latest production Worker `97bfd351-9305-4b2f-a2c6-4572f83aa65f` includes the branded pointer and the accessible mobile-navigation follow-up. The pointer uses a compact four-part editorial crop mark with a small P-shaped index. It changes state for links, external links, buttons, images and text, while editable text, native controls, dialogs, keyboard focus, touch devices and reduced-motion preferences retain appropriate native behavior. It has no trail, persistent rotation, glow, blend mode or magnetic movement. The design decisions and fallbacks are recorded in [docs/custom-cursor.md](docs/custom-cursor.md).
+
+The mobile menu now locks background scrolling while open, traps keyboard focus, closes with Escape and restores focus to its trigger. It remains navigable if JavaScript is disabled. Local verification passed: Astro reports zero diagnostics, Vitest 14/14 and the local Playwright suite 43/43. The complete live Chrome production suite passed **19/19**, covering axe on public/Studio sign-in routes, pointer states, mobile menu and no-JavaScript fallback, search, route/asset metadata, privacy/security headers, six viewport widths, browser console and light theme. Cross-engine production tests passed in Chrome, Edge and WebKit (Safari engine). Firefox test startup is blocked by the downloaded Windows Firefox runtime's SideBySide activation-context error (`mozglue` manifest); no Firefox product result is claimed.
+
+This section is the authoritative status for the 1 October delivery. The dated entries below it are historical records and their test totals and Worker IDs refer to those releases.
+
 ## Güncel arama ve FM26 editoryal yayını — 1 Ekim 2026
 
 - Public arama masaüstü ve mobilde aynı temalı, anlık sonuç veren bir arayüze dönüştürüldü. Tür filtresi, görsel sonuç kartları, eşleşme vurgusu, klavye ile gezinme, `Ctrl/Cmd+K`, mobil menüden arama ve tüm sonuçlar sayfası çalışıyor. Arama metni DOM'a güvenli metin olarak eklenir; sonuç isteği iptal/eski yanıt denetimi ve loading, hata, boş sonuç durumları içerir. İngilizce/boş sorgular ve içerik türü filtresi API tarafından işlenir.
