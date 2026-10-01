@@ -1,5 +1,18 @@
 # Görsel ve ürün denetimi — 21 Eylül 2026
 
+## Arama açılışında imleç — 1 Ekim 2026
+
+- Canlı sitede arama simgesine tıklanınca özel imleç kaybolabiliyordu: imleç küçük dialog kutusuna taşınıyor, kutunun dışındaki viewport koordinatlarında kırpılıyordu. Tam ekran, şeffaf native dialog yüzeyi ve ayrı kaydırılabilir arama kartı kullanıldı. Input modal açılınca odaklanır; metin alanında tarayıcının I-beam imleci ve tema vurgulu caret kullanılır.
+- Modal `display:flex` ile viewport kapladığı için kapalı durum açıkça `display:none` yapıldı; aksi durumda kapalı dialog da sayfa tıklamalarını engelliyordu. Açık temada renk denetimi görünür panel üzerinden yapılır.
+- Doğrulama: yerel Playwright 44/44, `npm run verify` ve canlı production Playwright 31/31 geçti. Canlı Chrome özel imleç, masaüstü/mobil arama, 27 indekslenebilir sayfanın iki temadaki axe taraması ve console kontrolleri geçti. Worker `65461809-11c3-43df-bd0c-42d88e52f9e1` yayında.
+
+## Tam site erişilebilirlik ve gömülü medya denetimi — 1 Ekim 2026
+
+- Canlı sitemap'in 27 indekslenebilir URL'si production axe ile koyu ve açık temada ayrı ayrı tarandı; ciddi/kritik WCAG 2.2 bulgusu kalmadı. Tarama müzik detayları ve yorum alanlarını da kapsıyor.
+- Müzik sayfalarında YouTube player ilk sayfa yüklemesinde üçüncü taraf iframe ve erişilebilirlik ağacı ihlalleri oluşturuyordu. Video artık sayfa içinde yerel, klavyeyle etkinleştirilebilen bir yükleme düğmesiyle gösterilir; okuyucu seçince güvenli YouTube/Vimeo iframe'i oluşturulur. JavaScript kapalıysa açıkça etiketli dış bağlantı kalır. Böylece ilk yüklemede üçüncü taraf player çalıştırılmaz.
+- Yorum gövdesi açık temada koyu yüzey için tanımlanan açık gri rengi kullanıyordu; yorum giriş bağlantısı da iki temada aynı moru kullanıyordu. Gövde metni ve bağlantı artık tema metin token'ını, bağlantı ayrımı için mor alt çizgiyi kullanıyor.
+- Doğrulama: `npm run verify` (Astro 0 tanı, Vitest 18/18, build), yerel E2E 44/44, production E2E 31/31 ve özel imleç matrisi Chrome/Edge/WebKit 9/9 geçti. Firefox mevcut Windows Playwright sürecinde başlatılamadığı için dış tarayıcı matrisi açığı sürüyor.
+
 ## FAZ 2 yayın doğrulaması
 
 20 Eylül'de canlı `https://palmarghe.com/` Chrome'da tekrar incelendi. Yeni hero görseli, kategori kartları, mobil menü ve tipografik hiyerarşi doğru yüklendi. Worker sürümü `02653ebf-1315-4569-8f95-41b9b9014a27` üzerindeki production Playwright paketi 10/10 geçti; yerel regresyon 28/28 geçti. Önceki tablodaki FAZ 1 production role matrix ve atomik transaction maddeleri tarihsel bulgudur; ikisi de 19 Eylül production doğrulamasıyla kapanmıştır.

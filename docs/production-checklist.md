@@ -1,6 +1,6 @@
 # Production doğrulama kontrol listesi
 
-Son güncelleme: 28 Eylül 2026. FAZ 1 uygulanabilir kapsam tamamlandı; harici/kullanıcı bağımlı kapılar aşağıdadır. Ana kanıt kaydı `FINAL_REPORT.md` içindedir.
+Son güncelleme: 1 Ekim 2026. FAZ 1 uygulanabilir kapsam tamamlandı; harici/kullanıcı bağımlı kapılar aşağıdadır. Ana kanıt kaydı `FINAL_REPORT.md` içindedir.
 
 ## Tamamlanan
 
@@ -12,8 +12,8 @@ Son güncelleme: 28 Eylül 2026. FAZ 1 uygulanabilir kapsam tamamlandı; harici/
 - [x] Geçici member/editor Auth hesapları yalnız doğrulanan UUID'leriyle silindi. Son SQL: Auth `0`, profile `0`, audit `0`; gerçek owner admin sağlam `1`.
 - [x] Admin private Storage yükleme, staff preview/anonymous denial, Turnstile canlı mesaj ve görünüm ayarı turu doğrulandı.
 - [x] Search Console domain sahipliği ve sitemap işlendi; 20 sayfa keşfedildi. TXT öncesi DNS yedeği ve geri dönüş planı `docs/dns-search-console-2026-09-19.md` içinde.
-- [x] Yerel verify: 0 typecheck hatası/uyarı, 11/11 unit, build. Yerel E2E 25/25. Temizlik sonrası production E2E 10/10; altı canlı axe taramasında ciddi/kritik WCAG bulgusu yok.
-- [x] 19 Eylül Lighthouse: Performance 99, Accessibility 100, Best Practices 100, SEO 100; LCP 2.2 sn, CLS 0. Production dependency audit high-severity bulgu vermedi.
+- [x] 1 Ekim doğrulaması: Astro 0 tanı, Vitest 18/18, build başarılı; yerel E2E 44/44; production E2E 31/31. Sitemap'teki 27 indekslenebilir rota, koyu ve açık tema kombinasyonlarının tümünde ciddi/kritik WCAG 2.2 axe bulgusu olmadan geçti. Chrome/Edge/WebKit özel imleç matrisi 9/9. Arama açılışında kırpılan imleç, viewport boyutlu dialog ve ayrı arama kartıyla düzeltildi; kapalı dialog'un sayfa tıklamalarını yakalaması engellendi. Cloudflare Worker `65461809-11c3-43df-bd0c-42d88e52f9e1` canlı ve production doğrulaması tamam.
+- [x] 19 Eylül Lighthouse (tarihli tarihsel ölçüm): Performance 99, Accessibility 100, Best Practices 100, SEO 100; LCP 2.2 sn, CLS 0. 1 Ekim Lighthouse 12 mobil profilinde responsive WebP varyantları öncesi Performance 98, Accessibility 100, Best Practices 100, SEO 100; LCP 2.11 sn, CLS 0, TBT 0 kaydedildi. Yeni varyantlar ve embed ertelemesi sonrası saha CWV ölçümü bekleniyor. `npm audit --omit=dev --audit-level=high` yüksek önem düzeyli bulgu vermedi.
 - [x] Normal Git push ve GitHub Actions Verify geçmişi yeşil; her yeni production commit için çalışma sonucu ayrıca kontrol edilir.
 - [x] Bülten kaydı açık rıza, bot tuzağı, Worker taraflı hız sınırı ve anonim e-posta okumasına izin vermeyen `subscribe_newsletter` RPC’siyle doğrulandı; RPC execute izni yalnız `service_role` içindir. Kontrollü production kayıt oluşturuldu, veritabanında görüldü ve silinerek `0` kaldı.
 - [x] Tetikleyici ve scheduler yardımcılarının anon execute izinleri kapatıldı. Zamanlanmış takipçi bildirimleri yalnız Worker service-role ile dağıtılır; production fonksiyon yetki sorgusu anon erişimini `false`, scheduler service erişimini `true` doğruladı.

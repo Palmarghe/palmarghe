@@ -9,8 +9,10 @@ test('live search is interactive, image-led and filterable on mobile', async ({ 
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
   await expect(page.locator('html')).toHaveClass(/search-overlay-open/);
-  await expect(dialog.getByRole('searchbox')).toHaveCSS('cursor', 'text');
-  await dialog.getByRole('searchbox').fill('Lamine Yamal');
+  const input = dialog.getByRole('searchbox');
+  await expect(input).toBeFocused();
+  await expect(input).toHaveCSS('cursor', 'text');
+  await input.fill('Lamine Yamal');
   const result = dialog.getByRole('link', { name: /FM26: Lamine Yamal için sağ kanat oyun planı/ });
   await expect(result).toBeVisible({ timeout: 10000 });
   await expect(result.locator('img')).toHaveJSProperty('complete', true);
@@ -33,6 +35,7 @@ test('desktop command key, arrow navigation and full search page work', async ({
   await expect(dialog).toBeVisible();
   await expect(page.locator('html')).toHaveClass(/search-overlay-open/);
   const input = dialog.getByRole('searchbox');
+  await expect(input).toBeFocused();
   await expect(input).toHaveCSS('cursor', 'text');
   await expect(input).toHaveCSS('caret-color', 'rgb(139, 92, 246)');
   await input.fill('Lamine Yamal');

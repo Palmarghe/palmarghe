@@ -56,6 +56,15 @@ test('homepage identifies the Palmarghe publisher and website in structured data
   expect(article).toMatchObject({ '@type': 'Article', headline: 'FM26: Lamine Yamal için sağ kanat oyun planı', url: 'https://palmarghe.com/fm/lamine-yamal-fm26/' });
 });
 
+test('video embeds connect only after an explicit accessible action', async ({ page }) => {
+  await page.goto('/music/sevenfold-thunder/');
+  const trigger = page.getByRole('button', { name: 'Videoyu yükle: Sevenfold Thunder — Palmarghe' });
+  await expect(trigger).toBeVisible();
+  await expect(page.locator('iframe[src*="youtube-nocookie.com"]')).toHaveCount(0);
+  await trigger.click();
+  await expect(page.locator('iframe[src*="youtube-nocookie.com"]')).toHaveAttribute('title', 'Sevenfold Thunder — Palmarghe');
+});
+
 test('production privacy and security response headers', async ({ request }) => {
   const home = await request.get('/');
   expect(home.headers()['content-security-policy']).toContain('default-src');

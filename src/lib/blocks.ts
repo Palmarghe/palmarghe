@@ -43,7 +43,7 @@ export function parseDocument(value: string): Document | null {
     return parsed;
   } catch { return null; }
 }
-export function renderDocument(doc: Document): string {
+export function renderDocument(doc: Document, locale: 'tr' | 'en' = 'tr'): string {
   const render = (node: Block): string => {
     const inside = (node.content ?? []).map(render).join('');
     if (node.type === 'text') {
@@ -64,7 +64,13 @@ export function renderDocument(doc: Document): string {
     if (node.type === 'mediaGallery') { const mediaIds = Array.isArray(node.attrs?.media_ids) ? node.attrs.media_ids : []; return `<section class="content-gallery" aria-label="Görsel galerisi">${mediaIds.map((id, index) => `<a href="/api/media/${escapeHtml(String(id))}/" data-gallery-item><img src="/api/media/${escapeHtml(String(id))}/" alt="Galeri görseli ${index + 1}" loading="lazy" /></a>`).join('')}</section>`; }
     if (node.type === 'callout') return `<aside class="content-callout content-callout--${escapeHtml(String(node.attrs?.tone))}"><strong>${escapeHtml(String(node.attrs?.title))}</strong>${inside}</aside>`;
     if (node.type === 'cta') return `<p class="content-cta"><a class="button content-cta--${escapeHtml(String(node.attrs?.style ?? 'primary'))}" href="${escapeHtml(String(node.attrs?.href))}" rel="noopener noreferrer">${escapeHtml(String(node.attrs?.label))} →</a></p>`;
-    if (node.type === 'embed') return `<figure class="content-embed"><iframe src="${escapeHtml(String(node.attrs?.src))}" title="${escapeHtml(String(node.attrs?.title ?? 'Embedded content'))}" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups" referrerpolicy="strict-origin-when-cross-origin"></iframe></figure>`;
+    if (node.type === 'embed') {
+      const src = String(node.attrs?.src ?? '');
+      const title = String(node.attrs?.title ?? (locale === 'tr' ? 'Video' : 'Video'));
+      if (!safeEmbedUrl(src)) return '';
+      const action = locale === 'tr' ? 'Videoyu yükle' : 'Load video';
+      return `<figure class="content-embed" data-content-embed data-embed-src="${escapeHtml(src)}" data-embed-title="${escapeHtml(title)}"><button class="content-embed-trigger" type="button" data-embed-trigger aria-label="${escapeHtml(`${action}: ${title}`)}"><span class="content-embed-play" aria-hidden="true">▶</span><span>${action}</span></button><noscript><a class="content-embed-fallback" href="${escapeHtml(src)}" target="_blank" rel="noopener noreferrer">${locale === 'tr' ? 'Videoyu yeni sekmede aç' : 'Open video in a new tab'} ↗</a></noscript></figure>`;
+    }
     if (node.type === 'table') return `<div class="content-table-wrap"><table>${inside}</table></div>`;
     if (node.type === 'tableRow') return `<tr>${inside}</tr>`;
     if (node.type === 'tableHeader') return `<th scope="col">${inside}</th>`;

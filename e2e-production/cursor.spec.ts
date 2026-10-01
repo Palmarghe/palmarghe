@@ -43,11 +43,14 @@ test('Palmarghe pointer has semantic states across reading, links, controls and 
   await expect(page.locator('#search-overlay')).toBeVisible();
   await expect(page.locator('html')).toHaveClass(/search-overlay-open/);
   await expect.poll(() => cursor.evaluate(element => element.parentElement?.id)).toBe('search-overlay');
+  await expect(cursor).toHaveCSS('opacity', '1');
+  await expect(cursor).not.toHaveAttribute('data-away', '');
   const closeButton = page.locator('#search-overlay [data-search-close]');
   await closeButton.hover();
   await expect(cursor).toHaveAttribute('data-state', 'button');
   await expect(cursor).toHaveCSS('opacity', '1');
   const input = page.locator('#search-overlay input[name="q"]');
+  await expect(input).toBeFocused();
   await input.hover();
   await expect(input).toHaveCSS('cursor', 'text');
   await expect(input).toHaveCSS('caret-color', 'rgb(139, 92, 246)');

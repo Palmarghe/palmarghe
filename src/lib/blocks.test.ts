@@ -30,6 +30,11 @@ describe('controlled blocks', () => {
     expect(parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'embed', attrs: { src: 'https://www.youtube.com/embed/example', title: 'Video' } }] }))).not.toBeNull();
     expect(parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'embed', attrs: { src: 'https://www.youtube.com/watch?v=example', title: 'Video' } }] }))).toBeNull();
     expect(parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'embed', attrs: { src: 'https://untrusted.example/embed', title: 'X' } }] }))).toBeNull();
+    const embed = parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'embed', attrs: { src: 'https://www.youtube-nocookie.com/embed/example', title: 'Video <clip>' } }] }));
+    expect(embed && renderDocument(embed, 'tr')).toContain('data-embed-src="https://www.youtube-nocookie.com/embed/example"');
+    expect(embed && renderDocument(embed, 'tr')).toContain('aria-label="Videoyu yükle: Video &lt;clip&gt;"');
+    expect(embed && renderDocument(embed, 'en')).toContain('aria-label="Load video: Video &lt;clip&gt;"');
+    expect(embed && renderDocument(embed)).not.toContain('<iframe');
     expect(parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'mediaImage', attrs: { media_id: id, alt: 'A', caption: 7 } }] }))).toBeNull();
   });
 });

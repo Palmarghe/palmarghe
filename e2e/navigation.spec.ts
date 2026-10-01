@@ -100,7 +100,7 @@ test('light theme applies to public search and Studio classic editor', async ({ 
   await page.getByRole('button', { name: 'Açık modu aç' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'light');
   await page.getByRole('button', { name: 'Ara' }).click();
-  await expect(page.locator('#search-overlay')).toHaveCSS('background-color', 'rgb(255, 253, 250)');
+  await expect(page.locator('#search-overlay .search-overlay-panel')).toHaveCSS('background-color', 'rgb(255, 253, 250)');
 
   await page.goto('/studio/?section=content');
   await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');
@@ -120,6 +120,14 @@ test('brand cursor is enabled for fine pointers and keeps text inputs usable', a
   await page.goto('/');
   await expect(page.locator('[data-brand-cursor]')).toHaveCount(1);
   await expect.poll(() => page.evaluate(() => document.documentElement.classList.contains('has-brand-cursor'))).toBe(true);
+  await page.locator('.head-actions [data-search-trigger]').click();
+  const search = page.locator('#search-overlay');
+  const cursor = page.locator('[data-brand-cursor]');
+  await expect(search).toBeVisible();
+  await expect(search.getByRole('searchbox')).toBeFocused();
+  await expect(search).toHaveCSS('width', `${await page.evaluate(() => innerWidth)}px`);
+  await expect(cursor).toHaveCSS('opacity', '1');
+  await page.keyboard.press('Escape');
   await page.goto('/account/');
   const email = page.locator('input[name="email"]').first();
   await expect(email).toHaveCSS('cursor', 'text');
