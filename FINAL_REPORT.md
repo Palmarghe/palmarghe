@@ -361,3 +361,8 @@ pm run verify Astro 0 tanı, Vitest 14/14 ve production build ile başarılı; n
 
 - Cloudflare Vite eklentisi, Wrangler, Miniflare, Workerd ve undici kilit sürümleri güvenlik düzeltmeleri içeren sürümlere yükseltildi. `npm audit --omit=dev --audit-level=high` sonucu 0 vulnerability'dir.
 - Güncelleme sonrası `npm run verify` Astro 0 tanı, Vitest 14/14 ve production build ile başarılı; yerel navigation Playwright paketi 11/11 geçti.
+
+### Production test içeriği arşivleme — 1 Ekim 2026
+
+- Yalnız test amacıyla oluşturulan `test`, `Production QA taslağı` ve `Deneme` kayıtları production veritabanında silinmeden `archived` durumuna alındı; `Deneme` kaydının öne çıkarma işareti de kapatıldı.
+- Studio içerik listesi üç kaydı `Arşivlendi` olarak gösteriyor. Public `/test/`, `/deneme/` ve `/qa-production-draft/` rotaları 404 dönüyor; editoryal yayın kayıtları korunuyor.
