@@ -43,7 +43,9 @@ if (forms.length) {
       try {
         const destination = await submitStudioForm(form.action, body, 'media');
         dirty.delete(form);
-        feedback.textContent = 'İşlem tamamlandı · yönlendiriliyor';
+        feedback.textContent = new URL(destination).searchParams.get('cleanup') === 'pending'
+          ? 'Dosya temizliği bekliyor · yönlendiriliyor'
+          : 'İşlem tamamlandı · yönlendiriliyor';
         window.location.assign(destination);
       } catch (error) {
         busy = false;

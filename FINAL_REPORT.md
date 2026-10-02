@@ -1,8 +1,14 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 2 October 2026, search cursor and Studio save recovery
+## Current production state — 2 October 2026, durable media cleanup
 
-Worker `7b9107df-042f-404e-b193-14c26b4c4bbe` is live; migration036 remains applied. Search uses native pointers and text cursor throughout the modal; the branded pointer stays in the body and returns after close. Versioned script URLs refresh cached clients. Editor/media saves retain inputs on failure, restore editing, guard duplicate submits and verify redirects with a bounded request.
+Worker `0bf6fda5-3fd1-4b00-972d-0edfe01033e4` is live; migrations036/037 are applied. Atomic deletion receipts preserve failed Storage cleanup for permission-bound Studio retry. Native search pointers/carets and bounded save recovery remain active.
+
+Verification: Astro0 diagnostics, unit125/125, build success; full local56/56 plus new responsive/two-theme pending-state1/1; production browser14/14 for cursor/search/body-media/write boundaries. Real SQL rollback QA10/10; content12/revisions8/media7/Storage7 and four fingerprints unchanged, queue0 and trigger active. Actual Chrome admin media page loads seven records without a queue error. No physical production file deletion or Auth/editorial mutation occurred. Evidence/rollback/limits: docs/media-cleanup-audit-2026-10-02.md. Upload orphans, byte decoding, a real queued browser retry and other full webmaster gates remain open.
+
+## Previous production state — 2 October 2026, search cursor and Studio save recovery (historical)
+
+Worker `7b9107df-042f-404e-b193-14c26b4c4bbe` was live at this checkpoint; migration036 was applied. Search used native pointers and text cursor throughout the modal; the branded pointer stayed in the body and returned after close. Versioned script URLs refreshed cached clients. Editor/media saves retained inputs on failure, restored editing, guarded duplicate submits and verified redirects with a bounded request.
 
 Verification: Astro0 diagnostics, unit111/111, build success; local pointer1/1, controlled editor/media recovery2/2 and corrected media navigation2/2. Production Chrome cursor/search9/9; read-only Chrome confirms the deployed script and native cursor styles and a real search result. Final full local regression56/56 passed. Code release8dd5502 Actions37038189617 completed successfully; evidence and limits: docs/search-save-recovery-2026-10-02.md.
 

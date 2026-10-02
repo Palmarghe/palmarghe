@@ -590,3 +590,4 @@ html.mobile-navigation-open,html.search-overlay-open,html.gallery-modal-open,htm
 
 .content-editor-form button:disabled,.admin-main form[aria-busy='true'] button:disabled{opacity:.55}
 .studio-form-feedback{margin-block:1rem 0;font-size:.9rem;overflow-wrap:anywhere}
+.media-cleanup-panel ul{list-style:none;padding:0;display:grid;gap:1rem}.media-cleanup-panel li{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}.media-cleanup-panel li span{overflow-wrap:anywhere;min-width:0}.media-cleanup-panel form,.media-cleanup-panel button{max-width:100%}

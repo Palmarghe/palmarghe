@@ -27,6 +27,7 @@ const tables: Record<TableName, Row[]> = {
   site_settings: [], navigation: [], media: [], redirects: [], audit_logs: [], account_deletion_requests: [], traffic_daily: [], traffic_qualified_daily: [], content_bookmarks: [], content_follows: [], content_notifications: [], editorial_collections: [], editorial_collection_items: [], newsletter_subscribers: [], content_revisions: [],
 };
 const mediaFiles = new Map<string, Uint8Array>();
+const mediaCleanupTasks: Row[] = [];
 const isTable = (name: string): name is TableName => name in tables;
 
 class Query implements PromiseLike<{ data: any; error: { code: string; message: string } | null }> {
@@ -106,6 +107,7 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
     } else if (this.action === 'update') selected.forEach((row) => Object.assign(row, this.values));
     else if (this.action === 'delete') {
       if (this.table === 'media' && selected.some((row) => localMediaReferenced(row.id))) return { data:null,error:{code:'23503',message:'media in use'} };
+      if (this.table === 'media') for (const row of selected) mediaCleanupTasks.push({id:uid(),media_id:row.id,path:row.path,created_at:new Date().toISOString()});
       if (this.table === 'content_items') for (const row of selected) {
         for (let index=tables.content_revisions.length-1;index>=0;index--) if(tables.content_revisions[index].content_id===row.id) tables.content_revisions.splice(index,1);
       }
@@ -133,10 +135,17 @@ export function localSupabase(cookies: import('astro').AstroCookies) {
     from: (name: string) => { if (!isTable(name)) throw new Error('Unknown table'); return new Query(name, getUser()); },
     rpc: async (name: string, args: Row) => {
       const actor = getUser();
-      if (name === 'media_has_references') {
+      if (['media_has_references','pending_media_cleanup','complete_media_cleanup'].includes(name)) {
         const profile = actor && tables.profiles.find(entry=>entry.id===actor.id);
         const group = profile && tables.permission_groups.find(entry=>entry.id===profile.permission_group_id);
         if (!actor || (actor.role!=='admin' && group?.permissions?.media!==true)) return {data:null,error:{code:'42501',message:'media permission required'}};
+        if (name === 'pending_media_cleanup') return {data:mediaCleanupTasks.filter(task=>!args.p_media_id || task.media_id===args.p_media_id).slice(0,20),error:null};
+        if (name === 'complete_media_cleanup') {
+          const index=mediaCleanupTasks.findIndex(task=>task.id===args.p_task_id);
+          const task=mediaCleanupTasks[index];
+          if (!task || mediaFiles.has(task.path) || tables.media.some(row=>row.path===task.path)) return {data:false,error:null};
+          mediaCleanupTasks.splice(index,1); return {data:true,error:null};
+        }
         return {data:localMediaReferenced(args.p_media_id),error:null};
       }
       if (name === 'subscribe_newsletter') {

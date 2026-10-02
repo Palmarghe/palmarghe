@@ -1,8 +1,8 @@
 import type { APIRoute } from 'astro';
 import { canManageMedia } from '../../../lib/media-permission';
 import { z } from 'zod';
-import { supabase, localMode } from '../../../lib/supabase';
-import { localDeleteMedia } from '../../../lib/local-adapter';
+import { supabase } from '../../../lib/supabase';
+import { cleanDeletedMedia } from '../../../lib/media-cleanup';
 import { sameOrigin, errorResponse, redirectTo } from '../../../lib/security';
 export const POST: APIRoute = async ({ request, cookies }) => {
   if (!sameOrigin(request)) return errorResponse('Invalid origin',403);
@@ -14,6 +14,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const form = await request.formData();
   const id = z.uuid().safeParse(form.get('id'));
   if (!id.success) return errorResponse('Invalid id');
+  if (form.get('operation') === 'cleanup') {
+    const cleaned = await cleanDeletedMedia(db,id.data);
+    return redirectTo(request,'/studio/?panel=editor&section=media&cleanup=' + (cleaned ? 'complete' : 'pending'));
+  }
   const { data: media } = await db.from('media').select('id,path').eq('id',id.data).single();
   if (!media) return errorResponse('Not found',404);
   if (form.get('operation') === 'update') {
@@ -31,13 +35,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const { data: referenced, error: usageError } = await db.rpc('media_has_references',{p_media_id:id.data});
     if (usageError || typeof referenced !== 'boolean') return errorResponse('Usage check failed',503);
     if (referenced) return errorResponse('Media is in use (including revisions)',409);
+    const cleanupSupport = await db.rpc('pending_media_cleanup',{p_media_id:id.data});
+    if (cleanupSupport.error || !Array.isArray(cleanupSupport.data)) return errorResponse('Cleanup unavailable',503);
     const { error } = await db.from('media').delete().eq('id',id.data);
     // The FK closes the race between this friendly preflight and DELETE.
     if (error && ['23503','23001'].includes(error.code)) return errorResponse('Media is in use (including revisions)',409);
     if (error) return errorResponse('Delete failed',400);
-    if (localMode) localDeleteMedia(media.path);
-    else await db.storage.from('media').remove([media.path]);
-    return redirectTo(request,'/studio/?panel=editor&section=media');
+    const cleaned = await cleanDeletedMedia(db,id.data);
+    return redirectTo(request,'/studio/?panel=editor&section=media&cleanup=' + (cleaned ? 'complete' : 'pending'));
   }
   return errorResponse('Invalid operation');
 };

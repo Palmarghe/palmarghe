@@ -158,3 +158,6 @@ Previous turn was progress: canonical profile writes/recovery, deploy, 65 unit t
 Migration036 production’da uygulandı; current/revision derived8/2, kaynak12/8/7/7 ve parmak izleri korundu. Gerçek SQL rollback QA7/7; local medya4/4 ve production Chrome23/23. FK metadata yarış koruması, body/gallery yayın görünürlüğü ve fail-closed silme Worker5a7488ea ile canlı. Storage orphan temizliği/byte decode ve geniş kapsam açık. Kanıt: docs/media-references-audit-2026-10-02.md. Arama özel imleç yerine native kontrol/metin imlecini kullanır; site dışındaki marka sistemi korunur. Önceki e69cfd8 CI yeşil. Tam hedef kapanmış değildir.
 
 Ek production body-media1/1: gerçek anon Storage/gövde yükleme, 390/1440px × iki tema ve ciddi/kritik axe doğrulandı. Tam manual WCAG/AT kapısı bu otomatik kanıtla kapanmaz.
+ 
+## 2 October 2026 — durable media cleanup progress
+Requirements26/29/36 advanced by migration037 and Worker0bf6fda5: atomic receipts, permission-bound retry, Storage-absence completion and fail-closed preflight. SQL rollback10/10; source fingerprints preserved. Unit125/125; local56/56 plus new responsive pending-state1/1; live14/14. Evidence: docs/media-cleanup-audit-2026-10-02.md. Failed-upload orphans, byte decoding, real production physical cleanup and broader gates remain open.

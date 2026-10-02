@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 async function login(page: Page) {
   await page.goto('/studio/');
@@ -68,4 +69,20 @@ test('media upload retains file and alt text after server failure and retries su
   await form.getByRole('button', { name: 'Yükle' }).click();
   await expect(page.locator('.entry-card input[name="alt_tr"]').filter({ visible: true }).first()).toHaveValue(alt);
   expect(calls).toBe(2);
+});
+
+test('media pending-cleanup feedback is readable in both themes on phone and desktop', async ({ page }) => {
+  await login(page);
+  // Presentation of the server redirect state, not a simulated Storage deletion.
+  for (const width of [390,1440]) for (const theme of ['dark','light']) {
+    await page.setViewportSize({width,height:900});
+    await page.goto('/studio/?section=media&cleanup=pending');
+    await page.evaluate(value => { document.body.dataset.theme=value; },theme);
+    const notice=page.getByText('Medya kaydı kaldırıldı; dosya temizliği henüz tamamlanmadı.',{exact:false});
+    await expect(notice).toBeVisible();
+    await expect(notice).toHaveAttribute('role','status');
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+    const results=await new AxeBuilder({page}).include('.admin-main').analyze();
+    expect(results.violations.filter(item=>['serious','critical'].includes(item.impact ?? ''))).toEqual([]);
+  }
 });
