@@ -1,8 +1,14 @@
 # Production doğrulama kontrol listesi
 
-## Current production state — 2 October 2026, explicit search clear
+## Current production state — 2 October 2026, public CSS isolation
 
-Worker `90ef6f57-c845-4f40-aa5d-25992490019f` is live; migrations036/037 remain active. Modal/full-page search has a theme-aware, localized clear action preserving type and input focus. Native cursor fallback, bounded Studio save recovery and durable media cleanup remain active.
+Worker `b5fd38ce-e31d-4f72-848e-e581050a4caa` is live; migrations036/037 remain active. Public pages load a build-only smaller stylesheet from the same source. Studio's stylesheet matches the prior live bytes exactly; native search cursors/clear, bounded save recovery and durable media cleanup remain active.
+
+Verification: Astro0 diagnostics, unit129/129, full local59/59 and production39/39; actual Chrome public and authenticated Studio/light theme confirmed. Public CSS115424→72663 bytes; sampled transfer25425→17147 bytes. Serial mobile home LCP2.108→2.324s (no timing speedup claimed), article3.009s, CLS0/0.0113 and TBT0. Article LCP and field INP/CWV gates remain open. No editorial/Auth/physical-file mutation occurred. Previous fc69e67 Actions37046639598 succeeded. Evidence/rollback/limits: docs/public-css-audit-2026-10-02.md and docs/public-css-performance-2026-10-02.json. Full webmaster objective remains active.
+
+## Previous production state — 2 October 2026, explicit search clear (historical)
+
+Worker `90ef6f57-c845-4f40-aa5d-25992490019f` was live at this checkpoint; migrations036/037 were active. Modal/full-page search had a localized clear action preserving type and input focus. Native cursor fallback, bounded Studio save recovery and durable media cleanup were active.
 
 Verification: Astro0 diagnostics, unit125/125, build success; local search-clear2/2 and production11/11 including TR/EN, 320/1440px, both themes, keyboard, no-JS GET, axe and prior cursor/search regressions. Actual Chrome confirms clear control, real result and focus recovery. No production content/Auth/files changed. Previous d376721 Actions37042191255 succeeded. Evidence and rollback: docs/search-clear-audit-2026-10-02.md. Full webmaster scope, upload safety, comprehensive staff states and performance gates remain open.
 

@@ -6,7 +6,7 @@ import { runtimeSecret } from '../lib/runtime-secrets';
 import AdSlot from '../components/AdSlot.astro';
 import SocialIcon from '../components/SocialIcon.astro';
 import { socialPlatforms } from '../lib/social';
-import '../styles/global.css';
+import '../styles/global.css?public';
 interface Props { locale: Locale; title?: string; description?: string; alternate?: string; noindex?: boolean; structuredData?: Record<string, unknown>; ogImage?: string; ogAlt?: string; ogType?: 'article' | 'website'; canonicalOverride?: string; }
 const { locale, title, description, alternate, noindex = false, structuredData, ogImage, ogAlt, ogType = 'website', canonicalOverride } = Astro.props;
 const t = copy[locale];

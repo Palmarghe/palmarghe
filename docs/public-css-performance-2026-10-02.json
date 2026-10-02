@@ -1,0 +1,247 @@
+{
+  "measuredWorker": "b5fd38ce-e31d-4f72-848e-e581050a4caa",
+  "baselineWorker": "90ef6f57-c845-4f40-aa5d-25992490019f",
+  "baselineStylesheetSha256": "353368eef2b474405c772d161072351e2823ac811409e7335985ad0893febf4e",
+  "assets": [
+    {
+      "kind": "public",
+      "url": "https://palmarghe.com/_astro/Site.B5V9fJNn.css",
+      "status": 200,
+      "bytes": 72663,
+      "gzipEquivalentBytes": 14598,
+      "matchesBuild": true,
+      "sha256": "560bd65a05fc1a47ea892f927f4fd02621c9db9934e147e02799c795bbda739f",
+      "cacheControl": "public, max-age=31536000, immutable"
+    },
+    {
+      "kind": "studio",
+      "url": "https://studio.palmarghe.com/_astro/index.BP5JUn22.css",
+      "status": 200,
+      "bytes": 115424,
+      "gzipEquivalentBytes": 22014,
+      "matchesBuild": true,
+      "sha256": "353368eef2b474405c772d161072351e2823ac811409e7335985ad0893febf4e",
+      "cacheControl": "public, max-age=31536000, immutable"
+    }
+  ],
+  "before": {
+    "fetchTime": "2026-10-02T18:29:27.231Z",
+    "lighthouseVersion": "13.5.0",
+    "url": "https://palmarghe.com/?verify=lighthouse",
+    "settings": {
+      "output": [
+        "json"
+      ],
+      "maxWaitForFcp": 30000,
+      "maxWaitForLoad": 45000,
+      "pauseAfterFcpMs": 1000,
+      "pauseAfterLoadMs": 1000,
+      "networkQuietThresholdMs": 1000,
+      "cpuQuietThresholdMs": 1000,
+      "formFactor": "mobile",
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "throttlingMethod": "simulate",
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+      "auditMode": false,
+      "gatherMode": false,
+      "clearStorageTypes": [
+        "file_systems",
+        "shader_cache",
+        "service_workers",
+        "cache_storage"
+      ],
+      "disableStorageReset": false,
+      "debugNavigation": false,
+      "channel": "cli",
+      "usePassiveGathering": false,
+      "disableFullPageScreenshot": false,
+      "skipAboutBlank": false,
+      "blankPage": "about:blank",
+      "ignoreStatusCode": false,
+      "locale": "en-US",
+      "blockedUrlPatterns": null,
+      "additionalTraceCategories": null,
+      "extraHeaders": null,
+      "precomputedLanternData": null,
+      "onlyAudits": null,
+      "onlyCategories": null,
+      "skipAudits": null
+    },
+    "performance": 0.98,
+    "metrics": {
+      "largest-contentful-paint": 2107.7435,
+      "cumulative-layout-shift": 0,
+      "total-blocking-time": 0,
+      "total-byte-weight": 503223,
+      "server-response-time": 679
+    },
+    "stylesheets": [
+      {
+        "url": "https://palmarghe.com/_astro/global.BP5JUn22.css",
+        "transferSize": 25425,
+        "resourceSize": 115424
+      }
+    ]
+  },
+  "after": {
+    "fetchTime": "2026-10-02T18:38:08.121Z",
+    "lighthouseVersion": "13.5.0",
+    "url": "https://palmarghe.com/?verify=lighthouse",
+    "settings": {
+      "output": [
+        "json"
+      ],
+      "maxWaitForFcp": 30000,
+      "maxWaitForLoad": 45000,
+      "pauseAfterFcpMs": 1000,
+      "pauseAfterLoadMs": 1000,
+      "networkQuietThresholdMs": 1000,
+      "cpuQuietThresholdMs": 1000,
+      "formFactor": "mobile",
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "throttlingMethod": "simulate",
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+      "auditMode": false,
+      "gatherMode": false,
+      "clearStorageTypes": [
+        "file_systems",
+        "shader_cache",
+        "service_workers",
+        "cache_storage"
+      ],
+      "disableStorageReset": false,
+      "debugNavigation": false,
+      "channel": "cli",
+      "usePassiveGathering": false,
+      "disableFullPageScreenshot": false,
+      "skipAboutBlank": false,
+      "blankPage": "about:blank",
+      "ignoreStatusCode": false,
+      "locale": "en-US",
+      "blockedUrlPatterns": null,
+      "additionalTraceCategories": null,
+      "extraHeaders": null,
+      "precomputedLanternData": null,
+      "onlyAudits": null,
+      "onlyCategories": null,
+      "skipAudits": null
+    },
+    "performance": 0.98,
+    "metrics": {
+      "largest-contentful-paint": 2323.6989999999996,
+      "cumulative-layout-shift": 0,
+      "total-blocking-time": 0,
+      "total-byte-weight": 497215,
+      "server-response-time": 555
+    },
+    "stylesheets": [
+      {
+        "url": "https://palmarghe.com/_astro/Site.B5V9fJNn.css",
+        "transferSize": 17147,
+        "resourceSize": 72663
+      }
+    ]
+  },
+  "article": {
+    "fetchTime": "2026-10-02T18:39:33.165Z",
+    "lighthouseVersion": "13.5.0",
+    "url": "https://palmarghe.com/fm/lamine-yamal-fm26/?verify=lighthouse",
+    "settings": {
+      "output": [
+        "json"
+      ],
+      "maxWaitForFcp": 30000,
+      "maxWaitForLoad": 45000,
+      "pauseAfterFcpMs": 1000,
+      "pauseAfterLoadMs": 1000,
+      "networkQuietThresholdMs": 1000,
+      "cpuQuietThresholdMs": 1000,
+      "formFactor": "mobile",
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "throttlingMethod": "simulate",
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+      "auditMode": false,
+      "gatherMode": false,
+      "clearStorageTypes": [
+        "file_systems",
+        "shader_cache",
+        "service_workers",
+        "cache_storage"
+      ],
+      "disableStorageReset": false,
+      "debugNavigation": false,
+      "channel": "cli",
+      "usePassiveGathering": false,
+      "disableFullPageScreenshot": false,
+      "skipAboutBlank": false,
+      "blankPage": "about:blank",
+      "ignoreStatusCode": false,
+      "locale": "en-US",
+      "blockedUrlPatterns": null,
+      "additionalTraceCategories": null,
+      "extraHeaders": null,
+      "precomputedLanternData": null,
+      "onlyAudits": null,
+      "onlyCategories": null,
+      "skipAudits": null
+    },
+    "performance": 0.93,
+    "metrics": {
+      "largest-contentful-paint": 3009.473,
+      "cumulative-layout-shift": 0.01130670527173648,
+      "total-blocking-time": 0,
+      "total-byte-weight": 327822,
+      "server-response-time": 651
+    },
+    "stylesheets": [
+      {
+        "url": "https://palmarghe.com/_astro/Site.B5V9fJNn.css",
+        "transferSize": 17092,
+        "resourceSize": 72663
+      }
+    ]
+  },
+  "limitations": "Individual lab navigations, not field percentiles or INP. Final before/after and article samples ran without concurrent local build or browser test processes. The article has no fresh paired baseline. gzipEquivalentBytes is local compression, not a CDN wire measurement. Initial overlapping baseline is excluded."
+}
