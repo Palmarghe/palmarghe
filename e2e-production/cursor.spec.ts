@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { measureCursorTracking } from '../e2e/helpers/cursor';
 import { verifySearchPointers } from '../e2e/helpers/search-pointer';
 
-test('search retains native pointers and caret for mouse and keyboard opening', async ({ page }) => {
+test('search keeps branded controls and native text caret for mouse and keyboard opening', async ({ page }) => {
   await verifySearchPointers(page);
 });
 
@@ -48,13 +48,14 @@ test('Palmarghe pointer has semantic states across reading, links, controls and 
   await page.mouse.click(point.x, point.y);
   await expect(page.locator('#search-overlay')).toBeVisible();
   await expect(page.locator('html')).toHaveClass(/search-overlay-open/);
-  await expect(cursor).toBeHidden();
-  await expect(cursor).toBeHidden();
+  await expect(cursor).toHaveCount(1);
+  await expect(cursor).toHaveCount(1);
   await expect(cursor).not.toHaveAttribute('data-away', '');
   const closeButton = page.locator('#search-overlay [data-search-close]');
   await closeButton.hover();
   await expect(cursor).toHaveAttribute('data-state', 'button');
-  await expect(cursor).toBeHidden();
+  await expect(cursor).toBeVisible();
+  await expect(cursor).toHaveCSS('opacity', '1');
   const input = page.locator('#search-overlay input[name="q"]');
   await expect(input).toBeFocused();
   await input.hover();
@@ -142,3 +143,5 @@ test('rendered cursor reaches the pointer within one animation frame', async ({ 
     expect(measurements.maximumError, JSON.stringify(measurements)).toBeLessThanOrEqual(1);
   }
 });
+
+

@@ -1,6 +1,12 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 2 October 2026, session cookie audit
+## Current production state — 2 October 2026, search cursor correction
+
+Worker `664072c7-da2a-41cc-b3a5-45aa099d18d9` is live. The branded desktop pointer now moves inside the search dialog's browser top layer instead of being hidden behind it. Search controls retain the branded pointer; editable fields retain their native text pointer and violet caret. Closing search returns the pointer to the document body. Touch and reduced-motion behavior are preserved.
+
+Validation: Astro 0 diagnostics, unit 57/57, build success, local search regression 1/1 and production cursor/search suite 9/9, including mobile, both themes, keyboard, focus trapping and network recovery. Real Chrome confirms the cursor's modal parent, input caret and return to body. No content or production data changed. In-progress profile recovery work is preserved separately and is not part of this release. Previous session-cookie commit f982c01 Actions succeeded: https://github.com/Palmarghe/palmarghe/actions/runs/36981849520 . Full webmaster scope and earlier performance limits remain open.
+
+## Previous production state — 2 October 2026, session cookie audit (historical)
 
 Worker `a9f7f102-e50a-463e-8b37-ee87a27d87d3` is live. Server-only Auth cookie writes now enforce HttpOnly while preserving Secure, SameSite=Lax, root path, SDK lifetime and chunks. A controlled invalid expired session demonstrated the missing attribute before deploy; apex and Studio clearing responses now pass. Real SDK controlled-transport tests cover chunked login, logout and refresh. Existing authenticated real Chrome admin dashboard remains accessible.
 

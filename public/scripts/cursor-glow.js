@@ -14,9 +14,10 @@
 
   const searchDialog = document.querySelector('#search-overlay');
   const syncCursorLayer = () => {
-    // Native pointers remain reliable across the browser's modal top layer.
-    cursor.hidden = Boolean(searchDialog?.open);
-    if (cursor.parentElement !== document.body) document.body.append(cursor);
+    // Render inside the modal top layer; a body sibling sits behind its backdrop.
+    const host = searchDialog?.open ? searchDialog : document.body;
+    cursor.hidden = false;
+    if (cursor.parentElement !== host) host.append(cursor);
   };
   searchDialog?.addEventListener('search-open', () => {
     syncCursorLayer();
