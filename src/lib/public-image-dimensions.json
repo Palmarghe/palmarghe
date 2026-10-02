@@ -1,0 +1,250 @@
+{
+  "/avatars/avatar-01.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-02.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-03.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-04.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-05.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-06.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-07.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-08.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-09.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-10.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-11.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-12.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-13.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-14.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-15.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-16.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-17.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-18.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-19.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/avatars/avatar-20.webp": {
+    "width": 256,
+    "height": 256
+  },
+  "/editorial/lamine-yamal.webp": {
+    "width": 655,
+    "height": 1000
+  },
+  "/editorial/yamal-right-channel.png": {
+    "width": 1200,
+    "height": 740
+  },
+  "/visuals/category-ai.webp": {
+    "width": 960,
+    "height": 960
+  },
+  "/visuals/category-fm.webp": {
+    "width": 960,
+    "height": 960
+  },
+  "/visuals/category-gaming.webp": {
+    "width": 960,
+    "height": 960
+  },
+  "/visuals/category-lab.webp": {
+    "width": 960,
+    "height": 960
+  },
+  "/visuals/editorial-ai-480.webp": {
+    "width": 480,
+    "height": 300
+  },
+  "/visuals/editorial-ai-768.webp": {
+    "width": 768,
+    "height": 480
+  },
+  "/visuals/editorial-ai-960.webp": {
+    "width": 960,
+    "height": 600
+  },
+  "/visuals/editorial-ai.webp": {
+    "width": 1440,
+    "height": 900
+  },
+  "/visuals/editorial-fm-480.webp": {
+    "width": 480,
+    "height": 300
+  },
+  "/visuals/editorial-fm-768.webp": {
+    "width": 768,
+    "height": 480
+  },
+  "/visuals/editorial-fm-960.webp": {
+    "width": 960,
+    "height": 600
+  },
+  "/visuals/editorial-fm.webp": {
+    "width": 1440,
+    "height": 900
+  },
+  "/visuals/editorial-gaming-480.webp": {
+    "width": 480,
+    "height": 300
+  },
+  "/visuals/editorial-gaming-768.webp": {
+    "width": 768,
+    "height": 480
+  },
+  "/visuals/editorial-gaming-960.webp": {
+    "width": 960,
+    "height": 600
+  },
+  "/visuals/editorial-gaming.webp": {
+    "width": 1440,
+    "height": 900
+  },
+  "/visuals/editorial-lab-480.webp": {
+    "width": 480,
+    "height": 300
+  },
+  "/visuals/editorial-lab-768.webp": {
+    "width": 768,
+    "height": 480
+  },
+  "/visuals/editorial-lab-960.webp": {
+    "width": 960,
+    "height": 600
+  },
+  "/visuals/editorial-lab.webp": {
+    "width": 1440,
+    "height": 900
+  },
+  "/visuals/hero-glass.webp": {
+    "width": 1600,
+    "height": 900
+  },
+  "/visuals/music/anatolian-sub-ritual-480.webp": {
+    "width": 480,
+    "height": 270
+  },
+  "/visuals/music/anatolian-sub-ritual-960.webp": {
+    "width": 960,
+    "height": 540
+  },
+  "/visuals/music/anatolian-sub-ritual.png": {
+    "width": 1672,
+    "height": 941
+  },
+  "/visuals/music/anatolian-sub-ritual.webp": {
+    "width": 1440,
+    "height": 810
+  },
+  "/visuals/music/anatolian-velocity-480.webp": {
+    "width": 480,
+    "height": 270
+  },
+  "/visuals/music/anatolian-velocity-960.webp": {
+    "width": 960,
+    "height": 540
+  },
+  "/visuals/music/anatolian-velocity.png": {
+    "width": 1672,
+    "height": 941
+  },
+  "/visuals/music/anatolian-velocity.webp": {
+    "width": 1440,
+    "height": 810
+  },
+  "/visuals/music/kara-yol-480.webp": {
+    "width": 480,
+    "height": 270
+  },
+  "/visuals/music/kara-yol-960.webp": {
+    "width": 960,
+    "height": 540
+  },
+  "/visuals/music/kara-yol.png": {
+    "width": 1672,
+    "height": 941
+  },
+  "/visuals/music/kara-yol.webp": {
+    "width": 1440,
+    "height": 810
+  },
+  "/visuals/music/sevenfold-thunder-480.webp": {
+    "width": 480,
+    "height": 270
+  },
+  "/visuals/music/sevenfold-thunder-960.webp": {
+    "width": 960,
+    "height": 540
+  },
+  "/visuals/music/sevenfold-thunder.png": {
+    "width": 1672,
+    "height": 941
+  },
+  "/visuals/music/sevenfold-thunder.webp": {
+    "width": 1440,
+    "height": 810
+  },
+  "/visuals/og-default.webp": {
+    "width": 1200,
+    "height": 630
+  },
+  "/visuals/premium-ai-story.png": {
+    "width": 1672,
+    "height": 941
+  },
+  "/visuals/premium-game-atmosphere.png": {
+    "width": 1672,
+    "height": 941
+  }
+}

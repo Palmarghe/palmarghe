@@ -1,3 +1,5 @@
+import localDimensions from './public-image-dimensions.json';
+
 const optimizedImageVariants: Record<string, string> = {
   '/visuals/music/anatolian-sub-ritual.png': '/visuals/music/anatolian-sub-ritual.webp',
   '/visuals/music/anatolian-velocity.png': '/visuals/music/anatolian-velocity.webp',
@@ -48,4 +50,20 @@ export function publicImageSrcSet(value: string | null | undefined): string | un
   } catch {
     return undefined;
   }
+}
+
+export function mediaImageDimensions(value: { width?: unknown; height?: unknown } | null | undefined): { width: number; height: number } | undefined {
+  const width = value?.width, height = value?.height;
+  return typeof width === 'number' && typeof height === 'number' && Number.isSafeInteger(width) && Number.isSafeInteger(height) && width > 0 && height > 0
+    ? { width, height } : undefined;
+}
+
+/** Measured local asset dimensions; external images never inherit same-path metadata. */
+export function publicImageDimensions(value: string | null | undefined): { width: number; height: number } | undefined {
+  if (!value) return undefined;
+  try {
+    const source = new URL(publicImageUrl(value) ?? value, 'https://palmarghe.com');
+    if (source.origin !== 'https://palmarghe.com') return undefined;
+    return (localDimensions as Record<string, { width: number; height: number }>)[source.pathname];
+  } catch { return undefined; }
 }

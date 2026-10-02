@@ -26,14 +26,14 @@ function client(referrer = '', options: { automated?: boolean; blockedStorage?: 
     getAttribute() { return this.placement; }
   }
   const context = {
-    Element, URL, Date, crypto: { randomUUID: () => visitor },
+    Element, URL, Date, Intl, AbortController, setTimeout:vi.fn(() => 1), clearTimeout:vi.fn(), crypto: { randomUUID: () => visitor },
     navigator: { webdriver: options.automated ?? false, userAgent: 'Chrome' },
     location: { pathname: '/', search: '', hostname: 'palmarghe.com' },
     localStorage: adapter, sessionStorage: adapter,
     document: {
-      referrer, documentElement: { dataset: {} },
+      referrer, documentElement: { lang:'tr', dataset: {} },
       addEventListener: (name: string, handler: (event: unknown) => void) => { events[name] = handler; },
-      querySelector: () => ({}), querySelectorAll: () => [],
+      querySelector: () => ({ querySelector:() => null }), querySelectorAll: () => [],
     },
     fetch: async (url: string, init?: { body?: string }) => { requests.push({ url, body: init?.body }); return { ok: false }; },
   };

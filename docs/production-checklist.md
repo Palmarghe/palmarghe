@@ -1,10 +1,16 @@
 # Production doğrulama kontrol listesi
 
-## Current production state — 2 October 2026, public CSS isolation
+## Current production state — 2 October 2026, article image and readership reservation
+
+Worker `12e14605-beb3-4040-b765-5433108b2be3` is live; migrations036/037 remain active. Article covers use measured local or valid own-media dimensions. A reserved readership row prevents late counter insertion from moving the cover; localized loading/error feedback is bounded to10s. Content, Auth and original images remain unchanged. Existing native search, save recovery and durable cleanup continue to work.
+
+Verification: Astro0 diagnostics,136/136 units, full local59/59. Final production coverage is25 passed public/axe/responsive/security/analytics cases plus4 separately corrected fresh-context delayed-image/readership cases, all on this Worker. The initial combined run included an image-cache fixture failure; audit explains it. Actual Chrome light-theme/source dimensions and real counts confirmed. Serial mobile article sample: LCP2.280s, CLS0, TBT0, performance97; one lab sample does not prove field CWV/INP or a causal speedup. Public CSS72773bytes/Studio115534bytes; original assets are preserved. Evidence/limits/rollback: docs/image-reservation-audit-2026-10-02.md and docs/image-reservation-lab-2026-10-02.json. Full webmaster goal remains active; uploads, other image roles, Studio states and wider gates remain open. Previous documentation commit780a7dc Actions37050123673 succeeded. Current release CI is checked after push.
+
+## Previous production state — 2 October 2026, public CSS isolation (historical)
 
 Implementation release f2baaca Actions37049455709 completed successfully: https://github.com/Palmarghe/palmarghe/actions/runs/37049455709 . Documentation follow-up does not change deployed code.
 
-Worker `b5fd38ce-e31d-4f72-848e-e581050a4caa` is live; migrations036/037 remain active. Public pages load a build-only smaller stylesheet from the same source. Studio's stylesheet matches the prior live bytes exactly; native search cursors/clear, bounded save recovery and durable media cleanup remain active.
+Worker `b5fd38ce-e31d-4f72-848e-e581050a4caa` was live at that checkpoint; migrations036/037 were active. Public pages load a build-only smaller stylesheet from the same source. Studio's stylesheet matches the prior live bytes exactly; native search cursors/clear, bounded save recovery and durable media cleanup remain active.
 
 Verification: Astro0 diagnostics, unit129/129, full local59/59 and production39/39; actual Chrome public and authenticated Studio/light theme confirmed. Public CSS115424→72663 bytes; sampled transfer25425→17147 bytes. Serial mobile home LCP2.108→2.324s (no timing speedup claimed), article3.009s, CLS0/0.0113 and TBT0. Article LCP and field INP/CWV gates remain open. No editorial/Auth/physical-file mutation occurred. Previous fc69e67 Actions37046639598 succeeded. Evidence/rollback/limits: docs/public-css-audit-2026-10-02.md and docs/public-css-performance-2026-10-02.json. Full webmaster objective remains active.
 

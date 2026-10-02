@@ -1,10 +1,16 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 2 October 2026, public CSS isolation
+## Current production state — 2 October 2026, article image and readership reservation
+
+Worker `12e14605-beb3-4040-b765-5433108b2be3` is live; migrations036/037 remain active. Article covers use measured local or valid own-media dimensions. A reserved readership row prevents late counter insertion from moving the cover; localized loading/error feedback is bounded to10s. Content, Auth and original images remain unchanged. Existing native search, save recovery and durable cleanup continue to work.
+
+Verification: Astro0 diagnostics,136/136 units, full local59/59. Final production coverage is25 passed public/axe/responsive/security/analytics cases plus4 separately corrected fresh-context delayed-image/readership cases, all on this Worker. The initial combined run included an image-cache fixture failure; audit explains it. Actual Chrome light-theme/source dimensions and real counts confirmed. Serial mobile article sample: LCP2.280s, CLS0, TBT0, performance97; one lab sample does not prove field CWV/INP or a causal speedup. Public CSS72773bytes/Studio115534bytes; original assets are preserved. Evidence/limits/rollback: docs/image-reservation-audit-2026-10-02.md and docs/image-reservation-lab-2026-10-02.json. Full webmaster goal remains active; uploads, other image roles, Studio states and wider gates remain open. Previous documentation commit780a7dc Actions37050123673 succeeded. Current release CI is checked after push.
+
+## Previous production state — 2 October 2026, public CSS isolation (historical)
 
 Implementation release f2baaca Actions37049455709 completed successfully: https://github.com/Palmarghe/palmarghe/actions/runs/37049455709 . Documentation follow-up does not change deployed code.
 
-Worker `b5fd38ce-e31d-4f72-848e-e581050a4caa` is live; migrations036/037 remain active. Public pages load a build-only smaller stylesheet from the same source. Studio's stylesheet matches the prior live bytes exactly; native search cursors/clear, bounded save recovery and durable media cleanup remain active.
+Worker `b5fd38ce-e31d-4f72-848e-e581050a4caa` was live at that checkpoint; migrations036/037 were active. Public pages load a build-only smaller stylesheet from the same source. Studio's stylesheet matches the prior live bytes exactly; native search cursors/clear, bounded save recovery and durable media cleanup remain active.
 
 Verification: Astro0 diagnostics, unit129/129, full local59/59 and production39/39; actual Chrome public and authenticated Studio/light theme confirmed. Public CSS115424→72663 bytes; sampled transfer25425→17147 bytes. Serial mobile home LCP2.108→2.324s (no timing speedup claimed), article3.009s, CLS0/0.0113 and TBT0. Article LCP and field INP/CWV gates remain open. No editorial/Auth/physical-file mutation occurred. Previous fc69e67 Actions37046639598 succeeded. Evidence/rollback/limits: docs/public-css-audit-2026-10-02.md and docs/public-css-performance-2026-10-02.json. Full webmaster objective remains active.
 
@@ -198,7 +204,7 @@ Studio now uses a sticky action bar, writing canvas, focused settings rail, word
 
 Commits `76ec5b7`, `6bd7c86`, `2f9ddf7`, `6e60198`, `a00c9e7` and `2407777` completed another production Studio pass without changing the data model or permission boundaries. The writing workspace now has explicit draft, publish and schedule actions; a title/deck-led canvas; a disclosed URL field; undo/redo; active formatting states; Ctrl/Cmd+K link editing; a filterable slash menu; an inline gallery block; and a visual media picker with search, selection state and direct library access. CTA blocks retain server-side safe-link validation and add controlled primary, secondary and text presentation. Table insertion now asks for bounded row and column counts before creating an editable responsive table. The selected top-level block can be inserted around, moved, duplicated or deleted through an accessible block toolbar.
 
-Local verification passed with zero Astro diagnostics, 14/14 unit tests and a successful Cloudflare build. The keyboard editor, configurable table, block controls, taxonomy and content publishing E2E checks passed. Worker version `2b7a3ec7-e080-4f94-85fe-8c2ed03df90c` is live; Chrome confirmed the deployed action bar, URL disclosure, gallery control and six-action block toolbar. The final read-only production suite passed 10/10 after this deployment, including live axe scans, security/privacy headers, six viewport widths and browser-console checks. `npm audit --omit=dev --audit-level=high` found zero vulnerabilities.
+Local verification passed with zero Astro diagnostics, 14/14 unit tests and a successful Cloudflare build. The keyboard editor, configurable table, block controls, taxonomy and content publishing E2E checks passed. Worker version `2b7a3ec7-e080-4f94-85fe-8c2ed03df90c` was live at that historical checkpoint; Chrome confirmed the deployed action bar, URL disclosure, gallery control and six-action block toolbar. The final read-only production suite passed 10/10 after this deployment, including live axe scans, security/privacy headers, six viewport widths and browser-console checks. `npm audit --omit=dev --audit-level=high` found zero vulnerabilities.
 
 ## Live services
 
@@ -257,7 +263,7 @@ All changes were normal commits on `main`; no force push was used. GitHub Action
 
 Commit `3a81394` adds administrator-created and deleted Auth memberships, protected and custom permission groups, detailed capability choices, member profile cards with avatar and biography, authenticated-only content comments, and Studio comment moderation. The writing view now uses a familiar light document canvas and compact ribbon treatment while preserving the controlled Tiptap schema and existing security boundaries.
 
-Local `npm run verify` passed with zero Astro diagnostics, 14/14 unit tests and a successful Cloudflare build. The complete local Playwright suite passed 31/31, including membership lifecycle, custom groups, anonymous comment rejection, member commenting and serious accessibility checks. GitHub Actions Verify run #91 passed for `e7054a3`. Cloudflare Worker version `493f636f-8cde-40f5-b271-21bfe77a7fac` is live, and the read-only production E2E suite passed 10/10 after deployment.
+Local `npm run verify` passed with zero Astro diagnostics, 14/14 unit tests and a successful Cloudflare build. The complete local Playwright suite passed 31/31, including membership lifecycle, custom groups, anonymous comment rejection, member commenting and serious accessibility checks. GitHub Actions Verify run #91 passed for `e7054a3`. Cloudflare Worker version `493f636f-8cde-40f5-b271-21bfe77a7fac` was live at that historical checkpoint, and the read-only production E2E suite passed 10/10 after deployment.
 
 Migration `202609210014_members_permissions_comments.sql` was safely applied to Supabase production after the existing `202609160001`–`202609190013` history was reconciled as already applied. Local and remote migration histories now match through `202609210014`. The migration adds profile bio/avatar fields, protected and custom permission groups, authenticated comments and moderation RLS/RPCs.
 
@@ -451,7 +457,7 @@ The final local verification run completed with zero Astro diagnostics, 14/14 un
 - `202609270031_due_author_follow_notifications.sql`, zamanı gelmiş ama satır güncellemesi almamış zamanlanmış yayınların bildirimlerini ilk sonraki site isteğinde idempotent olarak oluşturur. Production fonksiyon çağrısı başarıyla tamamlandı ve bekleyen yayın olmadığı için `0` bildirim döndürdü.
 - Worker sürümü `cc08e727-870c-442e-914d-0abb297eca75` canlıda; Chrome ana sayfa ve console denetimi hatasız geçti. Yerel takip/yorum E2E 3/3 ve `npm run verify` başarılıdır.
 
-### Güncel production doğrulaması — 27 Eylül 2026
+### Tarihsel production doğrulaması — 27 Eylül 2026
 
 - Test koşucusundaki paylaşılan loopback kimliği, gerçek kullanıcı trafiğini etkilemeden yalnız `LOCAL_TEST_MODE` içinde test bazlı IP ile yalıtıldı. Giriş hız sınırı senaryosu gerçek eşik ile ayrıca çalışmaya devam eder.
 - Yerel doğrulama: `npm run verify` başarıyla tamamlandı; rate-limit E2E 1/1 ve navigation E2E 9/9 geçti.

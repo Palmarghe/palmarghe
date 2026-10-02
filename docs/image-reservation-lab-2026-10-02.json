@@ -1,0 +1,74 @@
+{
+  "worker": "12e14605-beb3-4040-b765-5433108b2be3",
+  "lighthouseVersion": "13.5.0",
+  "fetchTime": "2026-10-02T19:12:25.791Z",
+  "url": "https://palmarghe.com/fm/lamine-yamal-fm26/?verify=lighthouse",
+  "settings": {
+    "output": [
+      "json"
+    ],
+    "maxWaitForFcp": 30000,
+    "maxWaitForLoad": 45000,
+    "pauseAfterFcpMs": 1000,
+    "pauseAfterLoadMs": 1000,
+    "networkQuietThresholdMs": 1000,
+    "cpuQuietThresholdMs": 1000,
+    "formFactor": "mobile",
+    "throttling": {
+      "rttMs": 150,
+      "throughputKbps": 1638.4,
+      "requestLatencyMs": 562.5,
+      "downloadThroughputKbps": 1474.5600000000002,
+      "uploadThroughputKbps": 675,
+      "cpuSlowdownMultiplier": 4
+    },
+    "throttlingMethod": "simulate",
+    "screenEmulation": {
+      "mobile": true,
+      "width": 412,
+      "height": 823,
+      "deviceScaleFactor": 1.75,
+      "disabled": false
+    },
+    "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+    "auditMode": false,
+    "gatherMode": false,
+    "clearStorageTypes": [
+      "file_systems",
+      "shader_cache",
+      "service_workers",
+      "cache_storage"
+    ],
+    "disableStorageReset": false,
+    "debugNavigation": false,
+    "channel": "cli",
+    "usePassiveGathering": false,
+    "disableFullPageScreenshot": false,
+    "skipAboutBlank": false,
+    "blankPage": "about:blank",
+    "ignoreStatusCode": false,
+    "locale": "en-US",
+    "blockedUrlPatterns": null,
+    "additionalTraceCategories": null,
+    "extraHeaders": null,
+    "precomputedLanternData": null,
+    "onlyAudits": null,
+    "onlyCategories": null,
+    "skipAudits": null
+  },
+  "performance": 0.97,
+  "metrics": {
+    "first-contentful-paint": 1756.176,
+    "largest-contentful-paint": 2279.78,
+    "total-blocking-time": 0,
+    "cumulative-layout-shift": 0,
+    "server-response-time": 404,
+    "total-byte-weight": 326008
+  },
+  "limits": [
+    "One serial simulated-mobile sample; not a median or field percentile.",
+    "No concurrent build or repository browser test during this sample.",
+    "TBT is not INP; field CWV and full image/upload pipeline remain open."
+  ],
+  "originalImageSha256": "262CCBBE190A0D2F5A9AF224AEFA526B91440EC490815CDB45C5B931DFC03A57"
+}
