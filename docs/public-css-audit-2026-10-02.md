@@ -36,7 +36,7 @@ These are individual observations, not medians/field percentiles or causal timin
 - Production39/39: all sitemap pages in both themes through serious/critical WCAG scans, ten widths, forms/profile fixtures, images, cursor/search, no-JS search and security/console smoke.
 - Removed-selector regression scans every sitemap URL plus QA article/TR/EN account and real search results; no removed selector matches public DOM. This is route/state coverage, not proof of every possible future component state.
 - Actual Chrome public page loads Site.B5V9fJNn.css; existing authenticated admin Studio loads index.BP5JUn22.css and its light-theme dashboard. Screenshots: public-css-home-2026-10-02.png and public-css-studio-2026-10-02.png.
-- Previous fc69e67 Actions37046639598 succeeded. Current release CI is checked after push.
+- Implementation f2baaca [Actions37049455709](https://github.com/Palmarghe/palmarghe/actions/runs/37049455709) completed successfully, including verify and full local browser regression. Previous fc69e67 Actions37046639598 also succeeded. Documentation follow-up does not change deployed code.
 
 ## Rollback and scope
 
