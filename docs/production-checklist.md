@@ -1,6 +1,14 @@
 # Production doğrulama kontrol listesi
 
-## Current production state — 2 October 2026, profile recovery audit
+## Current production state — 2 October 2026, media permission audit
+
+Worker `2b94a3f1-208f-4801-a976-a7a1c0acbb59` is live. Media upload/management now requires a successfully read staff profile and explicit boolean media permission for editors; missing or failed permission-group reads deny access. Admin media permissions are preserved. Media redirects retain editor-panel access. Deletion now also protects OG media references and aborts on failed cover/OG usage queries.
+
+Verify: Astro 0 diagnostics, unit 78/78, build success. Final sequential local media/member/gallery suite 4/4 covers admin/editor CRUD, restricted-editor denial and draft OG reference protection. Production 9/9 covers all 11 POST endpoints rejecting absent/foreign Origin on both domains (44 rejected requests), anonymous media writes (4 rejected requests), four profile recovery fixtures and search cursor. Chrome public page renders with no broken images among the two visible images; Studio anonymous login was observed. No production media/profile/content writes occurred. Actual production staff media mutations and a complete upload/deletion safety audit are not claimed.
+
+Previous profile commit 3935381 Actions succeeded: https://github.com/Palmarghe/palmarghe/actions/runs/36984593732 . Current release CI is checked after push. Evidence, remaining media findings and rollback: `docs/media-permission-audit-2026-10-02.md`. Full webmaster goal remains active; body/revision media usage and transactional deletion need further work.
+
+## Previous production state — 2 October 2026, profile recovery audit (historical)
 
 Worker `5ae7c25a-3438-44e1-a79d-c5d97a63c96e` is live. Profile writes now use one canonical profile-row update, normalize an empty private author address to SQL NULL and never claim success after a partial name-only fallback. Duplicate addresses, public profiles without an address and denied writes return explicit errors. Profile loading fails closed with retry; network/save errors retain entries and duplicate submits are guarded. An existing null display name is editable. Auth metadata is preserved. The shared button hover uses deeper violet for adequate white-label contrast.
 

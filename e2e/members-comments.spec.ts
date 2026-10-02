@@ -31,6 +31,10 @@ test('admin creates permission groups and manages a Studio membership',async({pa
   await expect(page.locator('nav a[href*="section=content"]')).toHaveCount(0);
   const denied=await page.request.post('/api/studio/',{headers:{Origin:'http://127.0.0.1:4322'},form:{entity:'content',title:'Yetkisiz içerik',slug:'yetkisiz-icerik',locale:'tr',type:'article',status:'draft',body:'{}'}});
   expect(denied.status()).toBe(403);
+  for (const endpoint of ['/api/media/', '/api/media/manage/']) {
+    const mediaDenied=await page.request.post(endpoint,{headers:{Origin:'http://127.0.0.1:4322'},form:{}});
+    expect(mediaDenied.status()).toBe(403);
+  }
   await page.context().clearCookies();
   await loginStudio(page);
   await page.goto('/studio/?section=members');

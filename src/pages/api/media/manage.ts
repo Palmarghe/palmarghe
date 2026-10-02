@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { canManageMedia } from '../../../lib/media-permission';
 import { z } from 'zod';
 import { supabase, localMode } from '../../../lib/supabase';
 import { localDeleteMedia } from '../../../lib/local-adapter';
@@ -9,10 +10,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (!db) return errorResponse('Service unavailable',503);
   const { data: { user } } = await db.auth.getUser();
   if (!user) return errorResponse('Unauthorized',401);
-  let { data: profile } = await db.from('profiles').select('role,permission_group_id').eq('id',user.id).single();
-  if(!profile) profile=(await db.from('profiles').select('role').eq('id',user.id).single()).data;
-  if (!['admin','editor'].includes(profile?.role ?? '')) return errorResponse('Forbidden',403);
-  if(profile?.role==='editor'&&profile.permission_group_id){const {data:group}=await db.from('permission_groups').select('permissions').eq('id',profile.permission_group_id).single();if(group&&!group.permissions?.media)return errorResponse('Forbidden',403);}
+  if (!await canManageMedia(db, user.id)) return errorResponse('Forbidden',403);
   const form = await request.formData();
   const id = z.uuid().safeParse(form.get('id'));
   if (!id.success) return errorResponse('Invalid id');
@@ -27,11 +25,15 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     if (!altEn.success || !captionTr.success || !captionEn.success) return errorResponse('Invalid media text');
     const { error } = await db.from('media').update({ alt_tr: alt.data, alt_en: altEn.data || null, caption_tr: captionTr.data || null, caption_en: captionEn.data || null }).eq('id',id.data);
     if (error) return errorResponse('Update failed',400);
-    return redirectTo(request,'/studio/?section=media');
+    return redirectTo(request,'/studio/?panel=editor&section=media');
   }
   if (form.get('operation') === 'delete') {
-    const { data: linked } = await db.from('content_items').select('id').eq('cover_media_id',id.data).limit(1);
+    const { data: linked, error: coverError } = await db.from('content_items').select('id').eq('cover_media_id',id.data).limit(1);
+    if (coverError) return errorResponse('Usage check failed',503);
     if (linked?.length) return errorResponse('Media is in use',409);
+    const { data: socialLinked, error: socialError } = await db.from('content_items').select('id').eq('og_media_id',id.data).limit(1);
+    if (socialError) return errorResponse('Usage check failed',503);
+    if (socialLinked?.length) return errorResponse('Media is in use',409);
     const { data: galleries, error: galleryError } = await db.from('content_items').select('id,type_data').eq('type','gallery');
     if (galleryError) return errorResponse('Usage check failed',503);
     if (galleries?.some((item: {type_data?: {gallery_media_ids?: unknown}}) => Array.isArray(item.type_data?.gallery_media_ids) && item.type_data.gallery_media_ids.includes(id.data))) return errorResponse('Media is in use',409);
@@ -39,7 +41,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     if (error) return errorResponse('Delete failed',400);
     if (localMode) localDeleteMedia(media.path);
     else await db.storage.from('media').remove([media.path]);
-    return redirectTo(request,'/studio/?section=media');
+    return redirectTo(request,'/studio/?panel=editor&section=media');
   }
   return errorResponse('Invalid operation');
 };

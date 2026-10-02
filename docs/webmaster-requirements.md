@@ -146,3 +146,7 @@ Worker `a9f7f102-e50a-463e-8b37-ee87a27d87d3` forces HttpOnly server Auth writes
 ## 2 October 2026 — profile form recovery evidence
 
 Previous turn was progress: modal cursor reparenting, deploy, 9 live tests, real Chrome and green Actions. This turn closes profile partial-success/null-slug defects and load/save recovery; docs/profile-recovery-audit-2026-10-02.md records scope and limits. Requirements 10/11/15/16 receive profile-state evidence in four locale/theme/layout cases, local persistence, eight server boundary tests and real authenticated read-only load. A button hover contrast finding was fixed. This does not close all button/form/viewport or production write requirements. No completion claim for the full goal.
+
+## 2 October 2026 — media permission and Origin boundary evidence
+
+Previous turn was progress: canonical profile writes/recovery, deploy, 65 unit tests, real account read-only load, 7 live checks and green Actions. This turn closes editor fail-open media permission reads, editor post-save panel loss and omitted OG deletion protection. Requirements 26/29/36 receive thirteen unit cases, four local role/CRUD/reference browser tests and all eleven live POST Origin boundaries on two domains. docs/media-permission-audit-2026-10-02.md records limits. Media body/revision references, gallery cap, concurrent deletion, orphan cleanup and decoded upload validation are explicit open findings; full security scope is not closed.

@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { canManageMedia } from '../../../lib/media-permission';
 import { supabase, localMode } from '../../../lib/supabase';
 import { localStoreMedia } from '../../../lib/local-adapter';
 import { detectImage, validMediaSize } from '../../../lib/media';
@@ -9,10 +10,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (!db) return errorResponse('Service unavailable', 503);
   const { data: { user } } = await db.auth.getUser();
   if (!user) return errorResponse('Unauthorized', 401);
-  let { data: profile } = await db.from('profiles').select('role,permission_group_id').eq('id',user.id).single();
-  if(!profile) profile=(await db.from('profiles').select('role').eq('id',user.id).single()).data;
-  if (!['admin','editor'].includes(profile?.role ?? '')) return errorResponse('Forbidden', 403);
-  if(profile?.role==='editor'&&profile.permission_group_id){const {data:group}=await db.from('permission_groups').select('permissions').eq('id',profile.permission_group_id).single();if(group&&!group.permissions?.media)return errorResponse('Forbidden',403);}
+  if (!await canManageMedia(db, user.id)) return errorResponse('Forbidden',403);
   const form = await request.formData();
   const file = form.get('file');
   if (!(file instanceof File) || !validMediaSize(file.size)) return errorResponse('Invalid file', 400);
@@ -30,5 +28,5 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   else { const { error } = await db.storage.from('media').upload(path, bytes, { contentType: mime, upsert: false }); if (error) return errorResponse('Upload failed', 503); }
   const { error } = await db.from('media').insert({ path, mime, bytes: bytes.length, alt_tr: alt, alt_en: altEn || null, caption_tr: captionTr || null, caption_en: captionEn || null, uploaded_by: user.id });
   if (error) { if (!localMode) await db.storage.from('media').remove([path]); return errorResponse('Metadata save failed', 503); }
-  return redirectTo(request, '/studio/?section=media');
+  return redirectTo(request, '/studio/?panel=editor&section=media');
 };
