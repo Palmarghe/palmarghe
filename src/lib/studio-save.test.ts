@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { STUDIO_SAVE_TIMEOUT_MS, StudioSaveError, submitStudioForm, studioSaveMessage } from './studio-save';
+import { STUDIO_SAVE_TIMEOUT_MS, StudioSaveError, submitStudioForm, studioSaveMessage, validateStudioImage } from './studio-save';
 
 const action = 'https://studio.palmarghe.com/api/studio/';
 function response(status: number, url = 'https://studio.palmarghe.com/studio/?section=content', redirected = true) {
@@ -49,5 +49,23 @@ describe('bounded Studio save transport', () => {
     expect(signal?.aborted).toBe(true);
     expect(vi.getTimerCount()).toBe(0);
     expect(studioSaveMessage(new StudioSaveError('timeout'))).toContain('sonucu doğrulanamadı');
+  });
+});
+
+describe('read-only image preflight transport',()=>{
+  it('requests validation and accepts bounded decoded dimensions',async()=>{
+    const body=new FormData();const transport=vi.fn<typeof fetch>(async()=>Response.json({validated:true,width:1200,height:1600,bytes:50000}));
+    expect(await validateStudioImage(action,body,transport)).toMatchObject({width:1200,height:1600});
+    expect(body.get('operation')).toBe('validate');
+    expect(transport).toHaveBeenCalledWith(action,expect.objectContaining({credentials:'same-origin',signal:expect.any(AbortSignal)}));
+  });
+  it.each([{}, {validated:true,width:50000,height:1,bytes:20}, {validated:true,width:1,height:1,bytes:-1}])('rejects invalid success payloads',async data=>{
+    await expect(validateStudioImage(action,new FormData(),async()=>Response.json(data))).rejects.toMatchObject({reason:'response'});
+  });
+  it('uses only whitelisted field explanations, never server text',async()=>{
+    try {await validateStudioImage(action,new FormData(),async()=>Response.json({error:'image_dimensions',detail:'PRIVATE'},{status:400}));}
+    catch(error){expect(studioSaveMessage(error,true)).toContain('4096');expect(studioSaveMessage(error,true)).not.toContain('PRIVATE');}
+    try {await validateStudioImage(action,new FormData(),async()=>Response.json({error:'PRIVATE'},{status:400}));}
+    catch(error){expect(studioSaveMessage(error,true)).not.toContain('PRIVATE');}
   });
 });

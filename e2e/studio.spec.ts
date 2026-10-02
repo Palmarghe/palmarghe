@@ -177,7 +177,7 @@ test('admin manages tags, appearance, navigation and media', async ({ page }) =>
   ]);
   await expect(page.getByRole('cell', { name: navLabel })).toBeVisible();
   await page.goto('/studio/?section=media');
-  const image = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/lXcAAAAASUVORK5CYII=', 'base64');
+  const image = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADElEQVQImWOYVLgGAANIAbAPnu7IAAAAAElFTkSuQmCC', 'base64');
   await page.locator('input[name="file"]').setInputFiles({ name: 'pixel.png', mimeType: 'image/png', buffer: image });
   await page.locator('form[action="/api/media/"] input[name="alt_tr"]').fill('Test görseli');
   await Promise.all([page.waitForEvent('domcontentloaded'), page.getByRole('button', { name: 'Yükle' }).click()]);
@@ -198,7 +198,7 @@ test('gallery media is private until publication and retains its caption', async
   await page.locator('input[name="password"]').fill('LocalTest123!');
   await page.getByRole('button', { name: 'Giriş' }).click();
   await page.goto('/studio/?section=media');
-  const image = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/lXcAAAAASUVORK5CYII=', 'base64');
+  const image = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADElEQVQImWOYVLgGAANIAbAPnu7IAAAAAElFTkSuQmCC', 'base64');
   await page.locator('input[name="file"]').setInputFiles({ name: 'gallery.png', mimeType: 'image/png', buffer: image });
   await page.locator('form[action="/api/media/"] input[name="alt_tr"]').fill('Galeri görseli');
   await page.locator('form[action="/api/media/"] input[name="alt_en"]').fill('Gallery image');

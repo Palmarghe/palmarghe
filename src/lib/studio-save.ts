@@ -2,7 +2,16 @@
 export const STUDIO_SAVE_TIMEOUT_MS = 30_000;
 export type StudioSaveFailure = 'timeout' | 'network' | 'validation' | 'authentication' | 'permission' | 'conflict' | 'server' | 'response';
 export class StudioSaveError extends Error {
-  constructor(public readonly reason: StudioSaveFailure) { super(reason); }
+  constructor(public readonly reason: StudioSaveFailure, public readonly detail?:string) { super(reason); }
+}
+const mediaErrors:Record<string,string>={
+  image_dimensions:'Görsel en fazla 4096 px kenar ve 3 megapiksel olabilir. Daha küçük bir görsel seçin.',
+  image_metadata:'Görselin profil/yön/metin verisi çok büyük. Görseli web için yeniden dışa aktarın.',
+  invalid_image:'Görsel çözülemedi. Geçerli, statik PNG, JPEG veya WebP dosyası seçin.',
+};
+async function mediaErrorDetail(response:Response):Promise<string|undefined>{
+  if(!response.headers.get('content-type')?.includes('application/json')) return;
+  try {const data=await response.json();return typeof data?.error==='string' && Object.hasOwn(mediaErrors,data.error) ? mediaErrors[data.error] : undefined;}catch{return;}
 }
 
 export async function submitStudioForm(action: string, body: FormData, section: 'content' | 'media', transport: typeof fetch = fetch): Promise<string> {
@@ -13,8 +22,8 @@ export async function submitStudioForm(action: string, body: FormData, section: 
     const response = await transport(action, { method: 'POST', body, credentials: 'same-origin', headers: { Accept: 'text/html' }, signal: controller.signal });
     if (!response.ok) {
       const reason: StudioSaveFailure = response.status === 401 ? 'authentication' : response.status === 403 ? 'permission'
-        : response.status === 409 ? 'conflict' : response.status === 400 || response.status === 422 ? 'validation' : 'server';
-      throw new StudioSaveError(reason);
+        : response.status === 409 ? 'conflict' : [400,413,422].includes(response.status) ? 'validation' : 'server';
+      throw new StudioSaveError(reason,section==='media' ? await mediaErrorDetail(response) : undefined);
     }
     let destination: URL;
     try { destination = new URL(response.url); } catch { throw new StudioSaveError('response'); }
@@ -31,6 +40,7 @@ export async function submitStudioForm(action: string, body: FormData, section: 
 }
 
 export function studioSaveMessage(error: unknown, media = false): string {
+  if(media && error instanceof StudioSaveError && error.detail) return error.detail;
   const reason = error instanceof StudioSaveError ? error.reason : 'network';
   if (reason === 'timeout' || reason === 'response') return 'İşlemin sonucu doğrulanamadı. Girdileriniz bu sayfada korunuyor. Yeniden denemeden önce Studio listesini başka bir sekmede kontrol edin.';
   if (reason === 'authentication') return 'Oturumunuz sona ermiş olabilir. Girdilerinizi koruyarak başka bir sekmede tekrar giriş yapın.';
@@ -39,4 +49,19 @@ export function studioSaveMessage(error: unknown, media = false): string {
   if (reason === 'validation') return 'Alanları ve dosya biçimini kontrol edin. Girdileriniz korunuyor; düzelttikten sonra yeniden deneyebilirsiniz.';
   if (reason === 'server') return 'Sunucu işlemi tamamlayamadı. Girdileriniz korunuyor; yeniden deneyebilirsiniz.';
   return 'Bağlantı kurulamadı. Girdileriniz korunuyor. Yeniden denemeden önce Studio listesini kontrol edin.';
+}
+
+export async function validateStudioImage(action:string, body:FormData, transport:typeof fetch=fetch):Promise<{width:number;height:number;bytes:number}> {
+  body.set('operation','validate');
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),STUDIO_SAVE_TIMEOUT_MS);
+  try {
+    const response=await transport(action,{method:'POST',body,credentials:'same-origin',headers:{Accept:'application/json'},signal:controller.signal});
+    if(!response.ok) throw new StudioSaveError(response.status===401 ? 'authentication' : response.status===403 ? 'permission' : [400,413,422].includes(response.status) ? 'validation' : 'server',await mediaErrorDetail(response));
+    if(response.redirected || !response.headers.get('content-type')?.includes('application/json')) throw new StudioSaveError('response');
+    const data=await response.json();
+    if(data?.validated!==true || ![data.width,data.height,data.bytes].every(value=>Number.isSafeInteger(value)&&value>0) || data.width>4096 || data.height>4096 || data.width*data.height>3000000 || data.bytes>10485760) throw new StudioSaveError('response');
+    return data;
+  } catch(error){if(error instanceof StudioSaveError) throw error;throw new StudioSaveError(controller.signal.aborted ? 'timeout' : 'network');}
+  finally{clearTimeout(timeout);}
 }

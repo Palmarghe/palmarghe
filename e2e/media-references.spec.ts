@@ -16,7 +16,7 @@ test('body media is private until published and survives removal while a revisio
   await login(page);
   await page.goto('/studio/?section=media');
   const upload = page.locator('form[action="/api/media/"]');
-  await upload.locator('[name="file"]').setInputFiles({ name: 'body-reference.png', mimeType: 'image/png', buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/lXcAAAAASUVORK5CYII=', 'base64') });
+  await upload.locator('[name="file"]').setInputFiles({ name: 'body-reference.png', mimeType: 'image/png', buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADElEQVQImWOYVLgGAANIAbAPnu7IAAAAAElFTkSuQmCC', 'base64') });
   await upload.locator('[name="alt_tr"]').fill('Body reference QA');
   await upload.getByRole('button', { name: 'Yükle' }).click();
   const card = page.locator('.entry-card').filter({ has: page.locator('input[value="Body reference QA"]') });

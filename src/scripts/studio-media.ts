@@ -1,4 +1,4 @@
-import { submitStudioForm, studioSaveMessage } from '../lib/studio-save';
+import { submitStudioForm, studioSaveMessage, validateStudioImage } from '../lib/studio-save';
 import { validMediaSize } from '../lib/media';
 
 const forms = [...document.querySelectorAll<HTMLFormElement>('form[action="/api/media/"],form[action="/api/media/manage/"]')];
@@ -15,15 +15,18 @@ if (forms.length) {
     feedback.hidden = true;
     form.append(feedback);
     form.setAttribute('aria-busy', 'false');
+    form.querySelector<HTMLButtonElement>('[data-media-validation]')?.removeAttribute('hidden');
     const fileInput = form.querySelector<HTMLInputElement>('input[type="file"]');
     for (const event of ['input', 'change']) form.addEventListener(event, () => {
       dirty.add(form);
       fileInput?.removeAttribute('aria-invalid');
+      feedback.hidden=true;
     });
     form.addEventListener('submit', async event => {
       event.preventDefault();
       if (busy || !form.reportValidity()) return;
       const body = new FormData(form);
+      const validating=event.submitter instanceof HTMLButtonElement && event.submitter.hasAttribute('data-media-validation');
       const file = body.get('file');
       if (file instanceof File && !validMediaSize(file.size)) {
         feedback.hidden = false;
@@ -41,6 +44,15 @@ if (forms.length) {
       feedback.hidden = false;
       feedback.textContent = 'İşleniyor…';
       try {
+        if(validating){
+          const result=await validateStudioImage(form.action,body);
+          feedback.textContent=`Görsel doğrulandı: ${result.width} × ${result.height} px · ${Math.ceil(result.bytes/1024)} KB. Henüz yüklenmedi.`;
+          busy=false;
+          controls.forEach((control,position)=>{control.disabled=disabled[position];});
+          form.setAttribute('aria-busy','false');
+          if(event.submitter instanceof HTMLButtonElement) event.submitter.focus({preventScroll:true});
+          return;
+        }
         const destination = await submitStudioForm(form.action, body, 'media');
         dirty.delete(form);
         feedback.textContent = new URL(destination).searchParams.get('cleanup') === 'pending'

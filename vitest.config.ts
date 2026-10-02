@@ -1,2 +1,3 @@
 import { defineConfig } from 'vitest/config';
-export default defineConfig({ test: { include: ['src/**/*.test.ts'] } });
+import { imageCodecsPlugin } from './scripts/image-codecs.mjs';
+export default defineConfig({ plugins:[imageCodecsPlugin()], test: { include: ['src/**/*.test.ts'] } });

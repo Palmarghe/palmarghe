@@ -7,7 +7,7 @@ test('editor with explicit media permission uploads, edits and removes local med
   await page.getByRole('button', { name: 'Giriş' }).click();
   await expect(page.getByRole('heading', { name: 'Genel bakış' })).toBeVisible();
   await page.goto('/studio/?panel=editor&section=media');
-  const image = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/lXcAAAAASUVORK5CYII=', 'base64');
+  const image = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADElEQVQImWOYVLgGAANIAbAPnu7IAAAAAElFTkSuQmCC', 'base64');
   const upload = page.locator('form[action="/api/media/"]');
   await upload.locator('input[name="file"]').setInputFiles({ name: 'editor-permission.png', mimeType: 'image/png', buffer: image });
   await upload.locator('input[name="alt_tr"]').fill('Yetkili editör QA');

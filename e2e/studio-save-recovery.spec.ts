@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import sharp from 'sharp';
 
 async function login(page: Page) {
   await page.goto('/studio/');
@@ -51,7 +52,7 @@ test('media upload retains file and alt text after server failure and retries su
   await page.goto('/studio/?section=media');
   const form = page.locator('form[action="/api/media/"]');
   const alt = `Recovery image ${Date.now()}`;
-  await form.locator('[name="file"]').setInputFiles({ name: 'recovery.png', mimeType: 'image/png', buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/lXcAAAAASUVORK5CYII=', 'base64') });
+  await form.locator('[name="file"]').setInputFiles({ name: 'recovery.png', mimeType: 'image/png', buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADElEQVQImWOYVLgGAANIAbAPnu7IAAAAAElFTkSuQmCC', 'base64') });
   await form.locator('[name="alt_tr"]').fill(alt);
   let calls = 0;
   await page.route('**/api/media/', async route => {
@@ -85,4 +86,26 @@ test('media pending-cleanup feedback is readable in both themes on phone and des
     const results=await new AxeBuilder({page}).include('.admin-main').analyze();
     expect(results.violations.filter(item=>['serious','critical'].includes(item.impact ?? ''))).toEqual([]);
   }
+});
+
+test('media preflight decodes all formats without adding library entries and preserves inputs', async ({ page }) => {
+  await login(page);
+  await page.goto('/studio/?section=media');
+  const form=page.locator('form[action="/api/media/"]');
+  const originalCount=await page.locator('.entry-card').count();
+  await form.locator('[name="alt_tr"]').fill('Read-only image validation');
+  for(const format of ['jpeg','png','webp'] as const){
+    const buffer=await sharp({create:{width:1600,height:1200,channels:3,background:'#9271ac'}}).withMetadata({orientation:6}).toFormat(format).toBuffer();
+    await form.locator('[name="file"]').setInputFiles({name:`preflight.${format}`,mimeType:`image/${format}`,buffer});
+    await form.getByRole('button',{name:'Dosyayı kontrol et'}).click();
+    await expect(form.locator('[data-studio-form-status]')).toContainText('Henüz yüklenmedi.');
+    await expect(form.locator('[data-studio-form-status]')).toContainText('1200');
+    await expect(form.locator('[name="alt_tr"]')).toHaveValue('Read-only image validation');
+    expect(await page.locator('.entry-card').count()).toBe(originalCount);
+  }
+  await form.locator('[name="file"]').setInputFiles({name:'corrupt.png',mimeType:'image/png',buffer:Buffer.from([137,80,78,71,13,10,26,10])});
+  await form.getByRole('button',{name:'Dosyayı kontrol et'}).click();
+  await expect(form.locator('[data-studio-form-status]')).toContainText('PNG');
+  await expect(form.getByRole('button',{name:'Yükle'})).toBeEnabled();
+  expect(await page.locator('.entry-card').count()).toBe(originalCount);
 });
