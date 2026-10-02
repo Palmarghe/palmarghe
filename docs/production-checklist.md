@@ -1,6 +1,15 @@
 # Production doğrulama kontrol listesi
 
-## Current production state — 2 October 2026, media reference safety
+## Current production state — 2 October 2026, search cursor and Studio save recovery
+
+Worker `7b9107df-042f-404e-b193-14c26b4c4bbe` is live; migration036 remains applied. Search uses native pointers and text cursor throughout the modal; the branded pointer stays in the body and returns after close. Versioned script URLs refresh cached clients. Editor/media saves retain inputs on failure, restore editing, guard duplicate submits and verify redirects with a bounded request.
+
+Verification: Astro0 diagnostics, unit111/111, build success; local pointer1/1, controlled editor/media recovery2/2 and corrected media navigation2/2. Production Chrome cursor/search9/9; read-only Chrome confirms the deployed script and native cursor styles and a real search result. Final full local regression56/56 passed. Latest CI is checked after push; evidence and limits: docs/search-save-recovery-2026-10-02.md.
+
+No production content, Auth or files changed. Production staff mutations, Storage orphan cleanup/byte decoding and remaining full webmaster gates are still open. All following production states are historical snapshots.
+
+
+## Previous production state — 2 October 2026, media reference safety (historical)
 
 Worker `5a7488ea-cfdd-4536-9337-87b35d16e058` is live; migration036 is applied to production. Current and revision media references now have restrictive FK guards; publication visibility includes nested body/gallery media. Worker deletion checks fail closed and preserve Storage on FK conflict. Search uses native controls/text caret; branded cursor remains elsewhere.
 

@@ -469,11 +469,11 @@ body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-p
   .has-brand-cursor iframe,.has-brand-cursor video,.has-brand-cursor audio{cursor:auto}
   /* A native modal occupies the browser top layer, above this document cursor. */
   .has-brand-cursor.search-overlay-open,.has-brand-cursor.search-overlay-open *{cursor:auto}
-  .has-brand-cursor.search-overlay-open a,.has-brand-cursor.search-overlay-open button{cursor:none}
+  .has-brand-cursor.search-overlay-open a,.has-brand-cursor.search-overlay-open button{cursor:pointer}
   .has-brand-cursor.search-overlay-open input,.has-brand-cursor.search-overlay-open textarea{cursor:text}
   .has-brand-cursor:has(dialog[open]),.has-brand-cursor:has(dialog[open]) *{cursor:auto}
   .has-brand-cursor:has(dialog[open]) a,.has-brand-cursor:has(dialog[open]) button{cursor:pointer}
-  .has-brand-cursor #search-overlay[open] a,.has-brand-cursor #search-overlay[open] button{cursor:none}
+  .has-brand-cursor #search-overlay[open] a,.has-brand-cursor #search-overlay[open] button{cursor:pointer}
   .has-brand-cursor:has(dialog[open]) input,.has-brand-cursor:has(dialog[open]) textarea{cursor:text}
   .brand-cursor{--cursor-x:-80px;--cursor-y:-80px;position:fixed;z-index:var(--cursor-layer);left:0;top:0;width:var(--cursor-size);height:var(--cursor-size);display:grid;place-items:center;pointer-events:none;transform:translate3d(var(--cursor-x),var(--cursor-y),0) translate(-50%,-50%);color:var(--text);opacity:1;transition:opacity var(--cursor-speed) ease;will-change:transform}
   .brand-cursor[hidden]{display:none}
@@ -587,3 +587,6 @@ html.mobile-navigation-open,html.search-overlay-open,html.gallery-modal-open,htm
 .has-brand-cursor #search-overlay[open] a,.has-brand-cursor #search-overlay[open] button{cursor:pointer}
 .has-brand-cursor #search-overlay[open] input{cursor:text}
 #search-overlay[open] .brand-cursor{display:none!important}
+
+.content-editor-form button:disabled,.admin-main form[aria-busy='true'] button:disabled{opacity:.55}
+.studio-form-feedback{margin-block:1rem 0;font-size:.9rem;overflow-wrap:anywhere}

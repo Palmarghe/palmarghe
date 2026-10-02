@@ -5,6 +5,7 @@ import { BubbleMenu } from '@tiptap/extension-bubble-menu';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import { slugFromTitle } from '../lib/slug';
+import { submitStudioForm, studioSaveMessage } from '../lib/studio-save';
 
 const mediaImage = Node.create({
   name: 'mediaImage', group: 'block', atom: true,
@@ -31,6 +32,7 @@ if (element && output) {
   let media: StudioMedia[] = [];
   try { media = JSON.parse(element.dataset.media ?? '[]') as StudioMedia[]; } catch { /* keep empty media collection */ }
   let dirty = false;
+  let submitting = false;
   const statusBar = document.createElement('p');
   statusBar.className = 'editor-status'; statusBar.setAttribute('aria-live', 'polite');
   element.parentElement?.append(statusBar);
@@ -88,6 +90,7 @@ if (element && output) {
   templateControls.innerHTML = `<span>Şablonla başla</span>${Object.entries(templates).map(([key, template]) => `<button type="button" data-editor-template="${key}" title="${template.hint}">${template.label}</button>`).join('')}`;
   element.parentElement?.insertBefore(templateControls, element);
   templateControls.addEventListener('click', (event) => {
+    if (submitting) return;
     const key = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-editor-template]')?.dataset.editorTemplate;
     if (!key || !templates[key]) return;
     editor.commands.setContent(templates[key].content);
@@ -105,6 +108,7 @@ if (element && output) {
   element.parentElement?.insertBefore(blockControls, element);
   const selectedBlockIndex = () => Math.max(0, Math.min(editor.state.doc.childCount - 1, editor.state.selection.$from.index(0)));
   blockControls.addEventListener('click', (event) => {
+    if (submitting) return;
     const action = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-block-action]')?.dataset.blockAction;
     if (!action) return;
     const documentJson = editor.getJSON();
@@ -132,7 +136,7 @@ if (element && output) {
   let slashPosition = 0;
   let slashFilter = '';
   const visibleSlashButtons = () => [...slashMenu.querySelectorAll<HTMLButtonElement>('button:not([hidden])')];
-  const applySlashCommand = (command?: string) => { if (!command) return; slashMenu.hidden = true; const to = editor.state.selection.from; editor.chain().focus().deleteRange({ from: slashPosition - 1, to }).run(); document.querySelector<HTMLButtonElement>(`[data-editor="${command}"]`)?.click(); slashPosition = 0; slashFilter = ''; };
+  const applySlashCommand = (command?: string) => { if (submitting || !command) return; slashMenu.hidden = true; const to = editor.state.selection.from; editor.chain().focus().deleteRange({ from: slashPosition - 1, to }).run(); document.querySelector<HTMLButtonElement>(`[data-editor="${command}"]`)?.click(); slashPosition = 0; slashFilter = ''; };
   element.addEventListener('keydown', (event) => {
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); openDialog('link'); return; }
     if (!slashMenu.hidden) {
@@ -188,6 +192,7 @@ if (element && output) {
     dialog.showModal(); document.documentElement.classList.add('editor-modal-open'); dialog.querySelector<HTMLElement>('input,select')?.focus();
   };
   document.querySelectorAll<HTMLButtonElement>('[data-editor]').forEach((button) => button.addEventListener('click', () => {
+    if (submitting) return;
     switch (button.dataset.editor) {
       case 'paragraph': editor.chain().focus().setParagraph().run(); break; case 'heading2': editor.chain().focus().toggleHeading({ level: 2 }).run(); break; case 'heading3': editor.chain().focus().toggleHeading({ level: 3 }).run(); break; case 'bold': editor.chain().focus().toggleBold().run(); break; case 'italic': editor.chain().focus().toggleItalic().run(); break; case 'underline':editor.chain().focus().toggleUnderline().run();break;case 'strike':editor.chain().focus().toggleStrike().run();break;case 'align-left':editor.chain().focus().setTextAlign('left').run();break;case 'align-center':editor.chain().focus().setTextAlign('center').run();break;case 'align-right':editor.chain().focus().setTextAlign('right').run();break;case 'align-justify':editor.chain().focus().setTextAlign('justify').run();break;case 'link': openDialog('link'); break; case 'undo': editor.chain().focus().undo().run(); break; case 'redo': editor.chain().focus().redo().run(); break; case 'ordered': editor.chain().focus().toggleOrderedList().run(); break; case 'bullet': editor.chain().focus().toggleBulletList().run(); break; case 'quote': editor.chain().focus().toggleBlockquote().run(); break; case 'code': editor.chain().focus().toggleCodeBlock().run(); break; case 'divider': editor.chain().focus().setHorizontalRule().run(); break; case 'gallery': if (media.length) openDialog('gallery'); else window.alert('Önce Medya bölümünden görsel yükleyin.'); break; case 'media': if (media.length) openDialog('media'); else window.alert('Önce Medya bölümünden bir görsel yükleyin.'); break; case 'callout': openDialog('callout'); break; case 'cta': openDialog('cta'); break; case 'embed': openDialog('embed'); break; case 'table': openDialog('table'); break; case 'focus': element.closest('.content-editor-form')?.classList.toggle('editor-focus-mode'); break;
     } sync();
@@ -198,6 +203,7 @@ if (element && output) {
   const zoom=document.querySelector<HTMLInputElement>('[data-editor-zoom]');
   zoom?.addEventListener('input',()=>{element.style.setProperty('--editor-zoom',String(Number(zoom.value)/100));const output=zoom.parentElement?.querySelector('output');if(output)output.textContent=`${zoom.value}%`;});
   document.querySelectorAll<HTMLButtonElement>('[data-publish-action]').forEach((button) => button.addEventListener('click', () => {
+    if (submitting) return;
     const status = button.dataset.publishAction;
     const select = output.form?.querySelector<HTMLSelectElement>('select[name="status"]');
     if (!select || !status) return;
@@ -209,31 +215,47 @@ if (element && output) {
     sync();
     if (!form?.reportValidity()) { updateStatus('Eksik veya geçersiz alanları kontrol edin.'); return; }
     select.value = status;
-    dirty = false; updateStatus(status === 'published' ? 'Yayınlanıyor…' : status === 'scheduled' ? 'Zamanlanıyor…' : 'Kaydediliyor…');
+    updateStatus(status === 'published' ? 'Yayınlanıyor…' : status === 'scheduled' ? 'Zamanlanıyor…' : 'Kaydediliyor…');
     form.requestSubmit();
   }));
-  sync(); updateStatus();
-  let submitting = false;
+  sync(); updateStatus(output.form?.querySelector<HTMLInputElement>('input[name="id"]')?.value ? 'Kaydedildi' : 'Yeni taslak');
+  output.form?.setAttribute('aria-busy', 'false');
+  for (const name of ['input', 'change']) output.form?.addEventListener(name, () => {
+    if (!submitting) { dirty = true; updateStatus('Kaydedilmedi'); }
+  });
   output.form?.addEventListener('submit', async (event) => {
     event.preventDefault();
     const form = output.form;
     if (!form || submitting) return;
     sync();
     if (!form.reportValidity()) { updateStatus('Eksik veya geçersiz alanları kontrol edin.'); return; }
+    // Serialize before disabling fields: disabled controls are omitted from FormData.
+    const body = new FormData(form);
     submitting = true;
-    dirty = false;
+    dirty = true;
     const publishing = form.querySelector<HTMLSelectElement>('select[name="status"]')?.value === 'published';
+    const controls = [...form.querySelectorAll<HTMLInputElement | HTMLButtonElement | HTMLSelectElement | HTMLTextAreaElement>('input,button,select,textarea')];
+    const wasDisabled = controls.map(control => control.disabled);
+    controls.forEach(control => { control.disabled = true; });
+    const wasEditable = editor.isEditable;
+    editor.setEditable(false, false);
+    form.setAttribute('aria-busy', 'true');
     updateStatus(publishing ? 'Yayınlanıyor…' : 'Kaydediliyor…');
     const patience = window.setTimeout(() => updateStatus(publishing ? 'Yayınlanıyor… Sunucu yanıtı bekleniyor.' : 'Kaydediliyor… Sunucu yanıtı bekleniyor.'), 2500);
     const longWait = window.setTimeout(() => updateStatus('Kaydediliyor… Bu işlem birkaç saniye sürebilir; sayfayı kapatmayın.'), 5500);
     try {
-      const response = await fetch(form.action, { method: 'POST', body: new FormData(form), credentials: 'same-origin', headers: { Accept: 'text/html' } });
-      if (!response.ok) throw new Error((await response.text()).slice(0, 240));
-      window.location.assign(response.url);
+      const destination = await submitStudioForm(form.action, body, 'content');
+      dirty = false;
+      updateStatus('Kaydedildi · yönlendiriliyor');
+      window.location.assign(destination);
     } catch (error) {
       submitting = false;
-      const detail = error instanceof Error && error.message ? ` (${error.message.replace(/<[^>]+>/g, '').slice(0, 140)})` : '';
-      updateStatus(`İçerik kaydedilemedi.${detail}`);
+      dirty = true;
+      controls.forEach((control, index) => { control.disabled = wasDisabled[index]; });
+      editor.setEditable(wasEditable, false);
+      updateToolbar();
+      form.setAttribute('aria-busy', 'false');
+      updateStatus(studioSaveMessage(error));
     } finally {
       window.clearTimeout(patience); window.clearTimeout(longWait);
     }
