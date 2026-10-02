@@ -268,6 +268,7 @@ test('Studio pairs translations without exposing a UUID field', async ({ page })
   await page.locator('.content-editor-form select[name="status"]').selectOption('published');
   await page.locator('#block-editor .tiptap').fill('Türkçe içerik.');
   await page.getByRole('button', { name: 'Kaydet', exact: true }).click();
+  await expect(page.getByRole('cell', { name: 'Bağlantılı Türkçe', exact: true })).toBeVisible();
   await page.goto('/studio/?section=content');
   await page.getByRole('button', { name: 'Detaylı' }).click();
   await page.locator('input[name="title"]').fill('Linked English');
@@ -275,6 +276,7 @@ test('Studio pairs translations without exposing a UUID field', async ({ page })
   await page.locator('.content-editor-form select[name="status"]').selectOption('published');
   await page.locator('#block-editor .tiptap').fill('English content.');
   await page.getByRole('button', { name: 'Kaydet', exact: true }).click();
+  await expect(page.getByRole('cell', { name: 'Linked English', exact: true })).toBeVisible();
   await page.goto('/studio/?section=content');
   await page.getByRole('row').filter({ hasText: 'Bağlantılı Türkçe' }).getByRole('link', { name: 'Düzenle' }).click();
   await page.locator('select[name="target_id"]').selectOption({ label: 'Linked English · EN' });
