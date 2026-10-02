@@ -1,5 +1,10 @@
 import { test, expect, type Page } from '@playwright/test';
 
+// Isolate this multi-login workflow from the shared suite rate-limit bucket.
+test.beforeEach(async ({ context }) => {
+  await context.setExtraHTTPHeaders({ 'CF-Connecting-IP': '198.51.100.250' });
+});
+
 async function login(page: Page) {
   await page.goto('/studio/');
   await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.test');

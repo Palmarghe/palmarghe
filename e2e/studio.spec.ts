@@ -338,6 +338,7 @@ test('FM mod has dedicated fields and safe external download', async ({ page }) 
   await page.locator('input[name="download_url"]').fill('https://example.com/download');
   await page.locator('#block-editor .tiptap').fill('Mod açıklaması.');
   await page.getByRole('button', { name: 'Kaydet', exact: true }).click();
+  await expect(page.getByRole('cell', { name: 'FM26 Test Modu', exact: true })).toBeVisible();
   await page.goto('/fm/fm26/test-modu/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('FM26 Test Modu');
   await expect(page.getByText('Dosyayı oyun klasörüne kopyalayın.')).toBeVisible();
