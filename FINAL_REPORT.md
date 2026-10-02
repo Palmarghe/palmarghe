@@ -1,8 +1,13 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 2 October 2026, bounded raster upload validation
+## Current production state — 2 October 2026, author heading and landing correction
 
-Worker `591ab0aa-99d1-4c29-ba53-a3ddee154b21` deployed successfully. Migrations036/037 remain active. PNG/JPEG/WebP uploads now undergo bounded full pixel decoding; new metadata records store measured display dimensions. Studio provides read-only file validation before upload. Existing content/Auth/original assets are preserved. Latest local verify: Astro0, units160/160, build success; full local E2E60/60. A Vite navigation AbortError appeared despite passing tests and is recorded separately. Production authenticated Chrome preflight, production E2E, commit/push and Actions checks for this release remain pending. Upload metadata-failure orphan/race handling remains open. See docs/image-upload-validation-2026-10-02.md. Full webmaster goal remains active.
+Worker `497668f1-80bf-4c62-b331-87d0e247e88d` is live. Previous upload validation and migrations036/037 remain active. Author detail now has a single main heading; the existing author landing has localized title and publication navigation instead of a blank heading. No content/profile privacy setting changed. Verify Astro0/unit160/build succeeded; affected local author follow/phone-theme axe test and localized landing test passed. Actual Chrome TR landing and production TR/EN landing E2E passed. A real publicly enabled production author detail remains unverified; no account was made public for QA. Previous release Actions37058265623 completed successfully. Current commit/push/Actions follow-up is pending. Full webmaster scope and upload metadata failure race remain open.
+
+
+## Previous production state — 2 October 2026, bounded raster upload validation (historical)
+
+Worker `591ab0aa-99d1-4c29-ba53-a3ddee154b21` was deployed for that release. Migrations036/037 remain active. PNG/JPEG/WebP uploads now undergo bounded full pixel decoding; new metadata records store measured display dimensions. Studio provides read-only file validation before upload. Existing content/Auth/original assets are preserved. Latest local verify: Astro0, units160/160, build success; full local E2E60/60. A Vite navigation AbortError appeared despite passing tests and is recorded separately. Actual authenticated Chrome preflight passed for three 3MP formats and a dense JPEG; fresh library count remained7. Production E2E ended59 passed/1 failed (5s media decode wait); the unchanged media test separately passed1/1. This is not a combined60/60 claim, and the original timeout root cause remains uncertain. Commit56fc776 was normally pushed to main; Actions37058265623 completed successfully, including verify and full local E2E. Upload metadata-failure orphan/race handling remains open. See docs/image-upload-validation-2026-10-02.md. Full webmaster goal remains active.
 
 ## Previous production state — 2 October 2026, article image and readership reservation (historical)
 

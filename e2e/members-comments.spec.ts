@@ -1,4 +1,5 @@
 import { test,expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 const loginStudio=async(page:import('@playwright/test').Page)=>{ await page.goto('/studio/'); await page.getByRole('textbox',{name:'Email'}).fill('admin@example.test'); await page.locator('input[name="password"]').fill('LocalTest123!'); await page.getByRole('button',{name:'Giriş'}).click(); await expect(page.getByRole('heading',{name:'Genel bakış'})).toBeVisible(); };
 
@@ -94,6 +95,15 @@ test('author follows receive a readable publication notification',async({page})=
   await login.locator('input[name="password"]').fill('LocalTest123!');
   await login.getByRole('button',{name:'Giriş yap'}).click();
   await page.goto('/authors/e2e-yazar/');
+  await expect(page.locator('main h1')).toHaveCount(1);
+  await expect(page.locator('.author-public-heading h2')).toHaveText('E2E Yazar');
+  for(const width of [390,1440]) for(const theme of ['dark','light']){
+    await page.setViewportSize({width,height:900});
+    await page.evaluate(value=>{document.body.dataset.theme=value;},theme);
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+    const audit=await new AxeBuilder({page}).include('main').analyze();
+    expect(audit.violations.filter(item=>['serious','critical'].includes(item.impact ?? ''))).toEqual([]);
+  }
   const follow=page.getByRole('button',{name:'Takip et'});
   const [followResponse]=await Promise.all([page.waitForResponse((response)=>response.url().endsWith('/api/library/')&&response.request().method()==='POST'),follow.click()]);
   expect(followResponse.status(),await followResponse.text()).toBe(200);

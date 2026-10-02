@@ -1,5 +1,14 @@
 import { test, expect } from '@playwright/test';
 
+test('author landing has a localized heading and useful publication navigation',async({page})=>{
+  for(const [url,title] of [['/authors/','Yazarlar'],['/en/authors/','Authors']]){
+    const response=await page.goto(url);expect(response?.status()).toBe(200);
+    await expect(page.locator('main h1')).toHaveText(title);
+    await expect(page).toHaveTitle(new RegExp(title));
+    await expect(page.locator('main a[href$="/archive/"]')).toBeVisible();
+  }
+});
+
 const origin = 'http://127.0.0.1:4322';
 async function admin(page: import('@playwright/test').Page) {
   await page.goto('/studio/');

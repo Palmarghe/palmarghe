@@ -1,5 +1,14 @@
 import { test, expect } from '@playwright/test';
 
+test('live author landing has localized titles and publication navigation',async({page})=>{
+  for(const [url,title] of [['/authors/','Yazarlar'],['/en/authors/','Authors']]){
+    const response=await page.goto(url);expect(response?.status()).toBe(200);
+    await expect(page.locator('main h1')).toHaveText(title);
+    await expect(page).toHaveTitle(new RegExp(title));
+    await expect(page.locator('main a[href$="/archive/"]')).toBeVisible();
+  }
+});
+
 test('every sitemap URL is canonical, localized and exposes complete metadata with reciprocal alternates', async ({ page, request }) => {
   test.setTimeout(120000);
   const sitemap=await request.get('/sitemap.xml');

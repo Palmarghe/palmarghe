@@ -2,7 +2,7 @@
 
 ## Durum
 
-Değişiklikler Worker `591ab0aa-99d1-4c29-ba53-a3ddee154b21` olarak deploy edildi. Önceki doğrulanan Worker `12e14605-beb3-4040-b765-5433108b2be3` tarihsel release'dir. Authenticated Chrome preflight geçti; production E2E çalışıyor ve içerik içi medya testinin 5 saniyelik decode beklemesi başarısız oldu. Ana webmaster hedefi tamamlanmış değildir.
+Değişiklikler Worker `591ab0aa-99d1-4c29-ba53-a3ddee154b21` olarak deploy edildi. Önceki doğrulanan Worker `12e14605-beb3-4040-b765-5433108b2be3` tarihsel release'dir. Authenticated Chrome preflight geçti. Tam production E2E 59 passed/1 failed; aynı medya testi değişmeden ayrı koşuda 1/1 geçti. Ana webmaster hedefi tamamlanmış değildir.
 
 ## Uygulanan sınırlar
 
@@ -26,6 +26,6 @@ Değişiklikler Worker `591ab0aa-99d1-4c29-ba53-a3ddee154b21` olarak deploy edil
 
 ## Henüz açık
 
-Production E2E terminal sonuç/başarısız medya testinin kök nedeni ve Actions doğrulaması henüz gerekli. Local mock Storage upload testi gerçek production Storage yazısı değildir. Deploy startup 16 ms değeri decode CPU ölçümü değildir.
+İlk production medya timeout'unun kesin kök nedeni hâlâ kanıtlanmadı; değişmeyen testin ayrı tekrarında 1/1 geçmesi, ilk koşunun 60/60 olduğu anlamına gelmez. Commit `56fc776` normal push ile main'e gönderildi. Actions `37058265623` completed/success: verify ve tam local E2E dahil yeşil. https://github.com/Palmarghe/palmarghe/actions/runs/37058265623 Local mock Storage upload testi gerçek production Storage yazısı değildir. Deploy startup 16 ms değeri decode CPU ölçümü değildir.
 
 Metadata INSERT başarısızlığı sonrası mevcut Storage remove akışının geç tamamlanan INSERT ile yarışması ve local orphan temizliği bu değişikliklerle çözülmedi. Ayrı güvenli transaction/recovery çalışması gerektirir. Bu kayda dayanarak tüm medya yaşam döngüsü tamamlandı sayılamaz.
