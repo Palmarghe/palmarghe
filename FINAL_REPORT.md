@@ -1,6 +1,11 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 2 October 2026, media permission audit
+## Current production state — 2 October 2026, native search pointer hotfix
+
+Worker `281955fb-0131-4338-88ce-bbdc1d1b6cd3` is live. Search modal controls now use the browser's native pointer and input caret, avoiding custom-pointer disappearance in the browser top layer. The branded pointer remains on the rest of the site. Local dark/light mouse/keyboard search regression passed; production Chrome cursor suite 5/5 passed, including touch and reduced motion. Build succeeded. No production data changed. In-progress migration036/media reference work is preserved and has not been applied or deployed. Full webmaster scope remains active.
+
+
+## Previous production state — 2 October 2026, media permission audit (historical)
 
 Worker `2b94a3f1-208f-4801-a976-a7a1c0acbb59` is live. Media upload/management now requires a successfully read staff profile and explicit boolean media permission for editors; missing or failed permission-group reads deny access. Admin media permissions are preserved. Media redirects retain editor-panel access. Deletion now also protects OG media references and aborts on failed cover/OG usage queries.
 
@@ -497,3 +502,4 @@ pm run verify Astro 0 tanı, Vitest 14/14 ve production build ile başarılı; n
 - Astro 0 tanı, Vitest 14/14, production build ve navigation E2E 11/11 başarılı. Canlı Chrome’da YouTube bağlantısı boş görünür metin ve SVG ile doğrulandı; açık tema değişimi ve taşma kontrolü geçti.
 
 Final live pointer matrix: Chrome 5/5, Edge 5/5, WebKit 5/5. Both themes retain visible search controls and native text cursor/caret. Screenshot inspection confirmed the pointer on the search close control. Full production run passed 36 cases; one layout case hit a test-artifact directory collision during parallel runs and passed 1/1 when rerun alone. All 37 production cases therefore passed across the full run and isolated rerun. No product assertion failed in that run.
+

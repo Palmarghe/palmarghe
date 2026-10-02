@@ -18,10 +18,8 @@ export async function verifySearchPointers(page: Page) {
       await input.fill('a');
       const close = dialog.locator('[data-search-close]');
       await close.hover();
-      await expect(close).toHaveCSS('cursor', 'none');
-      await expect(cursor).toBeVisible();
-      await expect(cursor).toHaveCSS('opacity', '1');
-      await expect(cursor).toHaveAttribute('data-state', 'button');
+      await expect(close).toHaveCSS('cursor', 'pointer');
+      await expect(cursor).toBeHidden();
       await input.hover();
       await expect(cursor).toHaveCSS('opacity', '0');
       await expect(input).toHaveCSS('cursor', 'text');
@@ -35,4 +33,6 @@ export async function verifySearchPointers(page: Page) {
     }
   }
 }
+
+
 

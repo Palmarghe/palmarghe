@@ -581,3 +581,9 @@ html.mobile-navigation-open,html.search-overlay-open,html.gallery-modal-open,htm
  .newsletter-signup span input{flex:1;min-width:0;width:0}
  .newsletter-signup span button{flex-shrink:0}
 }
+
+/* Native search pointers remain visible above the modal backdrop. */
+.has-brand-cursor #search-overlay[open]{cursor:auto}
+.has-brand-cursor #search-overlay[open] a,.has-brand-cursor #search-overlay[open] button{cursor:pointer}
+.has-brand-cursor #search-overlay[open] input{cursor:text}
+#search-overlay[open] .brand-cursor{display:none!important}
