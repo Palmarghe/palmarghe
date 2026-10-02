@@ -1,6 +1,14 @@
 # Production doğrulama kontrol listesi
 
-## Current production state — 2 October 2026, search cursor correction
+## Current production state — 2 October 2026, profile recovery audit
+
+Worker `5ae7c25a-3438-44e1-a79d-c5d97a63c96e` is live. Profile writes now use one canonical profile-row update, normalize an empty private author address to SQL NULL and never claim success after a partial name-only fallback. Duplicate addresses, public profiles without an address and denied writes return explicit errors. Profile loading fails closed with retry; network/save errors retain entries and duplicate submits are guarded. An existing null display name is editable. Auth metadata is preserved. The shared button hover uses deeper violet for adequate white-label contrast.
+
+Verify: Astro 0 diagnostics, 65/65 unit tests, build success; affected local member/profile/comment/follow tests 4/4. Final production profile/cookie/search tests 7/7: deployed profile script with intercepted test transport in TR desktop/EN mobile × dark/light, no horizontal overflow and no serious/critical profile axe findings. Real authenticated Chrome read-only check confirms loaded profile, enabled save and 20 avatars. Production profile writes/conflicts are not exercised by these fixtures; server error handling is covered by unit tests and real local adapter persistence by browser tests. No editorial or real profile data changed.
+
+Previous cursor release 1d5ce92 Actions succeeded: https://github.com/Palmarghe/palmarghe/actions/runs/36983334419 . Current release CI is checked after push. Full 40-section goal and previous performance/external gates remain open. Evidence: `docs/profile-recovery-audit-2026-10-02.md`.
+
+## Previous production state — 2 October 2026, search cursor correction (historical)
 
 Worker `664072c7-da2a-41cc-b3a5-45aa099d18d9` is live. The branded desktop pointer now moves inside the search dialog's browser top layer instead of being hidden behind it. Search controls retain the branded pointer; editable fields retain their native text pointer and violet caret. Closing search returns the pointer to the document body. Touch and reduced-motion behavior are preserved.
 

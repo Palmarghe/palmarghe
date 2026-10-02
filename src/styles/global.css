@@ -454,6 +454,10 @@ body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-p
 
 .follow-button{margin-top:1rem;border:1px solid var(--border);padding:.45rem .7rem;background:transparent;color:var(--text)}.follow-button[aria-pressed='true']{border-color:var(--accent);color:var(--accent)}
 
+/* White button labels need a deeper violet than the decorative accent. */
+:root{--accent-button:#6d28d9}
+.button:hover{background:var(--accent-button);border-color:var(--accent-button);color:#fff}
+
 .advertising-visibility{font-size:.7rem;font-style:normal;color:var(--muted)}
 
 /* Palmarghe cursor: offset crop marks frame a small P-shaped editorial index. */

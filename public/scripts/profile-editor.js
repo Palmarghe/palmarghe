@@ -11,7 +11,49 @@
   const form=panel.querySelector('form');const status=panel.querySelector('[data-profile-status]');const avatar=panel.querySelector('[data-avatar] img');
   const render=(key)=>{avatar.src=`/avatars/${key}.webp`;};
   form.addEventListener('change',(event)=>{if(event.target.name==='avatar_key')render(event.target.value);});
-  form.setAttribute('aria-busy','true');
-  fetch('/api/profile/',{credentials:'same-origin'}).then((response)=>response.ok?response.json():Promise.reject()).then((profile)=>{form.elements.display_name.value=profile.display_name||'';form.elements.bio.value=profile.bio||'';form.elements.author_slug.value=profile.author_slug||'';form.elements.public_profile.checked=Boolean(profile.public_profile);const key=profile.avatar_key||'avatar-01';const input=form.querySelector(`input[value="${key}"]`);if(input)input.checked=true;render(key);}).catch(()=>{}).finally(()=>form.setAttribute('aria-busy','false'));
-  form.addEventListener('submit',async(event)=>{event.preventDefault();status.textContent=locale==='tr'?'Kaydediliyor…':'Saving…';const response=await fetch('/api/profile/',{method:'POST',body:new FormData(form),credentials:'same-origin'});status.textContent=response.ok?(locale==='tr'?'Profil kaydedildi.':'Profile saved.'):(locale==='tr'?'Profil kaydedilemedi.':'Could not save profile.');});
+  const retry=document.createElement('button');retry.type='button';retry.className='text-link';retry.hidden=true;retry.textContent=locale==='tr'?'Yeniden dene':'Try again';form.append(retry);
+  status.setAttribute('role','status');status.tabIndex=-1;
+  let ready=false,busy=false;
+  const message=(tr,en)=>locale==='tr'?tr:en;
+  const controls=[...form.querySelectorAll('input,textarea,button')].filter(control=>control!==retry);
+  const setBusy=value=>{busy=value;form.setAttribute('aria-busy',String(value));controls.forEach(control=>control.disabled=value||!ready);};
+  const load=async()=>{
+    if(busy)return;
+    ready=false;retry.hidden=true;setBusy(true);status.textContent=message('Profil yükleniyor…','Loading profile…');
+    try{
+      const response=await fetch('/api/profile/',{credentials:'same-origin'});
+      if(!response.ok)throw new Error('load');
+      const profile=await response.json();
+      if(!profile || (profile.display_name!==null && typeof profile.display_name!=='string'))throw new Error('load');
+      form.elements.display_name.value=profile.display_name||'';
+      form.elements.display_name.minLength=2;
+      form.elements.bio.value=profile.bio||'';form.elements.author_slug.value=profile.author_slug||'';
+      form.elements.public_profile.checked=Boolean(profile.public_profile);
+      const key=choices.includes(profile.avatar_key)?profile.avatar_key:'avatar-01';
+      form.querySelector('input[value="'+key+'"]').checked=true;render(key);
+      ready=true;status.textContent='';
+    }catch{status.textContent=message('Profil yüklenemedi. Bilgilerinizi korumak için kayıt kapatıldı. Bağlantıyı kontrol edip yeniden deneyin.','Profile could not load. Saving is disabled to protect your details. Check your connection and try again.');retry.hidden=false;}
+    finally{setBusy(false);}
+  };
+  retry.addEventListener('click',load);
+  form.addEventListener('submit',async event=>{
+    event.preventDefault();if(!ready||busy)return;
+    form.querySelectorAll('[aria-invalid]').forEach(control=>control.removeAttribute('aria-invalid'));
+    const payload=new FormData(form); // Capture before disabling controls.
+    setBusy(true);status.textContent=message('Kaydediliyor…','Saving…');
+    try{
+      const response=await fetch('/api/profile/',{method:'POST',body:payload,credentials:'same-origin'});
+      if(response.ok){status.textContent=message('Profil kaydedildi.','Profile saved.');return;}
+      const error=await response.json().catch(()=>({}));
+      if(error.error==='invalid_profile' && ['display_name','bio','author_slug','avatar_key'].includes(error.field)){
+        const control=form.elements[error.field];if(control?.setAttribute)control.setAttribute('aria-invalid','true');
+        const errors={display_name:message('Görünen ad 2–100 karakter olmalı.','Display name must be 2–100 characters.'),bio:message('Kısa tanıtım en fazla 500 karakter olmalı.','Short bio must be at most 500 characters.'),author_slug:message('Profil adresinde küçük harf, sayı ve kelimeler arasında tire kullanın.','Use lowercase letters, numbers and hyphens between words for the profile address.'),avatar_key:message('Hazır avatarlardan birini seçin.','Choose one of the preset avatars.')};status.textContent=errors[error.field];
+      }else if(error.field==='author_slug'){
+        form.elements.author_slug.setAttribute('aria-invalid','true');
+        status.textContent=error.error==='author_slug_taken'?message('Bu profil adresi kullanılıyor. Başka bir adres seçin.','This profile address is taken. Choose another address.'):message('Herkese açık profil için bir profil adresi girin.','Enter a profile address to publish your profile.');
+      }else status.textContent=response.status===401?message('Oturumunuz sona erdi. Sayfayı yenileyip yeniden giriş yapın.','Your session expired. Reload the page and sign in again.'):message('Profil kaydedilemedi. Bilgileriniz bu formda korunuyor; bağlantıyı kontrol edip yeniden deneyin.','Profile could not be saved. Your entries remain in this form; check your connection and try again.');
+    }catch{status.textContent=message('Bağlantı kurulamadı. Bilgileriniz bu formda korunuyor; yeniden deneyin.','Connection failed. Your entries remain in this form; try again.');}
+    finally{setBusy(false);}
+  });
+  load();
 })();

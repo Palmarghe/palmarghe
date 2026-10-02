@@ -142,3 +142,7 @@ Cache/font follow-up: `docs/cache-font-2026-10-02.json` records no-store public/
 ## Session cookie progress — 2 October 2026
 
 Worker `a9f7f102-e50a-463e-8b37-ee87a27d87d3` forces HttpOnly server Auth writes. The earlier open HttpOnly finding above is superseded by before/after production clearing-cookie evidence on apex and Studio, real SDK chunked login/logout/refresh fixtures, verify 57/57, local affected 4/4 and live combined 5/5. Real Chrome existing admin continuity confirmed. Details/limitations: `docs/session-cookie-audit-2026-10-02.md`. Row 26 is advanced, not fully closed; fresh production login/logout, runtime CSRF/endpoint coverage and retention review remain open. Performance commit d4dc0ce full Actions passed (36928098805). This is progress through deployed security code and new authoritative evidence; the full objective is preserved.
+
+## 2 October 2026 — profile form recovery evidence
+
+Previous turn was progress: modal cursor reparenting, deploy, 9 live tests, real Chrome and green Actions. This turn closes profile partial-success/null-slug defects and load/save recovery; docs/profile-recovery-audit-2026-10-02.md records scope and limits. Requirements 10/11/15/16 receive profile-state evidence in four locale/theme/layout cases, local persistence, eight server boundary tests and real authenticated read-only load. A button hover contrast finding was fixed. This does not close all button/form/viewport or production write requirements. No completion claim for the full goal.
