@@ -18,7 +18,7 @@ The shared request helper has a 30-second abort deadline and only calls the oper
 
 Unit **111/111**, Astro **0 diagnostics**, build succeeded. Two new local browser workflows pass: controlled503 preserves editor values and dirty state, disables editing, blocks a second submit and then performs a real local save; controlled503 preserves the media FileList/alt text and then performs a real local upload. Two older media tests advanced before the asynchronous save redirect, selecting a stale card or opening delete details before reload; they now explicitly wait for navigation and both pass. Local fixtures are disposable test-adapter data, not production mutations.
 
-Final full local regression: **56/56 passed** (2.7 minutes). A local Vite navigation AbortError was printed during the existing content-tags workflow despite passing assertions; no clean-server-log claim is made. Latest GitHub Actions status is checked after push. Production staff save mutations have not been performed in this release. Storage orphan cleanup and byte decoding remain open, as do the other full webmaster requirements.
+Final full local regression: **56/56 passed** (2.7 minutes). A local Vite navigation AbortError was printed during the existing content-tags workflow despite passing assertions; no clean-server-log claim is made. Code release8dd5502 GitHub Actions37038189617 completed successfully: https://github.com/Palmarghe/palmarghe/actions/runs/37038189617. Production staff save mutations have not been performed in this release. Storage orphan cleanup and byte decoding remain open, as do the other full webmaster requirements.
 
 ## Rollback
 

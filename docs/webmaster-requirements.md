@@ -4,6 +4,9 @@ Kaynak: `C:\Users\Palmarghe\.codex\attachments\060efb3f-064b-466b-bac2-cf1bafe94
 
 1 Ekim 2026 itibarıyla önceki turn somut ilerlemeydi: imleç kırpılması düzeltildi, deploy edildi ve production/Actions doğrulandı. Bu tur modal etkileşimi ve yeni kanıt kaydı ekler. Ana hedefin tamamlanması henüz kanıtlanmış değildir. Tarihsel rapor, yeşil test veya dosyanın varlığı tek başına geniş kapsamı tamamlamaz.
 
+## 2 Ekim 2026 — arama imleci ve kayıt hatası toparlama
+
+Worker `7b9107df-042f-404e-b193-14c26b4c4bbe`: aramada body imlecini modal içine taşıma kaldırıldı, native pointer/text caret ve cache yenilemesi doğrulandı. Editör/media kaydı başarısız olunca girdiler korunuyor, kontroller tekrar açılıyor; çift submit engelleniyor ve belirsiz cevap başarı sayılmıyor. Astro0/unit111/full local56/56; production arama/imleç9/9 ve gerçek Chrome DOM/ekran kanıtı. Bu ilerleme tüm 40 bölümün kapanışı değildir. Staff production mutation, dosya orphan cleanup/decoding, manuel AT ve performans/diğer kapılar hâlâ açık. Kanıt ve sınırlar: `docs/search-save-recovery-2026-10-02.md`.
 ## Önceki release kanıtı (tarihsel)
 
 - Worker `ef4359fe-d4c6-4c34-aa22-231ccaca1b63`: arama arka plan scroll kilidi, Tab/Shift+Tab döngüsü, backdrop kapanışı, focus restore.
