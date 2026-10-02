@@ -34,6 +34,17 @@
     const input = root.querySelector('input[name="q"]'), results = root.querySelector('[data-search-results]'), status = root.querySelector('[data-search-status]');
     const form = root.querySelector('form'), select = root.querySelector('select[name="type"]');
     const english = root.dataset.locale === 'en';
+    const queryControl = document.createElement('div');
+    queryControl.className = 'search-query-control';
+    const inputLabel = input.closest('label');
+    inputLabel.before(queryControl); queryControl.append(inputLabel);
+    const clear = document.createElement('button');
+    clear.type = 'button'; clear.className = 'search-query-clear';
+    clear.setAttribute('aria-label', english ? 'Clear search' : 'Aramayı temizle');
+    clear.title = english ? 'Clear search' : 'Aramayı temizle';
+    clear.textContent = '×'; queryControl.append(clear);
+    const syncClear = () => { clear.hidden = !input.value; };
+    syncClear();
     const labels = english ? {article:'Article',project:'Project',fm_mod:'FM Mod',gallery:'Gallery',lab_entry:'Lab'} : {article:'Yazı',project:'Proje',fm_mod:'FM Mod',gallery:'Galeri',lab_entry:'Lab'};
     let type = select?.value || '', timer, controller, version = 0, selected = -1;
     status.hidden = false; results.hidden = false;
@@ -83,7 +94,8 @@
         finally { if (current === version) results.removeAttribute('aria-busy'); }
       },immediate ? 0 : 220);
     };
-    input.addEventListener('input',() => search());
+    input.addEventListener('input',() => { syncClear(); search(); });
+    clear.addEventListener('click',() => { input.value = ''; syncClear(); input.focus(); search(true); });
     form.addEventListener('submit',event => { event.preventDefault(); search(true); });
     select?.addEventListener('change',() => { type = select.value; search(true); });
     root.querySelectorAll('[data-search-type]').forEach(button => button.addEventListener('click',() => {

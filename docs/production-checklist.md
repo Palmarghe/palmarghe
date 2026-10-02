@@ -1,8 +1,14 @@
 # Production doğrulama kontrol listesi
 
-## Current production state — 2 October 2026, durable media cleanup
+## Current production state — 2 October 2026, explicit search clear
 
-Worker `0bf6fda5-3fd1-4b00-972d-0edfe01033e4` is live; migrations036/037 are applied. Atomic deletion receipts preserve failed Storage cleanup for permission-bound Studio retry. Native search pointers/carets and bounded save recovery remain active.
+Worker `90ef6f57-c845-4f40-aa5d-25992490019f` is live; migrations036/037 remain active. Modal/full-page search has a theme-aware, localized clear action preserving type and input focus. Native cursor fallback, bounded Studio save recovery and durable media cleanup remain active.
+
+Verification: Astro0 diagnostics, unit125/125, build success; local search-clear2/2 and production11/11 including TR/EN, 320/1440px, both themes, keyboard, no-JS GET, axe and prior cursor/search regressions. Actual Chrome confirms clear control, real result and focus recovery. No production content/Auth/files changed. Previous d376721 Actions37042191255 succeeded. Evidence and rollback: docs/search-clear-audit-2026-10-02.md. Full webmaster scope, upload safety, comprehensive staff states and performance gates remain open.
+
+## Previous production state — 2 October 2026, durable media cleanup (historical)
+
+Worker `0bf6fda5-3fd1-4b00-972d-0edfe01033e4` was live at this checkpoint; migrations036/037 were applied. Atomic deletion receipts preserved failed Storage cleanup for permission-bound Studio retry. Native search pointers/carets and bounded save recovery were active.
 
 Verification: Astro0 diagnostics, unit125/125, build success; full local56/56 plus new responsive/two-theme pending-state1/1; production browser14/14 for cursor/search/body-media/write boundaries. Real SQL rollback QA10/10; content12/revisions8/media7/Storage7 and four fingerprints unchanged, queue0 and trigger active. Actual Chrome admin media page loads seven records without a queue error. No physical production file deletion or Auth/editorial mutation occurred. Evidence/rollback/limits: docs/media-cleanup-audit-2026-10-02.md. Upload orphans, byte decoding, a real queued browser retry and other full webmaster gates remain open.
 
