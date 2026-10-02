@@ -17,7 +17,7 @@ Worker `12e14605-beb3-4040-b765-5433108b2be3` is the current release. Migrations
 - Final Worker:25 production cases passed for all indexable sitemap pages in both themes, ten widths/form routes, images, console/security, embeds and minimized analytics. The combined26-case run also contained a fixture failure because a reused page had an already decoded cover. This did not exercise delayed delivery for its second combination.
 - The fixture was corrected to use a fresh browser context for each combination. All4 delayed-image and delayed-readership regressions passed at390/1440px × dark/light, requiring an incomplete real image before release, real655px decoded width after release and less than1px change in x/y/width/height after each response. Coverage is25 passed cases plus4 corrected cases across runs; no single29-case green run is claimed. Metrics are intercepted before all writes; production counters are not populated by these tests.
 - Real Chrome confirms655×1000 source metadata, existing object-fit:cover, the reserved row and actual counts in light theme. Screenshot: `image-reservation-chrome-2026-10-02.png`.
-- Before the release, documentation commit780a7dc Actions37050123673 completed successfully. This release's Actions result is verified after push.
+- Before the release, documentation commit780a7dc Actions37050123673 completed successfully. Implementation commit49916eb Actions37052841751 completed successfully, including verify and full local E2E: https://github.com/Palmarghe/palmarghe/actions/runs/37052841751 . Documentation follow-up does not change deployed code.
 
 ## Performance evidence
 
