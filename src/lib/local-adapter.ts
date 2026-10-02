@@ -1,4 +1,5 @@
 /** Development-only, in-memory Supabase-shaped adapter for browser and E2E tests. */
+import { mediaReferences } from './media-references';
 type Row = Record<string, any>;
 type TableName = 'profiles' | 'permission_groups' | 'comments' | 'categories' | 'tags' | 'content_items' | 'content_categories' | 'content_tags' | 'contact_messages' | 'site_settings' | 'navigation' | 'media' | 'redirects' | 'audit_logs' | 'account_deletion_requests' | 'traffic_daily' | 'traffic_qualified_daily' | 'content_bookmarks' | 'content_follows' | 'content_notifications' | 'editorial_collections' | 'editorial_collection_items' | 'newsletter_subscribers' | 'content_revisions';
 type Filter = (row: Row) => boolean;
@@ -67,7 +68,7 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
     if (this.table === 'editorial_collections') return row.published || this.user?.role === 'admin' || this.user?.role === 'editor';
     if (this.table === 'editorial_collection_items') return tables.editorial_collections.some((collection) => collection.id === row.collection_id && (collection.published || this.user?.role === 'admin' || this.user?.role === 'editor'));
     if (this.table === 'account_deletion_requests') return Boolean(this.user && (this.user.id === row.user_id || this.user.role === 'admin'));
-    if (this.table === 'media') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => (item.cover_media_id === row.id || item.type === 'gallery' && Array.isArray(item.type_data?.gallery_media_ids) && item.type_data.gallery_media_ids.includes(row.id)) && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
+    if (this.table === 'media') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => mediaReferences(item.body,item.type==='gallery'?item.type_data:null,item.cover_media_id,item.og_media_id).has(row.id) && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
     if (this.table === 'contact_messages') return this.user?.role === 'admin' || this.user?.role === 'editor';
     if (this.table === 'audit_logs') return this.user?.role === 'admin';
     return true;
@@ -104,6 +105,10 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
       });
     } else if (this.action === 'update') selected.forEach((row) => Object.assign(row, this.values));
     else if (this.action === 'delete') {
+      if (this.table === 'media' && selected.some((row) => localMediaReferenced(row.id))) return { data:null,error:{code:'23503',message:'media in use'} };
+      if (this.table === 'content_items') for (const row of selected) {
+        for (let index=tables.content_revisions.length-1;index>=0;index--) if(tables.content_revisions[index].content_id===row.id) tables.content_revisions.splice(index,1);
+      }
       if (this.table === 'categories' && selected.some((row) => tables.content_categories.some((link) => link.category_id === row.id) || tables.categories.some((child) => child.parent_id === row.id))) return { data: null, error: { code: '23503', message: 'linked category' } };
       if (this.table === 'tags' && selected.some((row) => tables.content_tags.some((link) => link.tag_id === row.id))) return { data: null, error: { code: '23503', message: 'linked tag' } };
       selected.forEach((row) => rows.splice(rows.indexOf(row), 1));
@@ -118,12 +123,22 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
   }
 }
 
+function localMediaReferenced(id: string): boolean {
+  return tables.content_items.some(item => mediaReferences(item.body,item.type==='gallery'?item.type_data:null,item.cover_media_id,item.og_media_id).has(id))
+    || tables.content_revisions.some(item => mediaReferences(item.body,item.type_data).has(id));
+}
 export function localSupabase(cookies: import('astro').AstroCookies) {
   const getUser = () => users.find((user) => user.id === cookies.get('pg_mock_user')?.value) ?? null;
   return {
     from: (name: string) => { if (!isTable(name)) throw new Error('Unknown table'); return new Query(name, getUser()); },
     rpc: async (name: string, args: Row) => {
       const actor = getUser();
+      if (name === 'media_has_references') {
+        const profile = actor && tables.profiles.find(entry=>entry.id===actor.id);
+        const group = profile && tables.permission_groups.find(entry=>entry.id===profile.permission_group_id);
+        if (!actor || (actor.role!=='admin' && group?.permissions?.media!==true)) return {data:null,error:{code:'42501',message:'media permission required'}};
+        return {data:localMediaReferenced(args.p_media_id),error:null};
+      }
       if (name === 'subscribe_newsletter') {
         const email = String(args.p_email ?? '').trim().toLowerCase();
         const locale = String(args.p_locale ?? '');
@@ -195,6 +210,8 @@ if (name === 'get_public_author') {
         if (args.p_category_id && !category) return { data: null, error: { message: 'unknown category' } };
         const tagIds: string[] = args.p_tag_ids ?? [];
         if (tagIds.length > 20 || new Set(tagIds).size !== tagIds.length || tagIds.some((id) => !tables.tags.some((tag) => tag.id === id))) return { data: null, error: { message: 'unknown or duplicate tag' } };
+        const refs=mediaReferences(args.p_payload.body,args.p_payload.type==='gallery'?args.p_payload.type_data:null,args.p_payload.cover_media_id,args.p_payload.og_media_id);
+        if([...refs].some(id=>!tables.media.some(row=>row.id===id))) return {data:null,error:{code:'23503',message:'unknown media'}};
         const contentId = existing?.id ?? uid();
         const wasPublished = existing?.status === 'published';
         if (existing) {

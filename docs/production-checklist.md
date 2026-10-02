@@ -1,8 +1,17 @@
 # Production doğrulama kontrol listesi
 
-## Current production state — 2 October 2026, media permission audit
+## Current production state — 2 October 2026, media reference safety
 
-Worker `2b94a3f1-208f-4801-a976-a7a1c0acbb59` is live. Media upload/management now requires a successfully read staff profile and explicit boolean media permission for editors; missing or failed permission-group reads deny access. Admin media permissions are preserved. Media redirects retain editor-panel access. Deletion now also protects OG media references and aborts on failed cover/OG usage queries.
+Worker `5a7488ea-cfdd-4536-9337-87b35d16e058` is live; migration036 is applied to production. Current and revision media references now have restrictive FK guards; publication visibility includes nested body/gallery media. Worker deletion checks fail closed and preserve Storage on FK conflict. Search uses native controls/text caret; branded cursor remains elsewhere.
+
+Verification: Astro0 diagnostics, final unit95/95, build success; local media4/4; production Chrome23/23 for images/search/pointer/responsive/forms/console/security/write boundaries. Real production SQL rollback QA7/7; four source fingerprints unchanged (content12/revisions8/media7/Storage7), derived references8/2 and no missing references. Chrome home ten images loaded. Prior search commit e69cfd8 Actions36989873007 succeeded; current commit CI is checked after push. Evidence/rollback/limits: docs/media-references-audit-2026-10-02.md.
+
+No editorial content, Auth accounts or real files changed. Actual production staff upload/delete and complete file safety are not claimed. Orphan cleanup, byte decoding and other full webmaster gates remain open; the full objective remains active. All following deployment sections are historical snapshots superseded by this state.
+
+
+## Previous production state — 2 October 2026, media permission audit
+
+Worker `2b94a3f1-208f-4801-a976-a7a1c0acbb59` was live at that historical checkpoint. Media upload/management now requires a successfully read staff profile and explicit boolean media permission for editors; missing or failed permission-group reads deny access. Admin media permissions are preserved. Media redirects retain editor-panel access. Deletion now also protects OG media references and aborts on failed cover/OG usage queries.
 
 Verify: Astro 0 diagnostics, unit 78/78, build success. Final sequential local media/member/gallery suite 4/4 covers admin/editor CRUD, restricted-editor denial and draft OG reference protection. Production 9/9 covers all 11 POST endpoints rejecting absent/foreign Origin on both domains (44 rejected requests), anonymous media writes (4 rejected requests), four profile recovery fixtures and search cursor. Chrome public page renders with no broken images among the two visible images; Studio anonymous login was observed. No production media/profile/content writes occurred. Actual production staff media mutations and a complete upload/deletion safety audit are not claimed.
 
@@ -10,7 +19,7 @@ Previous profile commit 3935381 Actions succeeded: https://github.com/Palmarghe/
 
 ## Previous production state — 2 October 2026, profile recovery audit (historical)
 
-Worker `5ae7c25a-3438-44e1-a79d-c5d97a63c96e` is live. Profile writes now use one canonical profile-row update, normalize an empty private author address to SQL NULL and never claim success after a partial name-only fallback. Duplicate addresses, public profiles without an address and denied writes return explicit errors. Profile loading fails closed with retry; network/save errors retain entries and duplicate submits are guarded. An existing null display name is editable. Auth metadata is preserved. The shared button hover uses deeper violet for adequate white-label contrast.
+Worker `5ae7c25a-3438-44e1-a79d-c5d97a63c96e` was live at that historical checkpoint. Profile writes now use one canonical profile-row update, normalize an empty private author address to SQL NULL and never claim success after a partial name-only fallback. Duplicate addresses, public profiles without an address and denied writes return explicit errors. Profile loading fails closed with retry; network/save errors retain entries and duplicate submits are guarded. An existing null display name is editable. Auth metadata is preserved. The shared button hover uses deeper violet for adequate white-label contrast.
 
 Verify: Astro 0 diagnostics, 65/65 unit tests, build success; affected local member/profile/comment/follow tests 4/4. Final production profile/cookie/search tests 7/7: deployed profile script with intercepted test transport in TR desktop/EN mobile × dark/light, no horizontal overflow and no serious/critical profile axe findings. Real authenticated Chrome read-only check confirms loaded profile, enabled save and 20 avatars. Production profile writes/conflicts are not exercised by these fixtures; server error handling is covered by unit tests and real local adapter persistence by browser tests. No editorial or real profile data changed.
 
@@ -18,13 +27,13 @@ Previous cursor release 1d5ce92 Actions succeeded: https://github.com/Palmarghe/
 
 ## Previous production state — 2 October 2026, search cursor correction (historical)
 
-Worker `664072c7-da2a-41cc-b3a5-45aa099d18d9` is live. The branded desktop pointer now moves inside the search dialog's browser top layer instead of being hidden behind it. Search controls retain the branded pointer; editable fields retain their native text pointer and violet caret. Closing search returns the pointer to the document body. Touch and reduced-motion behavior are preserved.
+Worker `664072c7-da2a-41cc-b3a5-45aa099d18d9` was live at that historical checkpoint. The branded desktop pointer now moves inside the search dialog's browser top layer instead of being hidden behind it. Search controls retain the branded pointer; editable fields retain their native text pointer and violet caret. Closing search returns the pointer to the document body. Touch and reduced-motion behavior are preserved.
 
 Validation: Astro 0 diagnostics, unit 57/57, build success, local search regression 1/1 and production cursor/search suite 9/9, including mobile, both themes, keyboard, focus trapping and network recovery. Real Chrome confirms the cursor's modal parent, input caret and return to body. No content or production data changed. In-progress profile recovery work is preserved separately and is not part of this release. Previous session-cookie commit f982c01 Actions succeeded: https://github.com/Palmarghe/palmarghe/actions/runs/36981849520 . Full webmaster scope and earlier performance limits remain open.
 
 ## Previous production state — 2 October 2026, session cookie audit (historical)
 
-Worker `a9f7f102-e50a-463e-8b37-ee87a27d87d3` is live. Server-only Auth cookie writes now enforce HttpOnly while preserving Secure, SameSite=Lax, root path, SDK lifetime and chunks. A controlled invalid expired session demonstrated the missing attribute before deploy; apex and Studio clearing responses now pass. Real SDK controlled-transport tests cover chunked login, logout and refresh. Existing authenticated real Chrome admin dashboard remains accessible.
+Worker `a9f7f102-e50a-463e-8b37-ee87a27d87d3` was live at that historical checkpoint. Server-only Auth cookie writes now enforce HttpOnly while preserving Secure, SameSite=Lax, root path, SDK lifetime and chunks. A controlled invalid expired session demonstrated the missing attribute before deploy; apex and Studio clearing responses now pass. Real SDK controlled-transport tests cover chunked login, logout and refresh. Existing authenticated real Chrome admin dashboard remains accessible.
 
 Verify: Astro 0 diagnostics, Vitest 57/57, build success. Affected local browser tests 4/4; live cookie/privacy/native-search-pointer tests 5/5. No real account was created/deleted and no content was changed. Fresh real production login/logout and SMTP callback delivery are not claimed. Scope and rollback: `docs/session-cookie-audit-2026-10-02.md`.
 
@@ -33,7 +42,7 @@ Responsive image/read-batching, SEO/login, measurement migration 202610010035 an
 
 ## Previous production state — 2 October 2026, performance audit (historical)
 
-Worker `9cea5697-c203-415f-8fc0-c5eaeab9846c` is live. Existing category artwork now has smaller responsive WebP renditions; five independent public page reads run together without changing RLS, publication filters, cookies or no-store HTML. Four category downloads fell about 80% in the captured mobile profile. Editorial content and originals are preserved.
+Worker `9cea5697-c203-415f-8fc0-c5eaeab9846c` was live at that historical checkpoint. Existing category artwork now has smaller responsive WebP renditions; five independent public page reads run together without changing RLS, publication filters, cookies or no-store HTML. Four category downloads fell about 80% in the captured mobile profile. Editorial content and originals are preserved.
 
 Verify: Astro 0 diagnostics, unit 55/55, build successful; affected local E2E 6/6; final production E2E 6/6, including 32 sitemap URLs, two-theme category checks, assets, schema, headers and console. Image-only production smoke previously passed 10/10 including all ten viewport widths. Real Chrome confirmed loaded images and final page reload. Native search-pointer regression passed.
 
@@ -44,7 +53,7 @@ Previous docs commit 26e56cb Actions succeeded: https://github.com/Palmarghe/pal
 
 ## Previous production state — 2 October 2026, SEO and Studio login audit (historical)
 
-Worker `14c7f7e5-ea26-432b-868c-00855db99a00` is live. Exact publication lookup fixes older-entry 404s while preserving draft/schedule boundaries. Nested taxonomy URLs, reciprocal language links, blank metadata fallback, sitemap category/collection coverage, deduplication and canonical exclusion are corrected. Base pages have localized descriptions; BreadcrumbList and real content cover/public-author data are present. Studio editor login reaches its existing editor entry point. Role/write permissions are preserved.
+Worker `14c7f7e5-ea26-432b-868c-00855db99a00` was live at that historical checkpoint. Exact publication lookup fixes older-entry 404s while preserving draft/schedule boundaries. Nested taxonomy URLs, reciprocal language links, blank metadata fallback, sitemap category/collection coverage, deduplication and canonical exclusion are corrected. Base pages have localized descriptions; BreadcrumbList and real content cover/public-author data are present. Studio editor login reaches its existing editor entry point. Role/write permissions are preserved.
 
 Astro 0 diagnostics, unit 55/55, build successful. Final local full run 49/50 with one artifact-directory collision; gallery rerun 1/1 passed after output directories were separated. Final live Chrome 5/5 includes all 32 sitemap URLs, metadata/language/breadcrumb matrix, schema/route/assets/headers/console. Real Chrome confirmed Music language switching. Google validates the Music breadcrumb and FM26 Article/Breadcrumb; QA noindex and optional-author warning remain intentional. No production content/account was created or deleted. Exact evidence and remaining limits: `docs/seo-routing-audit-2026-10-01.md`.
 
@@ -55,7 +64,7 @@ Earlier releases and counts below are historical evidence.
 
 ## Previous production state — 1 October 2026, search pointer follow-up (historical)
 
-Worker `fb1a8e0d-63ae-4147-bc3e-9efb75dd0b55` is live. Search now uses native pointers throughout its modal: text/caret in the input, pointer on buttons and links, auto on the backdrop. The decorative brand cursor is hidden only while search is open and restored on close. This supersedes the earlier top-layer reparenting implementation below. Mouse and Ctrl+K opening, repeated close/reopen and both themes are covered; real Chrome confirmed input focus, text pointer, accent caret and a live Lamine result.
+Worker `fb1a8e0d-63ae-4147-bc3e-9efb75dd0b55` was live at that historical checkpoint. Search now uses native pointers throughout its modal: text/caret in the input, pointer on buttons and links, auto on the backdrop. The decorative brand cursor is hidden only while search is open and restored on close. This supersedes the earlier top-layer reparenting implementation below. Mouse and Ctrl+K opening, repeated close/reopen and both themes are covered; real Chrome confirmed input focus, text pointer, accent caret and a live Lamine result.
 
 Production migration `202610010035_measurement_worker_boundary` is applied and journalled. All three measurement RPCs deny anon/authenticated execution and allow the private Worker service role. Worker writes use a peppered IP hash and a 30-request/60-second endpoint rate window; missing configuration or rate-provider errors fail closed. Controlled anonymous RPC calls returned 42501; Worker traffic returned 204, absent-content engagement 404. The reserved QA path was verified 0→1→0 in all four traffic tables. A 31-request absent-content burst returned 30×404 and 1×429, without engagement rows. See `docs/measurement-boundary-2026-10-01.md` for initial fail-closed verification issues and rollback.
 

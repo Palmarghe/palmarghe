@@ -28,16 +28,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return redirectTo(request,'/studio/?panel=editor&section=media');
   }
   if (form.get('operation') === 'delete') {
-    const { data: linked, error: coverError } = await db.from('content_items').select('id').eq('cover_media_id',id.data).limit(1);
-    if (coverError) return errorResponse('Usage check failed',503);
-    if (linked?.length) return errorResponse('Media is in use',409);
-    const { data: socialLinked, error: socialError } = await db.from('content_items').select('id').eq('og_media_id',id.data).limit(1);
-    if (socialError) return errorResponse('Usage check failed',503);
-    if (socialLinked?.length) return errorResponse('Media is in use',409);
-    const { data: galleries, error: galleryError } = await db.from('content_items').select('id,type_data').eq('type','gallery');
-    if (galleryError) return errorResponse('Usage check failed',503);
-    if (galleries?.some((item: {type_data?: {gallery_media_ids?: unknown}}) => Array.isArray(item.type_data?.gallery_media_ids) && item.type_data.gallery_media_ids.includes(id.data))) return errorResponse('Media is in use',409);
+    const { data: referenced, error: usageError } = await db.rpc('media_has_references',{p_media_id:id.data});
+    if (usageError || typeof referenced !== 'boolean') return errorResponse('Usage check failed',503);
+    if (referenced) return errorResponse('Media is in use (including revisions)',409);
     const { error } = await db.from('media').delete().eq('id',id.data);
+    // The FK closes the race between this friendly preflight and DELETE.
+    if (error && ['23503','23001'].includes(error.code)) return errorResponse('Media is in use (including revisions)',409);
     if (error) return errorResponse('Delete failed',400);
     if (localMode) localDeleteMedia(media.path);
     else await db.storage.from('media').remove([media.path]);

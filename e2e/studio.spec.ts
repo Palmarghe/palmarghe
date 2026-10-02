@@ -179,16 +179,16 @@ test('admin manages tags, appearance, navigation and media', async ({ page }) =>
   await page.goto('/studio/?section=media');
   const image = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/lXcAAAAASUVORK5CYII=', 'base64');
   await page.locator('input[name="file"]').setInputFiles({ name: 'pixel.png', mimeType: 'image/png', buffer: image });
-  await page.locator('input[name="alt_tr"]').fill('Test görseli');
+  await page.locator('form[action="/api/media/"] input[name="alt_tr"]').fill('Test görseli');
   await page.getByRole('button', { name: 'Yükle' }).click();
   const card = page.locator('.entry-card').first();
   await expect(card.locator('input[name="alt_tr"]')).toHaveValue('Test görseli');
   const mediaId = await card.locator('input[name="id"]').first().inputValue();
   await card.locator('input[name="alt_tr"]').fill('Güncel alt');
   await card.getByRole('button', { name: 'Kaydet', exact: true }).click();
-  await expect(page.locator('.entry-card input[name="alt_tr"]')).toHaveValue('Güncel alt');
-  await page.locator('.entry-card summary').click();
-  await page.locator('.entry-card').getByRole('button', { name: 'Silmeyi onayla' }).click();
+  await expect(card.locator('input[name="alt_tr"]')).toHaveValue('Güncel alt');
+  await card.locator('summary').click();
+  await card.getByRole('button', { name: 'Silmeyi onayla' }).click();
   expect((await page.request.get(`/api/media/${mediaId}/`)).status()).toBe(404);
 });
 

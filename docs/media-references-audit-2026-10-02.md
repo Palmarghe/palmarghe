@@ -1,0 +1,44 @@
+# Media reference safety audit — 2 October 2026
+
+## Change and purpose
+
+Migration `202610020036_media_references.sql` derives private normalized references from current body image/gallery nodes, gallery metadata, cover/OG IDs, and saved revision body/gallery data. Restrictive foreign keys protect referenced media metadata even if a usage preflight races a content writer. Anonymous media/Storage visibility is based on current publication eligibility, never revisions. Direct authenticated Storage deletion requires deleting metadata first through its FK guard. No original content, revision, media or Storage records were edited by the migration.
+
+The Worker checks `media_has_references` before deletion, denies failed/nonboolean checks, and maps FK conflicts to HTTP409 without touching Storage. Local/test adapter models references, publication visibility, content/revision cascading and permission checks. It does not simulate native PostgreSQL concurrency or every Storage policy.
+
+## Production evidence
+
+Applied through authenticated Chrome to Palmarghe Production (`ozztqhiqzchlbxscbwhy`), PostgreSQL17.6. SQL Editor reported success. Preflight: current references8, revision references2, missing references0. Postflight: derived rows8/2; source content12, revisions8, media7, Storage7.
+
+All four before/after fingerprints also match after the rollback QA:
+
+| Source | MD5 comparison fingerprint |
+| --- | --- |
+| Content | da994147bf5e708510de8bb3c773d999 |
+| Revisions | 82bcbe7e2efb4d5157b6f5cc51d36c95 |
+| Media | 81fadd99e1a17df128e72179e68b219b |
+| Storage metadata | 55c6aa7a6cdfe66fa650b554649d3084 |
+
+These are change-detection comparisons, not credential hashes or a substitute for a database backup. Saved prior policies/rollback notes: `media-references-before-2026-10-02.sql`. No file bytes were modified.
+
+Production `media-references-production-qa.sql` runs in a transaction ending ROLLBACK. Seven checks passed: an actual referenced media metadata DELETE is rejected by FK even as owner; two restrictive guards exist; anon cannot read reference tables/call usage helper; actual anon and authenticated-without-permission calls reject; anonymous visible media is publication eligible. No committed QA records or real Auth account changes. This is not a fresh production editor/admin mutation matrix, concurrent load test, or physical Storage file deletion test.
+
+Screenshots: `media-references-production-2026-10-02.png`, `media-references-production-qa-2026-10-02.png`. Query sources: preflight/postflight/production-qa SQL files.
+
+Worker `5a7488ea-cfdd-4536-9337-87b35d16e058` deployed after the database migration. Real Chrome home: ten loaded images, no broken image in that rendered view; search has native text pointer/accent caret and native button pointer.
+
+## Tests
+
+- PostgreSQL-in-WASM tests10/10 apply the actual migration to a production-shaped narrow fixture: nested backfill, draft/due/archived visibility, real FK, private helpers/tables, Storage metadata-first deletion, revisions, missing-reference rollback, gallery/OG/cover, idempotency.
+- Worker deletion guard tests7: RPC unavailable/malformed, references conflict, both FK error codes preserve Storage, metadata-before-Storage ordering. Physical orphan cleanup failures are not covered as solved.
+- Local Chrome media suite4/4: permitted editor CRUD, body-image privacy/public rendering/revision retention and cleanup, admin media/settings, gallery publication/caption.
+- Production Chrome23/23: images, desktop/mobile search/network/focus, custom pointer outside search, native pointer inside search, responsive layouts/form routes, console, security/privacy, same-origin write boundaries on apex/Studio. No production content/profile/media writes in browser tests.
+- `npm run verify` final results recorded in FINAL_REPORT. Dependency: PGlite0.5.8 is test-only. Transitive devalue updated5.9.4; npm audit including dev dependencies reports0 vulnerabilities. No exploit claim.
+
+## Limitations and next work
+
+Upload decoding/byte-validity checks, orphan Storage cleanup and honest cleanup-failure UX remain open. The metadata/reference race is guarded by database constraints; file deletion and metadata deletion are not one distributed transaction. Test adapters and green test totals do not prove all webmaster requirements. Physical Safari/Firefox/AT checks, broad form/state matrices and performance gates remain separate open work.
+
+## Rollback
+
+Revert the Worker dependency on the usage RPC first if schema rollback is necessary. Prior read/delete policies can be restored using the saved file; keep the derived reference tables/FKs by default. Dropping derived schema requires a reviewed maintenance step after reverting the Worker; it does not require editing source documents or files. Current migration is idempotently tested; migrations must be applied before deploying a dependent Worker.
