@@ -42,3 +42,5 @@ Upload decoding/byte-validity checks, orphan Storage cleanup and honest cleanup-
 ## Rollback
 
 Revert the Worker dependency on the usage RPC first if schema rollback is necessary. Prior read/delete policies can be restored using the saved file; keep the derived reference tables/FKs by default. Dropping derived schema requires a reviewed maintenance step after reverting the Worker; it does not require editing source documents or files. Current migration is idempotently tested; migrations must be applied before deploying a dependent Worker.
+
+Additional production body-media regression1/1: existing public FM26 article’s two actual /api/media images load anonymously on 390/1440px × dark/light, real image bytes/MIME/nosniff verified, serious/critical WCAG2.2 axe scans pass in those four combinations; unknown UUID404. Source: e2e-production/media-references.spec.ts. This closes actual public-body load evidence for that controlled existing article, not a production staff write matrix.
