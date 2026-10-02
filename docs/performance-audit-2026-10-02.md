@@ -1,6 +1,6 @@
 # Production performance audit — 2 October 2026
 
-Current Worker: `9cea5697-c203-415f-8fc0-c5eaeab9846c`. Intermediate image-only deployment: `9458062d-afe9-41a3-8614-760af2bef511`.
+Measured Worker: `9cea5697-c203-415f-8fc0-c5eaeab9846c`. Intermediate image-only deployment: `9458062d-afe9-41a3-8614-760af2bef511`.
 
 ## Method and limits
 
@@ -32,6 +32,12 @@ These are individual laboratory observations, not field percentiles, medians, de
 - Image-only production smoke/SEO: 10/10, including ten viewport widths and theme persistence.
 - Final production affected E2E: 6/6, including category images at 390/768/1440 px in both themes, all 32 sitemap URLs and reciprocal metadata, public assets/routes, schema, security headers and console.
 - Native search pointer production regression passed separately. Real Chrome inspected the loaded category images and reloaded the final deployment successfully. Production content, users and historical metrics were not edited.
+
+## Font and delivery evidence
+
+Read-only HTTP requests recorded in `docs/cache-font-2026-10-02.json` confirm the actual home, account, anonymous Studio and search API responses are `private, no-store`. The observed hashed CSS is one-year immutable. Unversioned fonts, images and scripts have `max-age=0, must-revalidate` and ETags, allowing validation without indefinitely hiding updates. This is a sample of observed public assets; authenticated private media and conditional 304 semantics still need separate coverage.
+
+The current mobile profile requests only the two self-hosted variable Manrope WOFF2 subsets: Latin 24,836 resource bytes and Latin-ext 15,120. CSS defines one family, weights 400–700, `font-display:swap` and Unicode ranges that cover Turkish characters. Two subsets are justified for Turkish body text. No external font request appears in this home navigation profile. Font-specific shift attribution, English subset loading and Studio font usage remain to verify.
 
 ## Still open
 

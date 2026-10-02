@@ -1,6 +1,15 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 2 October 2026, performance audit
+## Current production state — 2 October 2026, session cookie audit
+
+Worker `a9f7f102-e50a-463e-8b37-ee87a27d87d3` is live. Server-only Auth cookie writes now enforce HttpOnly while preserving Secure, SameSite=Lax, root path, SDK lifetime and chunks. A controlled invalid expired session demonstrated the missing attribute before deploy; apex and Studio clearing responses now pass. Real SDK controlled-transport tests cover chunked login, logout and refresh. Existing authenticated real Chrome admin dashboard remains accessible.
+
+Verify: Astro 0 diagnostics, Vitest 57/57, build success. Affected local browser tests 4/4; live cookie/privacy/native-search-pointer tests 5/5. No real account was created/deleted and no content was changed. Fresh real production login/logout and SMTP callback delivery are not claimed. Scope and rollback: `docs/session-cookie-audit-2026-10-02.md`.
+
+Responsive image/read-batching, SEO/login, measurement migration 202610010035 and native search-pointer fixes remain active. Performance implementation commit d4dc0ce Actions succeeded: https://github.com/Palmarghe/palmarghe/actions/runs/36928098805 . Its current lab evidence is historical measurement of that same performance code: final mobile home LCP 2.531 s and article 2.892 s, so performance gates remain open. Cache/font sample evidence is in `docs/cache-font-2026-10-02.json`. Current release Actions is checked after push. The full 40-section goal remains active.
+
+
+## Previous production state — 2 October 2026, performance audit (historical)
 
 Worker `9cea5697-c203-415f-8fc0-c5eaeab9846c` is live. Existing category artwork now has smaller responsive WebP renditions; five independent public page reads run together without changing RLS, publication filters, cookies or no-store HTML. Four category downloads fell about 80% in the captured mobile profile. Editorial content and originals are preserved.
 

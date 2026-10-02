@@ -1,0 +1,232 @@
+{
+  "fonts": [
+    {
+      "url": "https://palmarghe.com/fonts/manrope-latin.woff2",
+      "transferSize": 25317,
+      "resourceSize": 24836
+    },
+    {
+      "url": "https://palmarghe.com/fonts/manrope-latin-ext.woff2",
+      "transferSize": 15597,
+      "resourceSize": 15120
+    }
+  ],
+  "rows": [
+    {
+      "url": "https://palmarghe.com/?verify=cache",
+      "status": 200,
+      "cacheControl": "private, no-store",
+      "type": "text/html",
+      "etag": null,
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/account/?verify=cache",
+      "status": 200,
+      "cacheControl": "private, no-store",
+      "type": "text/html",
+      "etag": null,
+      "location": null
+    },
+    {
+      "url": "https://studio.palmarghe.com/studio/",
+      "status": 200,
+      "cacheControl": "private, no-store",
+      "type": "text/html",
+      "etag": null,
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/api/search/?q=zzcacheaudit",
+      "status": 200,
+      "cacheControl": "private, no-store",
+      "type": "application/json",
+      "etag": null,
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/fonts/manrope-latin.woff2",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "font/woff2",
+      "etag": "\"1df3b315841516dcf29aa177f8dab32b\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/fonts/manrope-latin-ext.woff2",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "font/woff2",
+      "etag": "\"45643777877435094a3973e71661f666\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/_astro/global.Bs_EHSro.css",
+      "status": 200,
+      "cacheControl": "public, max-age=31536000, immutable",
+      "type": "text/css",
+      "etag": "W/\"f5ec6871acaf4620db116f1d05563d5b\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/visuals/hero-glass.webp",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "image/webp",
+      "etag": "\"861913b0944f67e44c2487920500f29c\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/scripts/library.js",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "text/javascript",
+      "etag": "W/\"639c371dc9a427024f3d2e1300435381\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/scripts/mobile-menu.js",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "text/javascript",
+      "etag": "W/\"5ecd7fa7c2bf4d40cc17285ee7341f99\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/scripts/mobile-secret.js",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "text/javascript",
+      "etag": "W/\"c0b518f84e0948743bd14c1b4f26a98e\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/scripts/interactive-search.js",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "text/javascript",
+      "etag": "W/\"cf6ae10420a35fbd5f57a0bfc42e807a\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/scripts/comments.js",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "text/javascript",
+      "etag": "W/\"11f5a83c551a316b6d40746ef2c5e2c6\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/scripts/traffic.js",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "text/javascript",
+      "etag": "W/\"9b243ff5b70acb4f7e592d9ecf4ab2b9\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/scripts/engagement.js",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "text/javascript",
+      "etag": "W/\"734fe0b904b47f0d9aa05f7f204b9986\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/scripts/theme-toggle.js",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "text/javascript",
+      "etag": "W/\"cb35717d8b743254a5f54b7b795ec217\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/scripts/cursor-glow.js",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "text/javascript",
+      "etag": "W/\"f1c3734acceac3f786e7b9748ab80442\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/scripts/service-worker-registration.js",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "text/javascript",
+      "etag": "W/\"47bc69da60f17c564a3c57c193e57460\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/visuals/music/anatolian-velocity-960.webp",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "image/webp",
+      "etag": "\"b98ce3dafbd7f4ac938eb5e970cdd21b\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/visuals/editorial-ai-480.webp",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "image/webp",
+      "etag": "\"a78564a0d5ab188489aa486f044eb1fe\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/visuals/editorial-gaming-480.webp",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "image/webp",
+      "etag": "\"839ca22e47e696f90777e455d7a2dea9\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/visuals/editorial-fm-480.webp",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "image/webp",
+      "etag": "\"229e077a08969b270801d9140dc78e79\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/visuals/editorial-lab-480.webp",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "image/webp",
+      "etag": "\"389db322dfc930d3f333b8ce347fc500\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/visuals/music/anatolian-sub-ritual-480.webp",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "image/webp",
+      "etag": "\"387e348911a414f1e43fcdd80ea5d39a\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/editorial/lamine-yamal.webp",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "image/webp",
+      "etag": "\"8b87e7955902960a63c6c966deabfd3c\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/visuals/music/anatolian-sub-ritual-960.webp",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "image/webp",
+      "etag": "\"deac32e49de140d4535d91f3367f529a\"",
+      "location": null
+    },
+    {
+      "url": "https://palmarghe.com/visuals/music/kara-yol-960.webp",
+      "status": 200,
+      "cacheControl": "public, max-age=0, must-revalidate",
+      "type": "image/webp",
+      "etag": "\"e604fafb2fd3ad5e2465be789e113c6d\"",
+      "location": null
+    }
+  ]
+}
