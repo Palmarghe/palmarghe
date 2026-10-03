@@ -53,6 +53,11 @@ describe('bounded Studio save transport', () => {
 });
 
 describe('read-only image preflight transport',()=>{
+  it('tells users to check the library before retrying an uncertain upload',async()=>{
+    const pending=submitStudioForm(action,new FormData(),'media',async()=>Response.json({error:'upload_uncertain',detail:'PRIVATE'},{status:503}));
+    try {await pending;throw new Error('Expected rejection');}
+    catch(error){expect(error).toBeInstanceOf(StudioSaveError);expect(studioSaveMessage(error,true)).toContain('Yeniden yüklemeden önce');expect(studioSaveMessage(error,true)).not.toContain('PRIVATE');}
+  });
   it('requests validation and accepts bounded decoded dimensions',async()=>{
     const body=new FormData();const transport=vi.fn<typeof fetch>(async()=>Response.json({validated:true,width:1200,height:1600,bytes:50000}));
     expect(await validateStudioImage(action,body,transport)).toMatchObject({width:1200,height:1600});

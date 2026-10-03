@@ -10,6 +10,22 @@ async function request(operation:string,bytes:Uint8Array){
   return POST({request:new Request('https://studio.palmarghe.com/api/media/',{method:'POST',headers:{origin:'https://studio.palmarghe.com'},body:form}),cookies:{}} as Parameters<typeof POST>[0]);
 }
 describe('real decoder API boundary',()=>{
+  it('preserves stored bytes when the metadata INSERT outcome is uncertain',async()=>{
+    state.insert.mockResolvedValueOnce({error:{message:'Transport failed'}});
+    const remove=vi.fn();state.storage.mockReturnValue({upload:state.upload,remove});
+    const bytes=await sharp({create:{width:43,height:29,channels:3,background:'#9271ac'}}).png().toBuffer();
+    const response=await request('upload',bytes);expect(response.status).toBe(503);
+    expect(await response.json()).toEqual({error:'upload_uncertain'});
+    expect(state.upload).toHaveBeenCalledOnce();expect(remove).not.toHaveBeenCalled();
+  });
+  it('reports uncertain outcome when INSERT throws after Storage success',async()=>{
+    state.insert.mockRejectedValueOnce(new Error('Private transport error'));
+    const remove=vi.fn();state.storage.mockReturnValue({upload:state.upload,remove});
+    const bytes=await sharp({create:{width:1,height:1,channels:3,background:'#9271ac'}}).png().toBuffer();
+    const response=await request('upload',bytes);
+    expect(await response.json()).toEqual({error:'upload_uncertain'});
+    expect(remove).not.toHaveBeenCalled();
+  });
   it('validates decoded dimensions without any Storage or metadata writes',async()=>{
     const bytes=await sharp({create:{width:43,height:29,channels:3,background:'#9271ac'}}).png().toBuffer();
     const response=await request('validate',bytes);expect(response.status).toBe(200);

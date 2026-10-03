@@ -5,6 +5,11 @@ export class StudioSaveError extends Error {
   constructor(public readonly reason: StudioSaveFailure, public readonly detail?:string) { super(reason); }
 }
 const mediaErrors:Record<string,string>={
+  content_fields:'Başlık, URL, dil ve içerik türünü kontrol edin. Girdileriniz korunuyor.',
+  content_body:'Editör içeriği doğrulanamadı. Girdileriniz korunuyor; desteklenmeyen bir blok olup olmadığını kontrol edin.',
+  content_duplicate:'Bu dilde bu URL yolu zaten kullanılıyor. Başka bir URL yolu seçin.',
+  content_transaction:'Sunucu içerik kaydını tamamlayamadı. Girdileriniz korunuyor; kayıt hatası inceleniyor.',
+  upload_uncertain:'Görsel kaydının sonucu doğrulanamadı. Dosyanız ve girdileriniz korunuyor. Yeniden yüklemeden önce medya listesini başka bir sekmede kontrol edin.',
   image_dimensions:'Görsel en fazla 4096 px kenar ve 3 megapiksel olabilir. Daha küçük bir görsel seçin.',
   image_metadata:'Görselin profil/yön/metin verisi çok büyük. Görseli web için yeniden dışa aktarın.',
   invalid_image:'Görsel çözülemedi. Geçerli, statik PNG, JPEG veya WebP dosyası seçin.',
@@ -23,7 +28,7 @@ export async function submitStudioForm(action: string, body: FormData, section: 
     if (!response.ok) {
       const reason: StudioSaveFailure = response.status === 401 ? 'authentication' : response.status === 403 ? 'permission'
         : response.status === 409 ? 'conflict' : [400,413,422].includes(response.status) ? 'validation' : 'server';
-      throw new StudioSaveError(reason,section==='media' ? await mediaErrorDetail(response) : undefined);
+      throw new StudioSaveError(reason,await mediaErrorDetail(response));
     }
     let destination: URL;
     try { destination = new URL(response.url); } catch { throw new StudioSaveError('response'); }
@@ -40,7 +45,7 @@ export async function submitStudioForm(action: string, body: FormData, section: 
 }
 
 export function studioSaveMessage(error: unknown, media = false): string {
-  if(media && error instanceof StudioSaveError && error.detail) return error.detail;
+  if(error instanceof StudioSaveError && error.detail) return error.detail;
   const reason = error instanceof StudioSaveError ? error.reason : 'network';
   if (reason === 'timeout' || reason === 'response') return 'İşlemin sonucu doğrulanamadı. Girdileriniz bu sayfada korunuyor. Yeniden denemeden önce Studio listesini başka bir sekmede kontrol edin.';
   if (reason === 'authentication') return 'Oturumunuz sona ermiş olabilir. Girdilerinizi koruyarak başka bir sekmede tekrar giriş yapın.';

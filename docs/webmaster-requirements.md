@@ -4,9 +4,9 @@ Kaynak: `C:\Users\Palmarghe\.codex\attachments\060efb3f-064b-466b-bac2-cf1bafe94
 
 1 Ekim 2026 itibarıyla önceki turn somut ilerlemeydi: imleç kırpılması düzeltildi, deploy edildi ve production/Actions doğrulandı. Bu tur modal etkileşimi ve yeni kanıt kaydı ekler. Ana hedefin tamamlanması henüz kanıtlanmış değildir. Tarihsel rapor, yeşil test veya dosyanın varlığı tek başına geniş kapsamı tamamlamaz.
 
-## Güncel ilerleme — 2 Ekim 2026, görsel yükleme doğrulaması
+## Önceki ilerleme — 2 Ekim 2026, görsel yükleme doğrulaması (tarihsel)
 
-Worker `591ab0aa-99d1-4c29-ba53-a3ddee154b21` deploy edildi. Gerçek raster decode, boyut/metadata/body sınırları ve mutation yapmayan Studio preflight uygulandı. Astro0/unit160/local60; gerçek Chrome 3 MP üç format ve yoğun JPEG başarılı, yeniden yüklenen medya sayısı7. Production tam koşu henüz terminal değil; medya görseli 5 saniye bekleme testi başarısız oldu ve araştırılıyor. Upload orphan/race hâlâ açık. Kanıt: `docs/image-upload-validation-2026-10-02.md`. Tüm 40 bölüm kapanmış değildir.
+Worker `591ab0aa-99d1-4c29-ba53-a3ddee154b21` deploy edildi. Gerçek raster decode, boyut/metadata/body sınırları ve mutation yapmayan Studio preflight uygulandı. Astro0/unit160/local60; gerçek Chrome 3 MP üç format ve yoğun JPEG başarılı, yeniden yüklenen medya sayısı7. Production koşusu59 başarılı/1 medya bekleme hatasıyla bitti; değişmeyen medya testi ayrı1/1 geçti, ilk timeout kök nedeni kesinleşmedi. Upload orphan/race hâlâ açık. Kanıt: `docs/image-upload-validation-2026-10-02.md`. Tüm 40 bölüm kapanmış değildir.
 
 ## 2 Ekim 2026 — arama imleci ve kayıt hatası toparlama (tarihsel)
 
@@ -168,3 +168,8 @@ Requirements26/29/36 advanced by migration037 and Worker0bf6fda5: atomic receipt
 Arama ilerlemesi 2 Ekim: Worker90ef6f57, açık temizleme eylemi TR/EN ve iki temada 320/1440px; local2/2, live11/11 ve gerçek Chrome. Bölüm13 clear gereksinimine kanıt eklendi; diğer tarayıcılar ve tüm hedef açık. docs/search-clear-audit-2026-10-02.md. Önceki d376721 CI37042191255 başarılı.
 2 Ekim CSS ilerlemesi: Workerb5fd38ce; public CSS115424->72663 byte,424 Studio kuralı build-only ayrıldı. Studio SHA önceki canlı dosyayla aynı. Unit129/129, full local59/59, live39/39 ve Chrome kanıtı. Bölüm19/21/34/36 ilerledi; article LCP3.009s hâlâ başarısız, home2.324s tek lab örneği, INP saha kanıtı yok. Portrait655x1000 ile article attributes1200x750 farkı bölüm18 için açık inceleme. Tam hedef açık. docs/public-css-audit-2026-10-02.md.
 2 October reservation progress: Worker12e14605,136 units/full local59, final live25 passed cases plus4 fresh-context delay regressions. Actual portrait655x1000 replaces1200x750; late readership row displacement25.109px removed in deterministic tests. Current serial article LCP2.280s/CLS0/TBT0 is one lab sample, not field INP or causal speedup. Rows18/19/29/36 advance; uploads/other image roles remain open. Dynamic public-author markup has outer and inner h1; real author route is not established by current sitemap scans, open15/22 finding. Evidence: docs/image-reservation-audit-2026-10-02.md. Full objective stays active.
+
+
+## Güncel production — 3 Ekim 2026
+
+Worker `3ac361c9-b737-4fac-91dc-89c78b659037`. Production yayınlama ve okuma listesi eksik tablo yetkileri mevcut RLS korunarak giderildi; beğeni sistemi migration039 ile eklendi. Gerçek Chrome QA yayınlama/arşive geri alma, okuma listesi ve beğeni temizliği doğrulandı. Kullanıcının işlem anında onayıyla Supabase parola kuralı8/karakter türü zorunluluğu yok olarak kaydedildi. Studio girişinin rol matrisi, portre kadrajı, özel imleç ve opsiyonel medya çerçeve/odak önizlemesi uygulandı. Astro0/unit170/build başarılı. Ayrı koşular ve bilinen test bağlamı hataları `docs/publishing-community-fixes-2026-10-03.md` içinde açıkça kayıtlıdır. Tüm40bölüm tamamlanmış sayılmaz; upload orphan reconciliation ve önceki dış/manual ölçüm boşlukları açıktır.

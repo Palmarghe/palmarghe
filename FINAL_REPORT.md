@@ -1,8 +1,16 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 2 October 2026, author heading and landing correction
+## Current production state — 3 October 2026
 
-Worker `497668f1-80bf-4c62-b331-87d0e247e88d` is live. Previous upload validation and migrations036/037 remain active. Author detail now has a single main heading; the existing author landing has localized title and publication navigation instead of a blank heading. No content/profile privacy setting changed. Verify Astro0/unit160/build succeeded; affected local author follow/phone-theme axe test and localized landing test passed. Actual Chrome TR landing and production TR/EN landing E2E passed. A real publicly enabled production author detail remains unverified; no account was made public for QA. Previous release Actions37058265623 completed successfully. Current commit/push/Actions follow-up is pending. Full webmaster scope and upload metadata failure race remain open.
+Worker `3ac361c9-b737-4fac-91dc-89c78b659037` is live. Production SQL migrations038/039/040 were applied through Chrome: revision and bookmark grants repaired with their existing RLS retained; authenticated one-per-content likes and private liker rows added. Actual Chrome QA publishing succeeded and the existing test record was restored to archived with revision history. Bookmark appeared in the account reading list and was removed; own QA like persisted across reload and was removed. Existing users/content/media/Git history remain preserved.
+
+Studio entry is now only in the header for admin/editor, including mobile. Blank surfaces no longer show the native pointer over the custom pointer. New/reset passwords require8 characters with no composition requirement; the user confirmed the matching Supabase provider setting, which was saved. Email confirmation and secure change protections remain enabled. Yamal portrait cards preserve the face. Optional media framing/width/focus has live preview and validated document attributes without rewriting source media.
+
+Latest verify Astro0/unit170/build passed. Local full run62/63 plus the unchanged context-navigation failure separately passed1/1; targeted role, cursor, media and account tests passed. Production theme/search/axe16/17 plus corrected pressed-state test1/1; public/media/write-boundary4/4. These separate runs are not represented as a combined full-suite pass. Current commit and CI status will be recorded after push. See `docs/publishing-community-fixes-2026-10-03.md` for evidence and limitations. Full webmaster scope remains active; upload uncertainty safeguard retains ambiguous Storage objects and durable orphan reconciliation remains open.
+
+## Previous production state — 2 October 2026, author heading and landing correction (historical)
+
+Worker `497668f1-80bf-4c62-b331-87d0e247e88d` was live for that release. Previous upload validation and migrations036/037 remain active. Author detail now has a single main heading; the existing author landing has localized title and publication navigation instead of a blank heading. No content/profile privacy setting changed. Verify Astro0/unit160/build succeeded; affected local author follow/phone-theme axe test and localized landing test passed. Actual Chrome TR landing and production TR/EN landing E2E passed. A real publicly enabled production author detail remains unverified; no account was made public for QA. Previous release Actions37058265623 completed successfully. That release commit f7eb6d7 was pushed normally; Actions37059059835 completed successfully. Full webmaster scope and upload metadata failure race remain open.
 
 
 ## Previous production state — 2 October 2026, bounded raster upload validation (historical)

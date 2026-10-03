@@ -25,6 +25,7 @@ function validNode(node: unknown, depth = 0): node is Block {
   if (value.type === 'heading' && ![2,3].includes(Number(value.attrs?.level))) return false;
   if (value.marks?.some((mark) => mark.type === 'link' && !safeLink(String(mark.attrs?.href ?? '')))) return false;
   if (value.type === 'mediaImage' && (!uuid.test(String(value.attrs?.media_id ?? '')) || typeof value.attrs?.alt !== 'string' || value.attrs.alt.length > 300 || (value.attrs?.caption !== undefined && (typeof value.attrs.caption !== 'string' || value.attrs.caption.length > 300)))) return false;
+  if (value.type === 'mediaImage' && (['displayWidth','focusX','focusY'].some((key) => value.attrs?.[key] !== undefined && (typeof value.attrs[key] !== 'number' || !Number.isFinite(value.attrs[key]) || Number(value.attrs[key]) < (key === 'displayWidth' ? 25 : 0) || Number(value.attrs[key]) > 100)) || value.attrs?.ratio !== undefined && !['original','16/9','4/3','1/1'].includes(String(value.attrs.ratio)))) return false;
   if (value.type === 'mediaGallery' && (!Array.isArray(value.attrs?.media_ids) || value.attrs.media_ids.length < 1 || value.attrs.media_ids.length > 12 || new Set(value.attrs.media_ids).size !== value.attrs.media_ids.length || value.attrs.media_ids.some((id) => !uuid.test(String(id))))) return false;
   if (value.type === 'callout' && (!['note','info','warning'].includes(String(value.attrs?.tone ?? '')) || typeof value.attrs?.title !== 'string' || value.attrs.title.length > 120)) return false;
   if (value.type === 'cta' && (!safeLink(String(value.attrs?.href ?? '')) || !['primary','secondary','text'].includes(String(value.attrs?.style ?? 'primary')) || typeof value.attrs?.label !== 'string' || !String(value.attrs?.label).trim() || String(value.attrs?.label).length > 120)) return false;
@@ -60,7 +61,13 @@ export function renderDocument(doc: Document, locale: 'tr' | 'en' = 'tr'): strin
     }
     if (node.type === 'hardBreak') return '<br />';
     if (node.type === 'horizontalRule') return '<hr />';
-    if (node.type === 'mediaImage') return `<figure class="content-media"><img src="/api/media/${escapeHtml(String(node.attrs?.media_id))}/" alt="${escapeHtml(String(node.attrs?.alt))}" loading="lazy" />${node.attrs?.caption ? `<figcaption>${escapeHtml(String(node.attrs.caption))}</figcaption>` : ''}</figure>`;
+    if (node.type === 'mediaImage') {
+      const width = Math.max(25,Math.min(100,Number(node.attrs?.displayWidth) || 100));
+      const ratio = ['16/9','4/3','1/1'].includes(String(node.attrs?.ratio)) ? String(node.attrs?.ratio) : 'auto';
+      const x = Math.max(0,Math.min(100,Number(node.attrs?.focusX ?? 50)));
+      const y = Math.max(0,Math.min(100,Number(node.attrs?.focusY ?? 50)));
+      return `<figure class="content-media" style="width:${width}%;margin-inline:auto"><img src="/api/media/${escapeHtml(String(node.attrs?.media_id))}/" alt="${escapeHtml(String(node.attrs?.alt))}" style="width:100%;aspect-ratio:${ratio};object-fit:cover;object-position:${x}% ${y}%" loading="lazy" />${node.attrs?.caption ? `<figcaption>${escapeHtml(String(node.attrs.caption))}</figcaption>` : ''}</figure>`;
+    }
     if (node.type === 'mediaGallery') { const mediaIds = Array.isArray(node.attrs?.media_ids) ? node.attrs.media_ids : []; return `<section class="content-gallery" aria-label="Görsel galerisi">${mediaIds.map((id, index) => `<a href="/api/media/${escapeHtml(String(id))}/" data-gallery-item><img src="/api/media/${escapeHtml(String(id))}/" alt="Galeri görseli ${index + 1}" loading="lazy" /></a>`).join('')}</section>`; }
     if (node.type === 'callout') return `<aside class="content-callout content-callout--${escapeHtml(String(node.attrs?.tone))}"><strong>${escapeHtml(String(node.attrs?.title))}</strong>${inside}</aside>`;
     if (node.type === 'cta') return `<p class="content-cta"><a class="button content-cta--${escapeHtml(String(node.attrs?.style ?? 'primary'))}" href="${escapeHtml(String(node.attrs?.href))}" rel="noopener noreferrer">${escapeHtml(String(node.attrs?.label))} →</a></p>`;

@@ -37,6 +37,9 @@ test('Palmarghe pointer has semantic states across reading, links, controls and 
   await expect(cursor).toHaveAttribute('data-state', 'button');
   await page.mouse.down();
   await expect(cursor).toHaveAttribute('data-pressed', '');
+  // Test the pressed pointer state without activating the anonymous bookmark
+  // flow, whose delayed account navigation would interrupt the search check.
+  await page.mouse.move(1,1);
   await page.mouse.up();
   await expect(cursor).not.toHaveAttribute('data-pressed', '');
 

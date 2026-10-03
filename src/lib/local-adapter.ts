@@ -1,7 +1,7 @@
 /** Development-only, in-memory Supabase-shaped adapter for browser and E2E tests. */
 import { mediaReferences } from './media-references';
 type Row = Record<string, any>;
-type TableName = 'profiles' | 'permission_groups' | 'comments' | 'categories' | 'tags' | 'content_items' | 'content_categories' | 'content_tags' | 'contact_messages' | 'site_settings' | 'navigation' | 'media' | 'redirects' | 'audit_logs' | 'account_deletion_requests' | 'traffic_daily' | 'traffic_qualified_daily' | 'content_bookmarks' | 'content_follows' | 'content_notifications' | 'editorial_collections' | 'editorial_collection_items' | 'newsletter_subscribers' | 'content_revisions';
+type TableName = 'profiles' | 'permission_groups' | 'comments' | 'categories' | 'tags' | 'content_items' | 'content_categories' | 'content_tags' | 'contact_messages' | 'site_settings' | 'navigation' | 'media' | 'redirects' | 'audit_logs' | 'account_deletion_requests' | 'traffic_daily' | 'traffic_qualified_daily' | 'content_likes' | 'content_bookmarks' | 'content_follows' | 'content_notifications' | 'editorial_collections' | 'editorial_collection_items' | 'newsletter_subscribers' | 'content_revisions';
 type Filter = (row: Row) => boolean;
 const uid = () => crypto.randomUUID();
 const initialCategories: Row[] = [
@@ -24,7 +24,7 @@ const tables: Record<TableName, Row[]> = {
     { id:'00000000-0000-4000-9000-000000000003',name:'Yönetici',description:'Tam erişim.',base_role:'admin',permissions:{comment:true,content:true,taxonomy:true,media:true,messages:true,appearance:true,navigation:true,members:true,permissions:true,audit:true},protected:true },
   ], comments: [], categories: initialCategories,
   tags: [], content_items: [], content_categories: [], content_tags: [], contact_messages: [],
-  site_settings: [], navigation: [], media: [], redirects: [], audit_logs: [], account_deletion_requests: [], traffic_daily: [], traffic_qualified_daily: [], content_bookmarks: [], content_follows: [], content_notifications: [], editorial_collections: [], editorial_collection_items: [], newsletter_subscribers: [], content_revisions: [],
+  site_settings: [], navigation: [], media: [], redirects: [], audit_logs: [], account_deletion_requests: [], traffic_daily: [], traffic_qualified_daily: [], content_likes: [], content_bookmarks: [], content_follows: [], content_notifications: [], editorial_collections: [], editorial_collection_items: [], newsletter_subscribers: [], content_revisions: [],
 };
 const mediaFiles = new Map<string, Uint8Array>();
 const mediaCleanupTasks: Row[] = [];
@@ -65,7 +65,7 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
     if (this.table === 'profiles') return Boolean(this.user && (this.user.id === row.id || this.user.role === 'admin'));
     if (this.table === 'permission_groups') return Boolean(this.user && ['editor','admin'].includes(this.user.role));
     if (this.table === 'comments') return row.status === 'published' || this.user?.role === 'admin' || this.user?.role === 'editor';
-    if (this.table === 'content_bookmarks' || this.table === 'content_follows' || this.table === 'content_notifications') return Boolean(this.user && row.user_id === this.user.id);
+    if (this.table === 'content_likes' || this.table === 'content_bookmarks' || this.table === 'content_follows' || this.table === 'content_notifications') return Boolean(this.user && row.user_id === this.user.id);
     if (this.table === 'editorial_collections') return row.published || this.user?.role === 'admin' || this.user?.role === 'editor';
     if (this.table === 'editorial_collection_items') return tables.editorial_collections.some((collection) => collection.id === row.collection_id && (collection.published || this.user?.role === 'admin' || this.user?.role === 'editor'));
     if (this.table === 'account_deletion_requests') return Boolean(this.user && (this.user.id === row.user_id || this.user.role === 'admin'));
@@ -79,7 +79,7 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
     if (this.table === 'profiles') return this.action === 'update';
     if (this.table === 'permission_groups') return this.user.role === 'admin';
     if (this.table === 'comments') return this.action === 'insert' || this.user.role === 'admin' || this.user.role === 'editor';
-    if (this.table === 'content_bookmarks' || this.table === 'content_follows') return true;
+    if (this.table === 'content_likes' || this.table === 'content_bookmarks' || this.table === 'content_follows') return true;
     if (this.table === 'content_notifications') return this.action === 'update';
     if (this.table === 'editorial_collections' || this.table === 'editorial_collection_items') return ['admin','editor'].includes(this.user.role);
     if (this.table === 'account_deletion_requests') return this.action === 'insert' || this.user.role === 'admin';
@@ -135,6 +135,10 @@ export function localSupabase(cookies: import('astro').AstroCookies) {
     from: (name: string) => { if (!isTable(name)) throw new Error('Unknown table'); return new Query(name, getUser()); },
     rpc: async (name: string, args: Row) => {
       const actor = getUser();
+      if (name === 'content_like_count') {
+        const item = tables.content_items.find(row => row.id === args.p_content_id && ['published','scheduled'].includes(row.status) && row.published_at <= new Date().toISOString());
+        return { data: item ? tables.content_likes.filter(row => row.content_id === item.id).length : 0, error: null };
+      }
       if (['media_has_references','pending_media_cleanup','complete_media_cleanup'].includes(name)) {
         const profile = actor && tables.profiles.find(entry=>entry.id===actor.id);
         const group = profile && tables.permission_groups.find(entry=>entry.id===profile.permission_group_id);

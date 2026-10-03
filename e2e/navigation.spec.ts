@@ -60,8 +60,8 @@ test('social metadata and account disclosure are localized', async ({ page }) =>
   await expect(signup.locator('input[name="kvkk_acknowledgement"]')).toHaveAttribute('required','');
   await expect(signup.getByRole('link', { name: 'Gizlilik Politikasını' })).toHaveAttribute('href','/privacy/');
   await expect(signup.getByRole('link', { name: 'KVKK Aydınlatma Metnini' })).toHaveAttribute('href','/kvkk/');
-  await expect(signup.locator('input[name="password"]')).toHaveAttribute('minlength','12');
-  await expect(signup.locator('input[name="password"]')).toHaveAttribute('pattern', /\[0-9\]/);
+  await expect(signup.locator('input[name="password"]')).toHaveAttribute('minlength','8');
+  await expect(signup.locator('input[name="password"]')).not.toHaveAttribute('pattern');
   await page.goto('/kvkk/');
   await expect(page.getByRole('heading', { name: 'KVKK Aydınlatma Metni' })).toBeVisible();
   await page.goto('/account/');
@@ -144,6 +144,8 @@ test('brand cursor is enabled for fine pointers and keeps text inputs usable', a
   await page.goto('/');
   await expect(page.locator('[data-brand-cursor]')).toHaveCount(1);
   await expect.poll(() => page.evaluate(() => document.documentElement.classList.contains('has-brand-cursor'))).toBe(true);
+  await expect(page.locator('body')).toHaveCSS('cursor','none');
+  await expect(page.locator('main')).toHaveCSS('cursor','none');
   const tracking = await measureCursorTracking(page);
   expect(tracking.maximumError, JSON.stringify(tracking)).toBeLessThanOrEqual(1);
   await page.locator('.head-actions [data-search-trigger]').click();

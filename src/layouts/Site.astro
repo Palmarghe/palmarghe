@@ -17,6 +17,12 @@ const activePath = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) => { const path = new URL(href, 'https://palmarghe.com').pathname.replace(/\/$/, '') || '/'; return activePath === path || (path !== '/' && activePath.startsWith(`${path}/`)); };
 const alternatePath = alternate;
 const db = supabase(Astro.cookies, Astro.request);
+let showStudio=false;
+const hasSession=/(?:^|;\s*)(?:sb-[^=]+-auth-token(?:\.\d+)?|pg_mock_user)=/.test(Astro.request.headers.get('cookie') ?? '');
+if(db && hasSession){
+  const {data:{user}}=await db.auth.getUser();
+  if(user){const {data:profile,error}=await db.from('profiles').select('role').eq('id',user.id).single();showStudio=!error && ['admin','editor'].includes(profile?.role);}
+}
 // Scheduled publications become visible at their timestamp without a database write.
 // The idempotent dispatcher runs with the Worker service key, never through a
 // public database function grant. Local E2E keeps using the in-memory adapter.
@@ -111,8 +117,9 @@ const adsEnabled = advertising?.enabled === true && /^ca-pub-\d{10,20}$/.test(St
         <button type="button" aria-label={t.search} class="search-icon" data-search-trigger><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></button>
         <a href={alternatePath ?? pathFor(locale === 'tr' ? 'en' : 'tr')} lang={locale === 'tr' ? 'en' : 'tr'} aria-label={locale === 'tr' ? 'Switch to English' : 'Türkçeye geç'}>{locale === 'tr' ? 'EN' : 'TR'}</a>
         <a href={pathFor(locale, 'account')}>{t.account}</a>
+        {showStudio && <a href="https://studio.palmarghe.com/studio/" class="studio-entry-link">Studio ↗</a>}
       </div>
-      <div class="mobile-menu"><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label={locale === 'tr' ? 'Menüyü aç' : 'Open menu'}><span></span><span></span><span></span></button><nav id="mobile-nav" aria-label={locale === 'tr' ? 'Mobil menü' : 'Mobile menu'}><div class="mobile-nav-sections">{customNav.length ? customNav.map((item) => <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined} rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}>{item.label}</a>) : mainNav.map((item) => <a href={pathFor(locale, item.slug)} aria-current={isActive(pathFor(locale,item.slug)) ? 'page' : undefined}>{item[locale]}</a>)}</div><div class="mobile-nav-tools"><a href={pathFor(locale,'search')} data-search-trigger>{t.search}</a><a href={alternatePath ?? pathFor(locale === 'tr' ? 'en' : 'tr')} lang={locale === 'tr' ? 'en' : 'tr'} aria-label={locale === 'tr' ? 'Switch to English' : 'Türkçeye geç'}>{locale === 'tr' ? 'EN' : 'TR'}</a><a href={pathFor(locale,'account')}>{t.account}</a><button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false">{locale === 'tr' ? 'Açık mod' : 'Light mode'}</button></div></nav></div>
+      <div class="mobile-menu"><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label={locale === 'tr' ? 'Menüyü aç' : 'Open menu'}><span></span><span></span><span></span></button><nav id="mobile-nav" aria-label={locale === 'tr' ? 'Mobil menü' : 'Mobile menu'}><div class="mobile-nav-sections">{customNav.length ? customNav.map((item) => <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined} rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}>{item.label}</a>) : mainNav.map((item) => <a href={pathFor(locale, item.slug)} aria-current={isActive(pathFor(locale,item.slug)) ? 'page' : undefined}>{item[locale]}</a>)}</div><div class="mobile-nav-tools"><a href={pathFor(locale,'search')} data-search-trigger>{t.search}</a><a href={alternatePath ?? pathFor(locale === 'tr' ? 'en' : 'tr')} lang={locale === 'tr' ? 'en' : 'tr'} aria-label={locale === 'tr' ? 'Switch to English' : 'Türkçeye geç'}>{locale === 'tr' ? 'EN' : 'TR'}</a><a href={pathFor(locale,'account')}>{t.account}</a>{showStudio && <a href="https://studio.palmarghe.com/studio/" class="studio-entry-link">Studio ↗</a>}<button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false">{locale === 'tr' ? 'Açık mod' : 'Light mode'}</button></div></nav></div>
     </header>
     <AdSlot placement="header" config={advertising} locale={locale}/>
     <main id="main"><slot /></main>

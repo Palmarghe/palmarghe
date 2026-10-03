@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { parseDocument, renderDocument } from './blocks';
 describe('controlled blocks', () => {
+  it('retains optional crop and focus while rejecting unsafe styling values', () => {
+    const attrs={media_id:'123e4567-e89b-42d3-a456-426614174000',alt:'Photo',displayWidth:75,ratio:'16/9',focusX:40,focusY:18};
+    const json=(changes={})=>JSON.stringify({type:'doc',content:[{type:'mediaImage',attrs:{...attrs,...changes}}]});
+    const doc=parseDocument(json());
+    expect(doc && renderDocument(doc)).toContain('aspect-ratio:16/9;object-fit:cover;object-position:40% 18%');
+    for(const changes of [{ratio:'1; color:red'},{focusX:101},{focusY:-1},{displayWidth:'75'},{displayWidth:0}]) expect(parseDocument(json(changes))).toBeNull();
+  });
   it('renders headings and marks', () => {
     const doc = parseDocument(JSON.stringify({ type: 'doc', content: [{ type: 'heading', attrs: { level: 2 }, content: [{ type: 'text', text: 'Hello', marks: [{ type: 'bold' }] }] }] }));
     expect(doc && renderDocument(doc)).toBe('<h2><strong>Hello</strong></h2>');

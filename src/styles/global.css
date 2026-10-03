@@ -463,6 +463,7 @@ body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-p
 /* Palmarghe cursor: offset crop marks frame a small P-shaped editorial index. */
 :root{--cursor-size:22px;--cursor-hover-size:26px;--cursor-press-scale:.92;--cursor-press-speed:100ms;--cursor-speed:180ms;--cursor-ease:cubic-bezier(.2,.7,.25,1);--cursor-layer:90}
 @media (pointer:fine) and (hover:hover) and (prefers-reduced-motion:no-preference){
+  .has-brand-cursor,.has-brand-cursor body,.has-brand-cursor main,.has-brand-cursor section,.has-brand-cursor article,.has-brand-cursor div,.has-brand-cursor img,.has-brand-cursor picture,.has-brand-cursor header,.has-brand-cursor footer,.has-brand-cursor nav{cursor:none}
   .has-brand-cursor a,.has-brand-cursor button,.has-brand-cursor summary,.has-brand-cursor [role="button"]{cursor:none}
   .has-brand-cursor input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="checkbox"]):not([type="radio"]):not([type="reset"]),.has-brand-cursor textarea,.has-brand-cursor [contenteditable="true"]{cursor:text}
   .has-brand-cursor input[type="submit"],.has-brand-cursor input[type="button"],.has-brand-cursor input[type="checkbox"],.has-brand-cursor input[type="radio"],.has-brand-cursor input[type="reset"],.has-brand-cursor select{cursor:pointer}
@@ -594,3 +595,8 @@ html.mobile-navigation-open,html.search-overlay-open,html.gallery-modal-open,htm
 .search-query-control{position:relative;flex:1;min-width:0}.search-query-control input{padding-right:3.5rem}.search-query-control input::-webkit-search-cancel-button{-webkit-appearance:none}.search-query-clear,.search-overlay-head .search-query-clear{position:absolute;right:4px;bottom:4px;width:44px;height:44px;min-width:44px;padding:0;border:0;background:transparent;color:var(--muted);font-size:1.5rem;cursor:pointer}.search-query-clear:hover{color:var(--text)}.search-query-clear[hidden]{display:none}.search-query-control label{margin:0}
 .content-meta .content-engagement{flex-basis:100%;min-block-size:1.6em;line-height:1.6;overflow-wrap:anywhere}
 .studio-media-actions{display:flex;flex-wrap:wrap;align-items:center;gap:1rem}.studio-media-actions button{max-width:100%;min-height:44px}.studio-media-actions button[hidden]{display:none}
+/* Keep portrait faces in landscape cards without changing original media. */
+.entry-card img[data-portrait="true"],.visual-reel img[data-portrait="true"] { object-position:50% 18%; }
+.media-adjustment-preview { margin:1rem 0; padding:1rem; background:var(--surface); border:1px solid var(--border); }
+.media-adjustment-preview img { display:block; max-width:100%; max-height:320px; margin-inline:auto; }
+.media-adjustments { padding:1rem; border:1px solid var(--border); }

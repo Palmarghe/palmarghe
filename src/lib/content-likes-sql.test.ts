@@ -1,0 +1,31 @@
+import {afterAll,beforeAll,it,expect} from 'vitest';
+import {PGlite} from '@electric-sql/pglite';
+import {readFileSync} from 'node:fs';
+const db=new PGlite();
+const user='11111111-1111-4111-8111-111111111111', other='22222222-2222-4222-8222-222222222222', content='33333333-3333-4333-8333-333333333333';
+beforeAll(async()=>{
+ await db.exec(`create role anon;create role authenticated;create schema auth;
+ create function auth.uid() returns uuid language sql stable as $$select current_setting('qa.uid',true)::uuid$$;
+ grant usage on schema public,auth to anon,authenticated;
+ create table public.profiles(id uuid primary key);
+ create table public.content_items(id uuid primary key,status text,published_at timestamptz);
+ grant select on public.content_items to authenticated;
+ insert into public.profiles values('${user}'),('${other}');
+ insert into public.content_items values('${content}','published',now()-interval '1 day');`);
+ await db.exec(readFileSync(new URL('../../supabase/migrations/202610030039_content_likes.sql',import.meta.url),'utf8'));
+},30000);
+afterAll(async()=>{await db.close();});
+it('enforces one like, own identity and private rows while exposing only aggregate counts',async()=>{
+ await db.exec(`set qa.uid='${user}';set role authenticated;insert into public.content_likes(user_id,content_id) values('${user}','${content}');`);
+ await expect(db.exec(`insert into public.content_likes(user_id,content_id) values('${user}','${content}')`)).rejects.toMatchObject({code:'23505'});
+ await expect(db.exec(`insert into public.content_likes(user_id,content_id) values('${other}','${content}')`)).rejects.toMatchObject({code:'42501'});
+ await db.exec(`set qa.uid='${other}';`);
+ expect((await db.query('select * from public.content_likes')).rows).toEqual([]);
+ await db.exec('reset role;set role anon;');
+ await expect(db.query('select * from public.content_likes')).rejects.toMatchObject({code:'42501'});
+ expect((await db.query(`select public.content_like_count('${content}') n`)).rows).toEqual([{n:1}]);
+ await db.exec('reset role;');
+ await db.exec(`update public.content_items set status='archived';set role anon;`);
+ expect((await db.query(`select public.content_like_count('${content}') n`)).rows).toEqual([{n:0}]);
+ await db.exec('reset role;');
+});

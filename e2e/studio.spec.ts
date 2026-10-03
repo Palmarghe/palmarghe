@@ -134,6 +134,25 @@ test('admin creates a category and publishes content', async ({ page }) => {
   await page.goto('/test-category/yerel-test-yazisi/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Yerel Test Yazısı');
   await expect(page.getByText('İçerik doğrulandı.')).toBeVisible();
+  await expect(page.locator('.head-actions .studio-entry-link')).toBeVisible();
+  const like=page.locator('[data-like]');
+  await like.click();
+  await expect(like).toHaveAttribute('aria-pressed','true');
+  await expect(like).toContainText('· 1');
+  await page.reload();
+  await expect(page.locator('[data-like]')).toHaveAttribute('aria-pressed','true');
+  await page.locator('[data-like]').click();
+  await expect(page.locator('[data-like]')).toHaveAttribute('aria-pressed','false');
+  await expect(page.locator('[data-like]')).toContainText('· 0');
+  const bookmark=page.locator('[data-bookmark]');
+  await bookmark.click();
+  await expect(bookmark).toHaveAttribute('aria-pressed','true');
+  await page.goto('/account/');
+  await expect(page.locator('.saved-reading-list')).toContainText('Yerel Test Yazısı');
+  await expect(page.locator('.account-content a[href="https://studio.palmarghe.com/studio/"]')).toHaveCount(0);
+  await page.goto('/test-category/yerel-test-yazisi/');
+  await page.locator('[data-bookmark]').click();
+  await expect(page.locator('[data-bookmark]')).toHaveAttribute('aria-pressed','false');
 });
 
 test('admin can save a simple-mode draft when the URL field is not filled', async ({ page }) => {
@@ -553,4 +572,30 @@ test('featured and noindex content controls affect public output', async ({ page
   expect(schema['@graph'].find((entry:{'@type':string})=>entry['@type']==='Article').headline).toBe('Öne Çıkan Gizli İndeks');
   const sitemap = await (await page.request.get('/sitemap.xml')).text();
   expect(sitemap).not.toContain('/lab/featured-noindex/');
+});
+
+
+test('optional media framing previews and survives document serialization', async ({page})=>{
+  await page.goto('/studio/');
+  await page.getByRole('textbox',{name:'Email'}).fill('admin@example.test');
+  await page.locator('input[name="password"]').fill('LocalTest123!');
+  await page.getByRole('button',{name:'Giriş yap',exact:true}).click();
+  await page.goto('/studio/?section=media');
+  const image=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADElEQVQImWOYVLgGAANIAbAPnu7IAAAAAElFTkSuQmCC','base64');
+  await page.locator('input[name="file"]').setInputFiles({name:'framing.png',mimeType:'image/png',buffer:image});
+  await page.locator('form[action="/api/media/"] input[name="alt_tr"]').fill('Framing test');
+  await Promise.all([page.waitForEvent('domcontentloaded'),page.getByRole('button',{name:'Yükle',exact:true}).click()]);
+  await page.goto('/studio/?section=content');
+  await page.getByRole('tab',{name:'Ekle',exact:true}).click();
+  await page.getByRole('button',{name:/Görsel/}).click();
+  const dialog=page.getByRole('dialog');
+  await dialog.locator('summary').click();
+  await dialog.locator('[name="ratio"]').selectOption('16/9');
+  await dialog.locator('[name="focusY"]').fill('18');
+  await dialog.locator('[name="displayWidth"]').fill('75');
+  await expect(dialog.locator('[data-adjustment-preview]')).toHaveCSS('object-position','50% 18%');
+  await dialog.locator('[name="alt"]').fill('QA image');
+  await dialog.getByRole('button',{name:'Ekle',exact:true}).click();
+  const document=JSON.parse(await page.locator('#body-json').inputValue());
+  expect(document.content.find((node:any)=>node.type==='mediaImage').attrs).toMatchObject({ratio:'16/9',displayWidth:75,focusY:18});
 });

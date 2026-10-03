@@ -303,7 +303,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
     const title = String(form.get('title') ?? '').trim();
     const parsed = content.safeParse({ id: form.get('id') || undefined, category_id: form.get('category_id') || null, cover_media_id: form.get('cover_media_id') || null, og_media_id: form.get('og_media_id') || null, canonical_override: form.get('canonical_override') || null, translation_group: form.get('translation_group') || null, featured: form.get('featured') === 'on', indexable: !form.has('indexable') || form.getAll('indexable').includes('on'), title, slug: form.get('slug') || slugFromTitle(title), locale: form.get('locale'), type: form.get('type'), status: form.get('status'), excerpt: form.get('excerpt') || null, body: form.get('body'), seo_title: form.get('seo_title') || null, seo_description: form.get('seo_description') || null });
-    if (!parsed.success) return errorResponse('Invalid data');
+    if (!parsed.success) return Response.json({error:'content_fields'},{status:400});
     const tagIds = form.getAll('tag_ids').map(String);
     if (tagIds.some((tagId) => !z.uuid().safeParse(tagId).success) || tagIds.length > 20) return errorResponse('Invalid tags');
     if (tagIds.length) {
@@ -312,7 +312,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
     const { id, category_id, cover_media_id, og_media_id, ...values } = parsed.data;
     const body = parseDocument(values.body);
-    if (!body) return errorResponse('Invalid content blocks', 400);
+    if (!body) return Response.json({error:'content_body'},{status:400});
     const field = (key: string, max = 5000) => String(form.get(key) ?? '').trim().slice(0,max);
     const urlField = (key: string) => { const value = field(key,500); return value && safeExternalUrl(value) ? value : null; };
     const unsafeUrl = ['download_url','source_url','project_url','experiment_url'].some((key) => field(key) && !urlField(key));
@@ -348,12 +348,13 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const { error } = await db.rpc('save_content_with_relations', {
       p_content_id: id ?? null, p_payload: payload, p_category_id: category_id, p_tag_ids: [...new Set(tagIds)],
     });
-    if (error) return errorResponse(error.code === '23505' ? 'Bu dilde bu URL yolu zaten kullanılıyor.' : 'İçerik kaydedilemedi.', 400);
+    if (error) {
+      console.error('content-save-failed', /^[A-Z0-9]{5,10}$/.test(error.code ?? '') ? error.code : 'UNKNOWN');
+      return Response.json({error:error.code==='23505'?'content_duplicate':'content_transaction'},{status:400});
+    }
     return redirectTo(request, '/studio/?section=content');
   }
   return errorResponse('Invalid entity');
 };
-
-
 
 

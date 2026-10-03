@@ -7,7 +7,7 @@ import { localAuthAllowed } from '../../lib/local-adapter';
 import { runtimeSecret } from '../../lib/runtime-secrets';
 
 const loginCredentials = z.object({ email: z.email().max(254), password: z.string().min(8).max(128) });
-const newPassword = z.string().min(12).max(128).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/, 'Password must include upper/lowercase letters, a number and a symbol');
+const newPassword = z.string().min(8).max(128);
 async function allowed(request: Request, action: string, email: string): Promise<boolean | null> {
   const ip = request.headers.get('cf-connecting-ip') ?? 'unknown';
   const max = action === 'login' ? 10 : 5;
@@ -92,7 +92,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (!permitted) return errorResponse('Rate limit exceeded',429);
   if (action === 'signup') {
     const password = newPassword.safeParse(parsed.data.password);
-    if (!password.success) return errorResponse('Use a 12+ character password with upper/lowercase letters, a number and a symbol',400);
+    if (!password.success) return errorResponse('Use a password of at least 8 characters',400);
     const acknowledgedAt = new Date().toISOString();
     const { error } = await db.auth.signUp({ ...parsed.data, password: password.data, options: { emailRedirectTo: new URL('/auth/callback/', request.url).href, data: { privacy_notice_acknowledged_at: acknowledgedAt, kvkk_notice_acknowledged_at: acknowledgedAt, notice_ui_version: '2026-10-01' } } });
     if (error) return errorResponse('Sign up unavailable', 400);

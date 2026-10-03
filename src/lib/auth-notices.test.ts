@@ -6,15 +6,20 @@ vi.mock('./local-adapter', () => ({ localAuthAllowed: () => true }));
 vi.mock('./runtime-secrets', () => ({ runtimeSecret: () => undefined }));
 import { POST } from '../pages/api/auth';
 
-async function signup(notices: Record<string, string>) {
+async function signup(notices: Record<string, string>, password='LocalTest123!') {
   const request = new Request('https://palmarghe.com/api/auth/', {
     method: 'POST', headers: { origin: 'https://palmarghe.com' },
-    body: new URLSearchParams({ action: 'signup', locale: 'tr', email: 'notice-qa@example.invalid', password: 'LocalTest123!', ...notices }),
+    body: new URLSearchParams({ action: 'signup', locale: 'tr', email: 'notice-qa@example.invalid', password, ...notices }),
   });
   return POST({ request, cookies: {} } as Parameters<typeof POST>[0]);
 }
 
 describe('signup notice acknowledgement boundary', () => {
+  it('accepts eight characters without composition rules and rejects shorter passwords',async()=>{
+    const notices={privacy_acknowledgement:'on',kvkk_acknowledgement:'on'};
+    expect((await signup(notices,'abcdefgh')).status).toBe(303);
+    expect((await signup(notices,'abcdefg')).status).toBe(400);
+  });
   beforeEach(() => { signUp.mockClear(); });
   const missingNotices: Record<string, string>[] = [
     {}, { privacy_acknowledgement: 'on' }, { kvkk_acknowledgement: 'on' },
