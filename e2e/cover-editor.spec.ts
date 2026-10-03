@@ -1,0 +1,33 @@
+import {test,expect} from '@playwright/test';
+test('separate cover area persists framing and replacement on mobile and desktop',async({page,context})=>{
+ await context.addCookies([{name:'pg_mock_user',value:'00000000-0000-4000-8000-100000000001',url:'http://127.0.0.1:4322'}]);
+ await page.goto('/studio/?section=media');
+ const upload=page.locator('form[action="/api/media/"]');
+ await upload.locator('[name="file"]').setInputFiles({name:'cover.png',mimeType:'image/png',buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADElEQVQImWOYVLgGAANIAbAPnu7IAAAAAElFTkSuQmCC','base64')});
+ await upload.locator('[name="alt_tr"]').fill('Cover framing QA');await upload.getByRole('button',{name:'Yükle'}).click();
+ const card=page.locator('.entry-card').filter({has:page.locator('input[value="Cover framing QA"]')});
+ await expect(card).toBeVisible();
+ const mediaId=await card.locator('input[name="id"]').first().inputValue();
+ await page.goto('/studio/?section=content&new=1');
+ await page.locator('[name="title"]').fill('Cover framing QA');
+ await page.locator('#block-editor .tiptap').fill('Cover preview persistence QA.');
+ const panel=page.locator('[data-cover-editor]');
+ await panel.locator('[name="cover_media_id"]').selectOption(mediaId);
+ await panel.locator('[name="cover_ratio"]').selectOption('16/9');
+ await panel.locator('[name="cover_focus_y"]').fill('20');
+ await expect(panel.locator('[data-cover-preview]')).toHaveCSS('object-position','50% 20%');
+ for(const width of [390,1440]){await page.setViewportSize({width,height:900});await expect(panel).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
+ await page.getByRole('button',{name:'Yayınla',exact:true}).click();
+ const row=page.getByRole('row').filter({hasText:'Cover framing QA'});
+ await expect(row).toBeVisible();
+ const editHref=await row.getByRole('link',{name:'Düzenle',exact:true}).getAttribute('href');
+ const id=new URL(editHref!,'http://127.0.0.1:4322').searchParams.get('edit')!;
+ await page.goto(`/studio/?section=content&edit=${id}`);
+ await expect(panel.locator('[name="cover_ratio"]')).toHaveValue('16/9');await expect(panel.locator('[name="cover_focus_y"]')).toHaveValue('20');
+ const href=await page.locator('input[name="slug"]').inputValue();
+ await page.goto(`/${href}/`);await expect(page.locator('.content-detail > img')).toHaveCSS('object-position','50% 20%');
+ await page.goto(`/studio/?section=content&edit=${id}`);await panel.locator('[data-cover-remove]').click();await expect(panel.locator('[data-cover-preview]')).toBeHidden();
+ await page.getByRole('button',{name:'Taslak kaydet',exact:true}).click();
+ await page.waitForURL(url=>!url.searchParams.has('edit'));await expect(row).toBeVisible();
+ await page.goto(`/studio/?section=content&edit=${id}`);await expect(panel.locator('[name="cover_media_id"]')).toHaveValue('');
+});

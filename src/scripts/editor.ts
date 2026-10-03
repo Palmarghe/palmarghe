@@ -281,6 +281,25 @@ if (element && output) {
 
 const studioEditorForm = document.querySelector<HTMLFormElement>('.content-editor-form');
 if (studioEditorForm) {
+  const coverPanel=studioEditorForm.querySelector<HTMLElement>('[data-cover-editor]');
+  if(coverPanel){
+    const picker=coverPanel.querySelector<HTMLSelectElement>('[name="cover_media_id"]')!;
+    const preview=coverPanel.querySelector<HTMLImageElement>('[data-cover-preview]')!;
+    const empty=coverPanel.querySelector<HTMLElement>('[data-cover-empty]')!;
+    const ratio=coverPanel.querySelector<HTMLSelectElement>('[name="cover_ratio"]')!;
+    const x=coverPanel.querySelector<HTMLInputElement>('[name="cover_focus_x"]')!;
+    const y=coverPanel.querySelector<HTMLInputElement>('[name="cover_focus_y"]')!;
+    const updateCover=()=>{
+      preview.hidden=!picker.value;empty.hidden=!!picker.value;
+      if(picker.value)preview.src=`/api/media/${encodeURIComponent(picker.value)}/`;
+      preview.style.aspectRatio=ratio.value==='original'?'auto':ratio.value;
+      preview.style.objectPosition=`${x.value}% ${y.value}%`;
+    };
+    coverPanel.addEventListener('input',updateCover);coverPanel.addEventListener('change',updateCover);
+    coverPanel.querySelector('[data-cover-reset]')?.addEventListener('click',()=>{x.value='50';y.value='50';ratio.value='original';x.dispatchEvent(new Event('input',{bubbles:true}));});
+    coverPanel.querySelector('[data-cover-remove]')?.addEventListener('click',()=>{picker.value='';picker.dispatchEvent(new Event('change',{bubbles:true}));});
+    updateCover();
+  }
   const settingsPanel = document.createElement('aside');
   settingsPanel.className = 'editor-settings-panel';
   settingsPanel.setAttribute('aria-label', 'İçerik ayarları');

@@ -1,0 +1,16 @@
+---
+import {coverFraming} from '../lib/cover-framing';
+const {media,selected,editorPanel}=Astro.props;
+const framing=coverFraming(selected?.type_data?.cover_framing);
+const source=selected?.cover_media_id ? `/api/media/${selected.cover_media_id}/` : selected?.cover_url;
+---
+<section class="cover-editor" aria-labelledby="cover-editor-title" data-cover-editor>
+ <div><span class="eyebrow">KAPAK FOTOĞRAFI</span><h3 id="cover-editor-title">Kapağı düzenle</h3><p>Kapak seç ve kadrajını ayarla. Asıl görsel dosyası korunur.</p></div>
+ <div class="cover-editor-grid"><div class="cover-editor-controls">
+ <label class="field">Kapak resmi<select name="cover_media_id"><option value="">Yok</option>{media.map((entry:any)=><option value={entry.id} selected={selected?.cover_media_id===entry.id}>{entry.alt_tr ?? entry.path}</option>)}</select></label>
+ <label class="field">Kapak oranı<select name="cover_ratio"><option value="original" selected={framing.ratio==='original'}>Orijinal</option>{['16/9','4/3','1/1'].map(ratio=><option value={ratio} selected={framing.ratio===ratio}>{ratio.replace('/',':')}</option>)}</select></label>
+ <label class="field">Yatay odak<input name="cover_focus_x" type="range" min="0" max="100" value={framing.x}/></label>
+ <label class="field">Dikey odak<input name="cover_focus_y" type="range" min="0" max="100" value={selected?.type_data?.cover_framing ? framing.y : 18}/></label>
+ <div class="cover-editor-actions"><button type="button" data-cover-reset>Kadrajı sıfırla</button><button type="button" data-cover-remove>Kapağı kaldır</button><a class="text-link" href={`/studio/?section=media${editorPanel ? '&panel=editor' : ''}`} target="_blank" rel="noopener">Medya yükle ↗</a></div>
+ </div><div><figure class="cover-editor-preview"><img data-cover-preview src={source || undefined} hidden={!source} alt="Kapak kadrajı önizlemesi"/><figcaption data-cover-empty hidden={!!source}>Bir kapak görseli seç.</figcaption></figure><small>İçerik kapağı önizlemesi. Ana sayfa kartları kendi oranını korur; aynı odak noktasını kullanır.</small></div></div>
+</section>

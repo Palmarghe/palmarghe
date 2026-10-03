@@ -1,3 +1,4 @@
+import { coverFraming } from '../../lib/cover-framing';
 import { socialPlatforms } from '../../lib/social';
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
@@ -344,7 +345,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const previous = id ? (await db.from('content_items').select('published_at').eq('id',id).single()).data : null;
     const published_at = values.status === 'published' ? previous?.published_at ?? new Date().toISOString() : values.status === 'scheduled' ? scheduledAt : values.status === 'archived' ? previous?.published_at ?? null : null;
     if (values.canonical_override && !safeExternalUrl(values.canonical_override)) return errorResponse('Invalid canonical URL',400);
-    const payload = { ...values, body, type_data, cover_media_id, og_media_id, cover_url: cover_media_id ? `/api/media/${cover_media_id}/` : null, published_at, updated_at: new Date().toISOString() };
+    const cover_framing = coverFraming({ x:Number(form.get("cover_focus_x") ?? 50), y:Number(form.get("cover_focus_y") ?? 50), ratio:String(form.get("cover_ratio") ?? "original") });
+    const payload = { ...values, body, type_data: { ...type_data, ...(form.has("cover_focus_x") ? {cover_framing} : {}) }, cover_media_id, og_media_id, cover_url: cover_media_id ? `/api/media/${cover_media_id}/` : null, published_at, updated_at: new Date().toISOString() };
     const { error } = await db.rpc('save_content_with_relations', {
       p_content_id: id ?? null, p_payload: payload, p_category_id: category_id, p_tag_ids: [...new Set(tagIds)],
     });
