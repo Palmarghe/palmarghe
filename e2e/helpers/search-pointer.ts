@@ -10,8 +10,8 @@ export async function verifySearchPointers(page: Page) {
       if (method === 'click') await page.locator('.head-actions [data-search-trigger]').click();
       else await page.keyboard.press('Control+k');
       await expect(dialog).toBeVisible();
-      await expect(dialog.locator('[data-brand-cursor]')).toHaveCount(0);
-      await expect(cursor).toBeHidden();
+      await expect(dialog.locator('[data-brand-cursor]')).toHaveCount(1);
+      await expect(cursor).toBeVisible();
       const input = dialog.locator('input[name="q"]');
       await expect(input).toBeFocused();
       await expect(input).toHaveCSS('cursor', 'text');
@@ -19,14 +19,14 @@ export async function verifySearchPointers(page: Page) {
       await input.fill('a');
       const close = dialog.locator('[data-search-close]');
       await close.hover();
-      await expect(close).toHaveCSS('cursor', 'pointer');
-      await expect(cursor).toBeHidden();
+      await expect(close).toHaveCSS('cursor', 'none');
+      await expect(cursor).toBeVisible();
       await input.hover();
       await expect(cursor).toHaveCSS('opacity', '0');
       await expect(input).toHaveCSS('cursor', 'text');
-      await expect(dialog).toHaveCSS('cursor', 'auto');
+      await expect(dialog).toHaveCSS('cursor', 'none');
       for (const control of await dialog.locator('button, a').all()) {
-        await expect(control).toHaveCSS('cursor', 'pointer');
+        await expect(control).toHaveCSS('cursor', 'none');
       }
       await input.fill('');
       await page.keyboard.press('Escape');

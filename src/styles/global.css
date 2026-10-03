@@ -600,3 +600,16 @@ html.mobile-navigation-open,html.search-overlay-open,html.gallery-modal-open,htm
 .media-adjustment-preview { margin:1rem 0; padding:1rem; background:var(--surface); border:1px solid var(--border); }
 .media-adjustment-preview img { display:block; max-width:100%; max-height:320px; margin-inline:auto; }
 .media-adjustments { padding:1rem; border:1px solid var(--border); }
+/* Geometric pointer shares the search dialog top layer; text keeps its caret. */
+@media (pointer:fine) and (hover:hover) and (prefers-reduced-motion:no-preference){
+ .has-brand-cursor #search-overlay[open],.has-brand-cursor #search-overlay[open] *{cursor:none}
+ .has-brand-cursor #search-overlay[open] input,.has-brand-cursor #search-overlay[open] textarea{cursor:text}
+ #search-overlay[open] .brand-cursor{display:grid!important}
+ .brand-cursor .cursor-arrow{fill:var(--bg);stroke:var(--text);stroke-width:1.4}
+ .brand-cursor[data-state="link"] .cursor-arrow,.brand-cursor[data-state="button"] .cursor-arrow,.brand-cursor[data-state="external"] .cursor-arrow{stroke:var(--accent)}
+ .brand-cursor .cursor-tick{opacity:0;transition:opacity 120ms ease}
+ .brand-cursor[data-state="link"] .cursor-tick,.brand-cursor[data-state="button"] .cursor-tick,.brand-cursor[data-pressed] .cursor-tick{opacity:1}
+}
+@media (pointer:fine) and (hover:hover) and (prefers-reduced-motion:no-preference){
+ .has-brand-cursor #search-overlay[open] a,.has-brand-cursor #search-overlay[open] button{cursor:none}
+}

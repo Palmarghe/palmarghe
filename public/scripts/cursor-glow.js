@@ -8,16 +8,16 @@
   cursor.dataset.brandCursor = '';
   cursor.dataset.state = 'default';
   cursor.setAttribute('aria-hidden', 'true');
-  cursor.innerHTML = '<svg viewBox="0 0 22 22" focusable="false"><g class="cursor-corners"><path class="cursor-corner cursor-corner--nw" d="M8 2.5H3v5.5"/><path class="cursor-corner cursor-corner--ne" d="M14 2.5h5v5.5"/><path class="cursor-corner cursor-corner--se" d="M19 14v5.5h-5"/><path class="cursor-corner cursor-corner--sw" d="M3 14v5.5h5"/></g><path class="cursor-mark" d="M9 15V7h3.8a2.2 2.2 0 0 1 0 4.4H9"/><path class="cursor-tick" d="M15.5 16.5h1.5"/></svg><span class="cursor-external" aria-hidden="true">↗</span>';
+  cursor.innerHTML = '<svg viewBox="0 0 22 22" focusable="false"><path class="cursor-arrow" d="M11 11L23 21L17 22L14 28Z"/><path class="cursor-tick" d="M21 26L24 29"/></svg>';
   document.body.append(cursor);
   document.documentElement.classList.add('has-brand-cursor');
 
   const searchDialog = document.querySelector('#search-overlay');
   const syncCursorLayer = () => {
-    // Modal controls use native cursors; never move the document pointer into
-    // the browser's top layer or briefly hide both pointer implementations.
-    cursor.hidden = Boolean(searchDialog?.open);
-    if (cursor.parentElement !== document.body) document.body.append(cursor);
+    // Place the same pointer inside the modal's top layer so it stays visible.
+    cursor.hidden = false;
+    const parent = searchDialog?.open ? searchDialog : document.body;
+    if (cursor.parentElement !== parent) parent.append(cursor);
   };
   searchDialog?.addEventListener('search-open', () => {
     syncCursorLayer();
