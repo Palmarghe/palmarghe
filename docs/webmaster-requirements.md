@@ -173,3 +173,5 @@ Arama ilerlemesi 2 Ekim: Worker90ef6f57, açık temizleme eylemi TR/EN ve iki te
 ## Güncel production — 3 Ekim 2026
 
 Worker `3ac361c9-b737-4fac-91dc-89c78b659037`. Production yayınlama ve okuma listesi eksik tablo yetkileri mevcut RLS korunarak giderildi; beğeni sistemi migration039 ile eklendi. Gerçek Chrome QA yayınlama/arşive geri alma, okuma listesi ve beğeni temizliği doğrulandı. Kullanıcının işlem anında onayıyla Supabase parola kuralı8/karakter türü zorunluluğu yok olarak kaydedildi. Studio girişinin rol matrisi, portre kadrajı, özel imleç ve opsiyonel medya çerçeve/odak önizlemesi uygulandı. Astro0/unit170/build başarılı. Ayrı koşular ve bilinen test bağlamı hataları `docs/publishing-community-fixes-2026-10-03.md` içinde açıkça kayıtlıdır. Tüm40bölüm tamamlanmış sayılmaz; upload orphan reconciliation ve önceki dış/manual ölçüm boşlukları açıktır.
+
+Kod commit ad07a9a normal push edildi; Actions37145519544 verify ve tam local E2E ile başarılı. Gerçek Chrome GitHub Success doğrulandı. Production Worker3ac361c9 değişmedi.

@@ -25,3 +25,7 @@
 - Actual Chrome console had no observed error/warning in the checked article flow. This is not proof every session/browser is error-free.
 - Evidence: publishing-restored-chrome-2026-10-03.png, password-policy-chrome-2026-10-03.png, article-actions-chrome-2026-10-03.png, media-framing-chrome-2026-10-03.png, media-framing-mobile-light-2026-10-03.png, home-portrait-chrome-2026-10-03.png.
 - The broader webmaster objective remains active. Historical media timeout, upload reconciliation, field performance and external/manual audit gaps are not claimed complete.
+
+## Release verification
+
+Final Worker: `3ac361c9-b737-4fac-91dc-89c78b659037`. Normal main commit/push: ad07a9a. GitHub Actions https://github.com/Palmarghe/palmarghe/actions/runs/37145519544 completed success, including verify and full local E2E; actual Chrome repository and Actions Success verified. The code CI gate passed after the documented local development-context failure. A fresh Supabase reload confirmed8/no required characters; the screenshot was refreshed after opening the persisted settings. Latest role/account targeted2/2 confirms neither staff role has a Studio entry inside account content.
