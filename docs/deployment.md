@@ -17,6 +17,8 @@ npx wrangler secret list --name palmarghe
 
 Turnstile ile gerçek iletişim gönderimi ve Studio gelen kutusuna kaydı doğrulandı. Production member/editor rol matrisi doğrulandı. SMTP/Auth e-posta callback ve reset, gerçek newsletter teslimat sağlayıcısı, Cloudflare Access, Search Console field verileri ve ayrı preview Supabase projesi hâlâ kontrol edilmelidir. Cloudflare Zero Trust Free onboarding ödeme kartı, Terms kabulü ve aylık aşım tahsilatı yetkisi istediği için Access aktivasyonu otomatik yapılmadı.
 
-Migration 202610010035 confines measurement RPC writes to the private Worker service role. Live grants, API checks, controlled QA cleanup and rollback are documented in docs/measurement-boundary-2026-10-01.md. Current Worker is 7b9107df-042f-404e-b193-14c26b4c4bbe; the 1–2 October SEO/login audit is in docs/seo-routing-audit-2026-10-01.md. Production verification uses its own test-results/production directory; local uses test-results/local.
+Migration 202610010035 confines measurement RPC writes to the private Worker service role. Live grants, API checks, controlled QA cleanup and rollback are documented in docs/measurement-boundary-2026-10-01.md. Historical Worker at that checkpoint was 7b9107df-042f-404e-b193-14c26b4c4bbe; the 1–2 October SEO/login audit is in docs/seo-routing-audit-2026-10-01.md. Production verification uses its own test-results/production directory; local uses test-results/local.
 
 Migration036 derives private body/gallery/cover/OG/revision references and guards metadata deletion with restrictive FKs. Apply before a Worker using media_has_references. Source data fingerprints were unchanged. Evidence/rollback: docs/media-references-audit-2026-10-02.md.
+
+Current Worker (4 October 2026): d2b14b6d-2a9d-448c-8c15-2c2814fe892d. Mod publication/category audit: docs/mod-publications-2026-10-04/AUDIT.md. Production migrations038/039/040 remain applied as documented in FINAL_REPORT.md.

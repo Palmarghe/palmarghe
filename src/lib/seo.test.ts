@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { categoryPath, indexableContentPath, pageDescription, sitemapXml } from './seo';
+import { categoryPath, categoryDescendantIds, indexableContentPath, pageDescription, sitemapXml } from './seo';
 
 describe('public SEO boundaries', () => {
+  it('includes grandchildren, excludes unrelated categories and terminates cycles', () => {
+    const tree = [{id:'root',slug:'gaming',parent_id:null},{id:'child',slug:'minecraft',parent_id:'root'},{id:'nested',slug:'tools',parent_id:'child'},{id:'other',slug:'music',parent_id:null}];
+    expect(categoryDescendantIds('root',tree)).toEqual(['root','child','nested']);
+    expect(categoryDescendantIds('root',[...tree,{id:'root',slug:'gaming',parent_id:'nested'}])).toEqual(['root','child','nested']);
+  });
   it('resolves nested categories and rejects missing ancestors and cycles', () => {
     const root = { id:'1', slug:'fm', parent_id:null };
     const child = { id:'2', slug:'fm26', parent_id:'1' };

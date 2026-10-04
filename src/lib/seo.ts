@@ -22,6 +22,14 @@ export function pageDescription(locale: Locale, slug: string, title?: string) {
 }
 
 export interface CategoryPath { id: string; slug: string; parent_id: string | null; }
+/** Include nested categories without looping on malformed category graphs. */
+export function categoryDescendantIds(id: string, categories: CategoryPath[]): string[] {
+  const ids = new Set([id]);
+  for (const parent of ids) {
+    for (const category of categories) if (category.parent_id === parent) ids.add(category.id);
+  }
+  return [...ids];
+}
 /** Inactive/missing ancestors and cycles do not yield public category URLs. */
 export function categoryPath(category: CategoryPath, categories: CategoryPath[]): string | undefined {
   const parts: string[] = [], seen = new Set<string>();

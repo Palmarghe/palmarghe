@@ -1,8 +1,15 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 3 October 2026
+## Current production state — 4 October 2026
 
-Worker `45200c55-3968-4d52-bde7-5c1d8811bf0a` is live. Production SQL migrations038/039/040 were applied through Chrome: revision and bookmark grants repaired with their existing RLS retained; authenticated one-per-content likes and private liker rows added. Actual Chrome QA publishing succeeded and the existing test record was restored to archived with revision history. Bookmark appeared in the account reading list and was removed; own QA like persisted across reload and was removed. Existing users/content/media/Git history remain preserved.
+Worker `d2b14b6d-2a9d-448c-8c15-2c2814fe892d` is live. Colony Director, PalmargheTR and KaanBuilder are published TR Project content with themed covers, installation/compatibility/limits and official Nexus/CurseForge source buttons. Two child categories under Oyunlar organize the three works. Parent categories now include descendant publications and show child navigation and cover images. Existing content, users, permissions and Git history are preserved; no migration or Auth change was needed.
+
+Verification: Astro0 diagnostics, unit174/174, build passed; local cover editor E2E1/1 and production mod publication E2E4/4 passed. Actual Chrome confirms Published Studio rows, Gaming cards, dark/light themes and390px without overflow. Documentation, record IDs, source manifests and screenshots: docs/mod-publications-2026-10-04/AUDIT.md. Source features were reviewed in Chrome; gameplay execution is outside this publication check. Earlier membership/likes/bookmarks/cursor/cover work remains deployed. External dependencies and the wider webmaster objective remain as described in the historical audits.
+
+
+## Previous production state — 3 October 2026 (historical)
+
+Worker `45200c55-3968-4d52-bde7-5c1d8811bf0a` was live at this checkpoint. Production SQL migrations038/039/040 were applied through Chrome: revision and bookmark grants repaired with their existing RLS retained; authenticated one-per-content likes and private liker rows added. Actual Chrome QA publishing succeeded and the existing test record was restored to archived with revision history. Bookmark appeared in the account reading list and was removed; own QA like persisted across reload and was removed. Existing users/content/media/Git history remain preserved.
 
 Studio entry is now only in the header for admin/editor, including mobile. Blank surfaces no longer show the native pointer over the custom pointer. New/reset passwords require8 characters with no composition requirement; the user confirmed the matching Supabase provider setting, which was saved. Email confirmation and secure change protections remain enabled. Yamal portrait cards preserve the face. Optional media framing/width/focus has live preview and validated document attributes without rewriting source media.
 

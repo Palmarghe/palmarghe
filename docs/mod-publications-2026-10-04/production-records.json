@@ -1,0 +1,40 @@
+{
+  "worker": "d2b14b6d-2a9d-448c-8c15-2c2814fe892d",
+  "createdThrough": "authenticated Chrome Studio UI",
+  "categories": [
+    {
+      "id": "bad709f6-4915-40a8-bada-092ab631612b",
+      "path": "gaming/stranded-alien-dawn"
+    },
+    {
+      "id": "2279c1d6-a13f-4563-ab6b-095b94d10a55",
+      "path": "gaming/minecraft"
+    }
+  ],
+  "publications": [
+    {
+      "key": "colony-director",
+      "content_id": "5fa778c5-d3ee-4e1d-86b2-7748faded201",
+      "cover_media_id": "e51fd57f-8702-45b1-95cb-aa704c3d2ea4",
+      "status": "published",
+      "locale": "tr",
+      "type": "project"
+    },
+    {
+      "key": "palmarghetr",
+      "content_id": "bbf71ee4-dcc3-413b-8926-baca0ff30c2a",
+      "cover_media_id": "dad7bdcd-a9ca-44e3-bf6a-d89440115d90",
+      "status": "published",
+      "locale": "tr",
+      "type": "project"
+    },
+    {
+      "key": "kaanbuilder",
+      "content_id": "e61e89b9-94ca-48b7-8408-f271b7ddf4bd",
+      "cover_media_id": "2d623064-b246-4f1d-a053-13eedf90f5ed",
+      "status": "published",
+      "locale": "tr",
+      "type": "project"
+    }
+  ]
+}
