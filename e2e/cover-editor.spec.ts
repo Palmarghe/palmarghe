@@ -17,7 +17,9 @@ test('separate cover area persists framing and replacement on mobile and desktop
  await panel.locator('[name="cover_focus_y"]').fill('20');
  await expect(panel.locator('[data-cover-preview]')).toHaveCSS('object-position','50% 20%');
  for(const width of [390,1440]){await page.setViewportSize({width,height:900});await expect(panel).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
+ const saved=page.waitForResponse(r=>r.url().includes('/api/studio/')&&r.request().method()==='POST');
  await page.getByRole('button',{name:'Yayınla',exact:true}).click();
+ const savedResponse=await saved;expect(savedResponse.status(),savedResponse.status()>=400?await savedResponse.text():'').toBeLessThan(400);
  const row=page.getByRole('row').filter({hasText:'Cover framing QA'});
  await expect(row).toBeVisible();
  const editHref=await row.getByRole('link',{name:'Düzenle',exact:true}).getAttribute('href');

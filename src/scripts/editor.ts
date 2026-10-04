@@ -42,7 +42,7 @@ if (element && output) {
   document.body.append(bubbleMenu);
   const editor = new Editor({
     element,
-    extensions: [StarterKit.configure({ heading: { levels: [2, 3] } }), Underline, TextAlign.configure({ types: ['heading','paragraph'] }), Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true, protocols: ['http', 'https', 'mailto'] }), BubbleMenu.configure({ element: bubbleMenu, shouldShow: ({ editor, state }) => editor.isEditable && !state.selection.empty }), mediaImage, mediaGallery, callout, cta, embed, table, tableRow, tableHeader, tableCell],
+    extensions: [StarterKit.configure({ heading: { levels: [2, 3] }, link: false, underline: false }), Underline, TextAlign.configure({ types: ['heading','paragraph'] }), Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true, protocols: ['http', 'https', 'mailto'] }), BubbleMenu.configure({ element: bubbleMenu, shouldShow: ({ editor, state }) => editor.isEditable && !state.selection.empty }), mediaImage, mediaGallery, callout, cta, embed, table, tableRow, tableHeader, tableCell],
     editorProps: { attributes: { 'aria-label': 'İçerik blok editörü' } },
     content: initial as object,
     onUpdate: ({ editor }) => { output.value = JSON.stringify(editor.getJSON()); dirty = true; updateStatus('Kaydedilmedi'); updateToolbar(); },

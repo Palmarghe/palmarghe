@@ -1,0 +1,30 @@
+# Site and Studio visual polish — 4 October 2026
+
+Final Worker: `db0ad0c3-3344-4b3f-a6b4-5507a5bd47a6`.
+
+## Review and changes
+
+Actual Chrome review covered the public homepage, category landing, search overlay, authenticated Studio dashboard/content/media/advertising, both themes and phone/desktop layouts. Local browser audit additionally covers Studio members/homepage and public account/search. These are representative surfaces, not a claim that every conditional state is visually perfect.
+
+- Public section spacing and headings follow a restrained scale; long page titles wrap. Cards use consistent gaps, borders and corners. Spotlight type is reduced and footer whitespace shortened.
+- Compact hero background is quieter; original source covers, media and text remain unchanged. The light theme keeps readable text and pale surfaces.
+- Studio headings stop inheriting oversized public typography. Stats and panels have consistent padding, surface color and corners; excessive shadows/gradients are reduced.
+- Editor title has a visible field and placeholder; deck height is reduced. Ribbon and settings match the theme. Phone grid order is actions/title/deck/cover/editor/settings, avoiding the previous cover-first placement. Phone back/mode/save controls have a compact layout. The incomplete-publication notice uses the brand accent; the ready state retains its distinct green indicator.
+- Media upload uses a balanced two-column desktop form, single-column phone form and themed file selector.
+- Advertising edit links and footer small text have sufficient contrast.
+- Tiptap StarterKit's bundled link/underline extensions are disabled in favor of the already configured explicit extensions, removing duplicate registration warnings. Slug initialization handles titles entered before the script attaches without overwriting an existing slug.
+
+No new artwork, production content changes, media deletion, account changes, permissions, migration or editorial setting mutation occurred. Temporary local QA data is confined to the local adapter.
+
+## Verification and limits
+
+- Final `npm run verify`: Astro0 diagnostics, unit174/174, build success.
+- Final local visual/cover run3/3 passed; the cover test additionally passed with an explicit POST-response assertion. Initial mixed runs had an intermittent cover validation failure, duplicate extension warning and low-contrast ad links. Slug initialization and extension registration were hardened; subsequent cover runs passed, but the initial validation failure was not conclusively isolated to one cause. Theme audits wait for actual CSS colors to settle before axe measurement.
+- Production accessibility/mobile navigation/mod publication/showcase23/23 passed during rollout. This includes dark/light sitemap accessibility scans, no-JS phone navigation and responsive controls. Final Worker source-media/showcase6/6 passed.
+- Local visual tests cover six Studio sections at390/1440px and four public routes at320/1024/1440px, both themes, no horizontal page overflow and no serious/critical axe violations. Existing cover test checks saved framing and replacement.
+- Actual final Chrome phone editor confirms correct order, visible title placeholder and no horizontal overflow. Fresh final editor logs have zero warnings/errors. Earlier review tabs recorded view-transition aborts when navigations interrupted transitions; no universal clean-console claim is made. Transitions are shortened and reduced-motion rules retained.
+- Screenshots in this directory show live homepage, Studio dashboard and editor. Mobile viewport override was reset after review. Older same-day publication checks are historical and remain preserved.
+
+## Rollback
+
+Ordinary Git revert of this release followed by verify/build/Worker deploy restores prior styles/scripts. No database or asset rollback is required. Existing production media, users and Git history are preserved. The broader webmaster objective and external dependencies remain as recorded in FINAL_REPORT.md.

@@ -5,6 +5,7 @@ const title = form?.querySelector<HTMLInputElement>('input[name="title"]');
 const slug = form?.querySelector<HTMLInputElement>('input[name="slug"]');
 if (title && slug) {
   let edited = Boolean(slug.value);
+  if (!edited && title.value) slug.value = slugFromTitle(title.value);
   slug.addEventListener('input', () => { edited = true; });
   title.addEventListener('input', () => { if (!edited) slug.value = slugFromTitle(title.value); });
 }
