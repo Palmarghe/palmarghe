@@ -1,6 +1,6 @@
 # Site and Studio visual polish — 4 October 2026
 
-Final Worker: `6ec5337d-7f68-4d9e-a7b9-0d907a1efaac`.
+Final Worker: `271a469e-5782-49f8-8b5a-8b89f16963b1`.
 
 ## Review and changes
 
@@ -27,7 +27,9 @@ No new artwork, production content changes, media deletion, account changes, per
 
 ## CI follow-up
 
-Initial CI run37180771545 on69c8cdd passed verify but ended with67/69 E2E. The classic-editor assertion still expected the former lavender menubar instead of the intentional paper surface. A populated search result also exposed low-contrast type labels. The assertion now matches the new surface; labels use theme-specific contrast colors. Local visual QA now creates a local-only published search fixture so this state is always audited. The editor theme regression plus both visual tests passed3/3; final build passed. Final Worker production search/clear tests passed6/6, including mobile, desktop, both themes, focus, no-JS and recovery. Actual Chrome confirms populated labels at rgb188,163,255 (dark) and rgb104,64,182 (light); search-light.png records the live page. The follow-up commit reruns the complete Actions gate; its final outcome is checked before closing this request.
+Initial CI run37180771545 on69c8cdd passed verify but ended with67/69 E2E. The classic-editor assertion still expected the former lavender menubar instead of the intentional paper surface. A populated search result also exposed low-contrast type labels. The assertion now matches the new surface; labels use theme-specific contrast colors. Local visual QA now creates a local-only published search fixture so this state is always audited. The editor theme regression plus both visual tests passed3/3; final build passed. Final Worker production search/clear tests passed6/6, including mobile, desktop, both themes, focus, no-JS and recovery. Actual Chrome confirms populated labels at rgb188,163,255 (dark) and rgb104,64,182 (light); search-light.png records the live page. Follow-up CI37193226815 succeeded, including verify and full E2E. The final highlighted-excerpt follow-up reruns the complete Actions gate and is checked before closing this request.
+
+Final populated-result follow-up also fixes light-theme highlighted excerpt text. The regression fixture now includes a matching excerpt and query, and axe measurement waits for the actual result background to reach the selected theme. A blanket animation-finish wait was discarded because unrelated paused animations can stall it. Production populated search passed all four390/1440px dark/light axe and overflow checks on Worker271a469e. A temporary local test/build overlap invalidated Vite's dependency cache; the sequential rerun avoids that tooling collision. Chrome extension subsequently requested an update and prevented additional UI actions; earlier real Chrome screenshots remain evidence, while the last highlight color was verified with production Chrome Playwright.
 
 ## Rollback
 

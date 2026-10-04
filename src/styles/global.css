@@ -659,3 +659,4 @@ body[data-theme="light"] .footer-bottom{color:var(--ink-soft)}.admin-main>form[a
 body[data-theme="light"] .editor-readiness:not(.is-ready){background:color-mix(in srgb,var(--accent) 7%,var(--paper));border-left-color:var(--accent)}
 body[data-theme="light"] .hero--compact .hero-art{opacity:.3}
 .instant-search-result .eyebrow{color:#bca3ff}body[data-theme="light"] .instant-search-result .eyebrow{color:#6840b6}
+body[data-theme="light"] .instant-search-result mark{color:var(--ink)}
