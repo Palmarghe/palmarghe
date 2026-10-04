@@ -30,7 +30,8 @@ test('Studio image preview, touch focus and undo remain usable in both themes an
  await expect(page.locator('[data-card-image]')).toHaveCSS('object-position','80% 25%');
  await page.getByRole('button',{name:'Görseli orijinal kadraja döndür'}).click();await expect(page.locator('[name=preview_zoom]')).toHaveValue('100');
  for(const width of [320,390,1440])for(const theme of ['light','dark']){await page.setViewportSize({width,height:900});await page.evaluate(theme=>document.body.dataset.theme=theme,theme);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
- const findings=await new AxeBuilder({page}).include('.admin-main,.admin-main *').analyze();expect(findings.violations.filter(v=>['serious','critical'].includes(v.impact??''))).toEqual([]);
+ const checkbox=page.locator('.homepage-curation-editor input[type=checkbox]').first();expect(await checkbox.evaluate(e=>e.getBoundingClientRect().width)).toBeLessThan(30);
+ for(const theme of ['light','dark']){await page.evaluate(theme=>document.body.dataset.theme=theme,theme);const findings=await new AxeBuilder({page}).include('.admin-main,.admin-main *').analyze();expect(findings.violations.filter(v=>['serious','critical'].includes(v.impact??''))).toEqual([]);}
 });
 
 test('category search includes descendants, excludes drafts and suggests real publications',async({page,context})=>{

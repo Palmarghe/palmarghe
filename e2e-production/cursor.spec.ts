@@ -56,8 +56,9 @@ test('Palmarghe pointer has semantic states across reading, links, controls and 
   await expect(cursor).not.toHaveAttribute('data-away', '');
   const closeButton = page.locator('#search-overlay [data-search-close]');
   await closeButton.hover();
-  await expect(closeButton).toHaveCSS('cursor', 'pointer');
-  await expect(cursor).toBeHidden();
+  await expect(closeButton).toHaveCSS('cursor', 'none');
+  await expect(cursor).toBeVisible();
+  await expect(cursor).toHaveAttribute('data-state', 'button');
   const input = page.locator('#search-overlay input[name="q"]');
   await expect(input).toBeFocused();
   await input.hover();
