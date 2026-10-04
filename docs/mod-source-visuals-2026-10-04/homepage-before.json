@@ -1,0 +1,222 @@
+[
+  {
+    "checked": false,
+    "name": "entity",
+    "value": "<redacted>"
+  },
+  {
+    "checked": true,
+    "name": "hero_visible",
+    "value": "on"
+  },
+  {
+    "checked": false,
+    "name": "hero_mode",
+    "value": "compact"
+  },
+  {
+    "checked": false,
+    "name": "hero_eyebrow_tr",
+    "value": ""
+  },
+  {
+    "checked": false,
+    "name": "hero_eyebrow_en",
+    "value": ""
+  },
+  {
+    "checked": false,
+    "name": "hero_title_tr",
+    "value": ""
+  },
+  {
+    "checked": false,
+    "name": "hero_title_en",
+    "value": ""
+  },
+  {
+    "checked": false,
+    "name": "hero_descriptor_tr",
+    "value": ""
+  },
+  {
+    "checked": false,
+    "name": "hero_descriptor_en",
+    "value": ""
+  },
+  {
+    "checked": false,
+    "name": "hero_media_id",
+    "value": ""
+  },
+  {
+    "checked": false,
+    "name": "hero_image_url",
+    "value": ""
+  },
+  {
+    "checked": false,
+    "name": "spotlight_id",
+    "value": "52e3da99-7eff-4c8a-8ee6-1f04fee24e56"
+  },
+  {
+    "checked": false,
+    "name": "featured_ids",
+    "value": "e61e89b9-94ca-48b7-8408-f271b7ddf4bd"
+  },
+  {
+    "checked": false,
+    "name": "featured_ids",
+    "value": "bbf71ee4-dcc3-413b-8926-baca0ff30c2a"
+  },
+  {
+    "checked": false,
+    "name": "featured_ids",
+    "value": "5fa778c5-d3ee-4e1d-86b2-7748faded201"
+  },
+  {
+    "checked": false,
+    "name": "featured_ids",
+    "value": "59f3cfde-7fb5-4b8a-9633-d7b95c4050c6"
+  },
+  {
+    "checked": false,
+    "name": "featured_ids",
+    "value": "7e33632a-9199-43d4-845a-57a52de044d6"
+  },
+  {
+    "checked": false,
+    "name": "featured_ids",
+    "value": "89f39c21-a3f9-49c2-9797-6bf64e7c42c1"
+  },
+  {
+    "checked": false,
+    "name": "featured_ids",
+    "value": "52e3da99-7eff-4c8a-8ee6-1f04fee24e56"
+  },
+  {
+    "checked": false,
+    "name": "featured_ids",
+    "value": "e4314176-8c61-4ca6-96d4-7954f49bcbf0"
+  },
+  {
+    "checked": false,
+    "name": "visual_reel_ids",
+    "value": "e61e89b9-94ca-48b7-8408-f271b7ddf4bd"
+  },
+  {
+    "checked": false,
+    "name": "visual_reel_ids",
+    "value": "bbf71ee4-dcc3-413b-8926-baca0ff30c2a"
+  },
+  {
+    "checked": false,
+    "name": "visual_reel_ids",
+    "value": "5fa778c5-d3ee-4e1d-86b2-7748faded201"
+  },
+  {
+    "checked": false,
+    "name": "visual_reel_ids",
+    "value": "59f3cfde-7fb5-4b8a-9633-d7b95c4050c6"
+  },
+  {
+    "checked": false,
+    "name": "visual_reel_ids",
+    "value": "7e33632a-9199-43d4-845a-57a52de044d6"
+  },
+  {
+    "checked": false,
+    "name": "visual_reel_ids",
+    "value": "89f39c21-a3f9-49c2-9797-6bf64e7c42c1"
+  },
+  {
+    "checked": false,
+    "name": "visual_reel_ids",
+    "value": "52e3da99-7eff-4c8a-8ee6-1f04fee24e56"
+  },
+  {
+    "checked": false,
+    "name": "visual_reel_ids",
+    "value": "e4314176-8c61-4ca6-96d4-7954f49bcbf0"
+  },
+  {
+    "checked": true,
+    "name": "now_visible",
+    "value": "on"
+  },
+  {
+    "checked": false,
+    "name": "now_order",
+    "value": "1"
+  },
+  {
+    "checked": true,
+    "name": "featured_visible",
+    "value": "on"
+  },
+  {
+    "checked": false,
+    "name": "featured_order",
+    "value": "2"
+  },
+  {
+    "checked": true,
+    "name": "categories_visible",
+    "value": "on"
+  },
+  {
+    "checked": false,
+    "name": "categories_order",
+    "value": "3"
+  },
+  {
+    "checked": true,
+    "name": "latest_visible",
+    "value": "on"
+  },
+  {
+    "checked": false,
+    "name": "latest_order",
+    "value": "4"
+  },
+  {
+    "checked": true,
+    "name": "fm_spotlight_visible",
+    "value": "on"
+  },
+  {
+    "checked": false,
+    "name": "fm_spotlight_order",
+    "value": "5"
+  },
+  {
+    "checked": true,
+    "name": "lab_notes_visible",
+    "value": "on"
+  },
+  {
+    "checked": false,
+    "name": "lab_notes_order",
+    "value": "6"
+  },
+  {
+    "checked": true,
+    "name": "visual_reel_visible",
+    "value": "on"
+  },
+  {
+    "checked": false,
+    "name": "visual_reel_order",
+    "value": "7"
+  },
+  {
+    "checked": true,
+    "name": "archive_cta_visible",
+    "value": "on"
+  },
+  {
+    "checked": false,
+    "name": "archive_cta_order",
+    "value": "8"
+  }
+]

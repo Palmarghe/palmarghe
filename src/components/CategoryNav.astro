@@ -1,0 +1,5 @@
+---
+interface Props { href:string; label:string; active:boolean; children:{href:string;label:string}[]; locale:'tr'|'en'; }
+const {href,label,active,children,locale}=Astro.props;
+---
+{children.length ? <div class="nav-category"><a href={href} aria-current={active?'page':undefined}>{label}</a><details><summary aria-label={`${label} — ${locale==='tr'?'alt kategoriler':'subcategories'}`}><span aria-hidden="true">⌄</span></summary><div class="nav-submenu"><a href={href}>{locale==='tr'?'Tüm yayınlar':'All publications'} →</a>{children.map(child=><a href={child.href}>{child.label}</a>)}</div></details></div> : <a href={href} aria-current={active?'page':undefined} rel={href.startsWith('http')?'noopener noreferrer':undefined}>{label}</a>}

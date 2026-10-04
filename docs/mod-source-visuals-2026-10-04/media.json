@@ -1,0 +1,36 @@
+{
+  "uploaded": {
+    "colony": "/api/media/a936d0fd-116d-44d5-b42b-1724f33d70f4/",
+    "translation": "/api/media/b77a08f2-c16a-4d68-a6f9-0f47eb242d8d/",
+    "builder": "/api/media/9fafc86e-bd72-4ecc-8a48-41f316c86b4e/",
+    "translation-menu": "/api/media/c7d8e990-42ae-49d4-914e-ca182d7eb0ac/",
+    "builder-house": "/api/media/908d428c-7b13-43e8-8efd-40680afad056/"
+  },
+  "assets": [
+    {
+      "key": "colony",
+      "alt": "Colony Director — Nexus Mods kaynak tanıtım görseli",
+      "caption": "Kaynak: Palmarghe / Nexus Mods. Yapay zekâ destekli tanıtım görselidir; oynanış ekranı değildir."
+    },
+    {
+      "key": "translation",
+      "alt": "PalmargheTR — Nexus Mods Türkçe yama kapağı",
+      "caption": "Kaynak: Palmarghe / Nexus Mods. Kaynak sayfanın tanıtım kapağı; yapay zekâ destekli görsel."
+    },
+    {
+      "key": "builder",
+      "alt": "KaanBuilder — modern ev ve Japon evi tanıtımı",
+      "caption": "Kaynak: Palmarghe / CurseForge. Kaynak galerisindeki yapay zekâ destekli tanıtım görseli; doğrulanmış oynanış ekranı değildir."
+    },
+    {
+      "key": "translation-menu",
+      "alt": "PalmargheTR Türkçe ana menüsü — gerçek oyun ekranı",
+      "caption": "Kaynak: Palmarghe / Nexus Mods. Türkçe ana menünün gerçek oyun ekran görüntüsü."
+    },
+    {
+      "key": "builder-house",
+      "alt": "KaanBuilder — kaynak galerisinden yapı örnekleri",
+      "caption": "Kaynak: Palmarghe / CurseForge. Kaynak galerisindeki tanıtım görseli; doğrulanmış oynanış ekranı değildir."
+    }
+  ]
+}

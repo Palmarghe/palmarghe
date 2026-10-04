@@ -13,6 +13,14 @@ for(const work of publications){
   const cover=page.locator('.content-detail > img');
   await expect(cover).toBeVisible();await expect.poll(()=>cover.evaluate(img=>(img as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
   await expect(cover).toHaveCSS('object-position','50% 50%');
+  await expect(cover).toHaveCSS('object-fit','contain');
+  const samples=page.locator('.content-detail .content-media');
+  await expect(page.locator('.content-detail h2')).toHaveCount(8);
+  await expect(samples).toHaveCount(work.key==='colony-director'?1:2);
+  for(const sample of await samples.all()){
+   await sample.scrollIntoViewIfNeeded();await expect(sample.locator('figcaption')).toContainText('Kaynak: Palmarghe');
+   await expect.poll(()=>sample.locator('img').evaluate(img=>(img as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  }
   for(const width of [390,1440])for(const theme of ['dark','light']){
    await page.setViewportSize({width,height:900});await page.evaluate(value=>document.body.dataset.theme=value,theme);
    // Link colors animate on theme switches; audit the completed theme, not intermediate colors.

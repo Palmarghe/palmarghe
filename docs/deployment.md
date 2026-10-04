@@ -21,4 +21,4 @@ Migration 202610010035 confines measurement RPC writes to the private Worker ser
 
 Migration036 derives private body/gallery/cover/OG/revision references and guards metadata deletion with restrictive FKs. Apply before a Worker using media_has_references. Source data fingerprints were unchanged. Evidence/rollback: docs/media-references-audit-2026-10-02.md.
 
-Current Worker (4 October 2026): d2b14b6d-2a9d-448c-8c15-2c2814fe892d. Mod publication/category audit: docs/mod-publications-2026-10-04/AUDIT.md. Production migrations038/039/040 remain applied as documented in FINAL_REPORT.md.
+Current Worker (4 October 2026): 2d093575-1d82-4565-8809-af7619bbea66. Original source covers/gallery, header subcategories and curated showcase audit: docs/mod-source-visuals-2026-10-04/AUDIT.md. Initial mod publication/category audit (historical): docs/mod-publications-2026-10-04/AUDIT.md. Production migrations038/039/040 remain applied as documented in FINAL_REPORT.md.
