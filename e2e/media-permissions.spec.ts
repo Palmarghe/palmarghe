@@ -22,8 +22,9 @@ test('editor with explicit media permission uploads, edits and removes local med
   // A draft's social image is still in use and must survive deletion attempts.
   const origin = 'http://127.0.0.1:4322';
   const slug = 'media-social-qa-' + Date.now();
+  const title = 'Medya social QA ' + slug;
   const content = await page.request.post('/api/studio/', { headers: { Origin: origin }, form: {
-    entity: 'content', title: 'Medya social QA', slug, locale: 'tr', type: 'article', status: 'draft', og_media_id: id,
+    entity: 'content', title, slug, locale: 'tr', type: 'article', status: 'draft', og_media_id: id,
     body: JSON.stringify({ type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Local QA' }] }] }),
   } });
   expect(content.status()).toBe(200);
@@ -31,15 +32,17 @@ test('editor with explicit media permission uploads, edits and removes local med
   expect(inUse.status()).toBe(409);
   expect((await page.request.get('/api/media/' + id + '/')).status()).toBe(200);
   await page.goto('/studio/?panel=editor&section=content');
-  const editHref = await page.getByRole('row').filter({ hasText: 'Medya social QA' }).getByRole('link', { name: 'Düzenle' }).getAttribute('href');
+  const editHref = await page.getByRole('row').filter({ hasText: title }).getByRole('link', { name: 'Düzenle' }).getAttribute('href');
   const contentId = new URL(editHref!, origin).searchParams.get('edit')!;
   const cleared = await page.request.post('/api/studio/', { headers: { Origin: origin }, form: {
-    entity: 'content', id: contentId, title: 'Medya social QA', slug, locale: 'tr', type: 'article', status: 'draft',
+    entity: 'content', id: contentId, title, slug, locale: 'tr', type: 'article', status: 'draft',
     body: JSON.stringify({ type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Local QA' }] }] }),
   } });
   expect(cleared.status()).toBe(200);
   await page.goto('/studio/?panel=editor&section=media');
   await updated.locator('summary').click();
+  const deletion = page.waitForResponse(response=>response.url().endsWith('/api/media/manage/')&&response.request().method()==='POST');
   await updated.getByRole('button', { name: 'Silmeyi onayla' }).click();
+  expect((await deletion).status()).toBeLessThan(400);
   expect((await page.request.get('/api/media/' + id + '/')).status()).toBe(404);
 });

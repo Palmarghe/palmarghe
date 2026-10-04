@@ -2,7 +2,10 @@ import {test,expect} from '@playwright/test';
 test('desktop and mobile category disclosures support keyboard and child navigation',async({page})=>{
  for(const width of [1440,390]){
   await page.setViewportSize({width,height:900});await page.goto('/');
-  if(width===390)await page.getByRole('button',{name:'Menüyü aç',exact:true}).click();
+  if(width===390){
+   await page.getByRole('button',{name:'Menüyü aç',exact:true}).click();
+   await expect(page.locator('#mobile-nav a').first()).toBeFocused();
+  }
   const nav=page.locator(width===390?'#mobile-nav':'.desktop-nav');
   const detail=nav.locator('.nav-category').filter({hasText:'Football Manager'}).locator('details');
   await detail.locator('summary').press('Enter');await expect(detail).toHaveAttribute('open','');
