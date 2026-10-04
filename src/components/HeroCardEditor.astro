@@ -1,6 +1,8 @@
 ---
+import {showcaseFocus} from '../lib/showcase-focus';
 const { setting = {}, content = [], media = [], autoId = '' } = Astro.props;
 const card = setting.preview ?? {};
+const focus=showcaseFocus(card);
 const autoContent = content.find((item:any)=>item.id===autoId&&item.status==='published')??content.find((item:any)=>item.status==='published');
 ---
 <fieldset class="hero-card-editor" id="hero-card-editor">
@@ -19,8 +21,12 @@ const autoContent = content.find((item:any)=>item.id===autoId&&item.status==='pu
     <label class="field">Görsel yerleşimi<select name="preview_fit"><option value="contain" selected={card.fit!=='cover'}>Görselin tamamını göster</option><option value="cover" selected={card.fit==='cover'}>Alanı doldur · kırp</option></select></label>
     <label class="field">Yakınlaştırma (%)<input type="range" name="preview_zoom" min="100" max="200" step="5" value={card.zoom??100}/><output data-card-zoom>{card.zoom??100}%</output></label>
     <label class="field">Görsel odağı<select name="preview_position">{[['center','Orta'],['top','Üst'],['bottom','Alt'],['left','Sol'],['right','Sağ']].map(([value,label])=><option value={value} selected={(card.position??'center')===value}>{label}</option>)}</select></label>
+    <label class="field">Kart yatay odağı<input type="range" name="preview_focus_x" min="0" max="100" value={focus.x}/></label>
+    <label class="field">Kart dikey odağı<input type="range" name="preview_focus_y" min="0" max="100" value={focus.y}/></label>
   </div>
   <p class="field-help">Odak seçimi görseli doldurma moduna geçirir ve gerekirse %125 yakınlaştırır. Yakınlaştırmayı azaltabilir veya artırabilirsin.</p>
-  <aside class="hero-card-editor-preview" aria-label="Vitrin kartı önizlemesi"><div class="hero-card-image-frame" data-card-frame><img data-card-image alt="Kart görseli önizlemesi" hidden/></div><small data-card-label></small><strong data-card-title></strong><span data-card-state aria-live="polite"></span></aside>
+  <aside class="hero-card-editor-preview" aria-label="Vitrin kartı önizlemesi"><div class="hero-card-image-frame" data-card-frame data-focus-surface data-focus-x="preview_focus_x" data-focus-y="preview_focus_y"><img data-card-image alt="Kart görseli önizlemesi" hidden/></div><small data-card-label></small><strong data-card-title></strong><span data-card-state aria-live="polite"></span></aside>
+  <p class="field-help">Görsele dokunarak veya sürükleyerek odağı seç. Klavyeyle yatay ve dikey odak çubuklarını kullanabilirsin.</p>
+  <button type="button" data-card-reset>Görseli orijinal kadraja döndür</button>
   <button class="button" type="submit" name="homepage_section" value="preview">Vitrin kartı ayarlarını kaydet</button>
 </fieldset>

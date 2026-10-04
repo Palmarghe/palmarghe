@@ -123,6 +123,7 @@ test('author follows receive a readable publication notification',async({page})=
   await memberLogin.getByRole('button',{name:'Giriş yap'}).click();
   await page.goto('/account/');
   const notice=page.locator('.account-notifications li').filter({hasText:'Takip bildirimi deneyi'});
+  await page.getByRole('tab',{name:'Bildirimler',exact:true}).click();
   await expect(notice).toHaveClass(/is-unread/);
   await expect(notice.getByRole('link')).toHaveAttribute('href',`/${slug}/`);
   await notice.getByRole('button',{name:'Okundu'}).click();

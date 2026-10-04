@@ -16,7 +16,7 @@ test('independent showcase card saves, renders, hides and preserves publication 
   expect(await page.locator('.hero-card-editor').evaluate(e=>{const box=e.getBoundingClientRect();return [...e.querySelectorAll('input,select')].every(input=>{const r=input.getBoundingClientRect();return r.left>=box.left&&r.right<=box.right;});})).toBe(true);
  }
  const invalid=await context.request.post('/api/studio/',{headers:{Origin:origin},form:{entity:'homepage',homepage_section:'preview',preview_width:'999'}});expect(invalid.status()).toBe(400);
- const save=async()=>{const response=page.waitForResponse(r=>r.url().endsWith('/api/studio/')&&r.request().method()==='POST');await page.getByRole('button',{name:'Vitrin kartı ayarlarını kaydet',exact:true}).click();expect((await response).status()).toBeLessThan(400);await expect(page.locator('.hero-card-editor')).toBeVisible();};
+ const save=async()=>{const response=page.waitForResponse(r=>r.url().endsWith('/api/studio/')&&r.request().method()==='POST');const navigation=page.waitForEvent('framenavigated',frame=>frame===page.mainFrame());await page.getByRole('button',{name:'Vitrin kartı ayarlarını kaydet',exact:true}).click();expect((await response).status()).toBeLessThan(400);await navigation;await page.waitForLoadState('domcontentloaded');await expect(page.locator('.hero-card-editor')).toBeVisible();};
  try{
   await page.locator('[name=hero_visible]').check();await page.locator('[name=hero_mode]').selectOption('compact');
   await page.locator('[name=preview_visible]').check();

@@ -1,42 +1,9 @@
 (() => {
-  const button = document.querySelector('[data-bookmark]');
-  if (!button) return;
-  const contentId = button.dataset.bookmark;
-  button.addEventListener('click', async () => {
-    if (!contentId) return;
-    button.disabled = true;
-    try {
-      const response = await fetch('/api/library/', { method:'POST', headers:{'content-type':'application/json'}, credentials:'same-origin', body:JSON.stringify({action:'bookmark',contentId}) });
-      const tr=document.documentElement.lang!=='en';
-      if (response.status === 401) { window.location.assign(tr?'/account/':'/en/account/'); return; }
-      if(!response.ok) throw new Error('Bookmark unavailable');
-      const data = await response.json();
-      if(typeof data.saved!=='boolean') throw new Error('Invalid bookmark response');
-      button.setAttribute('aria-pressed', String(Boolean(data.saved)));
-      button.textContent = data.saved ? (tr?'Okuma listesinde':'Saved for later') : (tr?'Okuma listesine ekle':'Save for later');
-    } catch { button.textContent = document.documentElement.lang==='en'?'Try again':'Tekrar dene'; }
-    finally { button.disabled = false; }
-  });
+  const tr=document.documentElement.lang!=='en';
+  const announce=(button,text)=>{let status=button.parentElement.querySelector('[data-action-status]');if(!status){status=document.createElement('span');status.dataset.actionStatus='';status.className='action-feedback';status.setAttribute('role','status');button.after(status);}status.textContent=text;};
+  const send=async(button,payload)=>{button.disabled=true;button.setAttribute('aria-busy','true');announce(button,tr?'Kaydediliyor…':'Saving…');try{const response=await fetch('/api/library/',{method:'POST',headers:{'content-type':'application/json'},credentials:'same-origin',body:JSON.stringify(payload),signal:AbortSignal.timeout(10000)});if(response.status===401){location.assign(tr?'/account/':'/en/account/');return null;}if(!response.ok)throw new Error();return response.status===204?{}:await response.json();}catch{announce(button,tr?'Kaydedilemedi. Bağlantıyı kontrol edip yeniden dene.':'Could not save. Check the connection and try again.');return null;}finally{button.disabled=false;button.removeAttribute('aria-busy');}};
+  document.querySelectorAll('[data-bookmark]').forEach(button=>button.addEventListener('click',async()=>{const data=await send(button,{action:'bookmark',contentId:button.dataset.bookmark});if(!data)return;if(typeof data.saved!=='boolean'){announce(button,tr?'Kayıt sonucu doğrulanamadı.':'Save could not be confirmed.');return;}button.setAttribute('aria-pressed',String(data.saved));button.textContent=data.saved?(tr?'Okuma listesinde':'Saved for later'):(tr?'Okuma listesine ekle':'Save for later');announce(button,data.saved?(tr?'Okuma listene eklendi.':'Added to your reading list.'):(tr?'Okuma listenden kaldırıldı.':'Removed from your reading list.'));}));
+  document.querySelectorAll('[data-like]').forEach(button=>button.addEventListener('click',async()=>{const data=await send(button,{action:'like',contentId:button.dataset.like});if(!data)return;if(typeof data.liked!=='boolean'||!Number.isInteger(data.count)||data.count<0){announce(button,tr?'Beğeni sonucu doğrulanamadı.':'Like could not be confirmed.');return;}button.setAttribute('aria-pressed',String(data.liked));button.textContent=`${data.liked?'♥':'♡'} ${tr?(data.liked?'Beğenildi':'Beğen'):(data.liked?'Liked':'Like')} · ${data.count}`;announce(button,data.liked?(tr?'Beğenin kaydedildi.':'Your like was saved.'):(tr?'Beğenin kaldırıldı.':'Your like was removed.'));}));
+  document.querySelectorAll('[data-notification-read]').forEach(button=>button.addEventListener('click',async()=>{const data=await send(button,{action:'notification_read',notificationId:Number(button.dataset.notificationRead)});if(data){button.closest('li')?.classList.remove('is-unread');button.hidden=true;announce(button,tr?'Okundu olarak işaretlendi.':'Marked as read.');}}));
+  document.querySelectorAll('[data-follow-id]').forEach(button=>button.addEventListener('click',async()=>{const data=await send(button,{action:'follow',targetKind:button.dataset.followKind,targetId:button.dataset.followId});if(data&&typeof data.following==='boolean'){button.textContent=data.following?(tr?'Takip ediliyor':'Following'):(tr?'Takip et':'Follow');button.setAttribute('aria-pressed',String(data.following));announce(button,data.following?(tr?'Takip başladı.':'You are now following.'):(tr?'Takip kaldırıldı.':'Unfollowed.'));}}));
 })();
-;(()=>{
-  const button=document.querySelector('[data-like]');
-  if(!button)return;
-  button.addEventListener('click',async()=>{
-    if(button.disabled)return;
-    const tr=document.documentElement.lang!=='en';
-    button.disabled=true;
-    try{
-      const response=await fetch('/api/library/',{method:'POST',headers:{'content-type':'application/json'},credentials:'same-origin',body:JSON.stringify({action:'like',contentId:button.dataset.like}),signal:AbortSignal.timeout(10000)});
-      if(response.status===401){window.location.assign(tr?'/account/':'/en/account/');return;}
-      if(!response.ok)throw new Error('Like unavailable');
-      const data=await response.json();
-      if(typeof data.liked!=='boolean'||!Number.isInteger(data.count)||data.count<0)throw new Error('Invalid like response');
-      button.setAttribute('aria-pressed',String(data.liked));
-      button.textContent=`${data.liked?'♥':'♡'} ${tr?(data.liked?'Beğenildi':'Beğen'):(data.liked?'Liked':'Like')} · ${data.count}`;
-    }catch{button.textContent=tr?'Tekrar dene':'Try again';}
-    finally{button.disabled=false;}
-  });
-})();
-;(()=>{document.querySelectorAll('[data-notification-read]').forEach((button)=>button.addEventListener('click',async()=>{const response=await fetch('/api/library/',{method:'POST',headers:{'content-type':'application/json'},credentials:'same-origin',body:JSON.stringify({action:'notification_read',notificationId:Number(button.dataset.notificationRead)})});if(response.ok){button.closest('li')?.classList.remove('is-unread');button.remove();}}));})();
-
-;(()=>{document.querySelectorAll('[data-follow-id]').forEach((button)=>button.addEventListener('click',async()=>{const response=await fetch('/api/library/',{method:'POST',headers:{'content-type':'application/json'},credentials:'same-origin',body:JSON.stringify({action:'follow',targetKind:button.dataset.followKind,targetId:button.dataset.followId})});if(response.ok){const data=await response.json();const tr=document.documentElement.lang!=='en';button.textContent=data.following?(tr?'Takip ediliyor':'Following'):(tr?'Takip et':'Follow');button.setAttribute('aria-pressed',String(data.following));}}));})();

@@ -2,7 +2,7 @@
 export const STUDIO_SAVE_TIMEOUT_MS = 30_000;
 export type StudioSaveFailure = 'timeout' | 'network' | 'validation' | 'authentication' | 'permission' | 'conflict' | 'server' | 'response';
 export class StudioSaveError extends Error {
-  constructor(public readonly reason: StudioSaveFailure, public readonly detail?:string) { super(reason); }
+  constructor(public readonly reason: StudioSaveFailure, public readonly detail?:string, public readonly field?:string) { super(reason); }
 }
 const mediaErrors:Record<string,string>={
   content_fields:'Başlık, URL, dil ve içerik türünü kontrol edin. Girdileriniz korunuyor.',
@@ -14,12 +14,12 @@ const mediaErrors:Record<string,string>={
   image_metadata:'Görselin profil/yön/metin verisi çok büyük. Görseli web için yeniden dışa aktarın.',
   invalid_image:'Görsel çözülemedi. Geçerli, statik PNG, JPEG veya WebP dosyası seçin.',
 };
-async function mediaErrorDetail(response:Response):Promise<string|undefined>{
-  if(!response.headers.get('content-type')?.includes('application/json')) return;
-  try {const data=await response.json();return typeof data?.error==='string' && Object.hasOwn(mediaErrors,data.error) ? mediaErrors[data.error] : undefined;}catch{return;}
+async function mediaErrorDetail(response:Response):Promise<{detail?:string;field?:string}>{
+  if(!response.headers.get('content-type')?.includes('application/json')) return {};
+  try {const data=await response.json();const fields=['title','slug','locale','type','status','excerpt','seo_title','seo_description','category_id','cover_media_id','og_media_id','canonical_override'];return {detail:typeof data?.error==='string' && Object.hasOwn(mediaErrors,data.error) ? mediaErrors[data.error] : undefined,field:data.error==='content_duplicate'?'slug':data.error==='content_body'?'body':fields.includes(data.field)?data.field:undefined};}catch{return {};}
 }
 
-export async function submitStudioForm(action: string, body: FormData, section: 'content' | 'media', transport: typeof fetch = fetch): Promise<string> {
+export async function submitStudioForm(action: string, body: FormData, section: 'content' | 'media' | 'homepage' | 'advertising', transport: typeof fetch = fetch): Promise<string> {
   const controller = new AbortController();
   let timedOut = false;
   const timeout = setTimeout(() => { timedOut = true; controller.abort(); }, STUDIO_SAVE_TIMEOUT_MS);
@@ -28,7 +28,7 @@ export async function submitStudioForm(action: string, body: FormData, section: 
     if (!response.ok) {
       const reason: StudioSaveFailure = response.status === 401 ? 'authentication' : response.status === 403 ? 'permission'
         : response.status === 409 ? 'conflict' : [400,413,422].includes(response.status) ? 'validation' : 'server';
-      throw new StudioSaveError(reason,await mediaErrorDetail(response));
+      const error=await mediaErrorDetail(response);throw new StudioSaveError(reason,error.detail,error.field);
     }
     let destination: URL;
     try { destination = new URL(response.url); } catch { throw new StudioSaveError('response'); }
@@ -36,6 +36,7 @@ export async function submitStudioForm(action: string, body: FormData, section: 
     if (!response.redirected || destination.origin !== source.origin || destination.pathname !== '/studio/' || destination.searchParams.get('section') !== section) {
       throw new StudioSaveError('response');
     }
+    if(destination.searchParams.has('error'))throw new StudioSaveError('validation');
     return destination.href;
   } catch (error) {
     if (timedOut) throw new StudioSaveError('timeout');
@@ -62,7 +63,7 @@ export async function validateStudioImage(action:string, body:FormData, transpor
   const timeout=setTimeout(()=>controller.abort(),STUDIO_SAVE_TIMEOUT_MS);
   try {
     const response=await transport(action,{method:'POST',body,credentials:'same-origin',headers:{Accept:'application/json'},signal:controller.signal});
-    if(!response.ok) throw new StudioSaveError(response.status===401 ? 'authentication' : response.status===403 ? 'permission' : [400,413,422].includes(response.status) ? 'validation' : 'server',await mediaErrorDetail(response));
+    if(!response.ok) {const error=await mediaErrorDetail(response);throw new StudioSaveError(response.status===401 ? 'authentication' : response.status===403 ? 'permission' : [400,413,422].includes(response.status) ? 'validation' : 'server',error.detail,error.field);}
     if(response.redirected || !response.headers.get('content-type')?.includes('application/json')) throw new StudioSaveError('response');
     const data=await response.json();
     if(data?.validated!==true || ![data.width,data.height,data.bytes].every(value=>Number.isSafeInteger(value)&&value>0) || data.width>4096 || data.height>4096 || data.width*data.height>3000000 || data.bytes>10485760) throw new StudioSaveError('response');

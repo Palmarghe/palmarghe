@@ -7,7 +7,7 @@ export default defineConfig({
   workers: 1,
   use: {
     ...devices['Desktop Chrome'],
-    channel: 'chrome',
+    channel: process.env.CI ? undefined : 'chrome',
     baseURL: 'https://palmarghe.com',
     trace: 'retain-on-failure',
   },

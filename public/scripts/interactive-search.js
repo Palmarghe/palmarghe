@@ -34,6 +34,9 @@
     const input = root.querySelector('input[name="q"]'), results = root.querySelector('[data-search-results]'), status = root.querySelector('[data-search-status]');
     const form = root.querySelector('form'), select = root.querySelector('select[name="type"]');
     const english = root.dataset.locale === 'en';
+    let categorySelect=form.querySelector('[name=category]');
+    if(!categorySelect){const categoryLabel=document.createElement('label');categoryLabel.className='search-category-filter';categoryLabel.textContent=english?'Category / game':'Kategori / oyun';categorySelect=document.createElement('select');categorySelect.name='category';categorySelect.innerHTML=`<option value="">${english?'All categories':'Tüm kategoriler'}</option>`;categoryLabel.append(categorySelect);form.append(categoryLabel);}
+    let category=new URL(location.href).searchParams.get('category')||'';
     const queryControl = document.createElement('div');
     queryControl.className = 'search-query-control';
     const inputLabel = input.closest('label');
@@ -83,13 +86,15 @@
       timer = setTimeout(async () => {
         const active = new AbortController(); controller = active;
         try {
-          const response = await fetch(`/api/search/?locale=${english ? 'en' : 'tr'}&q=${encodeURIComponent(q)}&type=${encodeURIComponent(type)}`,{signal:active.signal});
+          const response = await fetch(`/api/search/?locale=${english ? 'en' : 'tr'}&q=${encodeURIComponent(q)}&type=${encodeURIComponent(type)}&category=${encodeURIComponent(category)}`,{signal:active.signal});
           if (!response.ok) throw new Error('Unavailable');
           const payload = await response.json(); if (current !== version) return;
+          if(categorySelect.options.length===1){for(const item of payload.categories||[]){const option=document.createElement('option');option.value=item.id;option.textContent=english?item.name_en:item.name_tr;option.selected=item.id===category||item.slug===category;categorySelect.append(option);}}
           render(payload.results || [],q);
+          if(!payload.results?.length&&payload.suggestions?.length){const note=document.createElement('p');note.className='search-suggestion-heading';note.textContent=english?'You might also explore':'Bunlara da göz atabilirsin';const previous=status.textContent;render(payload.suggestions,'');results.prepend(note);status.textContent=previous;}
           const full = root.querySelector('a.text-link');
-          if (full) full.href = `${english ? '/en' : ''}/search/?q=${encodeURIComponent(q)}&type=${encodeURIComponent(type)}`;
-          if (root !== dialog) { const url = new URL(location.href); q ? url.searchParams.set('q',q) : url.searchParams.delete('q'); type ? url.searchParams.set('type',type) : url.searchParams.delete('type'); history.replaceState(null,'',url); }
+          if (full) full.href = `${english ? '/en' : ''}/search/?q=${encodeURIComponent(q)}&type=${encodeURIComponent(type)}&category=${encodeURIComponent(category)}`;
+          if (root !== dialog) { const url = new URL(location.href); q ? url.searchParams.set('q',q) : url.searchParams.delete('q'); type ? url.searchParams.set('type',type) : url.searchParams.delete('type'); category?url.searchParams.set('category',category):url.searchParams.delete('category');history.replaceState(null,'',url); }
         } catch { if (!active.signal.aborted && current === version) { results.replaceChildren(); status.textContent = english ? 'Search is unavailable. Please try again.' : 'Aramaya ulaşılamadı. Yeniden dene.'; } }
         finally { if (current === version) results.removeAttribute('aria-busy'); }
       },immediate ? 0 : 220);
@@ -98,6 +103,7 @@
     clear.addEventListener('click',() => { input.value = ''; syncClear(); input.focus(); search(true); });
     form.addEventListener('submit',event => { event.preventDefault(); search(true); });
     select?.addEventListener('change',() => { type = select.value; search(true); });
+    categorySelect.addEventListener('change',()=>{category=categorySelect.value;search(true);});
     root.querySelectorAll('[data-search-type]').forEach(button => button.addEventListener('click',() => {
       type = button.dataset.searchType;
       root.querySelectorAll('[data-search-type]').forEach(b => b.setAttribute('aria-pressed',String(b === button)));

@@ -148,7 +148,8 @@ test('admin creates a category and publishes content', async ({ page }) => {
   await bookmark.click();
   await expect(bookmark).toHaveAttribute('aria-pressed','true');
   await page.goto('/account/');
-  await expect(page.locator('.saved-reading-list')).toContainText('Yerel Test Yazısı');
+  await page.getByRole('tab',{name:'Okuma listesi',exact:true}).click();
+  await expect(page.locator('.saved-reading .saved-reading-list')).toContainText('Yerel Test Yazısı');
   await expect(page.locator('.account-content a[href="https://studio.palmarghe.com/studio/"]')).toHaveCount(0);
   await page.goto('/test-category/yerel-test-yazisi/');
   await page.locator('[data-bookmark]').click();
@@ -411,11 +412,15 @@ test('homepage controls hide and reorder sections', async ({ page }) => {
   await page.locator('select[name="lab_notes_order"]').selectOption('6');
   await page.locator('select[name="visual_reel_order"]').selectOption('7');
   await page.locator('select[name="archive_cta_order"]').selectOption('8');
+  const savedNavigation=page.waitForEvent('framenavigated',frame=>frame===page.mainFrame());
   await page.getByRole('button', { name: 'Ana sayfayı kaydet', exact: true }).click();
-  await page.waitForURL(/\/studio\/\?section=homepage$/);
+  await savedNavigation;
+  await page.waitForLoadState('domcontentloaded');
   await page.goto('/');
   const sections = page.locator('.home-sections > section');
   expect(await sections.count()).toBeGreaterThan(0);
+  await expect(page.locator('.featured-card')).toHaveCount(0);
+  await expect(page.locator('.spotlight')).toHaveCount(0);
 });
 
 test('social settings and translated content alternate', async ({ page }) => {

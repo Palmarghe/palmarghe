@@ -5,7 +5,9 @@ import { BubbleMenu } from '@tiptap/extension-bubble-menu';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import { slugFromTitle } from '../lib/slug';
-import { submitStudioForm, studioSaveMessage } from '../lib/studio-save';
+import { submitStudioForm, studioSaveMessage, StudioSaveError } from '../lib/studio-save';
+import { editorRecovery } from './editor-recovery';
+import { parseDocument, renderDocument } from '../lib/blocks';
 
 const mediaImage = Node.create({
   name: 'mediaImage', group: 'block', atom: true,
@@ -45,7 +47,7 @@ if (element && output) {
     extensions: [StarterKit.configure({ heading: { levels: [2, 3] }, link: false, underline: false }), Underline, TextAlign.configure({ types: ['heading','paragraph'] }), Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true, protocols: ['http', 'https', 'mailto'] }), BubbleMenu.configure({ element: bubbleMenu, shouldShow: ({ editor, state }) => editor.isEditable && !state.selection.empty }), mediaImage, mediaGallery, callout, cta, embed, table, tableRow, tableHeader, tableCell],
     editorProps: { attributes: { 'aria-label': 'İçerik blok editörü' } },
     content: initial as object,
-    onUpdate: ({ editor }) => { output.value = JSON.stringify(editor.getJSON()); dirty = true; updateStatus('Kaydedilmedi'); updateToolbar(); },
+    onUpdate: ({ editor }) => { output.value = JSON.stringify(editor.getJSON()); dirty = true; updateStatus('Kaydedilmedi'); updateToolbar(); recovery?.schedule(); },
     onSelectionUpdate: () => updateToolbar(),
   });
   const updateStatus = (state = 'Kaydedildi') => { const words = editor.getText().trim().split(/\s+/).filter(Boolean).length; const minutes = Math.max(1, Math.ceil(words / 200)); statusBar.textContent = `${state} · ${words} kelime · yaklaşık ${minutes} dk okuma`; document.querySelectorAll<HTMLElement>('[data-editor-save-state]').forEach((item) => { item.textContent = state; }); };
@@ -56,6 +58,19 @@ if (element && output) {
     document.querySelectorAll<HTMLButtonElement>('[data-editor="redo"]').forEach((button) => { button.disabled = !editor.can().redo(); });
   };
   const sync = () => { output.value = JSON.stringify(editor.getJSON()); updateToolbar(); };
+  let recovery: ReturnType<typeof editorRecovery> | undefined;
+  if(output.form) recovery=editorRecovery(output.form,body=>editor.commands.setContent(body),sync);
+  output.form?.addEventListener('invalid',event=>{const field=event.target as HTMLInputElement;field.setAttribute('aria-invalid','true');let parent=field.parentElement;while(parent&&parent!==output.form){if(parent instanceof HTMLDetailsElement)parent.open=true;parent=parent.parentElement;}updateStatus('Eksik veya geçersiz alanı düzeltin: '+(field.closest('label')?.firstChild?.textContent?.trim()||field.name));},true);
+  output.form?.addEventListener('input',event=>(event.target as HTMLElement).removeAttribute('aria-invalid'));
+  const previewButton=document.createElement('button');previewButton.type='button';previewButton.textContent='Yayın önizlemesi';previewButton.className='button button-quiet';previewButton.dataset.editorPreview='';
+  document.querySelector('.editor-action-bar [data-publish-action]')?.before(previewButton);
+  const publicationPreview=document.createElement('dialog');publicationPreview.className='publication-preview';publicationPreview.setAttribute('aria-label','Yayın önizlemesi');
+  publicationPreview.innerHTML='<div class="publication-preview-tools"><button type="button" data-preview-size="desktop">Masaüstü</button><button type="button" data-preview-size="mobile">Mobil</button><button type="button" data-preview-close>Önizlemeyi kapat</button></div><article class="page-content"><img data-publication-cover hidden alt="Kapak önizlemesi"><h1></h1><p class="preview-excerpt"></p><div class="block-content"></div></article>';
+  document.body.append(publicationPreview);
+  previewButton.addEventListener('click',()=>{sync();const doc=parseDocument(output.value);if(!doc){updateStatus('İçerik önizlenemedi; blokları kontrol edin.');return;}const cover=output.form?.querySelector<HTMLImageElement>('[data-cover-preview]');const target=publicationPreview.querySelector<HTMLImageElement>('[data-publication-cover]')!;target.hidden=!cover||cover.hidden;if(cover&&!cover.hidden){target.src=cover.src;target.style.cssText=cover.style.cssText;}publicationPreview.querySelector('h1')!.textContent=output.form?.querySelector<HTMLInputElement>('[name=title]')?.value||'Başlıksız taslak';publicationPreview.querySelector('.preview-excerpt')!.textContent=output.form?.querySelector<HTMLTextAreaElement>('[name=excerpt]')?.value||'';publicationPreview.querySelector('.block-content')!.innerHTML=renderDocument(doc);publicationPreview.showModal();});
+  publicationPreview.querySelector('[data-preview-close]')?.addEventListener('click',()=>publicationPreview.close());
+  publicationPreview.addEventListener('close',()=>previewButton.focus());
+  publicationPreview.querySelectorAll<HTMLButtonElement>('[data-preview-size]').forEach(button=>button.addEventListener('click',()=>{publicationPreview.dataset.previewDevice=button.dataset.previewSize;}));
 
   const templates: Record<string, { label: string; hint: string; content: JSONContent }> = {
     article: { label: 'Makale', hint: 'Başlık, bağlam, ana fikir ve kapanış', content: { type: 'doc', content: [
@@ -261,6 +276,7 @@ if (element && output) {
     const longWait = window.setTimeout(() => updateStatus('Kaydediliyor… Bu işlem birkaç saniye sürebilir; sayfayı kapatmayın.'), 5500);
     try {
       const destination = await submitStudioForm(form.action, body, 'content');
+      recovery?.clear();
       dirty = false;
       updateStatus('Kaydedildi · yönlendiriliyor');
       window.location.assign(destination);
@@ -272,6 +288,7 @@ if (element && output) {
       updateToolbar();
       form.setAttribute('aria-busy', 'false');
       updateStatus(studioSaveMessage(error));
+      if(error instanceof StudioSaveError && error.field){const target=error.field==='body'?element:form.querySelector<HTMLElement>(`[name="${error.field}"]`);target?.setAttribute('aria-invalid','true');form.querySelector<HTMLButtonElement>('[data-editor-mode=detailed]')?.click();let parent=target?.parentElement;while(parent&&parent!==form){if(parent instanceof HTMLDetailsElement)parent.open=true;parent=parent.parentElement;}target?.focus();}
     } finally {
       window.clearTimeout(patience); window.clearTimeout(longWait);
     }
@@ -303,13 +320,15 @@ if (studioEditorForm) {
   const settingsPanel = document.createElement('aside');
   settingsPanel.className = 'editor-settings-panel';
   settingsPanel.setAttribute('aria-label', 'İçerik ayarları');
-  settingsPanel.innerHTML = '<div class="editor-settings-heading"><span>Ayarlar</span><small>Yayın ve sınıflandırma</small></div>';
+  const settingsDisclosure=document.createElement('details');settingsDisclosure.className='editor-settings-disclosure';settingsDisclosure.open=matchMedia('(min-width:761px)').matches;
+  settingsDisclosure.innerHTML='<summary>Yayın ve sınıflandırma ayarları</summary>';
+  settingsPanel.append(settingsDisclosure);
   const settingNodes = [...studioEditorForm.children].filter((item) => {
     if (!(item instanceof HTMLElement)) return false;
     if (item.matches('.editor-title-field,.editor-deck-field,.classic-editor-shell,.editor-action-bar,.editor-status,input[type="hidden"]')) return false;
     return item.matches('label,details,[data-type-section],button.button:last-child');
   });
-  settingNodes.forEach((item) => settingsPanel.append(item));
+  settingNodes.forEach((item) => settingsDisclosure.append(item));
   studioEditorForm.querySelector('.editor-action-bar')?.after(settingsPanel);
 const readiness = document.createElement('section');
   readiness.className = 'editor-readiness'; readiness.setAttribute('aria-live','polite');

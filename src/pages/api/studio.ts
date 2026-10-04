@@ -148,7 +148,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const previewZoom=Number(form.get('preview_zoom')??100);
     if(!Number.isInteger(previewZoom)||previewZoom<100||previewZoom>200)return errorResponse('Invalid preview zoom',400);
     if(!Number.isInteger(previewWidth)||previewWidth<260||previewWidth>480)return errorResponse('Invalid preview width',400);
+    const focusCoordinates: Record<string,[number,number]>={center:[50,50],top:[50,0],bottom:[50,100],left:[0,50],right:[100,50]};
+    const focusDefault=focusCoordinates[String(form.get('preview_position'))]??focusCoordinates.center;
+    const focusX=Number(form.get('preview_focus_x')??focusDefault[0]),focusY=Number(form.get('preview_focus_y')??focusDefault[1]);
+    if(![focusX,focusY].every(n=>Number.isFinite(n)&&n>=0&&n<=100))return errorResponse('Invalid preview focus',400);
     const preview = {visible:form.get('preview_visible')==='on',content_id:previewContent,media_id:previewMedia,label_tr:pick('preview_label_tr',60),label_en:pick('preview_label_en',60),title_tr:pick('preview_title_tr',160),title_en:pick('preview_title_en',160),width:previewWidth,zoom:previewZoom,ratio:z.enum(['16/9','4/3','1/1']).catch('16/9').parse(form.get('preview_ratio')),fit:z.enum(['contain','cover']).catch('contain').parse(form.get('preview_fit')),position:z.enum(['center','top','bottom','left','right']).catch('center').parse(form.get('preview_position'))};
+    Object.assign(preview,{x:focusX,y:focusY});
     if(form.get('homepage_section')==='preview'){
       const {data:previous,error:readError}=await db.from('site_settings').select('value').eq('key','homepage');
       if(readError)return errorResponse('Could not read homepage settings',400);
@@ -321,7 +326,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
     const title = String(form.get('title') ?? '').trim();
     const parsed = content.safeParse({ id: form.get('id') || undefined, category_id: form.get('category_id') || null, cover_media_id: form.get('cover_media_id') || null, og_media_id: form.get('og_media_id') || null, canonical_override: form.get('canonical_override') || null, translation_group: form.get('translation_group') || null, featured: form.get('featured') === 'on', indexable: !form.has('indexable') || form.getAll('indexable').includes('on'), title, slug: form.get('slug') || slugFromTitle(title), locale: form.get('locale'), type: form.get('type'), status: form.get('status'), excerpt: form.get('excerpt') || null, body: form.get('body'), seo_title: form.get('seo_title') || null, seo_description: form.get('seo_description') || null });
-    if (!parsed.success) return Response.json({error:'content_fields'},{status:400});
+    if (!parsed.success) return Response.json({error:'content_fields',field:parsed.error.issues[0]?.path[0]},{status:400});
     const tagIds = form.getAll('tag_ids').map(String);
     if (tagIds.some((tagId) => !z.uuid().safeParse(tagId).success) || tagIds.length > 20) return errorResponse('Invalid tags');
     if (tagIds.length) {
@@ -375,4 +380,3 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
   return errorResponse('Invalid entity');
 };
-

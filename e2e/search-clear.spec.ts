@@ -14,7 +14,7 @@ test('search clear preserves type and focus across languages, themes and sizes',
     await clear.focus(); await page.keyboard.press('Enter');
     await expect(input).toHaveValue(''); await expect(input).toBeFocused();
     await expect(clear).toBeHidden();
-    await expect(root.locator('select')).toHaveValue('article');
+    await expect(root.locator('select[name=type]')).toHaveValue('article');
     await expect(page).not.toHaveURL(/q=abcd/);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
     if (width === 320) {
@@ -39,11 +39,11 @@ test('search remains a working GET form without JavaScript', async ({ browser, b
   await page.goto('/en/search/');
   const form = page.locator('main .search-form');
   await form.locator('input[name="q"]').fill('abcd');
-  await form.locator('select').selectOption('article');
+  await form.locator('select[name=type]').selectOption('article');
   await form.getByRole('button').click();
   await expect(page).toHaveURL(/q=abcd/);
   await expect(form.locator('input[name="q"]')).toHaveValue('abcd');
-  await expect(form.locator('select')).toHaveValue('article');
+  await expect(form.locator('select[name=type]')).toHaveValue('article');
   await expect(page.getByRole('button', { name: 'Clear search' })).toHaveCount(0);
   await context.close();
 });
