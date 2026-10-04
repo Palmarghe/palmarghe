@@ -26,6 +26,13 @@ test('independent showcase card saves, renders, hides and preserves publication 
   await page.getByLabel('TR kart üst satırı',{exact:true}).fill('ÖNE ÇIKAN');
   await page.locator('[name=preview_ratio]').selectOption('4/3');
   await page.locator('[name=preview_fit]').selectOption('cover');
+  await page.locator('[name=preview_position]').selectOption('left');
+  await expect(page.locator('[name=preview_zoom]')).toHaveValue('125');
+  await expect.poll(()=>page.locator('[data-card-image]').evaluate(e=>(e as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  const left=await page.locator('[data-card-frame]').screenshot();
+  await page.locator('[name=preview_position]').selectOption('right');
+  const right=await page.locator('[data-card-frame]').screenshot();
+  expect(left.equals(right),'Focus must change the rendered image, not just the selected option').toBe(false);
   await page.locator('[name=preview_position]').selectOption('top');
   await expect(page.locator('[data-card-title]')).toHaveText('Sadece vitrin başlığı');
   await save();
@@ -33,7 +40,7 @@ test('independent showcase card saves, renders, hides and preserves publication 
   await expect(page.getByLabel('TR kart başlığı',{exact:true})).toHaveValue('Sadece vitrin başlığı');
   await page.goto('/');
   const card=page.locator('.hero-preview');await expect(card).toContainText('Sadece vitrin başlığı');await expect(card).toContainText('ÖNE ÇIKAN');
-  await expect(card.locator('img')).toHaveCSS('aspect-ratio','4 / 3');await expect(card.locator('img')).toHaveCSS('object-fit','cover');
+  await expect(card.locator('.hero-card-image-frame')).toHaveCSS('aspect-ratio','4 / 3');await expect(card.locator('img')).toHaveCSS('transform','matrix(1.25, 0, 0, 1.25, 0, 0)');await expect(card.locator('img')).toHaveCSS('object-fit','cover');
   for(const width of [390,1440]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
   await card.click();await expect(page.getByRole('heading',{name:title,exact:true})).toBeVisible();
   await page.goto('/studio/?section=homepage');await page.locator('[name=preview_visible]').uncheck();await save();

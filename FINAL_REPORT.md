@@ -1,6 +1,11 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 4 October 2026, independent showcase card editor
+## Current production state — 4 October 2026, showcase card focus repair
+
+Worker `c2dee5b1-b931-42f7-89f1-d5e95ed022b9` is live. Card artwork now occupies a clipped fixed-ratio frame; focus selects cover and initial125% zoom, adjustable100–200%. Studio preview and public rendering share the same crop behavior. Actual Chrome saved right/cover/125%, confirmed the public transform, then restored the original user selection, center/contain/100%, ratio16:9 and width420. No publication or media was replaced. Verify Astro0/unit174/build passed; local regression1/1 compares left/right image pixels and save persistence; final production showcase/header2/2 passed across both themes and responsive widths with accessibility checks. Evidence and rollback: docs/hero-card-focus-2026-10-04/AUDIT.md. CI is checked before closing the request.
+
+
+## Previous production state — 4 October 2026, independent showcase card editor (historical)
 
 Worker `865263e7-937f-4bae-8e54-b3e645d4b0bb` is live. Studio homepage hero now contains a separate card editor with published content, existing library image, TR/EN labels/title, visibility, width, ratio, fit and focus controls. Its own Save merges only card settings, preserving hero copy and homepage curation. Original publication title/cover remain unchanged. Actual Chrome production title persistence was verified and the temporary title cleaned; the existing KaanBuilder card is restored. Verify Astro0/unit174/build passed; local card/visual3/3 and final scoped-card1/1 passed. Production responsive and final CI results are checked before closing this request. Evidence and rollback: docs/hero-card-editor-2026-10-04/AUDIT.md. Existing media, users, permissions, migrations and Git history remain preserved. Wider webmaster dependencies remain in historical audits.
 
@@ -598,3 +603,4 @@ Final live pointer matrix: Chrome 5/5, Edge 5/5, WebKit 5/5. Both themes retain 
 
 ## 3 Ekim — Ayrı kapak düzenleme paneli
 Basit ve detaylı editörde ayrı kapak paneli: medya seçimi, orijinal/16:9/4:3/kare oran, yatay/dikey odak, reset/kaldır, medya yükleme bağlantısı ve canlı önizleme. Güvenli kadraj metadata mevcut type_data içinde transaction RPC ile saklanır; dosya değişmez ve migration gerekmez. İçerik kapağı oranı ve kart odak noktası uygulanır. Verify 173/173, Astro sıfır hata; ayrı kapak E2E seçme/yayınlama/yeniden açma/public kadraj/kaldırma 1/1, 390/1440 taşma kontrolü geçti. Production Chrome arşiv QA üzerinde 16:9/1 odak kaydı ve kalıcılığı doğrulandı, sonra original/50 değerlerine sıfırlanıp kalıcılığı doğrulandı; QA archived kaldı. Kanıt docs/cover-editor-chrome-2026-10-03.png. Worker 45200c55-3968-4d52-bde7-5c1d8811bf0a.
+

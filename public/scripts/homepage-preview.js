@@ -24,7 +24,11 @@
       const img=card.querySelector('[data-card-image]');
       img.hidden=!image;
       if(image)img.src=image;else img.removeAttribute('src');
-      img.style.aspectRatio=field('preview_ratio')?.value||'16/9';
+      card.querySelector('[data-card-frame]').style.aspectRatio=field('preview_ratio')?.value||'16/9';
+      const zoom=Number(field('preview_zoom')?.value||100);
+      img.style.transform='scale('+zoom/100+')';
+      img.style.transformOrigin=field('preview_position')?.value||'center';
+      form.querySelector('[data-card-zoom]').textContent=zoom+'%';
       img.style.objectFit=field('preview_fit')?.value||'contain';
       img.style.objectPosition=field('preview_position')?.value||'center';
       card.style.maxWidth=(field('preview_width')?.value||420)+'px';
@@ -35,5 +39,5 @@
       card.classList.toggle('is-hidden',!field('preview_visible')?.checked||!visible||mode!=='compact');
     }
   };
-  form.addEventListener('input', render); form.addEventListener('change', render); render();
+  form.addEventListener('input', render); form.addEventListener('change', event=>{if(event.target===field('preview_position')){field('preview_fit').value='cover';if(Number(field('preview_zoom').value)===100)field('preview_zoom').value='125';}render();}); render();
 })();

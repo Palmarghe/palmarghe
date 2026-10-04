@@ -145,8 +145,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     if(previewContent){const {data:item}=await db.from('content_items').select('id').eq('id',previewContent).eq('status','published').single();if(!z.uuid().safeParse(previewContent).success||!item)return errorResponse('Invalid preview content',400);}
     if(previewMedia){const {data:item}=await db.from('media').select('id').eq('id',previewMedia).single();if(!z.uuid().safeParse(previewMedia).success||!item)return errorResponse('Invalid preview media',400);}
     const previewWidth=Number(form.get('preview_width')??420);
+    const previewZoom=Number(form.get('preview_zoom')??100);
+    if(!Number.isInteger(previewZoom)||previewZoom<100||previewZoom>200)return errorResponse('Invalid preview zoom',400);
     if(!Number.isInteger(previewWidth)||previewWidth<260||previewWidth>480)return errorResponse('Invalid preview width',400);
-    const preview = {visible:form.get('preview_visible')==='on',content_id:previewContent,media_id:previewMedia,label_tr:pick('preview_label_tr',60),label_en:pick('preview_label_en',60),title_tr:pick('preview_title_tr',160),title_en:pick('preview_title_en',160),width:previewWidth,ratio:z.enum(['16/9','4/3','1/1']).catch('16/9').parse(form.get('preview_ratio')),fit:z.enum(['contain','cover']).catch('contain').parse(form.get('preview_fit')),position:z.enum(['center','top','bottom','left','right']).catch('center').parse(form.get('preview_position'))};
+    const preview = {visible:form.get('preview_visible')==='on',content_id:previewContent,media_id:previewMedia,label_tr:pick('preview_label_tr',60),label_en:pick('preview_label_en',60),title_tr:pick('preview_title_tr',160),title_en:pick('preview_title_en',160),width:previewWidth,zoom:previewZoom,ratio:z.enum(['16/9','4/3','1/1']).catch('16/9').parse(form.get('preview_ratio')),fit:z.enum(['contain','cover']).catch('contain').parse(form.get('preview_fit')),position:z.enum(['center','top','bottom','left','right']).catch('center').parse(form.get('preview_position'))};
     if(form.get('homepage_section')==='preview'){
       const {data:previous,error:readError}=await db.from('site_settings').select('value').eq('key','homepage');
       if(readError)return errorResponse('Could not read homepage settings',400);
