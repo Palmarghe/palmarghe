@@ -1,0 +1,24 @@
+---
+const { setting = {}, content = [], media = [], autoId = '' } = Astro.props;
+const card = setting.preview ?? {};
+const autoContent = content.find((item:any)=>item.id===autoId&&item.status==='published')??content.find((item:any)=>item.status==='published');
+---
+<fieldset class="hero-card-editor" id="hero-card-editor">
+  <legend>Vitrin kartı · görsel ve içerik</legend>
+  <p class="field-help">Sağdaki küçük görselli kartı bağımsız düzenle. Bu ayarlar içeriğin kendi başlığını veya kapağını değiştirmez. Kart sade vitrin düzeninde görünür.</p>
+  <label><input type="checkbox" name="preview_visible" checked={card.visible !== false}/> Vitrin kartını göster</label>
+  <div class="homepage-hero-fields">
+    <label class="field">Kart içeriği<select name="preview_content_id"><option value="" data-title={autoContent?.title} data-image={autoContent?.cover_media_id?`/api/media/${autoContent.cover_media_id}/`:autoContent?.cover_url??''}>Otomatik · ilk seçilen içerik</option>{content.filter((item: any)=>item.status==='published').map((item: any)=><option value={item.id} selected={card.content_id===item.id} data-title={item.title} data-image={item.cover_media_id?`/api/media/${item.cover_media_id}/`:item.cover_url??''}>{item.title}</option>)}</select></label>
+    <label class="field">Kart görseli<select name="preview_media_id"><option value="">Seçilen içeriğin kapağı</option>{media.map((item: any)=><option value={item.id} selected={card.media_id===item.id}>{item.alt_tr??item.path}</option>)}</select></label>
+    <label class="field">TR kart üst satırı<input name="preview_label_tr" maxlength="60" value={card.label_tr??''} placeholder="VİTRİNDEN"/></label>
+    <label class="field">EN card label<input name="preview_label_en" maxlength="60" value={card.label_en??''} placeholder="IN THE SHOWCASE"/></label>
+    <label class="field">TR kart başlığı<input name="preview_title_tr" maxlength="160" value={card.title_tr??''} placeholder="İçeriğin başlığını kullan"/></label>
+    <label class="field">EN card title<input name="preview_title_en" maxlength="160" value={card.title_en??''} placeholder="Use the content title"/></label>
+    <label class="field">Kart genişliği (masaüstü)<input type="range" name="preview_width" min="260" max="480" step="10" value={card.width??420}/><output data-card-width>{card.width??420} px</output></label>
+    <label class="field">Görsel oranı<select name="preview_ratio">{['16/9','4/3','1/1'].map(value=><option value={value} selected={(card.ratio??'16/9')===value}>{value.replace('/',':')}</option>)}</select></label>
+    <label class="field">Görsel yerleşimi<select name="preview_fit"><option value="contain" selected={card.fit!=='cover'}>Görselin tamamını göster</option><option value="cover" selected={card.fit==='cover'}>Alanı doldur · kırp</option></select></label>
+    <label class="field">Görsel odağı<select name="preview_position">{[['center','Orta'],['top','Üst'],['bottom','Alt'],['left','Sol'],['right','Sağ']].map(([value,label])=><option value={value} selected={(card.position??'center')===value}>{label}</option>)}</select></label>
+  </div>
+  <aside class="hero-card-editor-preview" aria-label="Vitrin kartı önizlemesi"><img data-card-image alt="Kart görseli önizlemesi" hidden/><small data-card-label></small><strong data-card-title></strong><span data-card-state aria-live="polite"></span></aside>
+  <button class="button" type="submit" name="homepage_section" value="preview">Vitrin kartı ayarlarını kaydet</button>
+</fieldset>

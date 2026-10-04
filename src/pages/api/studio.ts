@@ -140,11 +140,25 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
   if (entity === 'homepage') {
     if (!hasPermission('appearance')) return errorResponse('Forbidden',403);
+    const pick = (name:string, limit:number) => String(form.get(name) ?? '').trim().slice(0,limit);
+    const previewContent = pick('preview_content_id',36), previewMedia = pick('preview_media_id',36);
+    if(previewContent){const {data:item}=await db.from('content_items').select('id').eq('id',previewContent).eq('status','published').single();if(!z.uuid().safeParse(previewContent).success||!item)return errorResponse('Invalid preview content',400);}
+    if(previewMedia){const {data:item}=await db.from('media').select('id').eq('id',previewMedia).single();if(!z.uuid().safeParse(previewMedia).success||!item)return errorResponse('Invalid preview media',400);}
+    const previewWidth=Number(form.get('preview_width')??420);
+    if(!Number.isInteger(previewWidth)||previewWidth<260||previewWidth>480)return errorResponse('Invalid preview width',400);
+    const preview = {visible:form.get('preview_visible')==='on',content_id:previewContent,media_id:previewMedia,label_tr:pick('preview_label_tr',60),label_en:pick('preview_label_en',60),title_tr:pick('preview_title_tr',160),title_en:pick('preview_title_en',160),width:previewWidth,ratio:z.enum(['16/9','4/3','1/1']).catch('16/9').parse(form.get('preview_ratio')),fit:z.enum(['contain','cover']).catch('contain').parse(form.get('preview_fit')),position:z.enum(['center','top','bottom','left','right']).catch('center').parse(form.get('preview_position'))};
+    if(form.get('homepage_section')==='preview'){
+      const {data:previous,error:readError}=await db.from('site_settings').select('value').eq('key','homepage');
+      if(readError)return errorResponse('Could not read homepage settings',400);
+      const current=previous?.[0]?.value??{};
+      const {error}=await db.from('site_settings').upsert({key:'homepage',value:{...current,hero:{...current.hero,preview}},updated_at:new Date().toISOString()});
+      if(error)return errorResponse('Save failed',400);
+      return redirectTo(request,'/studio/?section=homepage#hero-card-editor');
+    }
     const names = ['now','featured','categories','latest','fm_spotlight','lab_notes','visual_reel','archive_cta'];
     const order = Object.fromEntries(names.map((name) => [name, Number(form.get(`${name}_order`))]));
     if (new Set(Object.values(order)).size !== names.length || Object.values(order).some((value) => !Array.from({ length: names.length }, (_, index) => index + 1).includes(value))) return errorResponse('Invalid section order');
     const visible = Object.fromEntries(names.map((name) => [name, form.get(`${name}_visible`) === 'on']));
-    const pick = (name:string, limit:number) => String(form.get(name) ?? '').trim().slice(0,limit);
     const requestedImageUrl = pick('hero_image_url',500);
     const heroMediaId = z.uuid().safeParse(form.get('hero_media_id'));
     if (requestedImageUrl && !(/^\/(visuals|api\/media)\//.test(requestedImageUrl) || safeExternalUrl(requestedImageUrl))) return errorResponse('Invalid hero image URL');
@@ -154,8 +168,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     if (!mode.success) return errorResponse('Invalid hero mode');
     const hero = { visible: form.get('hero_visible') === 'on', mode: mode.data, eyebrow_tr:pick('hero_eyebrow_tr',100), eyebrow_en:pick('hero_eyebrow_en',100), title_tr:pick('hero_title_tr',120), title_en:pick('hero_title_en',120), descriptor_tr:pick('hero_descriptor_tr',260), descriptor_en:pick('hero_descriptor_en',260), image_url:imageUrl };
     const uniqueIds = (name:string, maximum:number) => [...new Set(form.getAll(name).map((value) => String(value)).filter((value) => z.uuid().safeParse(value).success))].slice(0,maximum);
+    Object.assign(hero,{preview});
     const curation = { featured_ids: uniqueIds('featured_ids',3), visual_reel_ids: uniqueIds('visual_reel_ids',6), spotlight_id: z.uuid().safeParse(form.get('spotlight_id')).success ? String(form.get('spotlight_id')) : '' };
-    const { error } = await db.from('site_settings').upsert({ key: 'homepage', value: { order, visible, hero, curation }, updated_at: new Date().toISOString() });
+    const { error } = await db.from('site_settings').upsert({ key: 'homepage', value: {order,visible,hero,curation}, updated_at: new Date().toISOString() });
     if (error) return errorResponse('Save failed',400);
     return redirectTo(request,'/studio/?section=homepage');
   }  if (entity === 'social') {
@@ -358,5 +373,4 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
   return errorResponse('Invalid entity');
 };
-
 

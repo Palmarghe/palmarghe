@@ -1,8 +1,12 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 4 October 2026
+## Current production state — 4 October 2026, independent showcase card editor
 
-Worker `271a469e-5782-49f8-8b5a-8b89f16963b1` is live. Visual polish aligns public cards/section spacing/page typography and Studio headings, panels, forms, editor ribbon and phone action bar. Compact hero artwork is subdued in both themes; original publication covers remain unchanged. Mobile editor ordering is corrected; upload form is balanced; ad edit/footer contrast is improved. Duplicate Tiptap Link/Underline registration is removed and title already entered before slug-script initialization is handled.
+Worker `865263e7-937f-4bae-8e54-b3e645d4b0bb` is live. Studio homepage hero now contains a separate card editor with published content, existing library image, TR/EN labels/title, visibility, width, ratio, fit and focus controls. Its own Save merges only card settings, preserving hero copy and homepage curation. Original publication title/cover remain unchanged. Actual Chrome production title persistence was verified and the temporary title cleaned; the existing KaanBuilder card is restored. Verify Astro0/unit174/build passed; local card/visual3/3 and final scoped-card1/1 passed. Production responsive and final CI results are checked before closing this request. Evidence and rollback: docs/hero-card-editor-2026-10-04/AUDIT.md. Existing media, users, permissions, migrations and Git history remain preserved. Wider webmaster dependencies remain in historical audits.
+
+## Previous production state — 4 October 2026, visual polish (historical)
+
+Worker `271a469e-5782-49f8-8b5a-8b89f16963b1` was live at this checkpoint. Visual polish aligns public cards/section spacing/page typography and Studio headings, panels, forms, editor ribbon and phone action bar. Compact hero artwork is subdued in both themes; original publication covers remain unchanged. Mobile editor ordering is corrected; upload form is balanced; ad edit/footer contrast is improved. Duplicate Tiptap Link/Underline registration is removed and title already entered before slug-script initialization is handled.
 
 Verification: final verify Astro0/unit174/build passed; local visual tests2/2 and cover persistence1/1 passed. Production accessibility/navigation/publication/showcase23/23 passed during rollout; final Worker publication/showcase6/6 passed. Actual authenticated Chrome inspected Studio/dashboard/content/media/advertising, desktop and390px, light/dark, and public homepage/category/search. Fresh final editor console has no warning/error. Earlier browser transition aborts remain recorded, without claiming every browser context is error-free. Evidence and rollback: `docs/visual-polish-2026-10-04/AUDIT.md`. No production editorial/Auth/migration change in this polish release. Wider webmaster/external dependencies remain in historical audits.
 
