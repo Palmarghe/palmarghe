@@ -133,7 +133,7 @@ test('light theme applies to public search and Studio classic editor', async ({ 
   await expect(page.getByRole('heading', { name: 'Genel bakış' })).toBeVisible();
   await page.goto('/studio/?section=content');
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'light');
-  await expect(page.locator('.classic-menubar')).toHaveCSS('background-color', 'rgb(243, 237, 245)');
+  await expect(page.locator('.classic-menubar')).toHaveCSS('background-color', 'rgb(255, 253, 250)');
   await expect(page.locator('#block-editor')).toHaveCSS('background-color', 'rgb(255, 253, 250)');
   const editor = page.locator('#block-editor [contenteditable="true"]');
   await expect(editor).toBeVisible();

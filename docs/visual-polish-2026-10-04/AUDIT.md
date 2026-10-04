@@ -1,6 +1,6 @@
 # Site and Studio visual polish — 4 October 2026
 
-Final Worker: `db0ad0c3-3344-4b3f-a6b4-5507a5bd47a6`.
+Final Worker: `6ec5337d-7f68-4d9e-a7b9-0d907a1efaac`.
 
 ## Review and changes
 
@@ -24,6 +24,10 @@ No new artwork, production content changes, media deletion, account changes, per
 - Local visual tests cover six Studio sections at390/1440px and four public routes at320/1024/1440px, both themes, no horizontal page overflow and no serious/critical axe violations. Existing cover test checks saved framing and replacement.
 - Actual final Chrome phone editor confirms correct order, visible title placeholder and no horizontal overflow. Fresh final editor logs have zero warnings/errors. Earlier review tabs recorded view-transition aborts when navigations interrupted transitions; no universal clean-console claim is made. Transitions are shortened and reduced-motion rules retained.
 - Screenshots in this directory show live homepage, Studio dashboard and editor. Mobile viewport override was reset after review. Older same-day publication checks are historical and remain preserved.
+
+## CI follow-up
+
+Initial CI run37180771545 on69c8cdd passed verify but ended with67/69 E2E. The classic-editor assertion still expected the former lavender menubar instead of the intentional paper surface. A populated search result also exposed low-contrast type labels. The assertion now matches the new surface; labels use theme-specific contrast colors. Local visual QA now creates a local-only published search fixture so this state is always audited. The editor theme regression plus both visual tests passed3/3; final build passed. Final Worker production search/clear tests passed6/6, including mobile, desktop, both themes, focus, no-JS and recovery. Actual Chrome confirms populated labels at rgb188,163,255 (dark) and rgb104,64,182 (light); search-light.png records the live page. The follow-up commit reruns the complete Actions gate; its final outcome is checked before closing this request.
 
 ## Rollback
 

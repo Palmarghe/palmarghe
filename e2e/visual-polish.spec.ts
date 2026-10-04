@@ -24,7 +24,10 @@ test('Studio surfaces keep compact headings, theme contrast and bounded phone la
  }
 });
 
-test('public pages retain restrained typography and responsive cards',async({page})=>{
+test('public pages retain restrained typography and responsive cards',async({page,context})=>{
+ await context.addCookies([{name:'pg_mock_user',value:'00000000-0000-4000-8000-100000000001',url:'http://127.0.0.1:4322'}]);
+ const fixture=await context.request.post('http://127.0.0.1:4322/api/studio/',{headers:{Origin:'http://127.0.0.1:4322'},form:{entity:'content',title:'Visual polish search QA',slug:`visual-polish-search-${Date.now()}`,locale:'tr',type:'article',status:'published',body:JSON.stringify({type:'doc',content:[{type:'paragraph',content:[{type:'text',text:'Local search contrast fixture.'}]}]})}});
+ expect(fixture.ok()).toBe(true);await context.clearCookies();
  for(const width of [320,1024,1440])for(const path of ['/','/gaming/','/account/','/search/']){
   await page.setViewportSize({width,height:900});await page.goto(path);
   for(const theme of ['dark','light']){
@@ -32,6 +35,7 @@ test('public pages retain restrained typography and responsive cards',async({pag
    await expect(page.locator('body')).toHaveCSS('color',theme==='light'?'rgb(32, 29, 39)':'rgb(243, 241, 234)');
    if(await page.locator('.admin-side nav a[aria-current=page]').count())await expect(page.locator('.admin-side nav a[aria-current=page]')).toHaveCSS('color',theme==='light'?'rgb(32, 29, 39)':'rgb(243, 241, 234)');
    if(await page.locator('.footer-bottom').count())await expect(page.locator('.footer-bottom')).toHaveCSS('color',theme==='light'?'rgb(78, 72, 87)':'rgb(156, 156, 163)');
+   if(path==='/search/')await expect(page.locator('.instant-search-result .eyebrow').first()).toHaveCSS('color',theme==='light'?'rgb(104, 64, 182)':'rgb(188, 163, 255)');
    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
    const axe=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();
    expect(axe.violations.filter(v=>['serious','critical'].includes(v.impact??'')).map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))).toEqual([]);
