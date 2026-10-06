@@ -1,0 +1,685 @@
+{
+  "worker": "d13d5a3c-2cf6-4fe4-98a0-f3bf24e6b7f6",
+  "source": "40bbe9b",
+  "scope": "Single mobile lab sample per page, sequential and without parallel E2E. Not field CWV, organic traffic or a before/after median.",
+  "samples": [
+    {
+      "page": "home",
+      "url": "https://palmarghe.com/?verify=lighthouse",
+      "fetchTime": "2026-10-06T21:23:45.067Z",
+      "lighthouseVersion": "13.5.0",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+      "settings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": [
+          "performance",
+          "accessibility",
+          "best-practices",
+          "seo"
+        ],
+        "skipAudits": null
+      },
+      "runtimeError": null,
+      "scores": [
+        {
+          "category": "performance",
+          "score": 0.96
+        },
+        {
+          "category": "accessibility",
+          "score": 1
+        },
+        {
+          "category": "best-practices",
+          "score": 1
+        },
+        {
+          "category": "seo",
+          "score": 1
+        }
+      ],
+      "lcpMs": 2628.6039999999994,
+      "fcpMs": 1728.594,
+      "cls": 0,
+      "tbtMs": 0,
+      "diagnostics": {
+        "numRequests": 32,
+        "numScripts": 12,
+        "numStylesheets": 1,
+        "numFonts": 2,
+        "numTasks": 751,
+        "numTasksOver10ms": 1,
+        "numTasksOver25ms": 1,
+        "numTasksOver50ms": 0,
+        "numTasksOver100ms": 0,
+        "numTasksOver500ms": 0,
+        "rtt": 23.980000000000004,
+        "throughput": 26889554.95954178,
+        "maxRtt": 70.858,
+        "maxServerLatency": 81.47299999999998,
+        "totalByteWeight": 855629,
+        "totalTaskTime": 110.14099999999998,
+        "mainDocumentTransferSize": 6982
+      },
+      "documentLatency": {
+        "type": "checklist",
+        "items": {
+          "noRedirects": {
+            "label": "Avoids redirects",
+            "value": true
+          },
+          "serverResponseIsFast": {
+            "label": "Server responds quickly (observed 382 ms)",
+            "value": true
+          },
+          "usesCompression": {
+            "label": "Applies text compression",
+            "value": true
+          }
+        },
+        "debugData": {
+          "type": "debugdata",
+          "redirectDuration": 0,
+          "serverResponseTime": 382,
+          "uncompressedResponseBytes": 0,
+          "wastedBytes": 0
+        }
+      },
+      "imageDelivery": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "node",
+            "valueType": "node",
+            "label": ""
+          },
+          {
+            "key": "url",
+            "valueType": "url",
+            "label": "URL",
+            "subItemsHeading": {
+              "key": "reason",
+              "valueType": "text"
+            }
+          },
+          {
+            "key": "totalBytes",
+            "valueType": "bytes",
+            "label": "Resource Size"
+          },
+          {
+            "key": "wastedBytes",
+            "valueType": "bytes",
+            "label": "Est Savings",
+            "subItemsHeading": {
+              "key": "wastedBytes",
+              "valueType": "bytes"
+            }
+          }
+        ],
+        "items": [
+          {
+            "node": {
+              "type": "node",
+              "lhId": "page-1-IMG",
+              "path": "1,HTML,1,BODY,2,MAIN,1,DIV,1,SECTION,1,DIV,0,A,0,IMG",
+              "selector": "section.section > div.featured-grid > a.entry-card > img",
+              "boundingRect": {
+                "top": 730,
+                "bottom": 967,
+                "left": 17,
+                "right": 395,
+                "width": 378,
+                "height": 236
+              },
+              "snippet": "<img src=\"/api/media/9fafc86e-bd72-4ecc-8a48-41f316c86b4e/\" style=\"object-position:50% 50%;object-fit:contain;\" data-portrait=\"false\" sizes=\"(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw\" alt=\"KaanBuilder — modern ev ve Japon evi tanıtımı\" width=\"1000\" height=\"625\" loading=\"lazy\" decoding=\"async\">",
+              "nodeLabel": "KaanBuilder — modern ev ve Japon evi tanıtımı"
+            },
+            "url": "https://palmarghe.com/api/media/9fafc86e-bd72-4ecc-8a48-41f316c86b4e/",
+            "totalBytes": 223612,
+            "wastedBytes": 185390,
+            "subItems": {
+              "type": "subitems",
+              "items": [
+                {
+                  "reason": "This image file is larger than it needs to be (1600x900) for its displayed dimensions (662x372). Use responsive images to reduce the image download size.",
+                  "wastedBytes": 185390
+                }
+              ]
+            }
+          },
+          {
+            "node": {
+              "type": "node",
+              "lhId": "page-2-IMG",
+              "path": "1,HTML,1,BODY,2,MAIN,1,DIV,1,SECTION,1,DIV,1,A,0,IMG",
+              "selector": "section.section > div.featured-grid > a.entry-card > img",
+              "boundingRect": {
+                "top": 1164,
+                "bottom": 1400,
+                "left": 17,
+                "right": 395,
+                "width": 378,
+                "height": 236
+              },
+              "snippet": "<img src=\"/api/media/b77a08f2-c16a-4d68-a6f9-0f47eb242d8d/\" style=\"object-position:50% 50%;object-fit:contain;\" data-portrait=\"false\" sizes=\"(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw\" alt=\"PalmargheTR — Nexus Mods Türkçe yama kapağı\" width=\"1000\" height=\"625\" loading=\"lazy\" decoding=\"async\">",
+              "nodeLabel": "PalmargheTR — Nexus Mods Türkçe yama kapağı"
+            },
+            "url": "https://palmarghe.com/api/media/b77a08f2-c16a-4d68-a6f9-0f47eb242d8d/",
+            "totalBytes": 106238,
+            "wastedBytes": 88920,
+            "subItems": {
+              "type": "subitems",
+              "items": [
+                {
+                  "reason": "This image file is larger than it needs to be (1024x1024) for its displayed dimensions (413x413). Use responsive images to reduce the image download size.",
+                  "wastedBytes": 88920
+                }
+              ]
+            }
+          },
+          {
+            "node": {
+              "type": "node",
+              "lhId": "page-3-IMG",
+              "path": "1,HTML,1,BODY,2,MAIN,0,SECTION,2,A,0,DIV,0,IMG",
+              "selector": "section.hero > a.hero-preview > div.hero-card-image-frame > img",
+              "boundingRect": {
+                "top": 375,
+                "bottom": 452,
+                "left": 29,
+                "right": 166,
+                "width": 138,
+                "height": 77
+              },
+              "snippet": "<img src=\"/api/media/fe750271-0ab5-4d33-9f29-62cd4e78dff9/\" alt=\"Lamine Yamal İspanya formasıyla maç sırasında\" width=\"640\" height=\"400\" decoding=\"async\">",
+              "nodeLabel": "Lamine Yamal İspanya formasıyla maç sırasında"
+            },
+            "url": "https://palmarghe.com/api/media/fe750271-0ab5-4d33-9f29-62cd4e78dff9/",
+            "totalBytes": 70980,
+            "wastedBytes": 61551,
+            "subItems": {
+              "type": "subitems",
+              "items": [
+                {
+                  "reason": "Increasing the image compression factor could improve this image's download size.",
+                  "wastedBytes": 30692
+                },
+                {
+                  "reason": "This image file is larger than it needs to be (655x369) for its displayed dimensions (193x294). Use responsive images to reduce the image download size.",
+                  "wastedBytes": 54368
+                }
+              ]
+            }
+          },
+          {
+            "node": {
+              "type": "node",
+              "lhId": "page-4-IMG",
+              "path": "1,HTML,1,BODY,2,MAIN,1,DIV,1,SECTION,1,DIV,2,A,0,IMG",
+              "selector": "section.section > div.featured-grid > a.entry-card > img",
+              "boundingRect": {
+                "top": 1598,
+                "bottom": 1834,
+                "left": 17,
+                "right": 395,
+                "width": 378,
+                "height": 236
+              },
+              "snippet": "<img src=\"https://palmarghe.com/visuals/music/anatolian-velocity-960.webp\" style=\"\" data-portrait=\"false\" srcset=\"/visuals/music/anatolian-velocity-480.webp 480w, /visuals/music/anatolian-…\" sizes=\"(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw\" alt=\"Anatolian Velocity: Epik Anadolu Elektronik Müzik\" width=\"1000\" height=\"625\" loading=\"lazy\" decoding=\"async\">",
+              "nodeLabel": "Anatolian Velocity: Epik Anadolu Elektronik Müzik"
+            },
+            "url": "https://palmarghe.com/visuals/music/anatolian-velocity-960.webp",
+            "totalBytes": 97516,
+            "wastedBytes": 46870,
+            "subItems": {
+              "type": "subitems",
+              "items": [
+                {
+                  "reason": "Increasing the image compression factor could improve this image's download size.",
+                  "wastedBytes": 19756
+                },
+                {
+                  "reason": "This image file is larger than it needs to be (864x540) for its displayed dimensions (735x413). Use responsive images to reduce the image download size.",
+                  "wastedBytes": 34003
+                }
+              ]
+            }
+          },
+          {
+            "node": {
+              "type": "node",
+              "lhId": "page-5-IMG",
+              "path": "1,HTML,1,BODY,2,MAIN,1,DIV,3,SECTION,1,DIV,0,A,0,IMG",
+              "selector": "section.section > div.card-grid > a.entry-card > img",
+              "boundingRect": {
+                "top": 2924,
+                "bottom": 3139,
+                "left": 34,
+                "right": 378,
+                "width": 343,
+                "height": 214
+              },
+              "snippet": "<img src=\"https://palmarghe.com/visuals/music/sevenfold-thunder-960.webp\" style=\"\" data-portrait=\"false\" srcset=\"/visuals/music/sevenfold-thunder-480.webp 480w, /visuals/music/sevenfold-t…\" sizes=\"(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw\" alt=\"Sevenfold Thunder: Karadeniz Horon Ritmi ve Techno\" width=\"800\" height=\"500\" loading=\"lazy\" decoding=\"async\">",
+              "nodeLabel": "Sevenfold Thunder: Karadeniz Horon Ritmi ve Techno"
+            },
+            "url": "https://palmarghe.com/visuals/music/sevenfold-thunder-960.webp",
+            "totalBytes": 68170,
+            "wastedBytes": 31666,
+            "subItems": {
+              "type": "subitems",
+              "items": [
+                {
+                  "reason": "This image file is larger than it needs to be (864x540) for its displayed dimensions (667x375). Use responsive images to reduce the image download size.",
+                  "wastedBytes": 31666
+                }
+              ]
+            }
+          },
+          {
+            "node": {
+              "type": "node",
+              "lhId": "page-6-IMG",
+              "path": "1,HTML,1,BODY,2,MAIN,1,DIV,3,SECTION,1,DIV,1,A,0,IMG",
+              "selector": "section.section > div.card-grid > a.entry-card > img",
+              "boundingRect": {
+                "top": 3425,
+                "bottom": 3639,
+                "left": 34,
+                "right": 378,
+                "width": 343,
+                "height": 214
+              },
+              "snippet": "<img src=\"https://palmarghe.com/visuals/music/anatolian-sub-ritual-960.webp\" style=\"\" data-portrait=\"false\" srcset=\"/visuals/music/anatolian-sub-ritual-480.webp 480w, /visuals/music/anatolia…\" sizes=\"(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw\" alt=\"Anatolian Sub Ritual: Karanlık Anadolu Elektronik Müziği\" width=\"800\" height=\"500\" loading=\"lazy\" decoding=\"async\">",
+              "nodeLabel": "Anatolian Sub Ritual: Karanlık Anadolu Elektronik Müziği"
+            },
+            "url": "https://palmarghe.com/visuals/music/anatolian-sub-ritual-960.webp",
+            "totalBytes": 61286,
+            "wastedBytes": 28468,
+            "subItems": {
+              "type": "subitems",
+              "items": [
+                {
+                  "reason": "This image file is larger than it needs to be (864x540) for its displayed dimensions (667x375). Use responsive images to reduce the image download size.",
+                  "wastedBytes": 28468
+                }
+              ]
+            }
+          },
+          {
+            "node": {
+              "type": "node",
+              "lhId": "page-7-IMG",
+              "path": "1,HTML,1,BODY,2,MAIN,1,DIV,2,SECTION,1,DIV,2,A,0,IMG",
+              "selector": "section.section > div.categories > a.category > img",
+              "boundingRect": {
+                "top": 2381,
+                "bottom": 2569,
+                "left": 17,
+                "right": 199,
+                "width": 182,
+                "height": 188
+              },
+              "snippet": "<img src=\"https://palmarghe.com/visuals/editorial-fm-480.webp\" srcset=\"/visuals/editorial-fm-480.webp 480w, /visuals/editorial-fm-768.webp 768w, …\" sizes=\"auto, (max-width: 430px) 50vw, (max-width: 700px) 33vw, 240px\" alt=\"\" width=\"1440\" height=\"900\" loading=\"lazy\" decoding=\"async\">",
+              "nodeLabel": "section.section > div.categories > a.category > img"
+            },
+            "url": "https://palmarghe.com/visuals/editorial-fm-480.webp",
+            "totalBytes": 23226,
+            "wastedBytes": 8666,
+            "subItems": {
+              "type": "subitems",
+              "items": [
+                {
+                  "reason": "Increasing the image compression factor could improve this image's download size.",
+                  "wastedBytes": 8666
+                }
+              ]
+            }
+          },
+          {
+            "node": {
+              "type": "node",
+              "lhId": "page-8-IMG",
+              "path": "1,HTML,1,BODY,2,MAIN,1,DIV,2,SECTION,1,DIV,4,A,0,IMG",
+              "selector": "section.section > div.categories > a.category > img",
+              "boundingRect": {
+                "top": 2583,
+                "bottom": 2771,
+                "left": 17,
+                "right": 199,
+                "width": 182,
+                "height": 188
+              },
+              "snippet": "<img src=\"https://palmarghe.com/visuals/music/anatolian-sub-ritual-480.webp\" srcset=\"/visuals/music/anatolian-sub-ritual-480.webp 480w, /visuals/music/anatolia…\" sizes=\"auto, (max-width: 430px) 50vw, (max-width: 700px) 33vw, 240px\" alt=\"\" width=\"1440\" height=\"900\" loading=\"lazy\" decoding=\"async\">",
+              "nodeLabel": "section.section > div.categories > a.category > img"
+            },
+            "url": "https://palmarghe.com/visuals/music/anatolian-sub-ritual-480.webp",
+            "totalBytes": 19516,
+            "wastedBytes": 7746,
+            "subItems": {
+              "type": "subitems",
+              "items": [
+                {
+                  "reason": "Increasing the image compression factor could improve this image's download size.",
+                  "wastedBytes": 7746
+                }
+              ]
+            }
+          },
+          {
+            "node": {
+              "type": "node",
+              "lhId": "page-9-IMG",
+              "path": "1,HTML,1,BODY,2,MAIN,1,DIV,2,SECTION,1,DIV,1,A,0,IMG",
+              "selector": "section.section > div.categories > a.category > img",
+              "boundingRect": {
+                "top": 2179,
+                "bottom": 2367,
+                "left": 213,
+                "right": 395,
+                "width": 182,
+                "height": 188
+              },
+              "snippet": "<img src=\"https://palmarghe.com/visuals/editorial-gaming-480.webp\" srcset=\"/visuals/editorial-gaming-480.webp 480w, /visuals/editorial-gaming-768.web…\" sizes=\"auto, (max-width: 430px) 50vw, (max-width: 700px) 33vw, 240px\" alt=\"\" width=\"1440\" height=\"900\" loading=\"lazy\" decoding=\"async\">",
+              "nodeLabel": "section.section > div.categories > a.category > img"
+            },
+            "url": "https://palmarghe.com/visuals/editorial-gaming-480.webp",
+            "totalBytes": 21880,
+            "wastedBytes": 7320,
+            "subItems": {
+              "type": "subitems",
+              "items": [
+                {
+                  "reason": "Increasing the image compression factor could improve this image's download size.",
+                  "wastedBytes": 7320
+                }
+              ]
+            }
+          }
+        ],
+        "debugData": {
+          "type": "debugdata",
+          "wastedBytes": 466597
+        }
+      }
+    },
+    {
+      "page": "article",
+      "url": "https://palmarghe.com/gaming/minecraft/kaanbuilder/?verify=lighthouse",
+      "fetchTime": "2026-10-06T21:24:46.699Z",
+      "lighthouseVersion": "13.5.0",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+      "settings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": [
+          "performance",
+          "accessibility",
+          "best-practices",
+          "seo"
+        ],
+        "skipAudits": null
+      },
+      "runtimeError": null,
+      "scores": [
+        {
+          "category": "performance",
+          "score": 0.87
+        },
+        {
+          "category": "accessibility",
+          "score": 1
+        },
+        {
+          "category": "best-practices",
+          "score": 1
+        },
+        {
+          "category": "seo",
+          "score": 1
+        }
+      ],
+      "lcpMs": 3833.378999999999,
+      "fcpMs": 1739.0545,
+      "cls": 0,
+      "tbtMs": 0,
+      "diagnostics": {
+        "numRequests": 25,
+        "numScripts": 13,
+        "numStylesheets": 1,
+        "numFonts": 2,
+        "numTasks": 554,
+        "numTasksOver10ms": 1,
+        "numTasksOver25ms": 1,
+        "numTasksOver50ms": 0,
+        "numTasksOver100ms": 0,
+        "numTasksOver500ms": 0,
+        "rtt": 23.832999999999984,
+        "throughput": 28869957.517213542,
+        "maxRtt": 71.561,
+        "maxServerLatency": 86.0015,
+        "totalByteWeight": 479945,
+        "totalTaskTime": 88.16400000000003,
+        "mainDocumentTransferSize": 7225
+      },
+      "documentLatency": {
+        "type": "checklist",
+        "items": {
+          "noRedirects": {
+            "label": "Avoids redirects",
+            "value": true
+          },
+          "serverResponseIsFast": {
+            "label": "Server responded slowly (observed 829 ms)",
+            "value": false
+          },
+          "usesCompression": {
+            "label": "Applies text compression",
+            "value": true
+          }
+        },
+        "debugData": {
+          "type": "debugdata",
+          "redirectDuration": 0,
+          "serverResponseTime": 829,
+          "uncompressedResponseBytes": 0,
+          "wastedBytes": 0
+        }
+      },
+      "imageDelivery": {
+        "type": "table",
+        "headings": [
+          {
+            "key": "node",
+            "valueType": "node",
+            "label": ""
+          },
+          {
+            "key": "url",
+            "valueType": "url",
+            "label": "URL",
+            "subItemsHeading": {
+              "key": "reason",
+              "valueType": "text"
+            }
+          },
+          {
+            "key": "totalBytes",
+            "valueType": "bytes",
+            "label": "Resource Size"
+          },
+          {
+            "key": "wastedBytes",
+            "valueType": "bytes",
+            "label": "Est Savings",
+            "subItemsHeading": {
+              "key": "wastedBytes",
+              "valueType": "bytes"
+            }
+          }
+        ],
+        "items": [
+          {
+            "node": {
+              "type": "node",
+              "lhId": "page-0-IMG",
+              "path": "1,HTML,1,BODY,2,MAIN,0,DIV,1,ARTICLE,5,DIV,13,FIGURE,0,A,0,IMG",
+              "selector": "div > figure.content-media > a.image-inspector-trigger > img",
+              "boundingRect": {
+                "top": 2892,
+                "bottom": 3106,
+                "left": 16,
+                "right": 396,
+                "width": 380,
+                "height": 215
+              },
+              "snippet": "<img src=\"/api/media/9fafc86e-bd72-4ecc-8a48-41f316c86b4e/\" alt=\"KaanBuilder — modern ev ve Japon evi tanıtımı\" style=\"width:100%;aspect-ratio:auto;object-fit:cover;object-position:50% 50%\" loading=\"lazy\">",
+              "nodeLabel": "KaanBuilder — modern ev ve Japon evi tanıtımı"
+            },
+            "url": "https://palmarghe.com/api/media/9fafc86e-bd72-4ecc-8a48-41f316c86b4e/",
+            "totalBytes": 223612,
+            "wastedBytes": 185390,
+            "subItems": {
+              "type": "subitems",
+              "items": [
+                {
+                  "reason": "This image file is larger than it needs to be (1600x900) for its displayed dimensions (662x372). Use responsive images to reduce the image download size.",
+                  "wastedBytes": 185390
+                }
+              ]
+            }
+          },
+          {
+            "node": {
+              "type": "node",
+              "lhId": "page-1-IMG",
+              "path": "1,HTML,1,BODY,2,MAIN,0,DIV,1,ARTICLE,5,DIV,14,FIGURE,0,A,0,IMG",
+              "selector": "div > figure.content-media > a.image-inspector-trigger > img",
+              "boundingRect": {
+                "top": 3218,
+                "bottom": 3432,
+                "left": 16,
+                "right": 396,
+                "width": 380,
+                "height": 215
+              },
+              "snippet": "<img src=\"/api/media/908d428c-7b13-43e8-8efd-40680afad056/\" alt=\"KaanBuilder — kaynak galerisinden yapı örnekleri\" style=\"width:100%;aspect-ratio:auto;object-fit:cover;object-position:50% 50%\" loading=\"lazy\">",
+              "nodeLabel": "KaanBuilder — kaynak galerisinden yapı örnekleri"
+            },
+            "url": "https://palmarghe.com/api/media/908d428c-7b13-43e8-8efd-40680afad056/",
+            "totalBytes": 147454,
+            "wastedBytes": 108072,
+            "subItems": {
+              "type": "subitems",
+              "items": [
+                {
+                  "reason": "This image file is larger than it needs to be (1280x720) for its displayed dimensions (662x372). Use responsive images to reduce the image download size.",
+                  "wastedBytes": 108072
+                }
+              ]
+            }
+          }
+        ],
+        "debugData": {
+          "type": "debugdata",
+          "wastedBytes": 293462
+        }
+      }
+    }
+  ]
+}
