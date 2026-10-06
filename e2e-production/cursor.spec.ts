@@ -16,7 +16,7 @@ test('Palmarghe pointer has semantic states across reading, links, controls and 
   await articleLink.hover();
   await expect(cursor).toHaveAttribute('data-state', 'link');
 
-  const externalLink = page.locator('.content-detail a[href^="https://"]').first();
+  const externalLink = page.locator('.content-detail a[href^="https://"]:not([href^="https://palmarghe.com/"])').first();
   await externalLink.scrollIntoViewIfNeeded();
   await externalLink.hover();
   await expect(cursor).toHaveAttribute('data-state', 'external');

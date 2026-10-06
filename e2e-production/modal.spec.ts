@@ -22,7 +22,7 @@ test('deployed gallery script supports modal dismissal, focus and scroll lock wi
     await expect(page.locator('html')).toHaveCSS('overflow', 'hidden');
     await expect(close).toBeFocused();
     await page.keyboard.press('Tab');
-    await expect(close).toBeFocused();
+    await expect(dialog.getByRole('button',{name:'Yakınlaştır',exact:true})).toBeFocused();
     await page.keyboard.press('Shift+Tab');
     await expect(close).toBeFocused();
     const scroll = await page.evaluate(() => scrollY);

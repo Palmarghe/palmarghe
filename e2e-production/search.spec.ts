@@ -116,7 +116,8 @@ test('search communicates slow, failed, empty and recovered network states', asy
 
   await input.fill('zzqxv-nomatch-2026');
   await expect(status).toContainText('Sonuç yok.', { timeout: 12000 });
-  await expect(dialog.getByRole('link', { name: 'Arşivi keşfet →' })).toBeVisible();
+  await expect(dialog.locator('.search-suggestion-heading')).toContainText('Bunlara da göz atabilirsin');
+  await expect(dialog.locator('[data-search-result]').first()).toBeVisible();
 
   await page.context().setOffline(true);
   await input.fill('Yamal offline recovery');
