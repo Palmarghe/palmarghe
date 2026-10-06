@@ -313,9 +313,9 @@ const handlePost: APIRoute = async ({ request, cookies }) => {
     if (!revisionId.success || !contentId.success) return errorResponse('Invalid revision',400);
     const { data: revision, error: revisionError } = await db.from('content_revisions').select('id,content_id,title,excerpt,body,type_data,status').eq('id',revisionId.data).eq('content_id',contentId.data).single();
     if (revisionError || !revision) return errorResponse('Revision not found',404);
-    const { error } = await db.from('content_items').update({ title:revision.title, excerpt:revision.excerpt, body:revision.body, type_data:revision.type_data, status:revision.status, updated_at:new Date().toISOString() }).eq('id',contentId.data);
-    if (error) return errorResponse('Revision restore failed',400);
-    return redirectTo(request, `/studio/?section=content&edit=${contentId.data}`);
+    const { data: restored, error } = await db.from('content_items').update({ title:revision.title, excerpt:revision.excerpt, body:revision.body, type_data:revision.type_data, status:revision.status, updated_at:new Date().toISOString() }).eq('id',contentId.data).select('id').single();
+    if (error || !restored) return errorResponse('Revision restore failed',400);
+    return redirectTo(request, `/studio/?section=content&edit=${contentId.data}${profile?.role==='editor'?'&panel=editor':''}`);
   }
   if (entity === 'content') {
     if (operation === 'delete') {

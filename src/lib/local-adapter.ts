@@ -104,7 +104,14 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
         const row = { id: uid(), created_at: new Date().toISOString(), updated_at: new Date().toISOString(), ...input };
         rows.push(row); return row;
       });
-    } else if (this.action === 'update') selected.forEach((row) => Object.assign(row, this.values));
+    } else if (this.action === 'update') selected.forEach((row) => {
+      const changed=this.table==='content_items'&&['title','excerpt','body','type_data','status'].some(key=>key in this.values&&JSON.stringify(row[key])!==JSON.stringify((this.values as Row)[key]));
+      Object.assign(row,this.values);
+      if(changed){
+        const revision=tables.content_revisions.filter(entry=>entry.content_id===row.id).reduce((maximum,entry)=>Math.max(maximum,Number(entry.revision)||0),0)+1;
+        tables.content_revisions.push({id:uid(),content_id:row.id,revision,title:row.title,excerpt:row.excerpt??null,body:row.body??null,type_data:row.type_data??null,status:row.status,changed_by:this.user?.id,created_at:new Date().toISOString()});
+      }
+    });
     else if (this.action === 'delete') {
       if (this.table === 'media' && selected.some((row) => localMediaReferenced(row.id))) return { data:null,error:{code:'23503',message:'media in use'} };
       if (this.table === 'media') for (const row of selected) mediaCleanupTasks.push({id:uid(),media_id:row.id,path:row.path,created_at:new Date().toISOString()});

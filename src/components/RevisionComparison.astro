@@ -1,0 +1,11 @@
+---
+import {compareRevision} from '../lib/revision-comparison';
+const {revision,current}=Astro.props;
+const fields=compareRevision(revision,current);
+const changed=fields.filter(field=>field.changed);
+---
+<details class="revision-comparison">
+ <summary>Güncel kayıtla karşılaştır · {changed.length} alan farklı</summary>
+ <p class="field-help">Sol sütun seçilen sürüm, sağ sütun güncel kayıttır. Metin biçimi değişiklikleri de farklılık olarak sayılır. Geri yükleme başlık, açıklama, metin, türe özel ayarlar ve yayın durumunu geri getirir; kategori/etiket ilişkilerini değiştirmez.</p>
+ {changed.length ? changed.map(field=><section><h4>{field.label}</h4><div class="revision-comparison-columns"><div><strong>Seçilen sürüm</strong><pre>{field.before||'—'}</pre></div><div><strong>Güncel kayıt</strong><pre>{field.after||'—'}</pre></div></div></section>) : <p>Bu alanlarda güncel kayıtla fark yok.</p>}
+</details>
