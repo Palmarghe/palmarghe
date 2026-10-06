@@ -33,3 +33,5 @@ Baseline: main0c8e03d, Worker a622e0b3-d44b-4eb6-9087-062ab7084dbc. Chrome6 Octo
 - No deployment or new Git commit in this upgrade yet. All14 completion gates remain active; this is not a production-complete report.
 
 Regression run: 81 local E2E scenarios executed, 78 passed initially. Three failures exposed two real regressions: low contrast of the palette shortcut badge and Ctrl+K competing with the editor link dialog. Badge now uses explicit theme foreground/surface; palette ignores handled events, editing fields and other open dialogs. All three affected scenarios passed after repair (16.4s). A clean full rerun and production gates are still required; no claim of 81/81 in one final run.
+
+6 October checkpoint deployed: Worker28a50a81-dbd7-4ea5-a2c3-1368059977f9, source5d1d7c37ecaa. Clean full local83/83 and scoped production7/7 passed. Hidden Aurora added per user request; no normal third-theme option. Chrome confirms public desktop/390px and Studio, plus real health release/service measurement. Scope items11/12 and broader performance/visual/reliability gates remain incomplete; no goal-completion claim.

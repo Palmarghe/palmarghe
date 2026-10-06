@@ -1,6 +1,14 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 4 October 2026, eight experience improvements
+## Current production state — 6 October 2026, hidden Aurora and premium interaction checkpoint
+
+Worker `28a50a81-dbd7-4ea5-a2c3-1368059977f9` serves implementation `5d1d7c37ecaa`. Aurora is a hidden petrol/apricot theme: hold the existing theme control1.4s or Alt+Shift+A outside editing/dialogs. Normal controls still switch only light/dark; original assets and layout are preserved. Staff command palette is role-filtered, preserves editor link shortcuts, and searches authorized records. Image inspection adds zoom/navigation/fullscreen/swipe/retry. Homepage preview adds tablet mode, direct field focus and changed-field summary. Admin health reports actual release, Auth/database/media-catalog checks and sampled operation durations; no observations is explicitly unmeasured.
+
+Verification:193 Astro files zero diagnostics;178 units/build passed; clean full local83/83 E2E passed. Production Aurora/search/showcase/category7/7 passed. Actual Chrome confirmed Aurora on desktop and390px public and Studio; public mobile has no horizontal overflow. Authenticated health showed correct source release, accessible Auth/database/media catalog and37ms measured database check; no operations had yet been sampled. Fresh health console errors/warnings: none. Screenshots and rollback: docs/aurora-theme-2026-10-06.md. Production settings, editorial records, accounts, media and migrations were not changed by this release.
+
+The full14-item premium webmaster objective remains active. This checkpoint does not claim full side-by-side device preview, revision comparison/restore, all visual baselines, all performance/reliability gates or production operation-trend proof. Remaining evidence is tracked in docs/premium-webmaster-2026-10-06.md. Normal main push and Actions verification follow this documentation update.
+
+## Previous production state — 4 October 2026, eight experience improvements (historical)
 
 Worker `a622e0b3-d44b-4eb6-9087-062ab7084dbc` is live. Studio has image-aware desktop/mobile previews, unsaved-change warnings, undo and failure-preserving settings saves. Publishing adds a safe local preview, scoped tab/user draft recovery and field-level errors. Cover/showcase focus can be dragged or adjusted precisely, with reset and visible focus marker. Mobile editor settings collapse; draft/preview/publish controls remain bounded. Homepage visual choices prioritize original work and keep hero/featured/spotlight distinct. Search filters include category descendants and relevant published suggestions. Account tabs organize profile, reading list, own likes, notifications and account controls; actions announce pending/success/failure.
 
