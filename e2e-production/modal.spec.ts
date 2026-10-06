@@ -14,7 +14,7 @@ test('deployed gallery script supports modal dismissal, focus and scroll lock wi
   const trigger = page.locator('[data-gallery-lightbox]');
   const dialog = page.locator('[data-gallery-dialog]');
   const close = dialog.getByRole('button', { name: 'Close preview' });
-  for (const width of [390, 1440]) for (const theme of ['dark', 'light']) {
+  for (const width of [390, 1440]) for (const theme of ['dark', 'light', 'aurora']) {
     await page.setViewportSize({ width, height: 900 });
     await page.evaluate(value => document.body.dataset.theme = value, theme);
     await trigger.click();
@@ -33,6 +33,13 @@ test('deployed gallery script supports modal dismissal, focus and scroll lock wi
     await expect(dialog).toBeVisible();
     const result = await new AxeBuilder({ page }).include('[data-gallery-dialog]').analyze();
     expect(result.violations.filter(v => ['serious', 'critical'].includes(v.impact ?? ''))).toEqual([]);
+    const fullscreen=dialog.getByRole('button',{name:'Tam ekran',exact:true});
+    await fullscreen.click();
+    await expect.poll(()=>page.evaluate(()=>document.fullscreenElement?.hasAttribute('data-gallery-screen'))).toBe(true);
+    await expect(fullscreen).toHaveAttribute('aria-pressed','true');
+    await fullscreen.click();
+    await expect.poll(()=>page.evaluate(()=>document.fullscreenElement===null)).toBe(true);
+    await expect(fullscreen).toHaveAttribute('aria-pressed','false');
     await page.screenshot({ path: `test-results/gallery-fixture-${width}-${theme}.png` });
     await page.keyboard.press('Escape');
     await expect(dialog).toBeHidden();

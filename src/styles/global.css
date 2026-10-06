@@ -645,6 +645,8 @@ html.mobile-navigation-open,html.search-overlay-open,html.gallery-modal-open,htm
 body[data-theme="light"] .admin-stats a,body[data-theme="light"] .studio-panel,body[data-theme="light"] .admin-quick,body[data-theme="light"] .classic-editor-shell .classic-ribbon,body[data-theme="light"] .classic-editor-shell .classic-menubar,body[data-theme="light"] .classic-editor-shell .editor-toolbar{background:var(--paper)!important;box-shadow:none}
 body[data-theme="light"] .editor-title-field>input,body[data-theme="light"] .editor-deck-field>textarea{background:var(--paper)!important}
 ::view-transition-old(root){animation-duration:.12s}::view-transition-new(root){animation-duration:.22s}
+/* Keep the user preference after all page-transition shorthand overrides. */
+@media(prefers-reduced-motion:reduce){::view-transition-old(root),::view-transition-new(root){animation:none!important}::view-transition-group(root){animation:none!important}}
 @media(max-width:820px){
  .content-editor-form>.cover-editor{order:4;grid-column:1!important;grid-row:auto!important}
  .content-editor-form>.field:has(#block-editor){order:5}.content-editor-form>.editor-settings-panel{order:6}.content-editor-form>.editor-status{order:7}
@@ -690,7 +692,7 @@ body[data-theme="light"] .homepage-live-preview [data-preview-artwork]{opacity:.
 
 /* Shared visual rhythm: public and Studio, both themes. */
 :root{--space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-6:1.5rem;--space-8:2rem;--control-radius:8px;--panel-radius:12px;--ease-refined:cubic-bezier(.2,.8,.2,1);--motion-fast:160ms;--motion-normal:240ms}
-.button,.studio-command-trigger{border-radius:var(--control-radius);transition:background var(--motion-fast),border-color var(--motion-fast),box-shadow var(--motion-fast),transform var(--motion-fast) var(--ease-refined)}
+.button,.studio-command-trigger{border-radius:var(--control-radius);transition:border-color var(--motion-fast),box-shadow var(--motion-fast),transform var(--motion-fast) var(--ease-refined)}
 .button:active{transform:translateY(1px)}
 :where(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea){border-radius:var(--control-radius)}
 :where(button,a,input,select,textarea):focus-visible{outline:2px solid var(--accent);outline-offset:3px}
@@ -734,6 +736,9 @@ html.studio-command-open{overflow:hidden}
 .studio-health-trend .health-sample span{display:block;height:6px;background:var(--accent,#9870ff);border-radius:4px}.studio-health-trend .health-sample.is-failed span{background:#c75362}.studio-health-trend small{display:block;margin-top:.3rem}
 .studio-change-summary{font-size:.8rem;overflow-wrap:anywhere}.studio-preview-tools{flex-wrap:wrap}.studio-preview-tools button{min-height:44px}[data-preview-device="tablet"]{width:min(100%,768px)!important;margin-inline:auto}[data-homepage-preview] [role="button"]{cursor:pointer}[data-homepage-preview] [role="button"]:focus-visible{outline:2px solid var(--accent,#9870ff);outline-offset:4px}
 .studio-command-trigger kbd{color:var(--text);background:var(--surface)}
+/* Theme foreground and surface must switch together, without a low-contrast intermediate frame. */
+.studio-command-trigger{transition:border-color var(--motion-fast),box-shadow var(--motion-fast),transform var(--motion-fast) var(--ease-refined)}
+@media(prefers-reduced-motion:reduce){.studio-command-trigger{transition:none}}
 
 /* Aurora is discovered through an Easter egg; geometry and original images stay intact. */
 body[data-theme="aurora"]{color-scheme:dark;--bg:#10262a;--surface:#19343a;--text:#f5f1e8;--muted:#b5cac6;--border:#355157;--accent:#ffbe98;--paper:#19343a;--paper-strong:#19343a;--ink:#f5f1e8;--ink-soft:#b5cac6;background:var(--bg);color:var(--text)}
