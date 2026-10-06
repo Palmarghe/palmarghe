@@ -13,6 +13,8 @@ test('actual device viewport renders unsaved bilingual fields, direct selection 
  await expect.poll(()=>live.locator('.hero-art').evaluate(e=>(e as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
  const fields=await page.locator('.homepage-hero-editor>.homepage-hero-fields').boundingBox(),preview=await panel.boundingBox();
  expect(preview!.x).toBeGreaterThan(fields!.x+fields!.width);
+ const heading=await panel.locator('header strong').boundingBox(),help=await panel.locator('header p').boundingBox();expect(help!.y).toBeGreaterThanOrEqual(heading!.y+heading!.height);
+ expect((await page.locator('.homepage-editor').boundingBox())!.width).toBeGreaterThan(900);
  for(const [name,width]of [['Masaüstü',1440],['Tablet',768],['Mobil',390]] as const){
   await panel.getByRole('button',{name,exact:true}).click();await expect.poll(()=>live.locator('html').evaluate(()=>innerWidth)).toBe(width);
   expect(await live.locator('html').evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
