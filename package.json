@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "test:e2e:production": "playwright test --config playwright.production.config.ts",
-    "verify": "npm run typecheck && npm run test && npm run build"
+    "verify": "npm run typecheck && npm run test && npm run build",
+    "test:visual": "playwright test --config playwright.visual.config.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "latest",

@@ -1,4 +1,4 @@
-# Shared hero and real device preview — local implementation
+# Shared hero and real device preview — implementation and production evidence
 
 Public homepage and the private Studio iframe now render the same HomeHero component and public stylesheet. The former lightweight text mock has been replaced with an actual1440/768/390px iframe viewport, scaled to fit beside fields on wide screens and stacked on phones. Unsaved TR/EN copy, media, card framing and theme update through a bounded message payload. Click/Enter selects the matching form field. Preview language/device controls do not enter the saved-field snapshot or submit settings.
 
@@ -12,3 +12,6 @@ Rollback: revert shared component integration, preview route/scripts/styles and 
 
 
 Recovery follow-up: HTTP503 fixture exposed a missed load event when a frame completed before the deferred parent script. Startup now checks an already-complete same-origin frame. A15s timeout reveals an explicit retry without clearing fields. Latest four scenarios pass4/4 in13.8s, including cross-frame axe, origin/source rejection, no writes/console errors, HTTP failure/corrected reload and stalled-frame value retention. These added recovery scenarios followed the earlier full90 run; they are not reported as a single92/92 local run. Fresh verify is running before commit/deploy.
+
+
+7 October release: initial shared preview Worker8d1e9fa6-2cb9-40d9-9419-9644417f2909/source3b45374 passed production13/13. Final visual polish Worker982caecf-ea5e-4368-a376-f837474c7378/clean sourceee122ed45712 supersedes it. Fresh verify208 zero diagnostics/182 units/build passed; geometry/recovery suite4/4 passed, final scoped production2/2 passed. Real Chrome found a negative helper margin overlapping the header and a general form width cap wasting space; scoped CSS repairs both. Chrome now reports1440px form width, help below heading and no overflow. A temporary unsaved title updated the frame; clicking it focused hero_title_tr; Undo restored the original. Mobile preview reports390px, light theme and fresh console warnings/errors none. No settings/content/account writes. Screenshots homepage-device-desktop-2026-10-07.png and homepage-device-light-2026-10-07.png. Actions37537106330 succeeded8m35s (91 passed and1 flaky cover-upload test passed on retry); new visual gate remains pending. Broader14-item scope stays active.

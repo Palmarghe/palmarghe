@@ -1,0 +1,4 @@
+/* Development tooling is absent from production and is not part of the UI baseline. */
+astro-dev-toolbar { display: none !important; }
+/* Pointer position is tested separately; it must not create random screenshot differences. */
+.brand-cursor { visibility: hidden !important; }

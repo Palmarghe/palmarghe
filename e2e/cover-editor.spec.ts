@@ -4,7 +4,10 @@ test('separate cover area persists framing and replacement on mobile and desktop
  await page.goto('/studio/?section=media');
  const upload=page.locator('form[action="/api/media/"]');
  await upload.locator('[name="file"]').setInputFiles({name:'cover.png',mimeType:'image/png',buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADElEQVQImWOYVLgGAANIAbAPnu7IAAAAAElFTkSuQmCC','base64')});
- await upload.locator('[name="alt_tr"]').fill('Cover framing QA');await upload.getByRole('button',{name:'Yükle'}).click();
+ await upload.locator('[name="alt_tr"]').fill('Cover framing QA');
+ const uploaded=page.waitForResponse(response=>new URL(response.url()).pathname==='/api/media/'&&response.request().method()==='POST');
+ await upload.getByRole('button',{name:'Yükle'}).click();
+ const uploadResponse=await uploaded;expect(uploadResponse.status(),uploadResponse.status()>=400?await uploadResponse.text():'').toBeLessThan(400);
  const card=page.locator('.entry-card').filter({has:page.locator('input[value="Cover framing QA"]')});
  await expect(card).toBeVisible();
  const mediaId=await card.locator('input[name="id"]').first().inputValue();

@@ -760,3 +760,4 @@ body[data-theme="aurora"]{--accent:#ffbe98!important}body[data-theme="aurora"] .
 .homepage-device-preview>[data-device-retry][hidden]{display:none}
 .admin-main>.homepage-editor{width:100%;max-width:1440px}
 .homepage-device-preview header strong{display:block;margin-bottom:.5rem}.homepage-device-preview header .field-help{margin-top:0;line-height:1.5}
+@media(max-width:600px){.homepage-device-preview .studio-preview-tools button{padding-inline:.35rem;font-size:.8rem;white-space:nowrap;min-width:0}}

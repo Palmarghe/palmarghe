@@ -17,6 +17,8 @@ export default defineConfig({
   adapter: cloudflare({ imageService: 'compile' }),
   session: false,
   trailingSlash: 'always',
+  // Development audits are unrelated to app QA and issue background requests while fixtures change.
+  devToolbar: { enabled: process.env.LOCAL_TEST_MODE !== 'true' },
   vite: {
     plugins: [publicStylesPlugin(), imageCodecsPlugin()],
     define: {
