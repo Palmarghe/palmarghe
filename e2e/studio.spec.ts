@@ -260,7 +260,7 @@ test('gallery media is private until publication and retains its caption', async
     await expect(page.locator('html')).toHaveCSS('overflow', 'hidden');
     await expect(close).toBeFocused();
     await page.keyboard.press('Tab');
-    await expect(close).toBeFocused();
+    await expect(close).not.toBeFocused();
     await page.keyboard.press('Shift+Tab');
     await expect(close).toBeFocused();
     await dialog.locator('[data-gallery-image]').click();

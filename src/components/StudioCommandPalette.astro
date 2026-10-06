@@ -1,0 +1,14 @@
+---
+const {sections=[],labels={},editor=false}=Astro.props;
+---
+<button class="studio-command-trigger" type="button" data-command-open aria-haspopup="dialog">⌕ Hızlı erişim <kbd>Ctrl K</kbd></button>
+<dialog class="studio-command-dialog" data-command-dialog aria-label="Studio komut paleti">
+ <header><label class="field">Bölüm, içerik veya medya bul<input type="search" data-command-query autocomplete="off" placeholder="Bir işlem veya isim yaz…"/></label><button type="button" data-command-close aria-label="Komut paletini kapat">×</button></header>
+ <p class="field-help">↑ ↓ seçenekler · Enter aç · Esc kapat</p>
+ <div data-command-results>
+  {sections.map((section:string)=><a data-command-item href={`/studio/?section=${section}${editor?'&panel=editor':''}`}>{labels[section]}<small>Studio bölümü</small></a>)}
+  <a data-command-item href="https://palmarghe.com/">Ana sayfayı aç<small>Canlı site</small></a>
+ </div>
+ <p role="status" data-command-status></p>
+</dialog>
+<script is:inline src="/scripts/studio-command.js" defer></script>

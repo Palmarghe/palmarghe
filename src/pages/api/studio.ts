@@ -1,3 +1,4 @@
+import { recordStudioOperation } from '../../lib/operation-observability';
 import { coverFraming } from '../../lib/cover-framing';
 import { socialPlatforms } from '../../lib/social';
 import type { APIRoute } from 'astro';
@@ -14,7 +15,7 @@ import { slugFromTitle } from '../../lib/slug';
 
 const category = z.object({ slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/), name_tr: z.string().min(1).max(100), name_en: z.string().min(1).max(100), description_tr: z.string().max(500).nullable(), description_en: z.string().max(500).nullable(), seo: z.object({ title_tr: z.string().max(120), title_en: z.string().max(120), description_tr: z.string().max(300), description_en: z.string().max(300) }), parent_id: z.uuid().nullable(), active: z.boolean(), sort_order: z.number().int().min(0).max(1000) });
 const content = z.object({ id: z.uuid().optional(), category_id: z.uuid().nullable(), cover_media_id: z.uuid().nullable(), og_media_id: z.uuid().nullable(), canonical_override: z.url().max(500).nullable(), translation_group: z.uuid().nullable(), featured: z.boolean(), indexable: z.boolean(), title: z.string().min(1).max(200), slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*(\/[a-z0-9]+(-[a-z0-9]+)*)*$/), locale: z.enum(['tr','en']), type: z.enum(['article','project','fm_mod','gallery','lab_entry']), status: z.enum(['draft','scheduled','published','archived']), excerpt: z.string().max(500).nullable(), body: z.string().max(100000), seo_title: z.string().max(200).nullable(), seo_description: z.string().max(300).nullable() });
-export const POST: APIRoute = async ({ request, cookies }) => {
+const handlePost: APIRoute = async ({ request, cookies }) => {
   if (!sameOrigin(request)) return errorResponse('Invalid origin', 403);
   const db = supabase(cookies, request);
   if (!db) return errorResponse('Service unavailable', 503);
@@ -380,3 +381,5 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
   return errorResponse('Invalid entity');
 };
+
+export const POST: APIRoute = async context => { const start=performance.now();const response=await handlePost(context);await recordStudioOperation(context,response,performance.now()-start);return response; };
