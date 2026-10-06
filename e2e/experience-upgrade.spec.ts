@@ -23,7 +23,7 @@ test('draft recovery is explicit, preserves body after reload and preview does n
 test('Studio image preview, touch focus and undo remain usable in both themes and sizes',async({page})=>{
  test.setTimeout(90000);await page.goto('/studio/?section=homepage');
  const initial=await page.locator('[name=hero_title_tr]').inputValue();await page.locator('[name=hero_title_tr]').fill('Unsaved preview');
- await expect(page.locator('[data-preview-title]')).toHaveText('Unsaved preview');await expect(page.locator('.studio-change-bar')).toContainText('Kaydedilmemiş');
+ await expect(page.frameLocator('[data-device-frame]').locator('.hero-copy>h1')).toHaveText('Unsaved preview');await expect(page.locator('.studio-change-bar')).toContainText('Kaydedilmemiş');
  await page.getByRole('button',{name:'Değişiklikleri geri al',exact:true}).click();await expect(page.locator('[name=hero_title_tr]')).toHaveValue(initial);
  const frame=page.locator('[data-card-frame]');await frame.scrollIntoViewIfNeeded();const box=await frame.boundingBox();expect(box).not.toBeNull();await page.mouse.click(box!.x+box!.width*.8,box!.y+box!.height*.25);
  await expect(page.locator('[name=preview_focus_x]')).toHaveValue('80');await expect(page.locator('[name=preview_focus_y]')).toHaveValue('25');

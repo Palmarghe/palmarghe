@@ -1,6 +1,6 @@
 (() => {
   for (const form of document.querySelectorAll('.homepage-editor,.advertising-form')) {
-    const controls = [...form.querySelectorAll('input,select,textarea')];
+    const controls = [...form.querySelectorAll('input,select,textarea')].filter(el=>el.name);
     const snapshot = () => controls.map(el => ({ value: el.value, checked: el.checked, selected: el.tagName === 'SELECT' ? [...el.options].map(o => o.selected) : null }));
     let initial = snapshot(); let dirty = false, leaving = false;
     const bar = document.createElement('div'); bar.className = 'studio-change-bar';

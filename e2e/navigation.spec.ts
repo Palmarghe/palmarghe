@@ -236,7 +236,7 @@ test('Studio dashboard reports publication quality and Studio previews update be
   await page.goto('/studio/?section=homepage');
   const title = page.getByRole('textbox', { name: 'TR başlık' });
   await title.fill('Yerel önizleme başlığı');
-  await expect(page.locator('[data-homepage-preview]')).toContainText('Yerel önizleme başlığı');
+  await expect(page.frameLocator('[data-device-frame]').locator('.hero-copy>h1')).toHaveText('Yerel önizleme başlığı');
 
   await page.goto('/studio/?section=advertising');
   await page.locator('input[name="header_title"]').fill('Yerel reklam önizlemesi');

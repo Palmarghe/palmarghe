@@ -2,7 +2,7 @@ import postcss from 'postcss';
 import selectorParser from 'postcss-selector-parser';
 
 // These namespaces belong to Studio. Unknown or mixed rules remain untouched.
-const studioClass = /^(admin-|studio-|editor-|content-editor-|classic-|ribbon-|media-cleanup-)/;
+const studioClass = /^(admin-|studio-|editor-|content-editor-|classic-|ribbon-|media-cleanup-|homepage-device-)/;
 
 export function publicStyles(source) {
   const tree = postcss.parse(source);

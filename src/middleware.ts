@@ -23,8 +23,15 @@ export const onRequest = defineMiddleware(async (context, next) => {
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
-  response.headers.set('X-Frame-Options', 'DENY');
+  const heroPreview=context.url.pathname==='/studio/preview/homepage/';
+  response.headers.set('X-Frame-Options', heroPreview?'SAMEORIGIN':'DENY');
   response.headers.set('Content-Security-Policy', "default-src 'self'; script-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com https://pagead2.googlesyndication.com; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; connect-src 'self' https://*.supabase.co https://cloudflareinsights.com https://pagead2.googlesyndication.com; frame-src https://challenges.cloudflare.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.youtube-nocookie.com https://www.youtube.com https://player.vimeo.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
+  if(context.url.pathname.startsWith('/studio/')){
+    let policy=response.headers.get('Content-Security-Policy')!;
+    policy=policy.replace('frame-src ','frame-src \'self\' ');
+    if(heroPreview)policy=policy.replace("frame-ancestors 'none'","frame-ancestors 'self'");
+    response.headers.set('Content-Security-Policy',policy);
+  }
   // Published pages read editable Studio settings at request time; never serve an old HTML render after a save.
   if ((response.headers.get('Content-Type') ?? '').startsWith('text/html')) response.headers.set('Cache-Control', 'private, no-store');
   if (context.url.hostname !== 'localhost' && context.url.protocol === 'https:') response.headers.set('Strict-Transport-Security', 'max-age=31536000');

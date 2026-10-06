@@ -1,0 +1,22 @@
+---
+import {pathFor,type Locale} from '../lib/site';
+interface Props {
+ locale:Locale; mode:string; title:string; eyebrow:string; descriptor:string; image:string;
+ preview?:{href:string;image:string;alt:string;label:string;title:string;style:string};
+ inspect?:boolean;
+}
+const {locale,mode,title,eyebrow,descriptor,image,preview,inspect=false}=Astro.props;
+---
+<section class={`hero hero--${mode} wrap`} data-hero-editable>
+ <img class="hero-art" src={image} alt="" width="1600" height="900" fetchpriority="high" decoding="async" data-preview-field={inspect?'hero_image_url':undefined}/>
+ <div class="hero-copy">
+  <span class="eyebrow" data-preview-field={inspect?`hero_eyebrow_${locale}`:undefined}>{eyebrow}</span>
+  <h1 data-preview-field={inspect?`hero_title_${locale}`:undefined}>{title}</h1>
+  <p data-preview-field={inspect?`hero_descriptor_${locale}`:undefined}>{descriptor}</p>
+  <div class="hero-actions"><a class="button" href={pathFor(locale,'gaming')}>{locale==='tr'?'Modları keşfet':'Explore mods'} <span aria-hidden="true">↗</span></a><a class="text-link" href={pathFor(locale,'music')}>{locale==='tr'?'Müziğe kulak ver':'Listen to the music'} →</a></div>
+ </div>
+ {mode==='compact'&&preview&&<a class="hero-preview" style={preview.style} href={preview.href} data-preview-field={inspect?'preview_content_id':undefined}>
+  <div class="hero-card-image-frame"><img src={preview.image} alt={preview.alt} width="640" height="400" decoding="async"/></div>
+  <div><span class="eyebrow">{preview.label}</span><strong>{preview.title}</strong><span aria-hidden="true">↗</span></div>
+ </a>}
+</section>

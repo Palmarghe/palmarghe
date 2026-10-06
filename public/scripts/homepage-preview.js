@@ -1,7 +1,7 @@
 (() => {
   const form = document.querySelector('.homepage-editor');
   const preview = document.querySelector('[data-homepage-preview]');
-  if (!form || !preview) return;
+  if (!form) return;
   const field = (name) => form.querySelector(`[name="${name}"]`);
   const card = form.querySelector('.hero-card-editor-preview');
   const render = () => {
@@ -10,7 +10,7 @@
     const desc = field('hero_descriptor_tr')?.value.trim() || 'Yapay zekâ, oyunlar, Football Manager ve dijital deneyler.';
     const visible = field('hero_visible')?.checked;
     const mode = field('hero_mode')?.value || 'compact';
-    preview.className = `homepage-live-preview mode-${mode}${visible ? '' : ' is-hidden'}`;
+    if(preview){preview.className = `homepage-live-preview mode-${mode}${visible ? '' : ' is-hidden'}`;
     preview.querySelector('[data-preview-eyebrow]').textContent = eyebrow;
     preview.querySelector('[data-preview-title]').textContent = title;
     preview.querySelector('[data-preview-desc]').textContent = desc;
@@ -19,7 +19,7 @@
     if(!artwork){artwork=document.createElement('img');artwork.dataset.previewArtwork='';artwork.alt='';preview.append(artwork);}
     const heroMedia=field('hero_media_id')?.value;
     const heroSource=heroMedia?'/api/media/'+heroMedia+'/':field('hero_image_url')?.value.trim()||'/visuals/hero-glass.webp';
-    try {const url=new URL(heroSource,location.origin);artwork.hidden=mode==='text';if(url.origin===location.origin||url.protocol==='https:')artwork.src=url.href;else artwork.hidden=true;}catch{artwork.hidden=true;}
+    try {const url=new URL(heroSource,location.origin);artwork.hidden=mode==='text';if(url.origin===location.origin||url.protocol==='https:')artwork.src=url.href;else artwork.hidden=true;}catch{artwork.hidden=true;}}
     if(card){
       const choice=field('preview_content_id');
       const selected=choice?.selectedOptions[0];

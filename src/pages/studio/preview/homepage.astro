@@ -1,0 +1,17 @@
+---
+import HomeHero from '../../../components/HomeHero.astro';
+import {supabase} from '../../../lib/supabase';
+import '../../../styles/global.css?public';
+const db=supabase(Astro.cookies,Astro.request);
+const user=db?(await db.auth.getUser()).data.user:null;
+const profile=user&&db?(await db.from('profiles').select('role,permission_group_id').eq('id',user.id).single()).data:null;
+if(!user)return new Response('Unauthorized',{status:401});
+if(profile?.role!=='admin')return new Response('Forbidden',{status:403});
+const appearance=db?(await db.from('site_settings').select('value').eq('key','appearance').single()).data?.value:null;
+const accent=({violet:'#8b5cf6',blue:'#60a5fa',amber:'#fbbf24'} as Record<string,string>)[appearance?.accent]??'#8b5cf6';
+const radius=appearance?.radius==='subtle'?'4px':'0px';
+---
+<!doctype html><html lang="tr"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="robots" content="noindex,nofollow"/><title>Vitrin cihaz önizlemesi</title></head><body style={`--accent:${accent};--radius:${radius}`}>
+<main><HomeHero locale="tr" mode="compact" title="Dijital işler için bir yayın alanı." eyebrow="PALMARGHE — BAĞIMSIZ DİJİTAL YAYIN" descriptor="Yapay zekâ, oyunlar, Football Manager ve dijital deneyler." image="/visuals/hero-glass.webp" inspect preview={{href:'#',image:'/visuals/hero-glass.webp',alt:'Vitrin kartı önizlemesi',label:'VİTRİNDEN',title:'Yayınlanmış içerik seç',style:''}}/></main>
+<script is:inline src="/scripts/homepage-device-frame.js"></script>
+</body></html>

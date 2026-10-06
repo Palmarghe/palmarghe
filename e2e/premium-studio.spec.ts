@@ -19,12 +19,12 @@ test('homepage preview selects fields, supports tablet and reports reversible ch
  await page.goto('/studio/?section=homepage');
  const title=page.locator('[name=hero_title_tr]');const original=await title.inputValue();
  await title.fill('Premium preview local QA');
- await expect(page.locator('[data-preview-title]')).toHaveText('Premium preview local QA');
+ const live=page.frameLocator('[data-device-frame]');
+ await expect(live.locator('.hero-copy>h1')).toHaveText('Premium preview local QA');
  await expect(page.locator('.studio-change-summary')).toContainText('alan değişti');
- await page.locator('[data-preview-title]').click();await expect(title).toBeFocused();
- const preview=page.locator('[data-homepage-preview]');
- await preview.locator('xpath=preceding-sibling::*[1]').getByRole('button',{name:'Tablet',exact:true}).click();
- await expect(preview).toHaveAttribute('data-preview-device','tablet');
+ await live.locator('.hero-copy>h1').click();await expect(title).toBeFocused();
+ await page.locator('[data-device-preview]').getByRole('button',{name:'Tablet',exact:true}).click();
+ await expect.poll(()=>live.locator('html').evaluate(()=>innerWidth)).toBe(768);
  await page.getByRole('button',{name:'Değişiklikleri geri al',exact:true}).click();
  await expect(title).toHaveValue(original);await expect(page.locator('.studio-change-summary')).toHaveText('');
 });
