@@ -11,13 +11,13 @@ const initialCategories: Row[] = [
   { id: '00000000-0000-4000-8000-000000000004', slug: 'lab', name_tr: 'Lab', name_en: 'Lab', parent_id: null, active: true, sort_order: 3 },
   { id: '00000000-0000-4000-8000-000000000005', slug: 'fm26', name_tr: 'FM26', name_en: 'FM26', parent_id: '00000000-0000-4000-8000-000000000003', active: true, sort_order: 0 },
 ];
-const users: Row[] = [
+const initialUsers: Row[] = [
   { id: '00000000-0000-4000-8000-100000000001', email: 'admin@example.test', password: 'LocalTest123!', role: 'admin' },
   { id: '00000000-0000-4000-8000-100000000002', email: 'editor@example.test', password: 'LocalTest123!', role: 'editor' },
   { id: '00000000-0000-4000-8000-100000000003', email: 'member@example.test', password: 'LocalTest123!', role: 'member' },
 ];
-const tables: Record<TableName, Row[]> = {
-  profiles: users.map(({ id, role },index) => ({ id, role, display_name:role === 'admin' ? 'Yerel Yönetici' : null, bio:null, avatar_key:`avatar-${String(index+1).padStart(2,'0')}`, permission_group_id:`00000000-0000-4000-9000-00000000000${role === 'member' ? 1 : role === 'editor' ? 2 : 3}` })),
+const initialTables: Record<TableName, Row[]> = {
+  profiles: initialUsers.map(({ id, role },index) => ({ id, role, display_name:role === 'admin' ? 'Yerel Yönetici' : null, bio:null, avatar_key:`avatar-${String(index+1).padStart(2,'0')}`, permission_group_id:`00000000-0000-4000-9000-00000000000${role === 'member' ? 1 : role === 'editor' ? 2 : 3}` })),
   permission_groups: [
     { id:'00000000-0000-4000-9000-000000000001',name:'Üye',description:'Yorum yapabilir.',base_role:'member',permissions:{comment:true},protected:true },
     { id:'00000000-0000-4000-9000-000000000002',name:'Editör',description:'İçerik yönetebilir.',base_role:'editor',permissions:{comment:true,content:true,taxonomy:true,media:true,messages:true},protected:true },
@@ -26,8 +26,15 @@ const tables: Record<TableName, Row[]> = {
   tags: [], content_items: [], content_categories: [], content_tags: [], contact_messages: [],
   site_settings: [], navigation: [], media: [], redirects: [], audit_logs: [], account_deletion_requests: [], traffic_daily: [], traffic_qualified_daily: [], content_likes: [], content_bookmarks: [], content_follows: [], content_notifications: [], editorial_collections: [], editorial_collection_items: [], newsletter_subscribers: [], content_revisions: [],
 };
-const mediaFiles = new Map<string, Uint8Array>();
-const mediaCleanupTasks: Row[] = [];
+type LocalStore={users:Row[];tables:Record<TableName,Row[]>;mediaFiles:Map<string,Uint8Array>;mediaCleanupTasks:Row[]};
+const fresh:LocalStore={users:initialUsers,tables:initialTables,mediaFiles:new Map(),mediaCleanupTasks:[]};
+// Vite can reload an SSR dependency after warming a new route. Preserve one store per
+// local QA server process so uploaded files and their rows never belong to different generations.
+// Production does not register or read this development-only state.
+const storeKey=Symbol.for('palmarghe.local-qa-store.v1');
+const registry=globalThis as typeof globalThis & {[key:symbol]:LocalStore|undefined};
+const store=import.meta.env.DEV&&import.meta.env.LOCAL_TEST_MODE==='true'?(registry[storeKey]??=fresh):fresh;
+const {users,tables,mediaFiles,mediaCleanupTasks}=store;
 const isTable = (name: string): name is TableName => name in tables;
 
 class Query implements PromiseLike<{ data: any; error: { code: string; message: string } | null }> {
