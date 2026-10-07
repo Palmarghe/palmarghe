@@ -423,7 +423,7 @@ body[data-theme="light"] .manual-ad-editor,body[data-theme="light"] .manual-ad-p
   .promotion-slot{width:calc(100% - 1.5rem)}
 }
 
-.library-button{appearance:none;border:0;background:transparent;padding:0;cursor:pointer;font:inherit}.library-button[aria-pressed="true"]{color:var(--accent)}
+.library-button{appearance:none;border:0;background:transparent;padding:0;cursor:pointer;font:inherit}.library-button[aria-pressed="true"]{color:var(--text);text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:.3em}
 
 .collection-editor fieldset{display:grid;gap:.45rem;margin:1rem 0;padding:1rem;border:1px solid var(--border)}.collection-item-choice{display:flex;gap:.5rem;align-items:flex-start}
 

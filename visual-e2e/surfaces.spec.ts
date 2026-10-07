@@ -34,6 +34,16 @@ for(const width of [390,1440])for(const theme of ['dark','light','aurora'])for(c
   const path=surface==='home'?'/':surface==='search'?'/search/?q=Dijital':`/studio/?section=${surface==='editor'?'content':surface}`;
   await page.goto(path);await expect(page.locator('body')).toHaveAttribute('data-theme',theme);
   await page.evaluate(()=>document.fonts.ready);
+  // Deferred navigation/editor code must finish before photographing the surface.
+  // CI previously captured the expanded server fallback before nav initialization.
+  if(['dashboard','editor','homepage','health'].includes(surface)){
+   await expect(page.locator('.studio-nav-group>span[role=button]')).toHaveCount(4);
+   if(width>900)for(const group of await page.locator('.studio-nav-group').all()){
+    const active=await group.locator('[aria-current=page]').count()>0;
+    await expect(group.locator(':scope>span')).toHaveAttribute('aria-expanded',String(active));
+   }
+  }
+  if(surface==='editor'){await expect(page.locator('#block-editor .tiptap')).toHaveAttribute('contenteditable','true');await expect(page.locator('.classic-ribbon [data-editor=undo]')).toBeDisabled();}
   if(surface==='search')await expect(page.locator('main [data-search-result]').first()).toBeVisible();
   // Bring each displayed lazy image into view; hidden menu/modal assets are not photographed.
   for(const image of await page.locator('img:visible').all()){

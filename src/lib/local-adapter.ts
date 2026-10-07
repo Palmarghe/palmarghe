@@ -46,6 +46,7 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
   private ascending = true;
   private max = Infinity;
   private expectSingle = false;
+  private ignoreDuplicates = false;
   constructor(private table: TableName, private user: Row | null) {}
   select(columns = '*') { this.columns = columns; return this; }
   eq(field: string, value: any) { this.filters.push((row) => row[field] === value); return this; }
@@ -64,7 +65,7 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
   insert(values: Row | Row[]) { this.action = 'insert'; this.values = values; return this; }
   update(values: Row) { this.action = 'update'; this.values = values; return this; }
   delete() { this.action = 'delete'; return this; }
-  upsert(values: Row | Row[]) { this.action = 'upsert'; this.values = values; return this; }
+  upsert(values: Row | Row[],options?:{ignoreDuplicates?:boolean}) { this.action = 'upsert'; this.values = values; this.ignoreDuplicates=options?.ignoreDuplicates===true;return this; }
   private visible(row: Row): boolean {
     if (this.table === 'content_items') return this.user?.role === 'admin' || this.user?.role === 'editor' || (['published','scheduled'].includes(row.status) && row.published_at && row.published_at <= new Date().toISOString());
     if (this.table === 'content_categories') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => item.id === row.content_id && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
@@ -103,10 +104,11 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
     if (this.table === 'account_deletion_requests' && this.action === 'insert' && (this.values as Row).user_id !== this.user?.id) return { data: null, error: { code: '42501', message: 'permission denied' } };
     if (this.action === 'insert' || this.action === 'upsert') {
       const inputs = Array.isArray(this.values) ? this.values : [this.values];
+      if (['content_likes','content_bookmarks','content_follows'].includes(this.table) && inputs.some(input=>input.user_id!==this.user?.id)) return {data:null,error:{code:'42501',message:'permission denied'}};
       selected = inputs.map((input) => {
         if (this.action === 'upsert') {
-          const existing = rows.find((row) => row.id === input.id || (this.table === 'site_settings' && row.key === input.key) || (this.table === 'content_categories' && row.content_id === input.content_id && row.category_id === input.category_id));
-          if (existing) return Object.assign(existing, input);
+          const existing = rows.find((row) => (input.id!==undefined && row.id === input.id) || (this.table === 'site_settings' && row.key === input.key) || (this.table === 'content_categories' && row.content_id === input.content_id && row.category_id === input.category_id) || (['content_likes','content_bookmarks'].includes(this.table) && row.user_id===input.user_id && row.content_id===input.content_id) || (this.table==='content_follows' && row.user_id===input.user_id && row.target_kind===input.target_kind && row.target_id===input.target_id));
+          if (existing) return this.ignoreDuplicates ? existing : Object.assign(existing, input);
         }
         const row = { id: uid(), created_at: new Date().toISOString(), updated_at: new Date().toISOString(), ...input };
         rows.push(row); return row;

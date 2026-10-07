@@ -1,0 +1,99 @@
+{
+  "scope": "Migration043 and authenticated rolled-back PostgreSQL QA; excludes later live Chrome interactions",
+  "before": [
+    {
+      "entity": "comments",
+      "fingerprint": "b4299019a74fb7366dd1ace3114c3a5c",
+      "rows": 4
+    },
+    {
+      "entity": "content",
+      "fingerprint": "40d324c87ebad7518156ea7a5c912ba3",
+      "rows": 15
+    },
+    {
+      "entity": "profiles",
+      "fingerprint": "43e32f0fa0de6e53a0db134484cf74e5",
+      "rows": 5
+    },
+    {
+      "entity": "media",
+      "fingerprint": "05bdcf09d5cddf45063c01986dfe8038",
+      "rows": 15
+    },
+    {
+      "entity": "settings",
+      "fingerprint": "08304cf5e75ceae6bf35fdae5e170a33",
+      "rows": 4
+    },
+    {
+      "entity": "likes",
+      "fingerprint": "d40f42fd19afb31f9f2cd16642293ded",
+      "rows": 5
+    },
+    {
+      "entity": "bookmarks",
+      "fingerprint": "39a0dc5c056ba8639a72fa6ba50f891d",
+      "rows": 1
+    },
+    {
+      "entity": "follows",
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e",
+      "rows": 0
+    },
+    {
+      "entity": "notifications",
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e",
+      "rows": 0
+    }
+  ],
+  "after": [
+    {
+      "entity": "comments",
+      "fingerprint": "b4299019a74fb7366dd1ace3114c3a5c",
+      "rows": 4
+    },
+    {
+      "entity": "content",
+      "fingerprint": "40d324c87ebad7518156ea7a5c912ba3",
+      "rows": 15
+    },
+    {
+      "entity": "profiles",
+      "fingerprint": "43e32f0fa0de6e53a0db134484cf74e5",
+      "rows": 5
+    },
+    {
+      "entity": "media",
+      "fingerprint": "05bdcf09d5cddf45063c01986dfe8038",
+      "rows": 15
+    },
+    {
+      "entity": "settings",
+      "fingerprint": "08304cf5e75ceae6bf35fdae5e170a33",
+      "rows": 4
+    },
+    {
+      "entity": "likes",
+      "fingerprint": "d40f42fd19afb31f9f2cd16642293ded",
+      "rows": 5
+    },
+    {
+      "entity": "bookmarks",
+      "fingerprint": "39a0dc5c056ba8639a72fa6ba50f891d",
+      "rows": 1
+    },
+    {
+      "entity": "follows",
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e",
+      "rows": 0
+    },
+    {
+      "entity": "notifications",
+      "fingerprint": "d41d8cd98f00b204e9800998ecf8427e",
+      "rows": 0
+    }
+  ],
+  "matched": true,
+  "note": "Two rolled-back notification inserts advance the identity sequence; all row values/counts match."
+}

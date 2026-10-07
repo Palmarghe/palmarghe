@@ -1,6 +1,12 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 7 October 2026, public shell concurrency
+## Current production state — 7 October 2026, search/profile recovery
+
+Worker `54c88d36-661e-4374-81c8-62a01c57799f` serves clean source `e402eaa79b0f`. Search/profile/comment responses have complete twelve-second fetch/body deadlines; search retains previous results and inputs with explicit retry, and profile saving requires the original session identity and a valid acknowledgement. No automatic write replay. Existing durable comments042, hidden Aurora, hero, private preview and sampled health remain deployed.
+
+Local229 checked files zero diagnostics/204 units/build, full106/106 E2E and36 unchanged visual36.2s passed. Production19/19 passed1.4m. Actual Chrome profile/search/390px Aurora/health release and30ms database check verified without profile writes. Source Actions37628770008 functional job passed204 units/106 E2E6.3m; visual35/36 caught deferred navigation initialization in editor-light-1440, production-smoke skipped. The screenshot-ready repair and library desired-state work are still local and are not represented as deployed. Details: docs/read-recovery-2026-10-07.md. Full fourteen-item scope remains active.
+
+## Previous production state — 7 October 2026, public shell concurrency (historical)
 
 Worker `4e9499b0-e1c2-478d-bb1f-f8b32b8cec31` serves clean source `2b0624968fe7`. Independent public shell Auth/profile, due-notification dispatch and five settings/navigation reads start concurrently; every task is awaited before rendering, with original RLS/service-role/staff-link boundaries retained. No detached work, global cache, schema or original data change. Durable comments/migration042, hidden Aurora, save history, private preview and sampled health remain deployed.
 
