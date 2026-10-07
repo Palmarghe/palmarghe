@@ -60,3 +60,6 @@ Visual gate release7 October: Workerf873c119-8777-47d9-b761-ae46784e2ccd/source1
 
 
 Adapter repair gate: verify211 files/184 units/build passed; full functional91/92 exposed a newsletter consent link color-transition contrast issue during theme change. The text now switches immediately with its background; targeted visual-polish2/2 passed38.7s. Visual30/30 after the adapter repair passed43.5s. No production data changed; new CI still requires inspection.
+
+
+Current checkpoint: sourcea6aa1d4/Worker53590fcd-5918-416d-ac92-5c070909e8e3; verify211 files/184 units/build, clean full local92/92 passed4.4m and production12/12 passed1.1m. CI281 functional92 E2E passed, visual29/30 caught native closed-select painting. The shared select repair is undergoing final visual/CI checks. This completes no wider14-item audit by itself. Hero visual controls, responsive original media delivery, broader comment recovery and health trend work remain applicable.

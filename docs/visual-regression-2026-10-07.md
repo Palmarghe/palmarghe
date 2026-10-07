@@ -23,3 +23,9 @@ Run280/d4d40fc: local-store setup now succeeds; Windows visual29/30 passed. Down
 
 
 Final repair checks: Aurora/search/visual-polish6/6 passed50.9s, including both-theme public and Studio axe and JS-disabled search. Six search references were intentionally regenerated after replacing platform-native closed-select painting with theme-colored CSS chevrons. Full unchanged-reference visual30/30 passed30.7s. Native selects retain their standard keyboard/dropdown behavior; forced-colors restores native painting. No tolerance/mask relaxation was used.
+
+
+Run281/a6aa1d4: functional verify184 units/full92 E2E passed4m30s; visual29/30 failed on a second native-select closed text in mobile light Studio navigation (160 pixels, top y163–175). Downloaded diff verifies this is the same platform painting discrepancy. Shared single-select CSS now removes that paint across public/Studio, preserving multiple selects and forced-colors. Full local92/92 passed4.4m before this final CSS-only generalization; production12/12 passed1.1m. No tolerance relaxation. Final visual comparisons and new CI pending.
+
+
+Shared-select comparison: intentionally regenerated Studio references after reviewing the light mobile navigation/hero controls; all30 unchanged-reference comparisons passed30.1s. The previous source completed clean full local92/92 and CI full92; final shared-select source is sent through the same CI gates. Actual Chrome production palette screenshots are aurora-polish-desktop/mobile/studio-2026-10-07.png. QA theme preferences were restored to their initial dark values; no settings forms submitted.
