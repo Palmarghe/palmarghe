@@ -4,13 +4,19 @@ for (const width of [390,1440]) {
   for (const theme of ['dark','light']) {
     // Each combination receives a fresh browser context; decoded-image reuse
     // must not bypass the deliberately delayed cover response.
-    test(`portrait and readership reserve their final box at ${width}px in ${theme}`, async ({ page }) => {
+    test(`portrait and readership reserve their final box at ${width}px in ${theme}`, async ({ page,request }) => {
     await page.setViewportSize({ width, height:900 });
       let release!: () => void;
       const held = new Promise<void>(resolve => { release = resolve; });
       let releaseMetrics!: () => void;
       const heldMetrics = new Promise<void>(resolve => { releaseMetrics = resolve; });
-      await page.route('**/editorial/lamine-yamal.webp', async route => { await held; await route.continue(); });
+      const html=await (await request.get('/fm/lamine-yamal-fm26/?verify=reservation-source')).text();
+      const tag=html.match(/<img\b[^>]*fetchpriority="high"[^>]*>/)?.[0];
+      const source=tag?.match(/\bsrc="([^"]+)"/)?.[1];
+      expect(source).toMatch(/^\/(?:editorial\/|api\/media\/)/);
+      const coverUrl=new URL(source!,'https://palmarghe.com').href;let heldCover=false;
+      await page.route(coverUrl,async route=>{heldCover=true;await held;await route.continue();});
+      await page.addInitScript(theme=>localStorage.setItem('palmarghe-theme',theme),theme);
       await page.route('**/api/engagement/**', async route => {
         if (route.request().method() === 'POST') return route.fulfill({status:204});
         await heldMetrics;
@@ -18,7 +24,9 @@ for (const width of [390,1440]) {
       });
       try {
         await page.goto('/fm/lamine-yamal-fm26/?verify=reservation', { waitUntil:'domcontentloaded' });
-        await page.evaluate(async theme => { document.body.dataset.theme=theme; await document.fonts.ready; }, theme);
+        await expect(page.locator('body')).toHaveAttribute('data-theme',theme);
+        await page.evaluate(async()=>{await document.fonts.ready;});
+        await expect.poll(()=>heldCover).toBe(true);
         const cover = page.locator('.content-detail > img');
         await expect(cover).toHaveAttribute('width','655');
         await expect(cover).toHaveAttribute('height','1000');
@@ -37,7 +45,7 @@ for (const width of [390,1440]) {
         await expect(page.locator('[data-content-engagement]')).toHaveText('1.234 okunma · 2 paylaşım');
         const afterMetrics=await cover.boundingBox();
         for (const key of ['x','y','width','height'] as const) expect(Math.abs(before![key]-afterMetrics![key]),`${width}/${theme}/metrics/${key}`).toBeLessThan(1);
-      } finally { release(); releaseMetrics(); await page.unroute('**/editorial/lamine-yamal.webp'); await page.unroute('**/api/engagement/**'); }
+      } finally { release(); releaseMetrics(); await page.unroute(coverUrl); await page.unroute('**/api/engagement/**'); }
     });
   }
 }

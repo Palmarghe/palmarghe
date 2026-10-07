@@ -27,6 +27,9 @@ test('hero appearance previews, persists, respects reduced motion and restores w
  await expect(page.locator('.hero-art')).toHaveCSS('animation-name','none');
  for(const theme of ['dark','light','aurora'])for(const width of [390,1440]){
   await page.setViewportSize({width,height:900});await page.evaluate(theme=>document.body.dataset.theme=theme,theme);
+  const foreground=theme==='light'?'rgb(32, 29, 39)':theme==='aurora'?'rgb(245, 241, 232)':'rgb(243, 241, 234)';
+  await expect(page.locator('body')).toHaveCSS('color',foreground);
+  await expect(page.locator('.brand > span')).toHaveCSS('color',foreground);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   const axe=await new AxeBuilder({page}).analyze();expect(axe.violations.filter(v=>['serious','critical'].includes(v.impact??''))).toEqual([]);
  }

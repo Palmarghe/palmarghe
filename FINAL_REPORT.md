@@ -1,6 +1,10 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 7 October 2026, library recovery
+## Current production state — 7 October 2026, collection recovery
+
+Worker `576d7669-9f34-4f9d-be2a-5afbcf9fdb6e` serves clean source `75b073a`, normally committed/pushed. Migration044 was proven in a rolled-back production transaction, applied/history-registered atomically, and proved again. Collection metadata/relations save atomically with staff capability boundaries; failed saves preserve Studio form input. Actual admin Chrome private create/edit/reload and guarded QA cleanup passed, collections/links returned to0/0. Local234 checked files zero diagnostics/212 units/build,109 E2E5.5m and36 unchanged visual34.2s passed. Full80-case production audit77 passed/3 obsolete-fixture failures; corrected reservation/search8/8 passed. Collection source CI units212/visual36 passed, functional108/109 had an immediate Aurora color-readiness failure; explicit foreground-readiness repair passed three local repeats6/6, new CI remains required. Library docs32381f7 CI37644683026 is fully green. See docs/collection-recovery-2026-10-07.md. The full fourteen-item goal remains active.
+
+## Previous production state — 7 October 2026, library recovery (historical)
 
 Worker `80cecf11-7e8b-4ed4-b483-1497ed01f085` serves clean local source `7d9557c`. Likes/bookmarks/follows use explicit desired state and validated viewer-bound acknowledgement, complete twelve-second response deadlines and manual safe retry; reconnect never replays writes. Narrow migration043 repairs missing follow/read-notification grants while preserving own-record RLS and permitting only notification read_at updates. Existing search/profile/comment recovery and hidden Aurora remain deployed.
 

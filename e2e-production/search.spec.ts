@@ -121,7 +121,8 @@ test('search communicates slow, failed, empty and recovered network states', asy
 
   await page.context().setOffline(true);
   await input.fill('Yamal offline recovery');
-  await expect(status).toContainText('Aramaya ulaşılamadı. Yeniden dene.', { timeout: 12000 });
+  await expect(status).toContainText('Sonuçlar güncellenemedi. Önceki sonuçlar gösteriliyor; yeniden dene.', { timeout: 12000 });
+  await expect(dialog.locator('[data-search-result]').first()).toBeVisible();
   await page.context().setOffline(false);
 
   await input.fill('Lamine Yamal');
