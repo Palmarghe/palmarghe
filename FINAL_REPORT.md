@@ -1,6 +1,14 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 7 October 2026, persisted save time and mobile actions
+## Current production state — 7 October 2026, durable comment delivery
+
+Worker `54246ba6-51b0-4572-9793-ec81c3f301c7` serves clean source `134714b15c88`. Additive migration202610070042 was applied and recorded atomically in production. Comments use authenticated transactional receipts, twelve-second read/write bounds, preserved drafts, manual safe verification after uncertain acknowledgement and session recovery. Reconnect retries reads only. Private receipt rows remain inaccessible to browser roles; anon cannot execute the RPC. Legacy requests without a retained key do not have cross-request deduplication.
+
+Final local verify227 files zero diagnostics/204 units/build, full103/103 E2E5.1m and36/36 unchanged visual references passed. Actual Chrome submitted one temporary comment, confirmed persistence after reload, and actual Worker receipt replay returned the same ID/created=false. Guarded cleanup retained all eight original comments and all content/media/profile/settings fingerprints. Current mobile light composer is bounded; pre-cleanup Aurora/light/desktop proof and cleaned form are in docs/comment-delivery-2026-10-07.md. No original data/account/security settings were altered. Initial article navigation logged one ViewTransition InvalidStateError; fresh Studio health logs were empty.
+
+Initial production13-case run passed12; only a test expecting bare no-store failed because actual middleware correctly sends private, no-store. The corrected two comment tests passed9.1s. Source Actions37621599519 verify and visual succeeded, production-smoke failed the same test assertion. Corrected-source full production/CI gates are pending. Existing hidden Aurora, configurable hero, real device preview, save history and sampled health remain live. All14 premium requirements remain active; wider performance and cross-surface design/loading work remains.
+
+## Previous production state — 7 October 2026, persisted save time and mobile actions (historical)
 
 Worker `83e57406-304c-4174-a4e7-96c882f0f183` serves clean implementation `5e27e69`. Existing content/homepage/advertising/appearance/social/collection forms display actual persisted updated_at in Europe/Istanbul; unavailable metadata is explicit and browser time is never substituted. Mobile editor preview is correctly proportioned and More actions have bounded touch targets, saved-content preview, actual pointer hit testing and Escape/focus return. No migration, security/account/editorial/media/settings mutation.
 
@@ -8,8 +16,6 @@ Final local verify224 files zero diagnostics,202 units/build; full98/98 E2E4.0m;
 
 Hidden Aurora remains live on desktop/mobile via theme-button long press1.4s or Alt+Shift+A outside editable fields, with no normal third-theme option. Existing hero, private device preview, sampled health trends and prior verified features are retained. All14 premium requirements remain active; responsive original-media/performance, comment/network recovery and broader design/loading audit remain applicable. This release completes persisted-time display within requirement12; it does not close the overall objective.
 
-
-Production schema transition: additive migration202610070042 is applied/registered atomically and real authenticated/anon transaction assertions rolled back with all eight comments unchanged. New durable-comment Worker UI source is locally verified, deploy/live gates pending; see docs/comment-delivery-2026-10-07.md.
 
 ## Previous production state — 7 October 2026, measured health trends (historical)
 

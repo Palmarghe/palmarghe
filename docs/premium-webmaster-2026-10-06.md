@@ -76,8 +76,8 @@ Requirement7: Studio ratio/depth/light/intensity/ambient-motion controls now dep
 | 1 Shared design system | Public/Studio/theme matrix, Aurora control contrast and single-select rendering verified. Some editor mode/action accents remain to normalize. Partial. |
 | 2 Studio simplification | Collapsed hero controls, grouped mobile editor, persistent save feedback and private device preview verified. Long settings/virtual keyboard usability still needs final audit. Partial. |
 | 3 Performance | Actual sequential lab samples in performance-lab-2026-10-07.md. Responsive original-media delivery and comparable post-change measurements remain. Partial. |
-| 4 Resilience | Settings failed-save input retention and preview retry verified. Comments network timeout/double-submit and uncertain POST recovery remain. Partial. |
-| 5 Visual automation | Thirty reproducible references, Windows gate, public/Studio390/1440 and three themes verified; Actions282/283 green. New hero Actions284 visual passed. |
+| 4 Resilience | Settings failed-save input retention and preview retry verified. Comments timeout/uncertain commit/reload/manual dedup recovery now production verified; broader async surfaces remain to audit. Partial. |
+| 5 Visual automation | Thirty-six reproducible references and Windows gate, public/Studio390/1440 and three themes verified. Latest comment source verify/visual green; corrected production cache assertion gate pending. |
 | 6 Navigation motion | Reduced-motion/back-scroll and production navigation tests verified; navigation-motion-2026-10-07.md. |
 | 7 Configurable hero | Ratio/depth/light/intensity/ambient motion, validation/permissions, local save/restore and actual production99→100 persistence verified; hero-appearance-2026-10-07.md. |
 | 8 Micro interactions | Existing feedback/card/menu/save motion verified in scoped tests. Complete error/loading/reduced-motion consistency audit remains. Partial. |
@@ -86,14 +86,16 @@ Requirement7: Studio ratio/depth/light/intensity/ambient-motion controls now dep
 | 11 Real device preview | Shared public hero/stylesheet at1440/768/390, pending values/direct selection, private framing, source/origin checks and retry verified; homepage-device-preview-2026-10-07.md. |
 | 12 Save/revisions | Actual revision diff/restore, changed-field summary and persisted saved time verified. Wrong-clock/failure/reload proof, independent production SQL/Chrome match; see saved-record-time-2026-10-07.md. Implemented and production verified. |
 | 13 Operational trends | Real authorized release/service measurements and last50 sampled operation records persist. Rolling24h/7-day summaries, median/p95, failure counts, bounded capacity and limited sample comparison are implemented and production-verified; health-trends-2026-10-07.md. Not organic traffic or field CWV. |
-| 14 Loading/reconnect | Private preview bounded loading/retry verified. Comments and other async surfaces require complete reconnect/error-state audit. Partial. |
+| 14 Loading/reconnect | Private preview bounded loading/retry verified. Comments twelve-second loading/refresh/reconnect/draft retention are production verified. Other async surfaces require complete error-state audit. Partial. |
 
 This matrix preserves the full scope. Passing one release or the hidden-theme request does not close the wider goal. Production appearance QA restored original visual values; original publications, accounts and media were retained.
 
 
-## Current health trends production checkpoint
+## Historical health trends production checkpoint
 
 Requirement13 actual service/release checks, persisted failure samples and bounded duration trends verified on Worker baa0bd21-6d41-4bf1-817f-e7c00f586ff9/source7c464df. Verify219/192/build, full95 local before final capacity refinement and final health/Studio5 after,36 visual references and11 production cases passed. Real admin Chrome desktop/mobile/light/Aurora and manual refresh confirmed four genuine records, correct summaries/empty buckets, clean console and bounded layout. Source Actions286 passed all three jobs, with actual Chrome confirmation; preceding284/285 are also fully green. No new DB/production-data writes. Full scope and remaining partial requirements are retained.
 
 
-7 October persisted-time release: Worker83e57406-304c-4174-a4e7-96c882f0f183/source5e27e69 adds real server metadata to six Studio forms, wrong-client-clock/failure/reload proof and bounded hit-tested mobile More menu.224-file/202-unit/build, full98/98 local4.0m,36/36 visual43.0s,production11/11 52.4s passed. Actual Chrome five metadata comparisons match Supabase read-only SQL; no production data mutation. Requirement12 persisted time is now verified; broader2/8 and remaining fourteen-item matrix remain active. Details: saved-record-time-2026-10-07.md. Source CI37586550384 pending.
+7 October persisted-time release: Worker83e57406-304c-4174-a4e7-96c882f0f183/source5e27e69 adds real server metadata to six Studio forms, wrong-client-clock/failure/reload proof and bounded hit-tested mobile More menu.224-file/202-unit/build, full98/98 local4.0m,36/36 visual43.0s,production11/11 52.4s passed. Actual Chrome five metadata comparisons match Supabase read-only SQL; no production data mutation. Requirement12 persisted time is now verified; broader2/8 and remaining fourteen-item matrix remain active. Details: saved-record-time-2026-10-07.md. Source CI37586550384 and documentation37587267429 all three jobs passed.
+
+7 October durable-comment checkpoint: migration042 production applied; Worker54246ba6/source134714b; local227/204/build,103/103 E2E5.1m,36 visual passed. Actual Chrome commit/reload and actual receipt replay proven; unique QA cleaned, all originals matched. Initial production12/13 had only stricter-cache header expectation failure; corrected2/2 passed9.1s. Source verify/visual green, corrected production gate pending. Requirements4/14 comment portions verified; full matrix remains active.

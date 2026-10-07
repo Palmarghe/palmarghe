@@ -1,7 +1,7 @@
 import {test,expect} from '@playwright/test';import AxeBuilder from '@axe-core/playwright';
 test.use({serviceWorkers:'block'});const path='/fm/lamine-yamal-fm26/',endpoint='/api/comments/?path='+encodeURIComponent(path),viewer='11111111-1111-4111-8111-111111111111',id='22222222-2222-4222-8222-222222222222';
 test('live comment reads expose no visitor identity and writes enforce authentication/origin',async({request})=>{
- const response=await request.get(endpoint);expect(response.status()).toBe(200);expect(response.headers()['cache-control']).toBe('no-store');const data=await response.json();expect(data).toMatchObject({authenticated:false,viewer_id:null});expect(Array.isArray(data.comments)).toBe(true);
+ const response=await request.get(endpoint);expect(response.status()).toBe(200);expect(response.headers()['cache-control'].split(',').map(v=>v.trim())).toEqual(expect.arrayContaining(['private','no-store']));const data=await response.json();expect(data).toMatchObject({authenticated:false,viewer_id:null});expect(Array.isArray(data.comments)).toBe(true);
  const denied=await request.post('/api/comments/',{headers:{Origin:'https://palmarghe.com'},form:{path,body:'Never stored: anonymous boundary',request_id:crypto.randomUUID()}});expect(denied.status()).toBe(401);
  const foreign=await request.post('/api/comments/',{headers:{Origin:'https://example.invalid'},form:{path,body:'Never stored: origin boundary',request_id:crypto.randomUUID()}});expect(foreign.status()).toBe(403);
 });
