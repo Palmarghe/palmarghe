@@ -17,3 +17,9 @@ Windows Actions37538970760 exposed a real local QA fixture defect: uploaded medi
 
 
 Adapter repair gate: verify211 files/184 units/build passed; full functional91/92 exposed a newsletter consent link color-transition contrast issue during theme change. The text now switches immediately with its background; targeted visual-polish2/2 passed38.7s. Visual30/30 after the adapter repair passed43.5s. No production data changed; new CI still requires inspection.
+
+
+Run280/d4d40fc: local-store setup now succeeds; Windows visual29/30 passed. Downloaded actual/expected/diff shows only native select text positioning in mobile Aurora search (263 pixels). Do not increase tolerance or mask the controls. The native closed select appearance is being normalized with CSS chevrons; native keyboard and forced-colors behavior stay available. Functional91/92 failed again on footer link color interpolation during theme switching, including its retry. All header/footer link colors now switch alongside the background. New final gates pending.
+
+
+Final repair checks: Aurora/search/visual-polish6/6 passed50.9s, including both-theme public and Studio axe and JS-disabled search. Six search references were intentionally regenerated after replacing platform-native closed-select painting with theme-colored CSS chevrons. Full unchanged-reference visual30/30 passed30.7s. Native selects retain their standard keyboard/dropdown behavior; forced-colors restores native painting. No tolerance/mask relaxation was used.

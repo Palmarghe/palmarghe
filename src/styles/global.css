@@ -762,5 +762,13 @@ body[data-theme="aurora"]{--accent:#ffbe98!important}body[data-theme="aurora"] .
 .homepage-device-preview header strong{display:block;margin-bottom:.5rem}.homepage-device-preview header .field-help{margin-top:0;line-height:1.5}
 @media(max-width:600px){.homepage-device-preview .studio-preview-tools button{padding-inline:.35rem;font-size:.8rem;white-space:nowrap;min-width:0}}
 
-/* Consent text switches with its background to retain contrast during theme changes. */
-.newsletter-signup .newsletter-consent a{transition:none}
+/* Navigation text switches with its background to retain contrast during theme changes. */
+.desktop-nav a,.head-actions a,.site-footer a{transition:opacity .22s ease}
+
+/* Aurora uses the same warm accent for secondary controls and editor selection. */
+body[data-theme="aurora"] .newsletter-signup button{background:var(--accent);border-color:var(--accent);color:#10262a}
+body[data-theme="aurora"] .classic-menubar button[aria-selected="true"],body[data-theme="aurora"] .classic-editor-shell .editor-toolbar button.is-active,body[data-theme="aurora"] .classic-ribbon button.is-active{background:var(--accent)!important;color:#10262a!important;border-color:var(--accent)!important}
+
+/* Keep select text and chevrons consistent without changing native keyboard interaction. */
+.search-form select{appearance:none;padding-right:2.5rem;background-image:linear-gradient(45deg,transparent 50%,var(--text) 50%),linear-gradient(135deg,var(--text) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat}
+@media(forced-colors:active){.search-form select{appearance:auto;background-image:none}}
