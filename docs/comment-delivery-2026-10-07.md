@@ -2,7 +2,7 @@
 
 ## Scope and state
 
-Migration202610070042 is applied and recorded atomically in production. Worker54246ba6-51b0-4572-9793-ec81c3f301c7/source134714b15c88 is deployed and actual authenticated delivery/cleanup verified. Test-only cache assertion correction is being released. Full fourteen-item premium goal remains active. Requirements4/14 now have concrete comment recovery implementation, not a claim that every async surface is audited.
+Migration202610070042 is applied and recorded atomically in production. Worker7597043d-cc88-4722-b007-2af7913be794/source13d2474b5cd9 is deployed and actual authenticated delivery/cleanup verified. Corrected production13/13 passed58.0s. Actual Chrome health confirms source13d2474b5cd9 and service access; fresh health console empty. Full fourteen-item premium goal remains active. Requirements4/14 now have concrete comment recovery implementation, not a claim that every async surface is audited.
 
 Comment reads have a twelve-second timeout, stable reserved loading area, explicit refresh and read-only reconnect. Existing comments/composer/input survive failed refresh; no duplicate forms/login notices. Submissions use a per-member/path UUID request, pending guard, read-only input while outcome is uncertain, manual verification/retry and scoped sessionStorage recovery after reload. Online never replays a write. Successful acknowledgement must include valid server receipt/identity; explicit rejection preserves editable text. A changed signed-in identity is rejected before insert. If an earlier outcome was uncertain, even a later401 preserves its original delivery key; switching back verifies the first transaction rather than creating a new request. In-place recovery works when storage is unavailable; reload recovery then cannot be promised.
 
@@ -20,7 +20,7 @@ Baseline original fingerprints: content15/40d324c87ebad7518156ea7a5c912ba3; medi
 
 ## Rollback
 
-Normally revert/rebuild/deploy Worker code while retaining042 schema/receipts; additive schema does not affect prior Worker direct inserts. Do not drop receipts after real use, because that would lose duplicate/replay protection. If disabling comments temporarily is required, disable writes at the Worker before any schema rollback. No automatic destructive down migration. Final corrected source CI and full production gate remain to be recorded.
+Normally revert/rebuild/deploy Worker code while retaining042 schema/receipts; additive schema does not affect prior Worker direct inserts. Do not drop receipts after real use, because that would lose duplicate/replay protection. If disabling comments temporarily is required, disable writes at the Worker before any schema rollback. No automatic destructive down migration. Final corrected source production13/13 passed58.0s; actual Chrome clean source/services verified, source Actions37623995954 pending.
 
 ## Actual Chrome delivery and cleanup
 
@@ -29,3 +29,5 @@ Already signed-in production admin submitted one uniquely marked temporary comme
 The first native pointer attempt did not initiate submit despite valid fields; keyboard Enter completed the actual transaction. Controlled Playwright click scenarios passed. Initial article Chrome recorded one ViewTransition InvalidStateError; fresh Studio health logs were empty. These observations are retained, not presented as globally clean console evidence.
 
 Actual pre-cleanup QA screenshots: comment-delivery-live-desktop-2026-10-07.jpg, comment-delivery-live-mobile-aurora-2026-10-07.jpg and comment-delivery-live-mobile-light-2026-10-07.jpg. Current cleaned form: comment-delivery-live-clean-mobile-light-2026-10-07.jpg. Screenshots are native JPEG, not altered images.
+
+Actual mutation/receipt proof was performed on initial Worker54246ba6/source134714b. Corrected Worker7597043d/source13d2474 has identical runtime/API/schema and only test/documentation changes; final13-case production run passed on this corrected source.
