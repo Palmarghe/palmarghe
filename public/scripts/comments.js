@@ -7,7 +7,7 @@
  const escape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[char]);
  let reading=false,readFailed=false,posting=false,viewer=null,form=null,pending=null,storageKey=null;
  const announce=text=>{status.hidden=false;status.textContent=text;};
- const timedFetch=async(url,options={})=>{const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);try{return await fetch(url,{...options,credentials:'same-origin',signal:controller.signal});}finally{clearTimeout(timer);}};
+ const timedFetch=async(url,options={})=>{const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);try{const response=await fetch(url,{...options,credentials:'same-origin',signal:controller.signal});const data=response.ok?await response.json():null;return {response,data};}finally{clearTimeout(timer);}};
  const remember=()=>{try{if(storageKey){if(pending)sessionStorage.setItem(storageKey,JSON.stringify(pending));else sessionStorage.removeItem(storageKey);}}catch{/* In-place delivery remains safe if storage is unavailable. */}};
  const attachComposer=data=>{
   const nextViewer=data.authenticated?data.viewer_id:null;
@@ -27,16 +27,16 @@
    if(!pending)pending={body,request:crypto.randomUUID(),uncertain:false};remember();posting=true;form.setAttribute('aria-busy','true');button.disabled=true;textarea.readOnly=true;delivery.textContent=say('Yorum gönderiliyor…','Posting comment…');
    const payload=new FormData();payload.append('path',path);payload.append('body',pending.body);payload.append('request_id',pending.request);payload.append('viewer_id',viewer);
    try{
-    const response=await timedFetch('/api/comments/',{method:'POST',body:payload});
+    const {response,data:result}=await timedFetch('/api/comments/',{method:'POST',body:payload});
     if(!response.ok){if(response.status>=500||response.status===408||response.status===429)throw new Error('uncertain');if(pending.uncertain){uncertain();if(response.status===401)delivery.textContent=say('Oturum değişti. İlk gönderimin sonucu belirsiz; metin ve gönderim anahtarı korundu. Aynı hesapla giriş yapıp doğrula.','The session changed. The first outcome is uncertain; its text and delivery key are retained. Sign in with the same account and verify.');return;}pending=null;remember();textarea.readOnly=false;button.textContent=say('Yorum gönder','Post comment');delivery.textContent=response.status===401?say('Oturumun sona erdi. Metnin burada duruyor; tekrar giriş yap.','Your session expired. Your text remains here; sign in again.'):say('Yorum kaydedilemedi. Metnin korundu; kontrol edip tekrar deneyebilirsin.','Comment was rejected. Your text remains; review it and retry.');return;}
-    const result=await response.json();if(result.ok!==true||result.viewer_id!==viewer||typeof result.created!=='boolean'||typeof result.removed!=='boolean'||(result.removed?result.id!==null||result.created:typeof result.id!=='string'))throw new Error('uncertain');
+    if(result.ok!==true||result.viewer_id!==viewer||typeof result.created!=='boolean'||typeof result.removed!=='boolean'||(result.removed?result.id!==null||result.created:typeof result.id!=='string'))throw new Error('uncertain');
     pending=null;remember();textarea.value='';textarea.readOnly=false;updateCount();button.textContent=say('Yorum gönder','Post comment');delivery.textContent=result.removed?say('Bu gönderim daha önce işlendi ve yorum kaldırıldı. Tekrar oluşturulmadı.','This submission was already processed and removed. It was not recreated.'):say('Yorum kaydedildi.','Comment posted.');await load();
    }catch{uncertain();}finally{posting=false;form?.setAttribute('aria-busy','false');button.disabled=false;}
   });
  };
  const load=async()=>{
   if(reading)return;reading=true;retry.disabled=true;list.setAttribute('aria-busy','true');announce(say('Yorumlar yükleniyor…','Loading comments…'));
-  try{const response=await timedFetch(`/api/comments/?path=${encodeURIComponent(path)}`);if(!response.ok)throw new Error('read failed');const data=await response.json();if(!Array.isArray(data.comments))throw new Error('invalid response');
+  try{const {response,data}=await timedFetch(`/api/comments/?path=${encodeURIComponent(path)}`);if(!response.ok)throw new Error('read failed');if(!Array.isArray(data.comments))throw new Error('invalid response');
    list.innerHTML=data.comments.length?data.comments.map(comment=>`<article class="comment"><div class="comment-avatar"><img src="/avatars/${escape(/^avatar-(0[1-9]|1[0-9]|20)$/.test(comment.avatar_key)?comment.avatar_key:'avatar-01')}.webp" alt="" loading="lazy"></div><div><header><strong>${escape(comment.display_name)}</strong><time datetime="${escape(comment.created_at)}">${new Date(comment.created_at).toLocaleDateString(tr?'tr-TR':'en-US')}</time></header><p>${escape(comment.body).replace(/\n/g,'<br>')}</p></div></article>`).join(''):`<p class="empty-comment">${say('İlk yorumu siz yazın.','Be the first to comment.')}</p>`;
    attachComposer(data);readFailed=false;retry.hidden=false;retry.textContent=say('Yorumları yenile','Refresh comments');status.hidden=true;
   }catch{readFailed=true;retry.hidden=false;announce(say('Yorumlar şu anda yüklenemiyor. Mevcut metin ve yorumlar korundu.','Comments could not be loaded. Existing text and comments are retained.'));}

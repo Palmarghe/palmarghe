@@ -6,13 +6,13 @@ export async function verifyProfileRecovery(page: Page, locale = 'tr') {
   await page.route('**/api/profile/', async route => {
     if (route.request().method() === 'GET') {
       loads++;
-      return route.fulfill(loads === 1 ? { status: 503, body: 'Unavailable' } : { json: { display_name: 'Controlled QA', bio: 'Existing bio', avatar_key: 'avatar-05', author_slug: 'qa-profile', public_profile: false } });
+      return route.fulfill(loads === 1 ? { status: 503, body: 'Unavailable' } : { json: { viewer_id:'00000000-0000-4000-8000-100000000003',display_name: 'Controlled QA', bio: 'Existing bio', avatar_key: 'avatar-05', author_slug: 'qa-profile', public_profile: false } });
     }
     saves++;
     if (saves === 1) return route.abort('failed');
     if (saves === 2) return route.fulfill({ status: 409, json: { error: 'author_slug_taken', field: 'author_slug' } });
     await new Promise<void>(resolve => { releaseSave = resolve; });
-    return route.fulfill({ json: { ok: true } });
+    return route.fulfill({ json: { ok: true,viewer_id:'00000000-0000-4000-8000-100000000003' } });
   });
   await page.goto(`${locale === 'en' ? '/en' : ''}/account/?verify=profile`);
   const message = (tr: string, en: string) => locale === 'en' ? en : tr;

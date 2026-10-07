@@ -1,12 +1,18 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 7 October 2026, durable comment delivery
+## Current production state — 7 October 2026, public shell concurrency
+
+Worker `4e9499b0-e1c2-478d-bb1f-f8b32b8cec31` serves clean source `2b0624968fe7`. Independent public shell Auth/profile, due-notification dispatch and five settings/navigation reads start concurrently; every task is awaited before rendering, with original RLS/service-role/staff-link boundaries retained. No detached work, global cache, schema or original data change. Durable comments/migration042, hidden Aurora, save history, private preview and sampled health remain deployed.
+
+Local verify227 files zero diagnostics/204 units/build; full103/103 E2E5.0m;36/36 unchanged visual35.6s; final production13/13 passed54.0s. Comparable three-run mobile homepage LCP median2.530→2.121s/performance97→98, but server response455→668ms: no general speed or field-CWV claim. Exact samples/limitations in docs/shell-performance-2026-10-07.md and JSON. Source Actions37625308388 passed verify, visual and production-smoke; preceding corrected comment source13d2474 Actions37623995954 passed all three jobs. Full14-item technical objective remains active, including responsive original media, broader async recovery and cross-surface design/loading audit.
+
+## Previous production state — 7 October 2026, durable comment delivery (historical)
 
 Worker `7597043d-cc88-4722-b007-2af7913be794` serves clean source `13d2474b5cd9`. Additive migration202610070042 was applied and recorded atomically in production. Comments use authenticated transactional receipts, twelve-second read/write bounds, preserved drafts, manual safe verification after uncertain acknowledgement and session recovery. Reconnect retries reads only. Private receipt rows remain inaccessible to browser roles; anon cannot execute the RPC. Legacy requests without a retained key do not have cross-request deduplication.
 
 Final local verify227 files zero diagnostics/204 units/build, full103/103 E2E5.1m and36/36 unchanged visual references passed. Actual Chrome submitted one temporary comment, confirmed persistence after reload, and actual Worker receipt replay returned the same ID/created=false. Guarded cleanup retained all eight original comments and all content/media/profile/settings fingerprints. Current mobile light composer is bounded; pre-cleanup Aurora/light/desktop proof and cleaned form are in docs/comment-delivery-2026-10-07.md. No original data/account/security settings were altered. Initial article navigation logged one ViewTransition InvalidStateError; fresh Studio health logs were empty.
 
-Initial production13-case run passed12; only a test expecting bare no-store failed because actual middleware correctly sends private, no-store. The corrected two comment tests passed9.1s. Source Actions37621599519 verify and visual succeeded, production-smoke failed the same test assertion. Corrected-source full production13/13 passed58.0s; Actions37623995954 visual passed, verify/production pending. Existing hidden Aurora, configurable hero, real device preview, save history and sampled health remain live. All14 premium requirements remain active; wider performance and cross-surface design/loading work remains.
+Initial production13-case run passed12; only a test expecting bare no-store failed because actual middleware correctly sends private, no-store. The corrected two comment tests passed9.1s. Source Actions37621599519 verify and visual succeeded, production-smoke failed the same test assertion. Corrected-source full production13/13 passed58.0s; Actions37623995954 completed successfully across verify, visual and production-smoke. Existing hidden Aurora, configurable hero, real device preview, save history and sampled health remain live. All14 premium requirements remain active; wider performance and cross-surface design/loading work remains.
 
 ## Previous production state — 7 October 2026, persisted save time and mobile actions (historical)
 

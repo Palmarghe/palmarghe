@@ -829,3 +829,9 @@ body[data-theme="light"] .hero[data-hero-visual].hero--compact{--hero-base-opaci
 .comments-list[aria-busy="true"]:empty{min-height:9rem;border:1px solid var(--border);border-radius:.35rem;background:linear-gradient(180deg,var(--surface),var(--bg));opacity:.65}
 .comment-delivery-status{margin:0;color:var(--muted);font-size:.85rem;overflow-wrap:anywhere}.comments-retry{margin:.25rem 0 1rem;min-height:44px;padding:.35rem 0;border:0;background:transparent;color:var(--text);font:inherit;text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:.3em}.comment-form[aria-busy="true"]{opacity:.85}.comment-form textarea[readonly]{border-color:var(--accent)}
 @media(max-width:520px){.comment-form>span{gap:.75rem;flex-wrap:wrap}.comment-form button{max-width:100%;white-space:normal}.comment header{flex-wrap:wrap}}
+
+/* A bounded, visible recovery action uses the active palette in every search surface. */
+.search-retry{min-height:44px;max-width:100%;white-space:normal;padding:.5rem .7rem;color:var(--text);background:transparent;border:1px solid var(--border);text-align:start}
+
+/* Result text and surface switch atomically; an interpolated surface can break contrast. */
+.search-overlay [data-search-results] .instant-search-result,.instant-search-result{transition:border-color .2s ease}

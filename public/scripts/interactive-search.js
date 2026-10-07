@@ -49,7 +49,10 @@
     const syncClear = () => { clear.hidden = !input.value; };
     syncClear();
     const labels = english ? {article:'Article',project:'Project',fm_mod:'FM Mod',gallery:'Gallery',lab_entry:'Lab'} : {article:'Yazı',project:'Proje',fm_mod:'FM Mod',gallery:'Galeri',lab_entry:'Lab'};
-    let type = select?.value || '', timer, controller, version = 0, selected = -1;
+    let type = select?.value || '', timer, controller, version = 0, selected = -1, unavailable = false;
+    const retry = document.createElement('button');
+    retry.type='button';retry.className='search-retry text-link';retry.hidden=true;
+    retry.textContent=english?'Retry search':'Aramayı yeniden dene';status.after(retry);
     status.hidden = false; results.hidden = false;
     root.querySelectorAll('[data-search-fallback]').forEach(el => { el.hidden = true; });
     const appendText = (parent, text, term) => {
@@ -80,25 +83,34 @@
     };
     const search = (immediate = false) => {
       clearTimeout(timer); controller?.abort(); const current = ++version, q = input.value.trim(); selected = -1;
-      results.setAttribute('aria-busy','true');
+      const returnToInput=document.activeElement===retry;retry.hidden=true;unavailable=false;results.setAttribute('aria-busy','true');
       if (q.length === 1) { results.replaceChildren(); results.removeAttribute('aria-busy'); status.textContent = english ? 'Enter at least two characters.' : 'En az iki karakter yaz.'; return; }
       status.textContent = english ? 'Searching…' : 'Aranıyor…';
       timer = setTimeout(async () => {
-        const active = new AbortController(); controller = active;
+        const active = new AbortController(); controller = active;let timedOut=false;
+        const deadline=setTimeout(()=>{timedOut=true;active.abort();},12000);
         try {
           const response = await fetch(`/api/search/?locale=${english ? 'en' : 'tr'}&q=${encodeURIComponent(q)}&type=${encodeURIComponent(type)}&category=${encodeURIComponent(category)}`,{signal:active.signal});
           if (!response.ok) throw new Error('Unavailable');
           const payload = await response.json(); if (current !== version) return;
+          const validItems=items=>Array.isArray(items)&&items.every(item=>item&&typeof item.slug==='string'&&typeof item.title==='string'&&typeof item.type==='string');
+          if(!payload||!validItems(payload.results)||(payload.suggestions!==undefined&&!validItems(payload.suggestions))||(payload.categories!==undefined&&(!Array.isArray(payload.categories)||!payload.categories.every(item=>item&&typeof item.id==='string'&&typeof item.name_tr==='string'&&typeof item.name_en==='string'))))throw new Error('Invalid search response');
           if(categorySelect.options.length===1){for(const item of payload.categories||[]){const option=document.createElement('option');option.value=item.id;option.textContent=english?item.name_en:item.name_tr;option.selected=item.id===category||item.slug===category;categorySelect.append(option);}}
-          render(payload.results || [],q);
+          render(payload.results || [],q);if(returnToInput)input.focus();
           if(!payload.results?.length&&payload.suggestions?.length){const note=document.createElement('p');note.className='search-suggestion-heading';note.textContent=english?'You might also explore':'Bunlara da göz atabilirsin';const previous=status.textContent;render(payload.suggestions,'');results.prepend(note);status.textContent=previous;}
           const full = root.querySelector('a.text-link');
           if (full) full.href = `${english ? '/en' : ''}/search/?q=${encodeURIComponent(q)}&type=${encodeURIComponent(type)}&category=${encodeURIComponent(category)}`;
           if (root !== dialog) { const url = new URL(location.href); q ? url.searchParams.set('q',q) : url.searchParams.delete('q'); type ? url.searchParams.set('type',type) : url.searchParams.delete('type'); category?url.searchParams.set('category',category):url.searchParams.delete('category');history.replaceState(null,'',url); }
-        } catch { if (!active.signal.aborted && current === version) { results.replaceChildren(); status.textContent = english ? 'Search is unavailable. Please try again.' : 'Aramaya ulaşılamadı. Yeniden dene.'; } }
-        finally { if (current === version) results.removeAttribute('aria-busy'); }
+        } catch { if (current === version && (!active.signal.aborted || timedOut)) {
+          unavailable=true;retry.hidden=false;
+          const retained=Boolean(results.querySelector('[data-search-result]'));
+          status.textContent=english?(retained?'Search could not update. Previous results are shown; retry when ready.':'Search is unavailable. Please retry.'):(retained?'Sonuçlar güncellenemedi. Önceki sonuçlar gösteriliyor; yeniden dene.':'Aramaya ulaşılamadı. Yeniden dene.');
+        } }
+        finally { clearTimeout(deadline);if (current === version) results.removeAttribute('aria-busy'); }
       },immediate ? 0 : 220);
     };
+    retry.addEventListener('click',()=>search(true));
+    window.addEventListener('online',()=>{if(unavailable && (root!==dialog || dialog.open))search(true);});
     input.addEventListener('input',() => { syncClear(); search(); });
     clear.addEventListener('click',() => { input.value = ''; syncClear(); input.focus(); search(true); });
     form.addEventListener('submit',event => { event.preventDefault(); search(true); });

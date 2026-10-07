@@ -2,12 +2,16 @@ name: Verify
 on:
   push:
   pull_request:
+permissions:
+  contents: read
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
           cache: npm
@@ -24,8 +28,10 @@ jobs:
   visual:
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
           cache: npm
@@ -41,13 +47,15 @@ jobs:
   production-smoke:
     needs: [verify, visual]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e:production -- e2e-production/visual-showcase.spec.ts e2e-production/search-clear.spec.ts e2e-production/experience-upgrade.spec.ts e2e-production/aurora-theme.spec.ts e2e-production/modal.spec.ts e2e-production/navigation.spec.ts e2e-production/homepage-preview.spec.ts e2e-production/health-boundary.spec.ts e2e-production/comment-delivery.spec.ts
+      - run: npm run test:e2e:production -- e2e-production/visual-showcase.spec.ts e2e-production/search-clear.spec.ts e2e-production/experience-upgrade.spec.ts e2e-production/aurora-theme.spec.ts e2e-production/modal.spec.ts e2e-production/navigation.spec.ts e2e-production/homepage-preview.spec.ts e2e-production/health-boundary.spec.ts e2e-production/comment-delivery.spec.ts e2e-production/profile-recovery.spec.ts e2e-production/read-recovery.spec.ts
