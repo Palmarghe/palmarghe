@@ -1,0 +1,16 @@
+---
+import {heroVisual} from '../lib/hero-visual';
+interface Props{setting?:unknown}
+const visual=heroVisual(Astro.props.setting);
+---
+<details class="hero-visual-controls">
+ <summary>Vitrin görünümü</summary>
+ <p class="field-help">Metin ve kart seçimini koruyarak oranı, ışığı ve derinliği ayarla. Değişiklikler cihaz önizlemesinde görünür; kaydedince yayına geçer.</p>
+ <label class="field">Vitrin oranı<select name="hero_visual_ratio"><option value="auto" selected={visual.ratio==='auto'}>Otomatik · mevcut düzen</option><option value="wide" selected={visual.ratio==='wide'}>Geniş · 16:5</option><option value="balanced" selected={visual.ratio==='balanced'}>Dengeli · 16:7</option></select><small class="field-help">Telefonlarda içerik yüksekliğine göre otomatik yerleşir.</small></label>
+ <div class="hero-visual-grid">
+  <label class="field" for="hero-depth">Derinlik <output for="hero-depth" data-hero-visual-output="hero_visual_depth">{visual.depth}</output><input id="hero-depth" name="hero_visual_depth" type="range" min="0" max="20" step="1" value={visual.depth}/></label>
+  <label class="field" for="hero-light">Işık <output for="hero-light" data-hero-visual-output="hero_visual_light" data-suffix="%">{visual.light}%</output><input id="hero-light" name="hero_visual_light" type="range" min="0" max="60" step="1" value={visual.light}/></label>
+  <label class="field" for="hero-intensity">Görsel yoğunluğu <output for="hero-intensity" data-hero-visual-output="hero_visual_intensity" data-suffix="%">{visual.intensity}%</output><input id="hero-intensity" name="hero_visual_intensity" type="range" min="0" max="150" step="1" value={visual.intensity}/><small class="field-help">100% mevcut yoğunluktur; 0% görseli geri çeker.</small></label>
+ </div>
+ <label class="field">Hareket<select name="hero_visual_motion"><option value="none" selected={visual.motion==='none'}>Sabit</option><option value="ambient" selected={visual.motion==='ambient'}>Hafif akış</option></select><small class="field-help">Hareketi azalt tercihi açık olduğunda animasyon çalışmaz.</small></label>
+</details>

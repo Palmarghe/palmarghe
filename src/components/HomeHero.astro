@@ -1,13 +1,15 @@
 ---
 import {pathFor,type Locale} from '../lib/site';
+import {heroVisual,heroVisualStyle} from '../lib/hero-visual';
 interface Props {
  locale:Locale; mode:string; title:string; eyebrow:string; descriptor:string; image:string;
  preview?:{href:string;image:string;alt:string;label:string;title:string;style:string};
- inspect?:boolean;
+ inspect?:boolean; visual?:unknown;
 }
 const {locale,mode,title,eyebrow,descriptor,image,preview,inspect=false}=Astro.props;
+const visual=heroVisual(Astro.props.visual);
 ---
-<section class={`hero hero--${mode} wrap`} data-hero-editable>
+<section class={`hero hero--${mode} wrap`} data-hero-editable data-hero-visual data-hero-ratio={visual.ratio} data-hero-depth={visual.depth} data-hero-motion={visual.motion} style={heroVisualStyle(visual)}>
  <img class="hero-art" src={image} alt="" width="1600" height="900" fetchpriority="high" decoding="async" data-preview-field={inspect?'hero_image_url':undefined}/>
  <div class="hero-copy">
   <span class="eyebrow" data-preview-field={inspect?`hero_eyebrow_${locale}`:undefined}>{eyebrow}</span>

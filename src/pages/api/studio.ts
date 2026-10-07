@@ -1,5 +1,6 @@
 import { recordStudioOperation } from '../../lib/operation-observability';
 import { coverFraming } from '../../lib/cover-framing';
+import {heroVisualSchema} from '../../lib/hero-visual';
 import { socialPlatforms } from '../../lib/social';
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
@@ -174,9 +175,11 @@ const handlePost: APIRoute = async ({ request, cookies }) => {
     const imageUrl = heroMediaId.success ? `/api/media/${heroMediaId.data}/` : requestedImageUrl;
     const mode = z.enum(['compact','editorial','text']).safeParse(form.get('hero_mode') ?? 'compact');
     if (!mode.success) return errorResponse('Invalid hero mode');
+    const visual=heroVisualSchema.safeParse({ratio:form.get('hero_visual_ratio')??undefined,depth:form.get('hero_visual_depth')??undefined,light:form.get('hero_visual_light')??undefined,intensity:form.get('hero_visual_intensity')??undefined,motion:form.get('hero_visual_motion')??undefined});
+    if(!visual.success)return errorResponse('Invalid hero appearance');
     const hero = { visible: form.get('hero_visible') === 'on', mode: mode.data, eyebrow_tr:pick('hero_eyebrow_tr',100), eyebrow_en:pick('hero_eyebrow_en',100), title_tr:pick('hero_title_tr',120), title_en:pick('hero_title_en',120), descriptor_tr:pick('hero_descriptor_tr',260), descriptor_en:pick('hero_descriptor_en',260), image_url:imageUrl };
     const uniqueIds = (name:string, maximum:number) => [...new Set(form.getAll(name).map((value) => String(value)).filter((value) => z.uuid().safeParse(value).success))].slice(0,maximum);
-    Object.assign(hero,{preview});
+    Object.assign(hero,{preview,visual:visual.data});
     const curation = { featured_ids: uniqueIds('featured_ids',3), visual_reel_ids: uniqueIds('visual_reel_ids',6), spotlight_id: z.uuid().safeParse(form.get('spotlight_id')).success ? String(form.get('spotlight_id')) : '' };
     const { error } = await db.from('site_settings').upsert({ key: 'homepage', value: {order,visible,hero,curation}, updated_at: new Date().toISOString() });
     if (error) return errorResponse('Save failed',400);

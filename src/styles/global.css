@@ -772,3 +772,23 @@ body[data-theme="aurora"] .classic-menubar button[aria-selected="true"],body[dat
 /* Keep select text and chevrons consistent without changing native keyboard interaction. */
 body select:not([multiple]){appearance:none;padding-right:2.5rem;background-image:linear-gradient(45deg,transparent 50%,var(--text) 50%),linear-gradient(135deg,var(--text) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat}
 @media(forced-colors:active){body select:not([multiple]){appearance:auto;background-image:none}}
+
+/* Optional hero controls preserve the existing layout and original media by default. */
+.hero[data-hero-visual]{--hero-base-opacity:.86}
+.hero[data-hero-visual].hero--compact{--hero-base-opacity:.3}
+body[data-theme="light"] .hero[data-hero-visual]{--hero-base-opacity:1}
+body[data-theme="light"] .hero[data-hero-visual].hero--compact{--hero-base-opacity:.3}
+.hero[data-hero-visual] .hero-art{opacity:clamp(0,calc(var(--hero-base-opacity)*var(--hero-intensity,1)),1)}
+.hero[data-hero-visual]::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 80% 20%,var(--accent),transparent 65%);opacity:var(--hero-light,0)}
+.hero[data-hero-visual]:not([data-hero-depth="0"]) .hero-art{transform:scale(var(--hero-scale,1))}
+.hero[data-hero-visual]:not([data-hero-depth="0"]) .hero-preview{box-shadow:0 var(--hero-depth) calc(var(--hero-depth)*2) rgb(0 0 0 / .2)}
+.hero[data-hero-motion="ambient"] .hero-art{animation:hero-ambient 18s ease-in-out infinite alternate}
+@keyframes hero-ambient{from{transform:scale(var(--hero-scale,1)) translateY(0)}to{transform:scale(calc(var(--hero-scale,1) + .02)) translateY(-6px)}}
+@media(min-width:900px){.hero[data-hero-ratio="wide"]{aspect-ratio:16/5}.hero[data-hero-ratio="balanced"]{aspect-ratio:16/7}}
+@media(prefers-reduced-motion:reduce){.hero[data-hero-motion="ambient"] .hero-art{animation:none!important;transform:none!important}}
+.hero-visual-controls{padding:1rem;border:1px solid var(--border);border-radius:8px;margin-block:1rem;min-width:0}
+.hero-visual-controls>summary{min-height:44px;display:list-item;cursor:pointer;font-size:1rem}
+.hero-visual-controls .field-help{max-width:65ch}.hero-visual-controls output{font-size:.85rem;color:var(--muted)}
+.hero-visual-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.hero-visual-grid input{width:100%;padding-inline:0;accent-color:var(--accent)}
+@media(max-width:600px){.hero-visual-grid{grid-template-columns:1fr}}

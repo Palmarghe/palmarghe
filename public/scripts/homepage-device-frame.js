@@ -9,6 +9,7 @@
   document.body.dataset.theme=['light','dark','aurora'].includes(values.theme)?values.theme:'dark';
   const mode=['compact','editorial','text'].includes(values.mode)?values.mode:'compact';
   hero.className=`hero hero--${mode} wrap`;hero.hidden=values.visible===false;hero.style.display=hero.hidden?'none':'';
+  const visual=values.visual||{};hero.dataset.heroRatio=['wide','balanced'].includes(visual.ratio)?visual.ratio:'auto';hero.dataset.heroMotion=visual.motion==='ambient'?'ambient':'none';const depth=clamp(visual.depth,0,20,0);hero.dataset.heroDepth=String(depth);hero.style.setProperty('--hero-depth',depth+'px');hero.style.setProperty('--hero-scale',String(1+depth/500));hero.style.setProperty('--hero-intensity',String(clamp(visual.intensity,0,150,100)/100));hero.style.setProperty('--hero-light',String(clamp(visual.light,0,60,0)/100));
   const fields=[['.hero-copy>.eyebrow','eyebrow',100,'hero_eyebrow_'],['.hero-copy>h1','title',120,'hero_title_'],['.hero-copy>p','descriptor',260,'hero_descriptor_']];
   for(const [selector,key,max,name]of fields){const node=hero.querySelector(selector);node.textContent=text(values[key],max);node.dataset.previewField=name+locale;}
   const image=source(values.image);if(image)hero.querySelector('.hero-art').src=image;
