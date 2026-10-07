@@ -1,6 +1,14 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 7 October 2026, search/profile recovery
+## Current production state — 7 October 2026, library recovery
+
+Worker `80cecf11-7e8b-4ed4-b483-1497ed01f085` serves clean local source `7d9557c`. Likes/bookmarks/follows use explicit desired state and validated viewer-bound acknowledgement, complete twelve-second response deadlines and manual safe retry; reconnect never replays writes. Narrow migration043 repairs missing follow/read-notification grants while preserving own-record RLS and permitting only notification read_at updates. Existing search/profile/comment recovery and hidden Aurora remain deployed.
+
+Verify232 files zero diagnostics/210 units/build, full108/108 local E2E5.4m and36/36 unchanged visual35.3s passed. Final production21/21 passed1.5m; actual authenticated Chrome add/reload/account-list/remove proof and rolled-back PostgreSQL replay/removal/foreign-row/column-boundary proof succeeded. Nine current table row fingerprints matched exactly after cleanup; the baseline for this slice contains4 comments, not the earlier historical8. Original content/media/settings still match prior fingerprints. Screenshots and limits: docs/library-recovery-2026-10-07.md.
+
+Source7d9557c is committed locally; normal GitHub pushes repeatedly return500, and an exact-SHA/fast-forward-only Git Data attempt also failed before any branch update. Remote main remains e402eaa; new Actions cannot run yet. This is an external publication failure, not evidence of a permissions blocker or green CI. Sourcee402eaa CI verify succeeded106 E2E; its35/36 visual failure was traced to deferred navigation initialization and repaired locally with readiness assertions without baseline/tolerance changes. Full fourteen-item objective remains active; missing collection privileges, responsive original media, remaining design/phone/loading audit and final CI remain applicable.
+
+## Previous production state — 7 October 2026, search/profile recovery (historical)
 
 Worker `54c88d36-661e-4374-81c8-62a01c57799f` serves clean source `e402eaa79b0f`. Search/profile/comment responses have complete twelve-second fetch/body deadlines; search retains previous results and inputs with explicit retry, and profile saving requires the original session identity and a valid acknowledgement. No automatic write replay. Existing durable comments042, hidden Aurora, hero, private preview and sampled health remain deployed.
 
