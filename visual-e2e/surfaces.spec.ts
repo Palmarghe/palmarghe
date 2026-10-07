@@ -1,5 +1,6 @@
 import {test,expect} from '@playwright/test';
 import {readFile} from 'node:fs/promises';
+import {operationTrends} from '../src/lib/operation-trends';
 
 const origin='http://127.0.0.1:4322';
 const admin={name:'pg_mock_user',value:'00000000-0000-4000-8000-100000000001',url:origin};
@@ -20,11 +21,16 @@ test.beforeAll(async({browser})=>{
  await context.close();
 });
 
-for(const width of [390,1440])for(const theme of ['dark','light','aurora'])for(const surface of ['home','search','dashboard','editor','homepage']){
+for(const width of [390,1440])for(const theme of ['dark','light','aurora'])for(const surface of ['home','search','dashboard','editor','homepage','health']){
  test(`${surface} ${theme} ${width}`,async({page,context})=>{
   await page.setViewportSize({width,height:900});
   await page.addInitScript(theme=>localStorage.setItem('palmarghe-theme',theme),theme);
-  if(['dashboard','editor','homepage'].includes(surface))await context.addCookies([admin]);
+  if(['dashboard','editor','homepage','health'].includes(surface))await context.addCookies([admin]);
+  if(surface==='health'){
+   // Fixed local screenshot fixture, never a claimed production measurement.
+   const observations=[{status:303,duration_ms:100,time:'2026-10-07T10:00:00Z',failed:false},{status:400,duration_ms:500,time:'2026-10-07T11:00:00Z',failed:true}];
+   await page.route('**/api/studio-health/',route=>route.fulfill({json:{checked_at:'2026-10-07T12:00:00Z',release:'visual-fixture',built_at:'2026-10-07T09:00:00Z',services:{auth:'ok',database:'ok',media_catalog:'ok'},database_ms:20,observations,observations_available:true,trends:operationTrends(observations,Date.parse('2026-10-07T12:00:00Z')),note:'Son 50 örneklenmiş Studio isteği; yalnız yerel görsel test verisi.'}}));
+  }
   const path=surface==='home'?'/':surface==='search'?'/search/?q=Dijital':`/studio/?section=${surface==='editor'?'content':surface}`;
   await page.goto(path);await expect(page.locator('body')).toHaveAttribute('data-theme',theme);
   await page.evaluate(()=>document.fonts.ready);
@@ -39,6 +45,7 @@ for(const width of [390,1440])for(const theme of ['dark','light','aurora'])for(c
    await expect(page.locator('main input[name=q]')).toBeFocused();
   }
   if(surface==='homepage')await expect(page.locator('[data-device-preview]>[role=status]')).toContainText('1440px');
+  if(surface==='health')await expect(page.locator('[data-health-metrics] .health-metric')).toHaveCount(4);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await expect(page).toHaveScreenshot(`${surface}-${theme}-${width}.png`,{fullPage:true,mask:[page.locator('time'),page.locator('.content-list .admin-table tbody tr td:nth-child(5)')]});
  });

@@ -792,3 +792,16 @@ body[data-theme="light"] .hero[data-hero-visual].hero--compact{--hero-base-opaci
 .hero-visual-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
 .hero-visual-grid input{width:100%;padding-inline:0;accent-color:var(--accent)}
 @media(max-width:600px){.hero-visual-grid{grid-template-columns:1fr}}
+
+/* Measured Studio operation summaries share each theme's surfaces and text. */
+.health-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem;margin:1rem 0}
+.health-metric{min-width:0;padding:1rem;border:1px solid var(--border);background:var(--surface)}
+.health-metric small,.health-metric strong{display:block;overflow-wrap:anywhere}
+.health-metric small{color:var(--muted);margin-bottom:.5rem}.health-metric strong{font-size:1.25rem}
+.health-buckets{max-width:100%;overflow-x:auto;margin:1rem 0}
+.health-buckets table{width:100%;border-collapse:collapse;font-size:.875rem}
+.health-buckets caption{text-align:left;color:var(--muted);padding:.5rem 0}
+.health-buckets th,.health-buckets td{text-align:left;padding:.6rem;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums}
+@media(max-width:700px){.health-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.health-buckets th,.health-buckets td{padding:.45rem;font-size:.75rem}}
+
+.studio-health .button-quiet{background:transparent;color:var(--text);border:1px solid var(--border);transition:opacity .2s ease}
