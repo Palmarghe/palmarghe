@@ -1,6 +1,15 @@
 # Palmarghe V1 Final Report
 
-## Current production state — 7 October 2026, measured health trends
+## Current production state — 7 October 2026, persisted save time and mobile actions
+
+Worker `83e57406-304c-4174-a4e7-96c882f0f183` serves clean implementation `5e27e69`. Existing content/homepage/advertising/appearance/social/collection forms display actual persisted updated_at in Europe/Istanbul; unavailable metadata is explicit and browser time is never substituted. Mobile editor preview is correctly proportioned and More actions have bounded touch targets, saved-content preview, actual pointer hit testing and Escape/focus return. No migration, security/account/editorial/media/settings mutation.
+
+Final local verify224 files zero diagnostics,202 units/build; full98/98 E2E4.0m; full36/36 visual43.0s; current production11/11 smoke/Aurora/health-boundary52.4s passed. Actual Chrome matches homepage, advertising, appearance, social and archived QA timestamps to independent read-only Supabase SQL. Mobile390 Aurora menu receives pointer hits and returns focus after Escape; inspected dark/light desktop has no overflow or console warnings/errors. QA remains archived at baseline revision9. Preferences restored to dark, viewport reset. Evidence/limits/rollback: docs/saved-record-time-2026-10-07.md. Source Actions37586550384 is running at this checkpoint; prior documentation37582877492 passed all three jobs.
+
+Hidden Aurora remains live on desktop/mobile via theme-button long press1.4s or Alt+Shift+A outside editable fields, with no normal third-theme option. Existing hero, private device preview, sampled health trends and prior verified features are retained. All14 premium requirements remain active; responsive original-media/performance, comment/network recovery and broader design/loading audit remain applicable. This release completes persisted-time display within requirement12; it does not close the overall objective.
+
+
+## Previous production state — 7 October 2026, measured health trends (historical)
 
 Worker `baa0bd21-6d41-4bf1-817f-e7c00f586ff9` serves clean implementation `7c464df`. Admin-only live health retains actual release/build/Auth/database/media checks and adds rolling24h sample count, median/p95 duration, sampled failure rate, seven rolling24h buckets and prior24h comparison only with at least five samples per interval. Missing measurements stay null/Ölçülmedi; capacity50 and incomplete windows are disclosed. These are sampled Studio operation durations, not organic traffic, uptime, all requests or field Core Web Vitals. Existing private authorization/sampling and service-role audit grants remain unchanged. Evidence/limits/rollback: docs/health-trends-2026-10-07.md.
 

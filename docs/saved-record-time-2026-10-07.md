@@ -2,7 +2,7 @@
 
 ## Scope and current gate
 
-Local implementation verified; deployment and live verification pending. This is progress on requirements 2/8/12, not closure of the full fourteen-item objective.
+Production Worker83e57406-304c-4174-a4e7-96c882f0f183, clean source5e27e69 deployed and verified. This is progress on requirements 2/8/12, not closure of the full fourteen-item objective.
 
 Content, homepage, advertising, appearance, social and editorial collection forms render the existing database updated_at value. Dates use explicit Europe/Istanbul and include seconds. Missing metadata is labelled unavailable or not yet saved; no current client clock is substituted. Confirmed form transport announces server confirmation while navigating; the subsequent server-rendered document supplies the persisted time. No migration, authentication, permissions or production data mutation.
 
@@ -17,3 +17,7 @@ Read-only production SQL before deployment: homepage 2026-10-07 06:16:14.351+00;
 ## Limits and rollback
 
 Last save is persisted row metadata, not a claim of exact commit completion instant. Display precision is seconds, ISO precision milliseconds. Revert this source commit and normally rebuild/deploy to remove the display/menu refinements; database state and history are unchanged. Broader performance/comment/loading/design scope remains active.
+
+## Live proof
+
+Production smoke/Aurora/private health11/11 passed52.4s. Actual admin Chrome matches all four settings timestamps and QA19:06:23 to SQL. QA remains archived at revision9.390px Aurora More menu command receives actual elementFromPoint hit, stays bounded, and Escape closes with focus returned. Desktop dark/light bounded; inspected warnings/errors empty. An initial chained theme action unexpectedly navigated to public home; fresh Studio navigation and separate light/dark actions confirmed correct theme/state with no overflow. Earlier intermediate overflow reading during navigation is not reported as a stable layout defect. Preferences restored to dark and viewport reset. Screenshots saved-record-time-live-desktop-2026-10-07.png and saved-record-time-live-mobile-aurora-2026-10-07.png. Source Actions37586550384 still running at this documentation checkpoint.
