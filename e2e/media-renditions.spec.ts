@@ -1,0 +1,39 @@
+import {test,expect} from '@playwright/test';
+import sharp from 'sharp';
+import {createHash} from 'node:crypto';
+test('failed derivative generation retains the original, retries safely and follows publication privacy and cleanup',async({page,context})=>{
+ await context.addCookies([{name:'pg_mock_user',value:'00000000-0000-4000-8000-100000000001',url:'http://127.0.0.1:4322'}]);
+ const original=await sharp({create:{width:1000,height:625,channels:3,background:'#90799f'}}).png().toBuffer();
+ const digest=(buffer:Buffer)=>createHash('sha256').update(buffer).digest('hex');
+ let fail=true;await page.route('**/api/media/renditions/',async route=>{if(fail){fail=false;await route.fulfill({status:503,body:'temporary QA failure'});}else await route.continue();});
+ await page.goto('/studio/?section=media');const upload=page.locator('form[action="/api/media/"]');
+ await upload.locator('input[type=file]').setInputFiles({name:'rendition-original.png',mimeType:'image/png',buffer:original});
+ await upload.locator('input[name=alt_tr]').fill('Responsive original QA');await upload.getByRole('button',{name:'Yükle',exact:true}).click();
+ const card=page.locator('.entry-card').filter({has:page.getByRole('img',{name:'Responsive original QA',exact:true})});
+ const tools=card.locator('[data-rendition-tools]');await expect(tools.locator('[data-rendition-status]')).toContainText('kaydedilemedi');
+ const id=await tools.getAttribute('data-media-id'),source=`/api/media/${id}/`;
+ expect(digest(await (await context.request.get(source)).body())).toBe(digest(original));
+ await expect(tools.getByRole('button')).toBeEnabled();await tools.getByRole('button').click();await expect(tools.locator('[data-rendition-status]')).toContainText('320 / 640 / 960 px sürümleri kaydedildi');
+ const derived=await context.request.get(source+'?w=320');expect(derived.status()).toBe(200);expect(derived.headers()['content-type']).toBe('image/webp');
+ expect(await sharp(await derived.body()).metadata()).toMatchObject({width:320,height:200});expect((await derived.body()).length).toBeLessThan(original.length);
+ expect(digest(await (await context.request.get(source)).body())).toBe(digest(original));
+ const anonymous=await context.browser()!.newContext({baseURL:'http://127.0.0.1:4322'});
+ try{
+  expect((await anonymous.request.get(source+'?w=320')).status()).toBe(404);
+  expect((await anonymous.request.post('/api/media/renditions/',{headers:{origin:'http://127.0.0.1:4322'},form:{media_id:id!}})).status()).toBe(401);
+  const title='Responsive derivative QA',slug='responsive-derivative-qa';
+  const created=await context.request.post('/api/studio/',{headers:{origin:'http://127.0.0.1:4322'},form:{entity:'content',operation:'create',title,slug,locale:'tr',type:'article',status:'published',cover_media_id:id!,featured:'on',body:JSON.stringify({type:'doc',content:[{type:'mediaImage',attrs:{media_id:id,alt:'Body original QA'}}]})}});
+  expect(created.status()).toBe(200);expect(created.url()).toContain('section=content');
+  expect((await anonymous.request.get(source+'?w=320')).status()).toBe(200);
+  await page.goto('/'+slug+'/');await expect(page.locator('article.content-detail > img[fetchpriority=high]')).toHaveAttribute('srcset',/\?w=320 320w/);
+  const bodyImage=page.getByRole('img',{name:'Body original QA',exact:true});await expect(bodyImage).toHaveAttribute('srcset',/\?w=640 640w/);await expect(bodyImage).toHaveAttribute('width','1000');await expect(bodyImage).toHaveAttribute('height','625');
+  const found=(await (await context.request.get('/api/search/?q=Responsive%20derivative&locale=tr')).json()).results.find((entry:any)=>entry.slug===slug);
+  expect(found.cover_srcset).toContain('?w=640 640w');
+  expect((await context.request.post('/api/media/manage/',{headers:{origin:'http://127.0.0.1:4322'},form:{id:id!,operation:'delete'}})).status()).toBe(409);
+  expect((await context.request.post('/api/studio/',{headers:{origin:'http://127.0.0.1:4322'},form:{entity:'content',operation:'delete',id:found.id}})).status()).toBe(200);
+  expect((await anonymous.request.get(source+'?w=320')).status()).toBe(404);
+  const removed=await context.request.post('/api/media/manage/',{headers:{origin:'http://127.0.0.1:4322'},form:{id:id!,operation:'delete'}});
+  expect(removed.status()).toBe(200);expect(removed.url()).toContain('cleanup=complete');
+  expect((await context.request.get(source+'?w=320')).status()).toBe(404);
+ }finally{await anonymous.close();}
+});

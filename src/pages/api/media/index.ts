@@ -33,10 +33,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if(operation==='validate') return Response.json({validated:true,mime,width,height,bytes:bytes.length});
   const extension = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp' }[mime];
   const path = `${crypto.randomUUID()}.${extension}`;
+  const mediaId=crypto.randomUUID();
   if (localMode) localStoreMedia(path, bytes);
   else { const { error } = await db.storage.from('media').upload(path, bytes, { contentType: mime, upsert: false }); if (error) return errorResponse('Upload failed', 503); }
   storedPath=path;
-  const { error } = await db.from('media').insert({ path, mime, bytes: bytes.length, width, height, alt_tr: alt, alt_en: altEn || null, caption_tr: captionTr || null, caption_en: captionEn || null, uploaded_by: user.id });
+  const { error } = await db.from('media').insert({ id:mediaId, path, mime, bytes: bytes.length, width, height, alt_tr: alt, alt_en: altEn || null, caption_tr: captionTr || null, caption_en: captionEn || null, uploaded_by: user.id });
   if (error) {
     // A lost remote INSERT response can follow a successful commit. Never
     // remove its object without durable reconciliation of that outcome.
@@ -44,7 +45,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     if (localMode) localDeleteMedia(path);
     return Response.json({error:'upload_uncertain'},{status:503});
   }
-  return redirectTo(request, '/studio/?panel=editor&section=media');
+  return redirectTo(request, `/studio/?panel=editor&section=media&renditions=${mediaId}`);
   } catch(error) {
     if(storedPath) {
       if(localMode) localDeleteMedia(storedPath);

@@ -3,7 +3,7 @@ import {pathFor,type Locale} from '../lib/site';
 import {heroVisual,heroVisualStyle} from '../lib/hero-visual';
 interface Props {
  locale:Locale; mode:string; title:string; eyebrow:string; descriptor:string; image:string;
- preview?:{href:string;image:string;alt:string;label:string;title:string;style:string};
+ preview?:{href:string;image:string;srcset?:string;alt:string;label:string;title:string;style:string};
  inspect?:boolean; visual?:unknown;
 }
 const {locale,mode,title,eyebrow,descriptor,image,preview,inspect=false}=Astro.props;
@@ -18,7 +18,7 @@ const visual=heroVisual(Astro.props.visual);
   <div class="hero-actions"><a class="button" href={pathFor(locale,'gaming')}>{locale==='tr'?'Modları keşfet':'Explore mods'} <span aria-hidden="true">↗</span></a><a class="text-link" href={pathFor(locale,'music')}>{locale==='tr'?'Müziğe kulak ver':'Listen to the music'} →</a></div>
  </div>
  {mode==='compact'&&preview&&<a class="hero-preview" style={preview.style} href={preview.href} data-preview-field={inspect?'preview_content_id':undefined}>
-  <div class="hero-card-image-frame"><img src={preview.image} alt={preview.alt} width="640" height="400" decoding="async"/></div>
+  <div class="hero-card-image-frame"><img src={preview.image} srcset={preview.srcset} sizes="(max-width: 600px) calc(100vw - 48px), 420px" alt={preview.alt} width="640" height="400" decoding="async"/></div>
   <div><span class="eyebrow">{preview.label}</span><strong>{preview.title}</strong><span aria-hidden="true">↗</span></div>
  </a>}
 </section>

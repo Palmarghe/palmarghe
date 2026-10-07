@@ -1,0 +1,14 @@
+---
+import {renditionWidths} from '../lib/media-renditions';
+interface Props{entry:{id:string;width?:number;height?:number;bytes:number};viewer:string;readyWidths:number[]}
+const {entry,viewer,readyWidths}=Astro.props;
+const widths=renditionWidths(entry.width??0);
+---
+{widths.length>0&&<details class="media-rendition-tools" data-rendition-tools data-media-id={entry.id} data-actor={viewer} data-source-width={entry.width} data-source-height={entry.height} data-source-bytes={entry.bytes}>
+ <summary>Görsel performansı</summary>
+ <p class="muted">Özgün görsel korunur. Daha küçük ekranlar için aynı kadrajda hafif WebP sürümleri hazırlanır.</p>
+ <p data-rendition-status role="status" aria-live="polite">{readyWidths.length?`${readyWidths.join(' / ')} px sürümleri hazır.`:'Henüz ekran boyutlarına uygun sürüm yok.'}</p>
+ <button class="button" type="button" data-generate-renditions>{readyWidths.length?'Sürümleri tamamla':'Ekran boyutlarını hazırla'}</button>
+ <noscript><p>Görsel sürümlerini hazırlamak için JavaScript gerekir. Özgün dosya kullanılmaya devam eder.</p></noscript>
+</details>}
+<script src="../scripts/media-renditions.ts"></script>

@@ -1,7 +1,8 @@
 /** Development-only, in-memory Supabase-shaped adapter for browser and E2E tests. */
 import { mediaReferences } from './media-references';
+import {detectImage} from './media';
 type Row = Record<string, any>;
-type TableName = 'profiles' | 'permission_groups' | 'comments' | 'categories' | 'tags' | 'content_items' | 'content_categories' | 'content_tags' | 'contact_messages' | 'site_settings' | 'navigation' | 'media' | 'redirects' | 'audit_logs' | 'account_deletion_requests' | 'traffic_daily' | 'traffic_qualified_daily' | 'content_likes' | 'content_bookmarks' | 'content_follows' | 'content_notifications' | 'editorial_collections' | 'editorial_collection_items' | 'newsletter_subscribers' | 'content_revisions';
+type TableName = 'profiles' | 'permission_groups' | 'comments' | 'categories' | 'tags' | 'content_items' | 'content_categories' | 'content_tags' | 'contact_messages' | 'site_settings' | 'navigation' | 'media' | 'redirects' | 'audit_logs' | 'account_deletion_requests' | 'traffic_daily' | 'traffic_qualified_daily' | 'content_likes' | 'content_bookmarks' | 'content_follows' | 'content_notifications' | 'editorial_collections' | 'editorial_collection_items' | 'newsletter_subscribers' | 'content_revisions' | 'media_renditions' | 'media_rendition_jobs';
 type Filter = (row: Row) => boolean;
 const uid = () => crypto.randomUUID();
 const initialCategories: Row[] = [
@@ -24,7 +25,7 @@ const initialTables: Record<TableName, Row[]> = {
     { id:'00000000-0000-4000-9000-000000000003',name:'Yönetici',description:'Tam erişim.',base_role:'admin',permissions:{comment:true,content:true,taxonomy:true,media:true,messages:true,appearance:true,navigation:true,members:true,permissions:true,audit:true},protected:true },
   ], comments: [], categories: initialCategories,
   tags: [], content_items: [], content_categories: [], content_tags: [], contact_messages: [],
-  site_settings: [], navigation: [], media: [], redirects: [], audit_logs: [], account_deletion_requests: [], traffic_daily: [], traffic_qualified_daily: [], content_likes: [], content_bookmarks: [], content_follows: [], content_notifications: [], editorial_collections: [], editorial_collection_items: [], newsletter_subscribers: [], content_revisions: [],
+  site_settings: [], navigation: [], media: [], redirects: [], audit_logs: [], account_deletion_requests: [], traffic_daily: [], traffic_qualified_daily: [], content_likes: [], content_bookmarks: [], content_follows: [], content_notifications: [], editorial_collections: [], editorial_collection_items: [], newsletter_subscribers: [], content_revisions: [], media_renditions: [], media_rendition_jobs: [],
 };
 type LocalStore={users:Row[];tables:Record<TableName,Row[]>;mediaFiles:Map<string,Uint8Array>;mediaCleanupTasks:Row[];commentDeliveries:Map<string,{content:string;body:string;id:string}>};
 const fresh:LocalStore={users:initialUsers,tables:initialTables,mediaFiles:new Map(),mediaCleanupTasks:[],commentDeliveries:new Map()};
@@ -81,6 +82,8 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
     if (this.table === 'editorial_collections') return row.published || this.contentPermission();
     if (this.table === 'editorial_collection_items') return this.contentPermission() || tables.editorial_collections.some(collection=>collection.id===row.collection_id&&collection.published&&tables.content_items.some(item=>item.id===row.content_id&&['published','scheduled'].includes(item.status)&&item.published_at&&item.published_at<=new Date().toISOString()));
     if (this.table === 'account_deletion_requests') return Boolean(this.user && (this.user.id === row.user_id || this.user.role === 'admin'));
+    if(this.table==='media_rendition_jobs')return false;
+    if(this.table==='media_renditions')return new Query('media',this.user).select('id').eq('id',row.media_id).execute().data?.length>0;
     if (this.table === 'media') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => mediaReferences(item.body,item.type==='gallery'?item.type_data:null,item.cover_media_id,item.og_media_id).has(row.id) && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
     if (this.table === 'contact_messages') return this.user?.role === 'admin' || this.user?.role === 'editor';
     if (this.table === 'audit_logs') return this.user?.role === 'admin';
@@ -88,6 +91,7 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
   }
   private canWrite(): boolean {
     if (!this.user) return false;
+    if(this.table==='media_renditions'||this.table==='media_rendition_jobs')return false;
     if (this.table === 'profiles') return this.action === 'update';
     if (this.table === 'permission_groups') return this.user.role === 'admin';
     if (this.table === 'comments') return this.action === 'insert' || this.user.role === 'admin' || this.user.role === 'editor';
@@ -127,7 +131,11 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
     });
     else if (this.action === 'delete') {
       if (this.table === 'media' && selected.some((row) => localMediaReferenced(row.id))) return { data:null,error:{code:'23503',message:'media in use'} };
-      if (this.table === 'media') for (const row of selected) mediaCleanupTasks.push({id:uid(),media_id:row.id,path:row.path,created_at:new Date().toISOString()});
+      if (this.table === 'media') for (const row of selected){
+        const derived_paths=[...new Set([...tables.media_renditions.filter(r=>r.media_id===row.id).map(r=>r.path),...tables.media_rendition_jobs.filter(j=>j.media_id===row.id).flatMap(j=>j.descriptors.map((d:Row)=>d.path))])];
+        mediaCleanupTasks.push({id:uid(),media_id:row.id,path:row.path,derived_paths,created_at:new Date().toISOString()});
+        for(const name of ['media_renditions','media_rendition_jobs'] as const)for(let i=tables[name].length-1;i>=0;i--)if(tables[name][i].media_id===row.id)tables[name].splice(i,1);
+      }
       if (this.table === 'content_items') for (const row of selected) {
         for (let index=tables.content_revisions.length-1;index>=0;index--) if(tables.content_revisions[index].content_id===row.id) tables.content_revisions.splice(index,1);
       }
@@ -156,6 +164,24 @@ export function localSupabase(cookies: import('astro').AstroCookies) {
     from: (name: string) => { if (!isTable(name)) throw new Error('Unknown table'); return new Query(name, getUser()); },
     rpc: async (name: string, args: Row) => {
       const actor = getUser();
+      if(['prepare_media_renditions','complete_media_renditions'].includes(name)){
+        const profile=actor&&tables.profiles.find(p=>p.id===actor.id),group=profile&&tables.permission_groups.find(g=>g.id===profile.permission_group_id);
+        if(!profile||!(profile.role==='admin'||profile.role==='editor'&&group?.permissions?.media===true))return {data:null,error:{code:'42501',message:'media permission required'}};
+        if(name==='prepare_media_renditions'){
+          const source=tables.media.find(m=>m.id===args.p_media_id),values=args.p_descriptors;
+          if(!source||source.path!==args.p_source_path||!source.width||!source.height||!source.bytes||!Array.isArray(values)||values.length<1||values.length>3||new Set(values.map(d=>d?.width)).size!==values.length||values.some(d=>!d||![320,640,960].includes(d.width)||d.width>=source.width||d.height!==Math.max(1,Math.round(source.height*d.width/source.width))||!Number.isSafeInteger(d.bytes)||d.bytes<1||d.bytes>2097152||d.bytes>=source.bytes))return {data:null,error:{code:'22023',message:'invalid renditions'}};
+          if(tables.media_rendition_jobs.filter(j=>j.media_id===source.id&&!j.completed).length>=16)return {data:null,error:{code:'54000',message:'pending rendition limit'}};
+          const id=uid(),descriptors=values.map(d=>({...d,path:`renditions/${source.id}/${id}/${d.width}.webp`}));
+          tables.media_rendition_jobs.push({id,media_id:source.id,source_path:source.path,descriptors,created_by:actor!.id,completed:false});
+          return {data:{id,descriptors},error:null};
+        }
+        const job=tables.media_rendition_jobs.find(j=>j.id===args.p_job_id&&j.created_by===actor!.id);
+        if(!job||!tables.media.some(m=>m.id===job.media_id&&m.path===job.source_path))return {data:false,error:null};
+        if(job.completed)return {data:true,error:null};
+        if(job.descriptors.some((d:Row)=>{const bytes=mediaFiles.get(d.path);return !bytes||bytes.length!==d.bytes||detectImage(bytes)!=='image/webp';}))return {data:false,error:null};
+        for(const d of job.descriptors)if(!tables.media_renditions.some(r=>r.media_id===job.media_id&&r.width===d.width))tables.media_renditions.push({...d,media_id:job.media_id});
+        job.completed=true;return {data:true,error:null};
+      }
       if(name==='save_editorial_collection'){
         const profile=actor&&tables.profiles.find(entry=>entry.id===actor.id),group=profile&&tables.permission_groups.find(entry=>entry.id===profile.permission_group_id);
         if(!profile||(profile.role!=='admin'&&(!['admin','editor'].includes(profile.role)||group?.permissions?.content!==true)))return {data:null,error:{code:'42501',message:'content permission required'}};
@@ -180,7 +206,7 @@ export function localSupabase(cookies: import('astro').AstroCookies) {
         if (name === 'complete_media_cleanup') {
           const index=mediaCleanupTasks.findIndex(task=>task.id===args.p_task_id);
           const task=mediaCleanupTasks[index];
-          if (!task || mediaFiles.has(task.path) || tables.media.some(row=>row.path===task.path)) return {data:false,error:null};
+          if (!task || mediaFiles.has(task.path) || (task.derived_paths??[]).some((path:string)=>mediaFiles.has(path)) || tables.media.some(row=>row.path===task.path)) return {data:false,error:null};
           mediaCleanupTasks.splice(index,1); return {data:true,error:null};
         }
         return {data:localMediaReferenced(args.p_media_id),error:null};

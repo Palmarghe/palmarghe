@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { supabase } from '../../lib/supabase';
 import { publicImageSrcSet, publicImageUrl } from '../../lib/public-image';
+import {mediaRenditionSrcSet} from '../../lib/media-renditions';
 import {categoryDescendantIds} from '../../lib/seo';
 
 export const GET: APIRoute = async ({ request, cookies }) => {
@@ -27,6 +28,11 @@ export const GET: APIRoute = async ({ request, cookies }) => {
   if (error) return Response.json({ results: [] }, { status: 503, headers: { 'cache-control': 'no-store' } });
   let suggestions:typeof data=[];
   if(query&&!data?.length&&ids?.length!==0){let fallback=db.from('content_items').select('id,title,slug,type,excerpt,published_at,cover_url,cover_media_id').eq('locale',locale).in('status',['published','scheduled']).lte('published_at',new Date().toISOString()).order('published_at',{ascending:false}).limit(3);if(types.includes(type))fallback=fallback.eq('type',type);if(ids?.length)fallback=fallback.in('id',ids);const result=await fallback;if(!result.error)suggestions=result.data;}
-  const image=(entry: { cover_url: string | null; [key: string]: unknown })=>({ ...entry, cover_url: publicImageUrl(entry.cover_url) ?? null, cover_srcset: publicImageSrcSet(entry.cover_url) });
+  const coverIds=[...new Set([...data??[],...suggestions??[]].map(entry=>entry.cover_media_id).filter(Boolean))];
+  const [renditions,covers]=await Promise.all([
+   coverIds.length?db.from('media_renditions').select('media_id,width,height,path,bytes').in('media_id',coverIds):{data:[]},
+   coverIds.length?db.from('media').select('id,width').in('id',coverIds):{data:[]},
+  ]);
+  const image=(entry: { cover_url: string | null; [key: string]: unknown })=>({ ...entry, cover_url: publicImageUrl(entry.cover_url) ?? null, cover_srcset: mediaRenditionSrcSet(entry.cover_url,renditions.data??[],covers.data?.find((row:{id:string})=>row.id===entry.cover_media_id))??publicImageSrcSet(entry.cover_url) });
   return Response.json({ results: (data ?? []).map(image),suggestions:(suggestions??[]).map(image),categories:categories??[] }, { headers: { 'cache-control': 'no-store' } });
 };

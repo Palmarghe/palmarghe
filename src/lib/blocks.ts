@@ -44,7 +44,12 @@ export function parseDocument(value: string): Document | null {
     return parsed;
   } catch { return null; }
 }
-export function renderDocument(doc: Document, locale: 'tr' | 'en' = 'tr'): string {
+export function renderDocument(doc: Document, locale: 'tr' | 'en' = 'tr',mediaAttributes?:(id:string)=>{width?:number;height?:number;srcset?:string}): string {
+  const imageAttributes=(id:string,sizes:string)=>{
+    const values=mediaAttributes?.(id);if(!values)return '';
+    const dimensions=Number.isSafeInteger(values.width)&&Number.isSafeInteger(values.height)&&values.width!>0&&values.height!>0?` width="${values.width}" height="${values.height}"`:'';
+    return dimensions+(values.srcset?` srcset="${escapeHtml(values.srcset)}" sizes="${sizes}"`:'');
+  };
   const render = (node: Block): string => {
     const inside = (node.content ?? []).map(render).join('');
     if (node.type === 'text') {
@@ -66,9 +71,9 @@ export function renderDocument(doc: Document, locale: 'tr' | 'en' = 'tr'): strin
       const ratio = ['16/9','4/3','1/1'].includes(String(node.attrs?.ratio)) ? String(node.attrs?.ratio) : 'auto';
       const x = Math.max(0,Math.min(100,Number(node.attrs?.focusX ?? 50)));
       const y = Math.max(0,Math.min(100,Number(node.attrs?.focusY ?? 50)));
-      return `<figure class="content-media" style="width:${width}%;margin-inline:auto"><img src="/api/media/${escapeHtml(String(node.attrs?.media_id))}/" alt="${escapeHtml(String(node.attrs?.alt))}" style="width:100%;aspect-ratio:${ratio};object-fit:cover;object-position:${x}% ${y}%" loading="lazy" />${node.attrs?.caption ? `<figcaption>${escapeHtml(String(node.attrs.caption))}</figcaption>` : ''}</figure>`;
+      return `<figure class="content-media" style="width:${width}%;margin-inline:auto"><img src="/api/media/${escapeHtml(String(node.attrs?.media_id))}/"${imageAttributes(String(node.attrs?.media_id),'(max-width: 900px) 90vw, 860px')} alt="${escapeHtml(String(node.attrs?.alt))}" style="width:100%;aspect-ratio:${ratio};object-fit:cover;object-position:${x}% ${y}%" loading="lazy" />${node.attrs?.caption ? `<figcaption>${escapeHtml(String(node.attrs.caption))}</figcaption>` : ''}</figure>`;
     }
-    if (node.type === 'mediaGallery') { const mediaIds = Array.isArray(node.attrs?.media_ids) ? node.attrs.media_ids : []; return `<section class="content-gallery" aria-label="Görsel galerisi">${mediaIds.map((id, index) => `<a href="/api/media/${escapeHtml(String(id))}/" data-gallery-item><img src="/api/media/${escapeHtml(String(id))}/" alt="Galeri görseli ${index + 1}" loading="lazy" /></a>`).join('')}</section>`; }
+    if (node.type === 'mediaGallery') { const mediaIds = Array.isArray(node.attrs?.media_ids) ? node.attrs.media_ids : []; return `<section class="content-gallery" aria-label="Görsel galerisi">${mediaIds.map((id, index) => `<a href="/api/media/${escapeHtml(String(id))}/" data-gallery-item><img src="/api/media/${escapeHtml(String(id))}/"${imageAttributes(String(id),'(max-width: 600px) 90vw, 430px')} alt="Galeri görseli ${index + 1}" loading="lazy" /></a>`).join('')}</section>`; }
     if (node.type === 'callout') return `<aside class="content-callout content-callout--${escapeHtml(String(node.attrs?.tone))}"><strong>${escapeHtml(String(node.attrs?.title))}</strong>${inside}</aside>`;
     if (node.type === 'cta') return `<p class="content-cta"><a class="button content-cta--${escapeHtml(String(node.attrs?.style ?? 'primary'))}" href="${escapeHtml(String(node.attrs?.href))}" rel="noopener noreferrer">${escapeHtml(String(node.attrs?.label))} →</a></p>`;
     if (node.type === 'embed') {
