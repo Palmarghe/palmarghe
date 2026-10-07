@@ -85,7 +85,12 @@ Requirement7: Studio ratio/depth/light/intensity/ambient-motion controls now dep
 | 10 Staff palette | Role-filtered Ctrl/Cmd+K search, keyboard and editor shortcut coexistence verified. |
 | 11 Real device preview | Shared public hero/stylesheet at1440/768/390, pending values/direct selection, private framing, source/origin checks and retry verified; homepage-device-preview-2026-10-07.md. |
 | 12 Save/revisions | Actual revision diff/restore and changed-field summary verified. Server-confirmed saved time presentation still needs completion. Partial. |
-| 13 Operational trends | Real authorized release/service measurements and last50 sampled operation records persist. Rolling summaries/performance trends still need implementation. Partial; not organic traffic or field CWV. |
+| 13 Operational trends | Real authorized release/service measurements and last50 sampled operation records persist. Rolling24h/7-day summaries, median/p95, failure counts, bounded capacity and limited sample comparison are implemented and production-verified; health-trends-2026-10-07.md. Not organic traffic or field CWV. |
 | 14 Loading/reconnect | Private preview bounded loading/retry verified. Comments and other async surfaces require complete reconnect/error-state audit. Partial. |
 
 This matrix preserves the full scope. Passing one release or the hidden-theme request does not close the wider goal. Production appearance QA restored original visual values; original publications, accounts and media were retained.
+
+
+## Current health trends production checkpoint
+
+Requirement13 actual service/release checks, persisted failure samples and bounded duration trends verified on Worker baa0bd21-6d41-4bf1-817f-e7c00f586ff9/source7c464df. Verify219/192/build, full95 local before final capacity refinement and final health/Studio5 after,36 visual references and11 production cases passed. Real admin Chrome desktop/mobile/light/Aurora and manual refresh confirmed four genuine records, correct summaries/empty buckets, clean console and bounded layout. Source Actions286 passed all three jobs, with actual Chrome confirmation; preceding284/285 are also fully green. No new DB/production-data writes. Full scope and remaining partial requirements are retained.
