@@ -1,5 +1,5 @@
 (() => {
-  for (const form of document.querySelectorAll('.homepage-editor,.advertising-form')) {
+  for (const form of document.querySelectorAll('.homepage-editor,.advertising-form,.collection-editor,.appearance-editor,.social-editor')) {
     const controls = [...form.querySelectorAll('input,select,textarea')].filter(el=>el.name);
     const snapshot = () => controls.map(el => ({ value: el.value, checked: el.checked, selected: el.tagName === 'SELECT' ? [...el.options].map(o => o.selected) : null }));
     let initial = snapshot(); let dirty = false, leaving = false;

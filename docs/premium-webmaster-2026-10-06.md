@@ -76,7 +76,7 @@ Requirement7: Studio ratio/depth/light/intensity/ambient-motion controls now dep
 | 1 Shared design system | Public/Studio/theme matrix, Aurora control contrast and single-select rendering verified. Some editor mode/action accents remain to normalize. Partial. |
 | 2 Studio simplification | Collapsed hero controls, grouped mobile editor, persistent save feedback and private device preview verified. Long settings/virtual keyboard usability still needs final audit. Partial. |
 | 3 Performance | Actual sequential lab samples in performance-lab-2026-10-07.md. Responsive original-media delivery and comparable post-change measurements remain. Partial. |
-| 4 Resilience | Settings failed-save input retention and preview retry verified. Comments timeout/uncertain commit/reload/manual dedup recovery now production verified; broader async surfaces remain to audit. Partial. |
+| 4 Resilience | Settings failed-save input retention and preview retry verified. Comments, library desired-state recovery, search/profile deadlines and collection atomic save are production verified. Appearance/social retained-input helpers are local under final gates; remaining async surfaces still need audit. Partial. |
 | 5 Visual automation | Thirty-six reproducible references and Windows gate, public/Studio390/1440 and three themes verified. Corrected comment source Actions37623995954 all three jobs green; shell-concurrency Actions37625308388 all three jobs green. |
 | 6 Navigation motion | Reduced-motion/back-scroll and production navigation tests verified; navigation-motion-2026-10-07.md. |
 | 7 Configurable hero | Ratio/depth/light/intensity/ambient motion, validation/permissions, local save/restore and actual production99→100 persistence verified; hero-appearance-2026-10-07.md. |
@@ -86,7 +86,7 @@ Requirement7: Studio ratio/depth/light/intensity/ambient-motion controls now dep
 | 11 Real device preview | Shared public hero/stylesheet at1440/768/390, pending values/direct selection, private framing, source/origin checks and retry verified; homepage-device-preview-2026-10-07.md. |
 | 12 Save/revisions | Actual revision diff/restore, changed-field summary and persisted saved time verified. Wrong-clock/failure/reload proof, independent production SQL/Chrome match; see saved-record-time-2026-10-07.md. Implemented and production verified. |
 | 13 Operational trends | Real authorized release/service measurements and last50 sampled operation records persist. Rolling24h/7-day summaries, median/p95, failure counts, bounded capacity and limited sample comparison are implemented and production-verified; health-trends-2026-10-07.md. Not organic traffic or field CWV. |
-| 14 Loading/reconnect | Private preview bounded loading/retry verified. Comments twelve-second loading/refresh/reconnect/draft retention are production verified. Other async surfaces require complete error-state audit. Partial. |
+| 14 Loading/reconnect | Private preview bounded loading/retry verified. Comments/search/profile/library bounded loading and explicit reconnect/retry are production verified; collection bounded save is live. Appearance/social are local under final gates. Remaining async surfaces require audit. Partial. |
 
 This matrix preserves the full scope. Passing one release or the hidden-theme request does not close the wider goal. Production appearance QA restored original visual values; original publications, accounts and media were retained.
 

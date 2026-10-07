@@ -5,7 +5,7 @@ import { socialPlatforms } from '../../lib/social';
 import type { APIRoute } from 'astro';
 import { z } from 'zod';
 import { supabase } from '../../lib/supabase';
-import { sameOrigin, errorResponse, redirectTo } from '../../lib/security';
+import { sameOrigin, errorResponse, redirectTo as redirectResponse } from '../../lib/security';
 import { parseDocument } from '../../lib/blocks';
 import { safeExternalUrl } from '../../lib/site';
 import { createClient } from '@supabase/supabase-js';
@@ -25,6 +25,12 @@ const handlePost: APIRoute = async ({ request, cookies }) => {
   let { data: profile } = await db.from('profiles').select('role,permission_group_id').eq('id', user.id).single();
   if(!profile) profile=(await db.from('profiles').select('role').eq('id',user.id).single()).data;
   if (!['editor','admin'].includes(profile?.role ?? '')) return errorResponse('Forbidden', 403);
+  // Successful staff writes must return to a workspace the same role can open.
+  const redirectTo=(source:Request,path:string)=>{
+    const destination=new URL(path,source.url);
+    if(profile?.role==='editor'&&destination.pathname==='/studio/')destination.searchParams.set('panel','editor');
+    return redirectResponse(source,destination.href);
+  };
   const form = await request.formData();
   const entity = form.get('entity');
   const operation = String(form.get('operation') ?? 'create');
