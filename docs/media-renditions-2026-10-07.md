@@ -1,6 +1,6 @@
 # Responsive original media — 7 October 2026
 
-## Current checkpoint: local implementation, production rehearsal only
+## Current checkpoint: deployed and prepared; final regression/CI pending
 
 Original media files and rows remain unchanged. Studio can generate smaller 320/640/960px WebP versions from the actual original, without upscaling or cropping. Only files smaller than the original are accepted. A private job registers object paths before upload; descriptors become readable only after every intended object is confirmed. Public derivative reads follow the original parent visibility. Cleanup receipts retain completed and interrupted job paths.
 
@@ -12,6 +12,20 @@ Actual Supabase Chrome preflight confirms migration044 present, migration045 abs
 
 Production follow-up: the rolled-back real admin/member/anon and Storage exercise passed (`role_rehearsal_passed`). It confirms incomplete-object rejection, complete/idempotent publication, private-job read denial, public parent-bound Storage reads and member/anonymous write denial. An initial proof transfer corrupted dollar quoting before execution; using a callback replacement preserved the SQL delimiters, and the corrected transaction passed. Migration045 and its migration-history row were then committed atomically. Read-only verification shows media_renditions present and history044/045 true. The complete nine-table result before/after is exactly equal. Native migration screenshot: media-renditions-migration-live-2026-10-07.png.
 
-Remaining release gates: full local and visual tests, normal source commit/push, clean Worker deploy, existing-original derivative preparation, production E2E and measured image bytes/performance comparison, native Chrome verification, CI and final documentation. Wider fourteen-item premium scope remains active. The current Worker still serves the prior source until the runtime release below is recorded.
+Runtime release: clean normally committed/pushed source e00f47b / Worker1b59e023-4cac-4984-9b19-136560928252. Full local114/114 E2E6.1m and unchanged visual36/36 comparisons38.0s passed. Actual Studio Chrome prepared29 WebP derivatives from10 existing originals;5 older originals have no stored dimensions and were preserved without rewriting their rows. Readiness survives reload. All eligible generated files are smaller than their originals. Native390px public Chrome selects640px derivatives without overflow and inspected warning/error logs are empty. Proof: media-renditions-studio-live-2026-10-07.png and media-renditions-mobile-live-2026-10-07.png.
+
+Real production byte measurement (29 descriptors; equivalent-original sum compares each source once per width):
+
+| Width | Files | Derived bytes | Equivalent original bytes | Reduction |
+|---|---:|---:|---:|---:|
+|320|10|107594|1010750|89.4%|
+|640|10|304236|1010750|69.9%|
+|960|9|448108|939770|52.3%|
+
+Production responsive/permission/reservation6/6 passed18.0s. Tests decode real returned WebP files, compare dimensions/aspect and byte lengths, require private/no-store responses and deny invalid widths/anonymous generation/unknown parents. Existing reservation tests now delay the actual chosen candidate, retain655×1000 markup and <1px box/engagement shift limits. Initial full80 run encountered four stale original-only fixture failures; this partial run is not claimed as full green. Source CI37680371649 is fully green in actual Chrome: verify8m0s / visual2m17s / production-smoke2m37s, total10m47s. Final expanded full82 production run is active. Latest typecheck246 files has zero diagnostics. New responsive cases are added to the production CI gate.
+
+Remaining release gates: final full production regression, sequential performance lab comparison, source/documentation CI and final report update. Wider fourteen-item premium scope remains active.
+
+Post-preparation integrity: all nine original-table fingerprints still match exactly. Actual source coverage SQL returns15 originals /5 without recorded dimensions /7 public originals /0 public originals missing measurements. Every currently public original is prepared. Read-only real private-original proof in docs/sql/media-renditions-private-read-proof.sql clears anonymous JWT claims, then verifies original rows, derivatives and Storage metadata are invisible to anon and the actual existing member; result private_original_and_derivative_reads_denied. It creates or deletes no record.
 
 Rollback: old Worker continues using original files. New derivative tables/objects can remain private and unused while code is normally reverted; do not drop originals or replay unrelated migrations. Restore cleanup RPC compatibility before reverting the additive schema if schema rollback is actually needed.

@@ -14,8 +14,9 @@ for (const width of [390,1440]) {
       const tag=html.match(/<img\b[^>]*fetchpriority="high"[^>]*>/)?.[0];
       const source=tag?.match(/\bsrc="([^"]+)"/)?.[1];
       expect(source).toMatch(/^\/(?:editorial\/|api\/media\/)/);
-      const coverUrl=new URL(source!,'https://palmarghe.com').href;let heldCover=false;
-      await page.route(coverUrl,async route=>{heldCover=true;await held;await route.continue();});
+      const coverUrl=new URL(source!,'https://palmarghe.com').href;let heldCover=false,heldCoverUrl='';
+      const coverRoute=coverUrl+'*';
+      await page.route(coverRoute,async route=>{heldCover=true;heldCoverUrl=route.request().url();await held;await route.continue();});
       await page.addInitScript(theme=>localStorage.setItem('palmarghe-theme',theme),theme);
       await page.route('**/api/engagement/**', async route => {
         if (route.request().method() === 'POST') return route.fulfill({status:204});
@@ -33,7 +34,8 @@ for (const width of [390,1440]) {
         expect(await cover.evaluate((image:HTMLImageElement) => image.complete)).toBe(false);
         const before = await cover.boundingBox();
         release();
-        await expect.poll(() => cover.evaluate((image:HTMLImageElement) => image.complete && image.naturalWidth === 655)).toBe(true);
+        await expect.poll(() => cover.evaluate((image:HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
+        expect(await cover.evaluate((image:HTMLImageElement)=>image.currentSrc)).toBe(heldCoverUrl);
         const after = await cover.boundingBox();
         expect(before).not.toBeNull();
         expect(after).not.toBeNull();
@@ -45,7 +47,7 @@ for (const width of [390,1440]) {
         await expect(page.locator('[data-content-engagement]')).toHaveText('1.234 okunma · 2 paylaşım');
         const afterMetrics=await cover.boundingBox();
         for (const key of ['x','y','width','height'] as const) expect(Math.abs(before![key]-afterMetrics![key]),`${width}/${theme}/metrics/${key}`).toBeLessThan(1);
-      } finally { release(); releaseMetrics(); await page.unroute(coverUrl); await page.unroute('**/api/engagement/**'); }
+      } finally { release(); releaseMetrics(); await page.unroute(coverRoute); await page.unroute('**/api/engagement/**'); }
     });
   }
 }
