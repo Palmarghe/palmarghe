@@ -25,3 +25,6 @@ Historical Worker (4 October 2026): a622e0b3-d44b-4eb6-9087-062ab7084dbc. Eight 
 
 
 Current Worker (7 October 2026): f873c119-8777-47d9-b761-ae46784e2ccd, clean source12ac328. Shared public hero/admin-only real device preview and mobile control polish; automated30-reference visual CI gate added. Verify210 files/182 units/build passed; clean full92/92, updated cover1/1 and unchanged-baseline30/30 comparison passed. Latest production13/13 regression passed58.9s; Actions37538970760 visual setup failed with Invalid media while its functional job is still running; prior preview13/13 and polish2/2 passed. Real admin Chrome confirms original saved values, loaded390px preview, bounded controls and clean inspected console. No editorial/account/media writes. Existing036–040 schema changes have missing remote history entries; inspect catalog before bulk migration push. Full14-item premium objective stays active; see visual-regression-2026-10-07.md and homepage-device-preview-2026-10-07.md.
+
+
+Current release (7 October): Worker e24e5b68-af6a-4035-b35e-a44133ccb095/source0f65364 supersedes earlier device-preview/color checkpoints. Local full92/92 passed4.2m; visual30/30 passed30.1s; final production Aurora/smoke10/10 passed49.2s. Actions37578565224 visual job passed1m38s, overall verify/production are pending. No database/Auth/publication/settings mutation.

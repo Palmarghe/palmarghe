@@ -29,3 +29,6 @@ Run281/a6aa1d4: functional verify184 units/full92 E2E passed4m30s; visual29/30 f
 
 
 Shared-select comparison: intentionally regenerated Studio references after reviewing the light mobile navigation/hero controls; all30 unchanged-reference comparisons passed30.1s. The previous source completed clean full local92/92 and CI full92; final shared-select source is sent through the same CI gates. Actual Chrome production palette screenshots are aurora-polish-desktop/mobile/studio-2026-10-07.png. QA theme preferences were restored to their initial dark values; no settings forms submitted.
+
+
+Final source0f65364 clean full local92/92 passed4.2m. Worker e24e5b68-af6a-4035-b35e-a44133ccb095 final production10/10 passed49.2s. Actions37578565224 visual job passed1m38s; remaining jobs are confirmed live, not complete.
