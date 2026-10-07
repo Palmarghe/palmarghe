@@ -18,7 +18,7 @@
     form.addEventListener('input',update); form.addEventListener('change',update);
     undo.addEventListener('click',() => { controls.forEach((el,i) => { el.value = initial[i].value; if ('checked' in el) el.checked = initial[i].checked; if (initial[i].selected) [...el.options].forEach((o,j)=>o.selected=initial[i].selected[j]); }); form.dispatchEvent(new Event('input',{bubbles:true})); update(); });
     form.addEventListener('submit',event=> { queueMicrotask(()=>{leaving=!event.defaultPrevented;}); });
-    form.addEventListener('studio-saved',()=>{initial=snapshot();leaving=true;update();state.textContent='Kaydedildi · '+new Date().toLocaleTimeString('tr-TR');});
+    form.addEventListener('studio-saved',()=>{initial=snapshot();leaving=true;update();state.textContent='Sunucu kaydı doğrulandı · yönlendiriliyor';});
     window.addEventListener('beforeunload',event=> { if (dirty && !leaving) event.preventDefault(); });
   }
   for (const preview of document.querySelectorAll('[data-homepage-preview],.hero-card-editor-preview,[data-ad-preview],.cover-editor-preview')) {

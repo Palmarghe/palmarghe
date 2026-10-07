@@ -1,0 +1,9 @@
+---
+import {savedRecordTime} from '../lib/saved-record-time';
+interface Props{value?:unknown;exists?:boolean}
+const {value,exists=false}=Astro.props;
+const stamp=savedRecordTime(value);
+---
+<p class="studio-record-time" data-studio-record-time>
+ {stamp ? <>Son kayıt: <time datetime={stamp.iso}>{stamp.text}</time> <span>· Türkiye saati</span></> : exists ? 'Son kayıt zamanı alınamadı.' : 'Henüz kaydedilmedi.'}
+</p>

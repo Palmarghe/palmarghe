@@ -384,3 +384,9 @@ const readiness = document.createElement('section');
 }
 
 
+
+const moreActions=document.querySelector<HTMLDetailsElement>('.editor-more-actions');
+if(moreActions){
+ moreActions.addEventListener('keydown',event=>{if(event.key==='Escape'&&moreActions.open){event.preventDefault();event.stopPropagation();moreActions.open=false;moreActions.querySelector<HTMLElement>('summary')?.focus();}});
+ document.addEventListener('pointerdown',event=>{if(moreActions.open&&!event.composedPath().includes(moreActions))moreActions.open=false;});
+}
