@@ -23,7 +23,7 @@ export const GET: APIRoute = async ({ request, cookies }) => {
     db.auth.getUser(),
   ]);
   if (error) return errorResponse('Comments unavailable',503);
-  return new Response(JSON.stringify({ contentId:content.id,authenticated:Boolean(user),comments:comments ?? [] }),{ headers:{ 'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff' } });
+  return new Response(JSON.stringify({ contentId:content.id,authenticated:Boolean(user),viewer_id:user?.id??null,comments:comments ?? [] }),{ headers:{ 'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff' } });
 };
 
 export const POST: APIRoute = async ({ request, cookies }) => {
@@ -33,11 +33,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const { data:{ user } } = await db.auth.getUser();
   if (!user) return errorResponse('Üye girişi gerekli',401);
   const form = await request.formData();
-  const input = z.object({ path:pathSchema, body:z.string().trim().min(2).max(2000) }).safeParse({ path:form.get('path'),body:form.get('body') });
+  const input = z.object({ path:pathSchema, body:z.string().trim().min(2).max(2000),request_id:z.uuid(),viewer_id:z.uuid().optional() }).safeParse({ path:form.get('path'),body:form.get('body'),request_id:form.get('request_id') ?? crypto.randomUUID(),viewer_id:form.get('viewer_id')??undefined });
   if (!input.success) return errorResponse('Geçersiz yorum',400);
+  if(input.data.viewer_id && input.data.viewer_id!==user.id)return errorResponse('Comment session changed',401);
   const content = await resolveContent(db,input.data.path);
   if (!content) return errorResponse('Not found',404);
-  const { error } = await db.from('comments').insert({ content_id:content.id,user_id:user.id,body:input.data.body,status:'published' });
-  if (error) return errorResponse('Yorum kaydedilemedi',400);
-  return new Response(JSON.stringify({ ok:true }),{ status:201,headers:{ 'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store' } });
+  const { data, error } = await db.rpc('deliver_comment',{p_content_id:content.id,p_request_id:input.data.request_id,p_body:input.data.body});
+  if (error) return errorResponse('Yorum kaydedilemedi',error.code==='22023'?409:error.code==='42501'?403:503);
+  const receipt=z.object({id:z.uuid().nullable(),created:z.boolean(),removed:z.boolean()}).refine(r=>r.removed?r.id===null&&!r.created:r.id!==null).safeParse(data);
+  if(!receipt.success)return errorResponse('Delivery confirmation unavailable',503);
+  return new Response(JSON.stringify({ ok:true,...receipt.data,viewer_id:user.id }),{ status:receipt.data.created ? 201 : 200,headers:{ 'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store' } });
 };

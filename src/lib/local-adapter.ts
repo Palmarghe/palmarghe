@@ -26,15 +26,15 @@ const initialTables: Record<TableName, Row[]> = {
   tags: [], content_items: [], content_categories: [], content_tags: [], contact_messages: [],
   site_settings: [], navigation: [], media: [], redirects: [], audit_logs: [], account_deletion_requests: [], traffic_daily: [], traffic_qualified_daily: [], content_likes: [], content_bookmarks: [], content_follows: [], content_notifications: [], editorial_collections: [], editorial_collection_items: [], newsletter_subscribers: [], content_revisions: [],
 };
-type LocalStore={users:Row[];tables:Record<TableName,Row[]>;mediaFiles:Map<string,Uint8Array>;mediaCleanupTasks:Row[]};
-const fresh:LocalStore={users:initialUsers,tables:initialTables,mediaFiles:new Map(),mediaCleanupTasks:[]};
+type LocalStore={users:Row[];tables:Record<TableName,Row[]>;mediaFiles:Map<string,Uint8Array>;mediaCleanupTasks:Row[];commentDeliveries:Map<string,{content:string;body:string;id:string}>};
+const fresh:LocalStore={users:initialUsers,tables:initialTables,mediaFiles:new Map(),mediaCleanupTasks:[],commentDeliveries:new Map()};
 // Vite can reload an SSR dependency after warming a new route. Preserve one store per
 // local QA server process so uploaded files and their rows never belong to different generations.
 // Production does not register or read this development-only state.
 const storeKey=Symbol.for('palmarghe.local-qa-store.v1');
 const registry=globalThis as typeof globalThis & {[key:symbol]:LocalStore|undefined};
 const store=import.meta.env.DEV&&import.meta.env.LOCAL_TEST_MODE==='true'?(registry[storeKey]??=fresh):fresh;
-const {users,tables,mediaFiles,mediaCleanupTasks}=store;
+const {users,tables,mediaFiles,mediaCleanupTasks,commentDeliveries}=store;
 const isTable = (name: string): name is TableName => name in tables;
 
 class Query implements PromiseLike<{ data: any; error: { code: string; message: string } | null }> {
@@ -195,6 +195,14 @@ if (name === 'get_public_author') {
         const data=profile?tables.content_items.filter((entry)=>entry.author_id===profile.id&&['published','scheduled'].includes(entry.status)&&entry.published_at&&entry.published_at<=new Date().toISOString()).slice(0,Math.min(Number(args.p_limit)||20,50)):[];
         return {data,error:null};
       }
+      if(name==='deliver_comment'){
+        if(!actor)return {data:null,error:{message:'authentication required'}};
+        const body=String(args.p_body??'').trim(),content=tables.content_items.find(row=>row.id===args.p_content_id&&row.status==='published'&&row.published_at&&row.published_at<=new Date().toISOString());
+        if(!content||body.length<2||body.length>2000||!args.p_request_id)return {data:null,error:{message:'invalid comment'}};
+        const key=actor.id+':'+args.p_request_id,existing=commentDeliveries.get(key);
+        if(existing){if(existing.content!==args.p_content_id||existing.body!==body)return {data:null,error:{message:'delivery key reused'}};const present=tables.comments.some(row=>row.id===existing.id);return {data:{id:present?existing.id:null,created:false,removed:!present},error:null};}
+        const id=uid(),now=new Date().toISOString();tables.comments.push({id,content_id:args.p_content_id,user_id:actor.id,body,status:'published',created_at:now,updated_at:now});commentDeliveries.set(key,{content:args.p_content_id,body,id});return {data:{id,created:true,removed:false},error:null};
+      }
       if (name === 'get_public_comments') {
         const data = tables.comments.filter((comment) => comment.content_id === args.p_content_id && comment.status === 'published').map((comment) => {
           const author = tables.profiles.find((profile) => profile.id === comment.user_id);
@@ -313,6 +321,7 @@ export function localAdminCreateUser(email:string,password:string,displayName:st
 }
 export function localAdminDeleteUser(id:string){
   const index=users.findIndex((user)=>user.id===id); if(index<0||users[index].role==='admin') return false;
+  for(const key of commentDeliveries.keys())if(key.startsWith(id+':'))commentDeliveries.delete(key);
   users.splice(index,1); for(const table of ['profiles','comments'] as const) tables[table]=tables[table].filter((row)=>row.id!==id&&row.user_id!==id); return true;
 }
 const localContactRate = new Map<string, { start: number; count: number }>();
