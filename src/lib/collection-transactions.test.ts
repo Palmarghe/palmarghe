@@ -1,0 +1,40 @@
+import {afterAll,beforeAll,expect,it} from 'vitest';
+import {PGlite} from '@electric-sql/pglite';
+import {readFileSync} from 'node:fs';
+const db=new PGlite(), user='00000000-0000-4000-8000-100000000001', item='00000000-0000-4000-8000-200000000001';
+let id:string;
+beforeAll(async()=>{
+ await db.exec(`create role authenticated;create role anon;create schema auth;
+ create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('qa.uid',true),'')::uuid$$;
+ create function public.current_role() returns text language sql stable as $$select current_setting('qa.role',true)$$;
+ create function public.has_permission(text) returns boolean language sql stable as $$select current_setting('qa.content',true)='true'$$;
+ grant usage on schema public,auth to authenticated,anon;
+ create table profiles(id uuid primary key);create table media(id uuid primary key);create table content_items(id uuid primary key,status text,published_at timestamptz);
+ insert into profiles values('${user}');insert into content_items values('${item}','published',now()-interval '1 hour');
+ grant select on content_items to authenticated,anon;`);
+ for(const name of ['202609270026_community_editorial_foundation.sql','202610070044_collection_transactions.sql'])await db.exec(readFileSync(new URL('../../supabase/migrations/'+name,import.meta.url),'utf8'));
+ await db.exec(`set role authenticated;set qa.uid='${user}';set qa.role='editor';set qa.content='true';`);
+},30000);
+afterAll(async()=>{await db.close();});
+const value={title:'QA collection',slug:'qa-collection',locale:'tr',description:'',published:false,sort_order:0};
+const save=(target:string|null,data:any,ids:string[])=>db.query<{saved:any}>('select public.save_editorial_collection($1::uuid,$2::jsonb,$3::uuid[]) as saved',[target,JSON.stringify(data),ids]);
+it('saves ordered links atomically and preserves prior data on invalid replacements',async()=>{
+ id=(await save(null,value,[item])).rows[0].saved.id;
+ const baseline=(await db.query('select * from editorial_collections')).rows;
+ await expect(save(id,{...value,title:'Should not persist'},[item,item])).rejects.toMatchObject({code:'22023'});
+ await expect(save(id,{...value,published:undefined},[])).rejects.toMatchObject({code:'22023'});
+ expect((await db.query('select * from editorial_collections')).rows).toEqual(baseline);
+ expect((await db.query('select content_id,sort_order from editorial_collection_items')).rows).toEqual([{content_id:item,sort_order:0}]);
+ const saved=(await save(id,{...value,title:'Updated collection',published:true},[item])).rows[0].saved;
+ expect(saved.created_by).toBe(user);expect(saved.title).toBe('Updated collection');
+});
+it('requires staff role and explicit content capability, with published-only anonymous reads',async()=>{
+ await db.exec("set qa.content='false';");await expect(save(id,value,[])).rejects.toMatchObject({code:'42501'});
+ await db.exec("set qa.content='true';set qa.role='member';");await expect(save(id,value,[])).rejects.toMatchObject({code:'42501'});
+ await db.exec('reset role;set role anon;');
+ expect((await db.query('select id from editorial_collections')).rows).toEqual([{id}]);
+ expect((await db.query('select content_id from editorial_collection_items')).rows).toEqual([{content_id:item}]);
+ await expect(save(id,value,[])).rejects.toMatchObject({code:'42501'});
+ await db.exec("reset role;set role authenticated;set qa.role='editor';");await save(id,value,[item]);
+ await db.exec('reset role;set role anon;');expect((await db.query('select * from editorial_collections')).rows).toEqual([]);expect((await db.query('select * from editorial_collection_items')).rows).toEqual([]);
+});

@@ -297,18 +297,15 @@ const handlePost: APIRoute = async ({ request, cookies }) => {
       if (!id.success) return errorResponse('Invalid collection',400);
       const { error } = await db.from('editorial_collections').delete().eq('id',id.data);
       if (error) return errorResponse('Delete failed',400);
-      return redirectTo(request,'/studio/?section=collections');
+      return redirectTo(request,'/studio/?section=collections'+(profile?.role==='editor'?'&panel=editor':''));
     }
     const input=z.object({title:z.string().trim().min(2).max(120),slug:z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),locale:z.enum(['tr','en']),description:z.string().trim().max(500),sort_order:z.coerce.number().int().min(0).max(1000),published:z.boolean()}).safeParse({title:form.get('title'),slug:form.get('slug'),locale:form.get('locale'),description:form.get('description')??'',sort_order:form.get('sort_order'),published:form.get('published')==='on'});
     if(!input.success) return errorResponse('Invalid collection',400);
     const contentIds=[...new Set(form.getAll('content_ids').map(String).filter((value)=>z.uuid().safeParse(value).success))].slice(0,50);
-    if(contentIds.length){const {data:known}=await db.from('content_items').select('id').in('id',contentIds).eq('status','published');if(known?.length!==contentIds.length)return errorResponse('Invalid collection content',400);}
-    const value={...input.data,updated_at:new Date().toISOString(),created_by:user.id};
-    let collectionId=id.success&&operation==='update'?id.data:'';
-    if(collectionId){const {error}=await db.from('editorial_collections').update(value).eq('id',collectionId);if(error)return errorResponse('Collection save failed',400);}else{const {data,error}=await db.from('editorial_collections').insert(value).select('id').single();if(error||!data)return errorResponse('Collection save failed',400);collectionId=data.id;}
-    const {error:removed}=await db.from('editorial_collection_items').delete().eq('collection_id',collectionId);if(removed)return errorResponse('Collection items failed',400);
-    if(contentIds.length){const {error}=await db.from('editorial_collection_items').insert(contentIds.map((content_id,sort_order)=>({collection_id:collectionId,content_id,sort_order})));if(error)return errorResponse('Collection items failed',400);}
-    return redirectTo(request,'/studio/?section=collections');
+    if(operation!=='create'&&operation!=='update'||operation==='update'&&!id.success)return errorResponse('Invalid collection operation',400);
+    const {data:saved,error}=await db.rpc('save_editorial_collection',{p_collection_id:operation==='update'&&id.success?id.data:null,p_value:input.data,p_content_ids:contentIds});
+    if(error||!saved?.id)return errorResponse('Collection save failed',error?.code==='42501'?403:400);
+    return redirectTo(request,'/studio/?section=collections'+(profile?.role==='editor'?'&panel=editor':''));
   }  if (entity === 'content_revision') {
     if (operation !== 'restore') return errorResponse('Invalid revision operation',400);
     const revisionId = z.uuid().safeParse(form.get('revision_id'));

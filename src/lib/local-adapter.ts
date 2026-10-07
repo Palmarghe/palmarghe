@@ -66,6 +66,10 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
   update(values: Row) { this.action = 'update'; this.values = values; return this; }
   delete() { this.action = 'delete'; return this; }
   upsert(values: Row | Row[],options?:{ignoreDuplicates?:boolean}) { this.action = 'upsert'; this.values = values; this.ignoreDuplicates=options?.ignoreDuplicates===true;return this; }
+  private contentPermission(): boolean {
+    const profile=this.user&&tables.profiles.find(entry=>entry.id===this.user!.id);
+    return profile?.role==='admin'||Boolean(profile&&['admin','editor'].includes(profile.role)&&tables.permission_groups.find(group=>group.id===profile.permission_group_id)?.permissions?.content);
+  }
   private visible(row: Row): boolean {
     if (this.table === 'content_items') return this.user?.role === 'admin' || this.user?.role === 'editor' || (['published','scheduled'].includes(row.status) && row.published_at && row.published_at <= new Date().toISOString());
     if (this.table === 'content_categories') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => item.id === row.content_id && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
@@ -74,8 +78,8 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
     if (this.table === 'permission_groups') return Boolean(this.user && ['editor','admin'].includes(this.user.role));
     if (this.table === 'comments') return row.status === 'published' || this.user?.role === 'admin' || this.user?.role === 'editor';
     if (this.table === 'content_likes' || this.table === 'content_bookmarks' || this.table === 'content_follows' || this.table === 'content_notifications') return Boolean(this.user && row.user_id === this.user.id);
-    if (this.table === 'editorial_collections') return row.published || this.user?.role === 'admin' || this.user?.role === 'editor';
-    if (this.table === 'editorial_collection_items') return tables.editorial_collections.some((collection) => collection.id === row.collection_id && (collection.published || this.user?.role === 'admin' || this.user?.role === 'editor'));
+    if (this.table === 'editorial_collections') return row.published || this.contentPermission();
+    if (this.table === 'editorial_collection_items') return this.contentPermission() || tables.editorial_collections.some(collection=>collection.id===row.collection_id&&collection.published&&tables.content_items.some(item=>item.id===row.content_id&&['published','scheduled'].includes(item.status)&&item.published_at&&item.published_at<=new Date().toISOString()));
     if (this.table === 'account_deletion_requests') return Boolean(this.user && (this.user.id === row.user_id || this.user.role === 'admin'));
     if (this.table === 'media') return this.user?.role === 'admin' || this.user?.role === 'editor' || tables.content_items.some((item) => mediaReferences(item.body,item.type==='gallery'?item.type_data:null,item.cover_media_id,item.og_media_id).has(row.id) && ['published','scheduled'].includes(item.status) && item.published_at <= new Date().toISOString());
     if (this.table === 'contact_messages') return this.user?.role === 'admin' || this.user?.role === 'editor';
@@ -89,7 +93,7 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
     if (this.table === 'comments') return this.action === 'insert' || this.user.role === 'admin' || this.user.role === 'editor';
     if (this.table === 'content_likes' || this.table === 'content_bookmarks' || this.table === 'content_follows') return true;
     if (this.table === 'content_notifications') return this.action === 'update';
-    if (this.table === 'editorial_collections' || this.table === 'editorial_collection_items') return ['admin','editor'].includes(this.user.role);
+    if (this.table === 'editorial_collections' || this.table === 'editorial_collection_items') return this.contentPermission();
     if (this.table === 'account_deletion_requests') return this.action === 'insert' || this.user.role === 'admin';
     if (['site_settings','navigation','redirects'].includes(this.table)) return this.user.role === 'admin';
     return ['admin','editor'].includes(this.user.role);
@@ -129,6 +133,7 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
       }
       if (this.table === 'categories' && selected.some((row) => tables.content_categories.some((link) => link.category_id === row.id) || tables.categories.some((child) => child.parent_id === row.id))) return { data: null, error: { code: '23503', message: 'linked category' } };
       if (this.table === 'tags' && selected.some((row) => tables.content_tags.some((link) => link.tag_id === row.id))) return { data: null, error: { code: '23503', message: 'linked tag' } };
+      if(this.table==='editorial_collections') for(let i=tables.editorial_collection_items.length-1;i>=0;i--) if(selected.some(row=>row.id===tables.editorial_collection_items[i].collection_id)) tables.editorial_collection_items.splice(i,1);
       selected.forEach((row) => rows.splice(rows.indexOf(row), 1));
     }
     if (this.sortField) { const field = this.sortField; selected.sort((a,b) => String(a[field] ?? '').localeCompare(String(b[field] ?? '')) * (this.ascending ? 1 : -1)); }
@@ -151,6 +156,18 @@ export function localSupabase(cookies: import('astro').AstroCookies) {
     from: (name: string) => { if (!isTable(name)) throw new Error('Unknown table'); return new Query(name, getUser()); },
     rpc: async (name: string, args: Row) => {
       const actor = getUser();
+      if(name==='save_editorial_collection'){
+        const profile=actor&&tables.profiles.find(entry=>entry.id===actor.id),group=profile&&tables.permission_groups.find(entry=>entry.id===profile.permission_group_id);
+        if(!profile||(profile.role!=='admin'&&(!['admin','editor'].includes(profile.role)||group?.permissions?.content!==true)))return {data:null,error:{code:'42501',message:'content permission required'}};
+        const value=args.p_value,ids=args.p_content_ids??[],existing=args.p_collection_id?tables.editorial_collections.find(entry=>entry.id===args.p_collection_id):null;
+        if(!value||typeof value.published!=='boolean'||typeof value.title!=='string'||value.title.trim().length<2||value.title.trim().length>120||!['tr','en'].includes(value.locale)||typeof value.slug!=='string'||!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(value.slug)||typeof value.description!=='string'||value.description.length>500||!Number.isInteger(value.sort_order)||value.sort_order<0||value.sort_order>1000||!Array.isArray(ids)||ids.length>50||new Set(ids).size!==ids.length||ids.some((id:string)=>!tables.content_items.some(item=>item.id===id&&item.status==='published'&&item.published_at&&item.published_at<=new Date().toISOString()))||args.p_collection_id&&!existing)return {data:null,error:{code:'22023',message:'invalid collection'}};
+        if(tables.editorial_collections.some(entry=>entry.id!==existing?.id&&entry.slug===value.slug&&entry.locale===value.locale))return {data:null,error:{code:'23505',message:'duplicate collection'}};
+        const now=new Date().toISOString(),saved={...(existing??{id:uid(),created_by:actor!.id,created_at:now}),...value,updated_at:now};
+        if(existing)Object.assign(existing,saved);else tables.editorial_collections.push(saved);
+        for(let i=tables.editorial_collection_items.length-1;i>=0;i--)if(tables.editorial_collection_items[i].collection_id===saved.id)tables.editorial_collection_items.splice(i,1);
+        ids.forEach((content_id:string,sort_order:number)=>tables.editorial_collection_items.push({collection_id:saved.id,content_id,sort_order}));
+        return {data:saved,error:null};
+      }
       if (name === 'content_like_count') {
         const item = tables.content_items.find(row => row.id === args.p_content_id && ['published','scheduled'].includes(row.status) && row.published_at <= new Date().toISOString());
         return { data: item ? tables.content_likes.filter(row => row.content_id === item.id).length : 0, error: null };
