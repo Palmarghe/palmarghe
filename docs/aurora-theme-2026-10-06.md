@@ -16,3 +16,6 @@ CI evidence: Actions37488395045 for959d838 completed Success in7m16s; verify inc
 
 
 7 October palette follow-up: newsletter and selected editor tools use apricot against petrol instead of hardcoded violet. Local Aurora2/2 passed with actual computed-color/axe assertions; visual30/30 passed32.2s after reviewing intentional changes. Current production d4d40fc/Worker6c72bd0c-dbfa-49da-bc7b-bfcdf8396129 Aurora/smoke10/10 passed48.4s. The newer color polish is not yet deployed at this checkpoint; rollout evidence follows after final gates.
+
+
+7 October final live follow-up: hidden Aurora and selected-control contrast remain deployed on Worker fce50526-2b39-40b6-ad69-ec4265a6da1f/source7d936a8. Production Aurora/preview/smoke/showcase13/13 passed58.4s; actual Chrome Alt+Shift+A activates the theme and ordinary toggle returns light/dark. Real live hero proof: aurora-live-hero-2026-10-07.png. Theme QA preferences restored to dark. No directly selectable third option was added. Prior shared-theme Actions282 and283 are successful across all three jobs. Full fourteen-item technical scope remains active.

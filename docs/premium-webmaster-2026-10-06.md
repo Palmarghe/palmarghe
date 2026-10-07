@@ -53,7 +53,7 @@ Gallery checkpoint supersedes prior inspector limitations: Worker7b1c8db9-0616-4
 7 October production release supersedes local-only navigation state: Worker d13d5a3c-2cf6-4fe4-98a0-f3bf24e6b7f6/source40bbe9b, clean verify201 files/182 units/build, full88/88 and production navigation/modal/Aurora/smoke12/12 passed. Actual Chrome Studio dark/light and390px confirm bounds and synchronized button surfaces, no console warnings/errors. Main pushed normally; Actions37533452974 is running at inspection. Fresh sequential mobile lab home96/LCP2.629s and KaanBuilder87/LCP3.833s, both CLS0/TBT0, identifies article request latency and responsive original-image delivery as concrete remaining work. See navigation-motion-2026-10-07.md and performance-lab-2026-10-07.md. Full14 scope remains active.
 
 
-Current7 October device-preview checkpoint: Worker982caecf-ea5e-4368-a376-f837474c7378/ee122ed45712. Requirement11 now uses the actual shared public renderer at1440/768/390px beside fields with direct selection. Admin-only/private framing, source/origin checks, no-POST controls and failed/stalled load preservation are tested. Verify208/182/build; earlier full90/90 and final targeted4/4; production13/13 before final CSS polish and2/2 after. Actual admin Chrome confirms final geometry/focus/Undo/mobile-preview/light theme, no console warnings/errors, no production settings writes. See homepage-device-preview-2026-10-07.md. Actions37537106330 succeeded8m35s, with one cover-upload retry. Automated30-screen comparison now passes locally; Windows CI remains pending. Requirement5 baselines and7 hero visual controls, measured renditions/performance/reliability/trends remain outstanding; full objective is active.
+Historical7 October device-preview checkpoint: Worker982caecf-ea5e-4368-a376-f837474c7378/ee122ed45712. Requirement11 now uses the actual shared public renderer at1440/768/390px beside fields with direct selection. Admin-only/private framing, source/origin checks, no-POST controls and failed/stalled load preservation are tested. Verify208/182/build; earlier full90/90 and final targeted4/4; production13/13 before final CSS polish and2/2 after. Actual admin Chrome confirms final geometry/focus/Undo/mobile-preview/light theme, no console warnings/errors, no production settings writes. See homepage-device-preview-2026-10-07.md. Actions37537106330 succeeded8m35s, with one cover-upload retry. Automated30-screen comparison now passes locally; Windows CI remains pending. Requirement5 baselines and7 hero visual controls, measured renditions/performance/reliability/trends remain outstanding; full objective is active.
 
 
 Visual gate release7 October: Workerf873c119-8777-47d9-b761-ae46784e2ccd/source12ac328. Verify210/182/build, clean full92/92, updated cover-upload response1/1 and final visual30/30 comparison31.2s passed. Actual Chrome390px confirms loaded real preview, single-line controls and no overflow/console warnings/errors; original saved title verified after reload. Latest production13-case regression and new Windows Actions37538970760 are running. This improves requirement5 but does not claim all14 requirements completed. Next outstanding product work includes hero appearance/intensity/motion controls and measured responsive media/performance/resilience trends.
@@ -62,4 +62,30 @@ Visual gate release7 October: Workerf873c119-8777-47d9-b761-ae46784e2ccd/source1
 Adapter repair gate: verify211 files/184 units/build passed; full functional91/92 exposed a newsletter consent link color-transition contrast issue during theme change. The text now switches immediately with its background; targeted visual-polish2/2 passed38.7s. Visual30/30 after the adapter repair passed43.5s. No production data changed; new CI still requires inspection.
 
 
-Current checkpoint: sourcea6aa1d4/Worker53590fcd-5918-416d-ac92-5c070909e8e3; verify211 files/184 units/build, clean full local92/92 passed4.4m and production12/12 passed1.1m. CI281 functional92 E2E passed, visual29/30 caught native closed-select painting. The shared select repair is undergoing final visual/CI checks. This completes no wider14-item audit by itself. Hero visual controls, responsive original media delivery, broader comment recovery and health trend work remain applicable.
+Historical checkpoint: sourcea6aa1d4/Worker53590fcd-5918-416d-ac92-5c070909e8e3; verify211 files/184 units/build, clean full local92/92 passed4.4m and production12/12 passed1.1m. CI281 functional92 E2E passed, visual29/30 caught native closed-select painting. The shared select repair is undergoing final visual/CI checks. This completes no wider14-item audit by itself. Hero visual controls, responsive original media delivery, broader comment recovery and health trend work remain applicable.
+
+
+## 7 October — configurable hero production checkpoint
+
+Requirement7: Studio ratio/depth/light/intensity/ambient-motion controls now deployed on Worker fce50526-2b39-40b6-ad69-ec4265a6da1f/source7d936a8; actual Chrome save/reload/public output and exact value restoration verified. Local215/187/build,94/94 E2E and30/30 visual passed; production13/13 passed. Requirement5 previous release and documentation Actions282/283 all three jobs passed. New source Actions284 visual passed, verify/production pending. Remaining partial requirements retain their original full scope; no overall completion claim. Details: hero-appearance-2026-10-07.md.
+
+## Current requirement matrix — 7 October 2026
+
+| Requirement | Evidence / remaining work |
+| --- | --- |
+| 1 Shared design system | Public/Studio/theme matrix, Aurora control contrast and single-select rendering verified. Some editor mode/action accents remain to normalize. Partial. |
+| 2 Studio simplification | Collapsed hero controls, grouped mobile editor, persistent save feedback and private device preview verified. Long settings/virtual keyboard usability still needs final audit. Partial. |
+| 3 Performance | Actual sequential lab samples in performance-lab-2026-10-07.md. Responsive original-media delivery and comparable post-change measurements remain. Partial. |
+| 4 Resilience | Settings failed-save input retention and preview retry verified. Comments network timeout/double-submit and uncertain POST recovery remain. Partial. |
+| 5 Visual automation | Thirty reproducible references, Windows gate, public/Studio390/1440 and three themes verified; Actions282/283 green. New hero Actions284 visual passed. |
+| 6 Navigation motion | Reduced-motion/back-scroll and production navigation tests verified; navigation-motion-2026-10-07.md. |
+| 7 Configurable hero | Ratio/depth/light/intensity/ambient motion, validation/permissions, local save/restore and actual production99→100 persistence verified; hero-appearance-2026-10-07.md. |
+| 8 Micro interactions | Existing feedback/card/menu/save motion verified in scoped tests. Complete error/loading/reduced-motion consistency audit remains. Partial. |
+| 9 Image inspector | Original-media zoom/fullscreen/swipe/keyboard/retry verified; gallery-inspector-2026-10-06.md. |
+| 10 Staff palette | Role-filtered Ctrl/Cmd+K search, keyboard and editor shortcut coexistence verified. |
+| 11 Real device preview | Shared public hero/stylesheet at1440/768/390, pending values/direct selection, private framing, source/origin checks and retry verified; homepage-device-preview-2026-10-07.md. |
+| 12 Save/revisions | Actual revision diff/restore and changed-field summary verified. Server-confirmed saved time presentation still needs completion. Partial. |
+| 13 Operational trends | Real authorized release/service measurements and last50 sampled operation records persist. Rolling summaries/performance trends still need implementation. Partial; not organic traffic or field CWV. |
+| 14 Loading/reconnect | Private preview bounded loading/retry verified. Comments and other async surfaces require complete reconnect/error-state audit. Partial. |
+
+This matrix preserves the full scope. Passing one release or the hidden-theme request does not close the wider goal. Production appearance QA restored original visual values; original publications, accounts and media were retained.
