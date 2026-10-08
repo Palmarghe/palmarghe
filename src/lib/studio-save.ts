@@ -6,6 +6,7 @@ export class StudioSaveError extends Error {
   constructor(public readonly reason: StudioSaveFailure, public readonly detail?:string, public readonly field?:string) { super(reason); }
 }
 const mediaErrors:Record<string,string>={
+  actor_session:'Oturum başka bir hesaba geçti. Girdileriniz korunuyor; bu hesabın Studio sayfasını başka bir sekmede açarak kontrol edin.',
   content_fields:'Başlık, URL, dil ve içerik türünü kontrol edin. Girdileriniz korunuyor.',
   content_body:'Editör içeriği doğrulanamadı. Girdileriniz korunuyor; desteklenmeyen bir blok olup olmadığını kontrol edin.',
   content_duplicate:'Bu dilde bu URL yolu zaten kullanılıyor. Başka bir URL yolu seçin.',

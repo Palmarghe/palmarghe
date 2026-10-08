@@ -16,3 +16,13 @@ for(const section of ['categories','tags','navigation','redirects'])test(section
  await page.unroute('**/api/studio/');await page.route('**/api/studio/',route=>route.abort());await button.click();await expect(form.locator('.studio-settings-status')).toContainText('Bağlantı kurulamadı');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);expect(posts).toBe(1);
 });
+test('an open taxonomy form rejects a different staff session before any write',async({page,context})=>{
+ const admin='00000000-0000-4000-8000-100000000001',editor='00000000-0000-4000-8000-100000000002';
+ await context.addCookies([{name:'pg_mock_user',value:admin,url:origin}]);await page.goto('/studio/?section=tags');
+ const form=page.locator('form[action="/api/studio/"]').filter({has:page.locator('input[name=operation][value=create]')}).first();const unique='session-guard-'+Date.now();
+ await form.locator('[name=slug]').fill(unique);await form.locator('[name=name_tr]').fill(unique);await form.locator('[name=name_en]').fill(unique);
+ await context.addCookies([{name:'pg_mock_user',value:editor,url:origin}]);
+ const receipt=page.waitForResponse(r=>r.request().method()==='POST'&&new URL(r.url()).pathname==='/api/studio/');await form.getByRole('button',{name:'Kaydet',exact:true}).click();const response=await receipt;
+ expect(response.status()).toBe(409);expect(await response.json()).toEqual({error:'actor_session'});await expect(form.locator('.studio-settings-status')).toContainText('Oturum başka bir hesaba geçti');await expect(form.locator('[name=slug]')).toHaveValue(unique);
+ await context.addCookies([{name:'pg_mock_user',value:admin,url:origin}]);expect(await (await context.request.get('/studio/?section=tags')).text()).not.toContain(unique);
+});

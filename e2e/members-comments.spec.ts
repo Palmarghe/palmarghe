@@ -14,9 +14,14 @@ test('admin creates permission groups and manages a Studio membership',async({pa
   await expect(page.getByRole('heading',{name:/Yorum moderatörü/})).toBeVisible();
   await page.goto('/studio/?section=members');
   const email=`studio-member-${Date.now()}@example.test`;
+  const groupId=await page.locator('.member-create select[name=group_id]').inputValue();
+  const tooShort=await page.request.post('/api/studio/',{headers:{Origin:'http://127.0.0.1:4322'},form:{entity:'member_account',operation:'create',email,password:'abcdefg',display_name:'Rejected short password',group_id:groupId}});
+  expect(tooShort.status()).toBe(400);
+  await expect(page.locator('.member-create input[name=password]')).toHaveAttribute('minlength','8');
+  await expect(page.locator('.member-create input[name=password]')).not.toHaveAttribute('pattern');
   await page.getByLabel('Görünen ad').fill('Yeni Studio Üyesi');
   await page.getByLabel('E-posta').fill(email);
-  await page.getByLabel('Geçici şifre').fill('MemberTest123!');
+  await page.getByLabel('Geçici şifre').fill('abcdefgh');
   await page.locator('.member-create select[name="group_id"]').selectOption({label:'Yorum moderatörü'});
   await page.getByRole('button',{name:'Üyeliği oluştur'}).click();
   const card=page.locator('.member-card').filter({hasText:'Yeni Studio Üyesi'});
@@ -24,7 +29,7 @@ test('admin creates permission groups and manages a Studio membership',async({pa
   await page.context().clearCookies();
   await page.goto('/studio/editor/');
   await page.getByRole('textbox',{name:'Email'}).fill(email);
-  await page.locator('input[name="password"]').fill('MemberTest123!');
+  await page.locator('input[name="password"]').fill('abcdefgh');
   await page.getByRole('button',{name:'Giriş'}).click();
   await expect(page.getByRole('heading',{name:'Genel bakış'})).toBeVisible();
   await expect(page).toHaveURL(/\/studio\/\?panel=editor&section=dashboard$/);

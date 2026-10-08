@@ -19,3 +19,19 @@ Full local regression is terminal and passed120/120 in5.7m. Visual36 baseline co
 Final unchanged visual comparison36/36 passed34.4s. All local release gates are terminal and passed.
 
 Production deployment supersedes local-only status: clean source2759c92 normally pushed, clean build passed, Worker dab52194-2cfd-4ed5-a883-d03b10a44034. No new bindings/secrets/migrations. Fresh full82 production is live under53551; native authenticated Studio and source Actions remain outstanding.
+
+Local follow-up after deployment: the authorized Studio page binds its current actor UUID to generic form submissions. Before entity permission checks or writes, an explicitly mismatched actor receives a private409 actor_session JSON response; the shared handler shows a session-change message and retains fields. Legacy/native requests without the optional field retain existing server authorization, rather than being silently claimed actor-bound. No new privilege is granted. The real local admin-to-editor cookie switch proves409, preserved input and no inserted tag. Scoped7/7 passed20.5s. This actor follow-up is not deployed; verify is running under27198, then full regression/visual/normal push/deploy/live verification remain.
+
+Actor follow-up verify passed249 checked files zero diagnostics/221 units/build. Full121-case local regression is now starting after verify ended; no runtime edits will be made during its server lifetime.
+
+Fresh full production release regression is terminal:82/82 passed6.1m on2759c92/Worker dab52194. This proves the deployed generic form recovery release regression; it does not deploy/prove the uncommitted actor follow-up. Local121 remains active under36179.
+
+Actor-only full121/121 passed5.8m. After its server exited, Studio UI and member_account API were aligned with the user's explicitly approved8-character requirement (maximum128, no forced character classes). Supabase Auth policy, roles and email behavior are not changed. Existing local membership workflow now creates/logs into/deletes a disposable8-lowercase account; direct7-character API request is rejected400. Membership/comments/notification and CRUD actor recovery8/8 passed24.5s. No production Auth account was created or deleted. Final combined verify is running; these actor/password edits are still uncommitted and not deployed.
+
+Deployed2759c92 source Actions37852998077 is terminal Success, verified in actual connected Edge: verify7m31s (120 E2E6.2m), visual2m5s, production-smoke2m50s, total10m29s. Combined actor/password final verify249 files zero diagnostics/221 units/build passed. Fresh sequential mobile Lighthouse is running only after local/production tests and verify ended; no overlapping audit load.
+
+After both sequential Lighthouse samples ended, final combined actor/password121-case local suite started under71008. Final verify and scoped8 are passed; this last full combined regression and subsequent visual/commit/clean deployment remain pending. No runtime edits during this active server.
+
+Final combined local121/121 passed5.3m. Unchanged36 baseline comparison is running sequentially under81420 after the full suite server ended. Report history was preserved byte-for-byte in final-report-history-through-2026-10-09.md (SHA256183eba6baba3d3aab0ecd0fca369825478c821b6f15db0f8601102095cd683ca); FINAL_REPORT now has one authoritative deployment, explicit local follow-up and all fourteen requirements, without treating old open/current phrases as current.
+
+Final combined unchanged visual36/36 passed32.7s. All local release gates are terminal and passed; source commit/clean deployment can now proceed.
