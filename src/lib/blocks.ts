@@ -48,7 +48,7 @@ export function renderDocument(doc: Document, locale: 'tr' | 'en' = 'tr',mediaAt
   const imageAttributes=(id:string,sizes:string)=>{
     const values=mediaAttributes?.(id);if(!values)return '';
     const dimensions=Number.isSafeInteger(values.width)&&Number.isSafeInteger(values.height)&&values.width!>0&&values.height!>0?` width="${values.width}" height="${values.height}"`:'';
-    return dimensions+(values.srcset?` srcset="${escapeHtml(values.srcset)}" sizes="${sizes}"`:'');
+    return dimensions+(values.srcset?` srcset="${escapeHtml(values.srcset)}" sizes="auto, ${sizes}"`:'');
   };
   const render = (node: Block): string => {
     const inside = (node.content ?? []).map(render).join('');

@@ -17,7 +17,7 @@ test('failed derivative generation retains the original, retries safely and foll
  const derived=await context.request.get(source+'?w=320');expect(derived.status()).toBe(200);expect(derived.headers()['content-type']).toBe('image/webp');
  expect(await sharp(await derived.body()).metadata()).toMatchObject({width:320,height:200});expect((await derived.body()).length).toBeLessThan(original.length);
  expect(digest(await (await context.request.get(source)).body())).toBe(digest(original));
- const anonymous=await context.browser()!.newContext({baseURL:'http://127.0.0.1:4322'});
+ const anonymous=await context.browser()!.newContext({baseURL:'http://127.0.0.1:4322',viewport:{width:390,height:844},deviceScaleFactor:1.75});
  try{
   expect((await anonymous.request.get(source+'?w=320')).status()).toBe(404);
   expect((await anonymous.request.post('/api/media/renditions/',{headers:{origin:'http://127.0.0.1:4322'},form:{media_id:id!}})).status()).toBe(401);
@@ -29,6 +29,11 @@ test('failed derivative generation retains the original, retries safely and foll
   const bodyImage=page.getByRole('img',{name:'Body original QA',exact:true});await expect(bodyImage).toHaveAttribute('srcset',/\?w=640 640w/);await expect(bodyImage).toHaveAttribute('width','1000');await expect(bodyImage).toHaveAttribute('height','625');
   const found=(await (await context.request.get('/api/search/?q=Responsive%20derivative&locale=tr')).json()).results.find((entry:any)=>entry.slug===slug);
   expect(found.cover_srcset).toContain('?w=640 640w');
+  const publicPage=await anonymous.newPage();await publicPage.goto('/archive/');const lazyCard=publicPage.locator(`.entry-card[href="/${slug}/"] img`).first();await lazyCard.scrollIntoViewIfNeeded();
+  await expect(lazyCard).toHaveAttribute('sizes',/^auto, /);await expect.poll(()=>lazyCard.evaluate(el=>(el as HTMLImageElement).currentSrc)).toContain('?w=640');
+  const selected=await lazyCard.evaluate(el=>({src:(el as HTMLImageElement).currentSrc,width:el.getBoundingClientRect().width,dpr:devicePixelRatio}));expect(selected.width*selected.dpr).toBeLessThanOrEqual(640);
+  const selectedBytes=await (await anonymous.request.get(selected.src)).body();expect(await sharp(selectedBytes).metadata()).toMatchObject({width:640});expect(selectedBytes.length).toBeLessThan((await (await anonymous.request.get(source+'?w=960')).body()).length);
+  await publicPage.close();
   expect((await context.request.post('/api/media/manage/',{headers:{origin:'http://127.0.0.1:4322'},form:{id:id!,operation:'delete'}})).status()).toBe(409);
   expect((await context.request.post('/api/studio/',{headers:{origin:'http://127.0.0.1:4322'},form:{entity:'content',operation:'delete',id:found.id}})).status()).toBe(200);
   expect((await anonymous.request.get(source+'?w=320')).status()).toBe(404);

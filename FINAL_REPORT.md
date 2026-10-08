@@ -19,16 +19,16 @@ This is the only current deployment state in this report. Historical snapshots a
 | Unchanged visual comparison |36/36 passed32.7s; dark/light/Aurora, public/Studio390/1440 |
 | Clean committed build/deploy |Completed; Worker ID above |
 | Fresh full production E2E |82/82 passed5.8m on the deployed Worker; a subsequent focused hidden-Aurora production check passed1/1 in4.7s, including390/1440 layouts, accessibility, search navigation and return to light theme |
-| Source GitHub Actions |New1fb9eb1 run still requires inspection. Previous2759c92 Actions37852998077 Success; verify7m31s, visual2m5s, production-smoke2m50s; total10m29s, inspected in connected Edge |
+| Source GitHub Actions |1fb9eb1 Actions37854993962 Success: verify6m2s (121 E2E5.0m), visual1m27s, production-smoke2m28s; total8m36s, inspected in connected Edge |
 | Original data protection |No production write in this release's QA; prior original/Storage boundary and fingerprint proofs retained in media documents |
 
 Connected browser currently has a nonstaff account and correctly denies Studio. This is role-boundary evidence, not authenticated administrator verification. Native authorized Studio review is still outstanding; no browser identity or evidence is fabricated.
 
-## Actor and membership follow-up — deployed, final live gates pending
+## Actor and membership follow-up — deployed and regression verified
 
 Generic form submissions capture their authorized Studio page actor. An explicitly different current staff session is rejected409 before writes; fields stay editable and preserved. Legacy/native API requests without this optional actor field still use existing server authorization and are not claimed universally actor-bound.
 
-Studio member creation UI/API now match the user's approved8..128 character rule without forced character types. Production Supabase Auth policy is unchanged. Local7-character API rejection,8-lowercase account create/login/permission checks/cleanup passed; no production account was created/deleted. Actor-only full121/121 passed5.8m. Combined membership/comments/CRUD checks8/8 passed24.5s; final verify249 files/221 units/build passed. Final combined121-case local suite71008 passed121/121 in5.3m. Unchanged36-screen visual comparison passed36/36 in32.7s, run sequentially after that server ended. Normal commit/push and clean deployment completed as1fb9eb1/Worker eabe551c. Final live regression/native staff checks and new source CI remain outstanding.
+Studio member creation UI/API now match the user's approved8..128 character rule without forced character types. Production Supabase Auth policy is unchanged. Local7-character API rejection,8-lowercase account create/login/permission checks/cleanup passed; no production account was created/deleted. Actor-only full121/121 passed5.8m. Combined membership/comments/CRUD checks8/8 passed24.5s; final verify249 files/221 units/build passed. Final combined121-case local suite71008 passed121/121 in5.3m. Unchanged36-screen visual comparison passed36/36 in32.7s, run sequentially after that server ended. Normal commit/push and clean deployment completed as1fb9eb1/Worker eabe551c. Final live regression82/82 and source Actions37854993962 passed. Native authorized staff checks remain outstanding.
 
 See [Studio form recovery evidence](docs/studio-crud-recovery-2026-10-09.md).
 
@@ -56,4 +56,4 @@ Custom SMTP, optional Cloudflare Access, Search Console field CWV/indexing matur
 
 ## Preservation and completion status
 
-Existing architecture, Git history, original content/media/accounts and production permissions are preserved. No force push. Runtime source was committed and deployed cleanly. This report update is a documentation-only follow-up awaiting normal commit/push. The goal is active, not complete and not blocked. Completion requires the full scope and current gates to be proved, normal main push, QA cleanup, clean Git and one accurate final production state.
+Existing architecture, Git history, original content/media/accounts and production permissions are preserved. No force push. Runtime source was committed and deployed cleanly. Subsequent responsive-image work is local and not yet deployed; its release gates are recorded separately. The goal is active, not complete and not blocked. Completion requires the full scope and current gates to be proved, normal main push, QA cleanup, clean Git and one accurate final production state.
