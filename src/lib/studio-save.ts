@@ -1,4 +1,5 @@
 /** A bounded Studio POST; a 200 error page must never be called a saved form. */
+export type StudioSaveSection = 'content' | 'media' | 'homepage' | 'advertising' | 'collections' | 'appearance' | 'settings' | 'categories' | 'tags' | 'navigation' | 'redirects' | 'comments' | 'messages' | 'members' | 'access' | 'users';
 export const STUDIO_SAVE_TIMEOUT_MS = 30_000;
 export type StudioSaveFailure = 'timeout' | 'network' | 'validation' | 'authentication' | 'permission' | 'conflict' | 'server' | 'response';
 export class StudioSaveError extends Error {
@@ -19,7 +20,7 @@ async function mediaErrorDetail(response:Response):Promise<{detail?:string;field
   try {const data=await response.json();const fields=['title','slug','locale','type','status','excerpt','seo_title','seo_description','category_id','cover_media_id','og_media_id','canonical_override'];return {detail:typeof data?.error==='string' && Object.hasOwn(mediaErrors,data.error) ? mediaErrors[data.error] : undefined,field:data.error==='content_duplicate'?'slug':data.error==='content_body'?'body':fields.includes(data.field)?data.field:undefined};}catch{return {};}
 }
 
-export async function submitStudioForm(action: string, body: FormData, section: 'content' | 'media' | 'homepage' | 'advertising' | 'collections' | 'appearance' | 'settings', transport: typeof fetch = fetch): Promise<string> {
+export async function submitStudioForm(action: string, body: FormData, section: StudioSaveSection, transport: typeof fetch = fetch): Promise<string> {
   const controller = new AbortController();
   let timedOut = false;
   const timeout = setTimeout(() => { timedOut = true; controller.abort(); }, STUDIO_SAVE_TIMEOUT_MS);

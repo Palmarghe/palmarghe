@@ -19,3 +19,5 @@ Final functional116/116 passed5.8m; final verify248 files zero diagnostics/221 u
 Final sequential visual gate passed36/36 unchanged comparisons44.4s. All local release gates are terminal and passed; deployment and native production verification remain next.
 
 9 October deployment supersedes the local-only checkpoint: clean9d35c33 normally pushed, clean build passed, Worker cd7758b2-db22-4458-b2f9-4a8c3ade3c6b deployed. Live Aurora/media3/3 passed14.6s. Actual connected Edge desktop hidden Aurora/background/no overflow passed; native proof aurora-live-2026-10-09.png, dark preference restored. Native short Studio viewport, new source CI and full production follow-up remain outstanding.
+
+9 October fresh full production regression passed82/82 in6.1m on Worker cd7758b2. This supersedes the outstanding full-production gate above. Source Actions37851697788 and docs Actions37851886936 are confirmed live in progress; native short Studio viewport/CI/performance remain outstanding.
