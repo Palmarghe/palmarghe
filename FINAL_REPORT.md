@@ -18,7 +18,7 @@ This is the only current deployment state in this report. Historical snapshots a
 | Full local E2E |121/121 passed5.3m |
 | Unchanged visual comparison |36/36 passed32.7s; dark/light/Aurora, public/Studio390/1440 |
 | Clean committed build/deploy |Completed; Worker ID above |
-| Fresh full production E2E |Running on the new Worker; not yet counted passed. Previous2759c92 full82/82 passed6.1m |
+| Fresh full production E2E |82/82 passed5.8m on the deployed Worker; a subsequent focused hidden-Aurora production check passed1/1 in4.7s, including390/1440 layouts, accessibility, search navigation and return to light theme |
 | Source GitHub Actions |New1fb9eb1 run still requires inspection. Previous2759c92 Actions37852998077 Success; verify7m31s, visual2m5s, production-smoke2m50s; total10m29s, inspected in connected Edge |
 | Original data protection |No production write in this release's QA; prior original/Storage boundary and fingerprint proofs retained in media documents |
 
