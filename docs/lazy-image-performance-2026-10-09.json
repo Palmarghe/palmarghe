@@ -1,0 +1,221 @@
+{
+  "source": "b7d0682",
+  "worker": "485bb85d-8ddd-4fbf-804a-86852d1663f4",
+  "scope": "Sequential single mobile lab samples after local and full production tests ended. Not medians, field CWV, organic traffic or causal proof; image selection/timing inspected separately.",
+  "samples": [
+    {
+      "page": "home",
+      "url": "https://palmarghe.com/?verify=lighthouse",
+      "fetchTime": "2026-10-08T23:05:18.784Z",
+      "lighthouseVersion": "13.5.0",
+      "settings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": [
+          "performance",
+          "accessibility",
+          "best-practices",
+          "seo"
+        ],
+        "skipAudits": null
+      },
+      "scores": {
+        "performance": 0.98,
+        "accessibility": 1,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "LCP": 2102.031,
+        "CLS": 0,
+        "TBT": 0,
+        "transferBytes": 678316,
+        "documentMs": 273
+      },
+      "images": [
+        {
+          "url": "https://palmarghe.com/visuals/hero-glass.webp",
+          "transferSize": 30104
+        },
+        {
+          "url": "https://palmarghe.com/api/media/fe750271-0ab5-4d33-9f29-62cd4e78dff9/?w=640",
+          "transferSize": 60522
+        },
+        {
+          "url": "https://palmarghe.com/api/media/b77a08f2-c16a-4d68-a6f9-0f47eb242d8d/?w=960",
+          "transferSize": 79122
+        },
+        {
+          "url": "https://palmarghe.com/api/media/9fafc86e-bd72-4ecc-8a48-41f316c86b4e/?w=960",
+          "transferSize": 85377
+        },
+        {
+          "url": "https://palmarghe.com/visuals/music/anatolian-velocity-960.webp",
+          "transferSize": 98009
+        },
+        {
+          "url": "https://palmarghe.com/visuals/editorial-ai-480.webp",
+          "transferSize": 10641
+        },
+        {
+          "url": "https://palmarghe.com/visuals/editorial-gaming-480.webp",
+          "transferSize": 22353
+        },
+        {
+          "url": "https://palmarghe.com/visuals/editorial-fm-480.webp",
+          "transferSize": 23696
+        },
+        {
+          "url": "https://palmarghe.com/visuals/editorial-lab-480.webp",
+          "transferSize": 14958
+        },
+        {
+          "url": "https://palmarghe.com/visuals/music/anatolian-sub-ritual-480.webp",
+          "transferSize": 20021
+        },
+        {
+          "url": "https://palmarghe.com/visuals/music/sevenfold-thunder-960.webp",
+          "transferSize": 68660
+        },
+        {
+          "url": "https://palmarghe.com/visuals/music/anatolian-sub-ritual-960.webp",
+          "transferSize": 61770
+        }
+      ]
+    },
+    {
+      "page": "article",
+      "url": "https://palmarghe.com/gaming/minecraft/kaanbuilder/?verify=lighthouse",
+      "fetchTime": "2026-10-08T23:05:41.724Z",
+      "lighthouseVersion": "13.5.0",
+      "settings": {
+        "output": [
+          "json"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": [
+          "performance",
+          "accessibility",
+          "best-practices",
+          "seo"
+        ],
+        "skipAudits": null
+      },
+      "scores": {
+        "performance": 0.97,
+        "accessibility": 1,
+        "bestPractices": 1,
+        "seo": 1
+      },
+      "metrics": {
+        "LCP": 2401.889,
+        "CLS": 0,
+        "TBT": 0,
+        "transferBytes": 286562,
+        "documentMs": 394
+      },
+      "images": [
+        {
+          "url": "https://palmarghe.com/api/media/9fafc86e-bd72-4ecc-8a48-41f316c86b4e/?w=960",
+          "transferSize": 85471
+        },
+        {
+          "url": "https://palmarghe.com/api/media/908d428c-7b13-43e8-8efd-40680afad056/?w=960",
+          "transferSize": 92897
+        }
+      ]
+    }
+  ]
+}

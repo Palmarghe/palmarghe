@@ -16,4 +16,21 @@ Verify passed249 files with zero diagnostics,221 unit tests and build. Full loca
 
 ## Release status
 
-Local implementation, not deployed yet. Current production remains source1fb9eb1/Worker eabe551c. Its full production82/82 passed5.8m and source Actions37854993962 passed all three jobs in8m36s. This follow-up is part of performance requirement3; it does not close the entire fourteen-item scope or establish field Core Web Vitals.
+Deployed from clean committed sourceb7d0682 after normal main push/build. Worker485bb85d-8ddd-4fbf-804a-86852d1663f4; scoped live media3/3 passed11.3s, including actual640px phone source/decoded bytes and original byte reduction. Connected Edge archive confirms all eight images now have responsive sources; visible225.55px cards selected320px ready WebPs, completed loading and remained within the viewport. Screenshot: archive-responsive-release-2026-10-09.png. Native Studio session still denies access, so this is public proof only.
+
+Native390px/DPR1 dark/light archive proof is saved as archive-responsive-mobile-2026-10-09.png and archive-responsive-mobile-light-2026-10-09.png. Its293.29px original-media card selected320px, loaded successfully and remained within bounds. The temporary viewport and original dark preference were restored. This distinct real-DPR proof is not confused with the dedicated Chrome390px/DPR1.75 test's640px selection.
+
+New full production83/83 passed5.9m. Source Actions37856721050 is Success: verify7m41s (121 E2E6.4m), visual2m1s, production-smoke3m3s; total10m52s, inspected in connected Edge. This follow-up is part of performance requirement3; it does not close the entire fourteen-item scope or establish field Core Web Vitals.
+
+## Comparable sequential mobile lab follow-up
+
+Both Lighthouse13.5.0 samples used mobile defaults and the previous headless flags/four categories, after local and full production suites ended. QA URLs use verify=lighthouse to exclude measurement from organic traffic. Compact settings/network evidence: lazy-image-performance-2026-10-09.json. Raw ignored reports: test-results/performance/lazy-home-20261009.json and lazy-article-20261009.json.
+
+| Page | Performance | Simulated LCP | CLS | TBT | Transfer | Observed document response |
+|---|---:|---:|---:|---:|---:|---:|
+| Home |98|2102ms|0|0|678316 bytes|273ms|
+| KaanBuilder |97|2402ms|0|0|286562 bytes|394ms|
+
+Automated accessibility/best practices/SEO100 in both. Prior2759c92 single samples were home97/LCP2458ms/680674 bytes and article94/LCP3062ms/368060 bytes. These are single samples, not medians, field CWV or causal speed claims. The article transfer fell81498 bytes (22.1%), but network inspection shows the previously fetched offscreen related960px cover absent from the new capture; it is not proof that the same fetched image became smaller. The two eager/visible image requests still use960px. A separate native390px keyboard navigation check brought both related cards into view: they completed loading320px candidates at actual293–306px width/DPR1, with no overflow or console warnings/errors. The archive DPR1.75 test separately proves actual640px selection and byte reduction.
+
+Current native archive review also identifies a remaining mobile-density improvement: stacked filters and the section gap push the first card title beyond the initial screen. This remains a shared-design follow-up, not a completed requirement hidden by passing performance tests.

@@ -1,6 +1,6 @@
 # Dağıtım
 
-Güncel production kaynağı ve Worker kimliği için tek yetkili durum [FINAL_REPORT.md](../FINAL_REPORT.md) dosyasındadır. Aşağıdaki tarihli release kayıtları tarihsel kanıttır. 9 Ekim doğrulaması: source1fb9eb1 / Worker eabe551c; production82/82 ve kaynak Actions37854993962 başarılı. Responsive media migration045 production'da uygulanmış ve history kaydı doğrulanmıştır; orijinallerin korunması ve parent RLS/Storage kontrolleri ilgili medya belgelerinde kayıtlıdır. Yerel lazy-image follow-up henüz dağıtılmadı.
+Güncel production kaynağı ve Worker kimliği için tek yetkili durum [FINAL_REPORT.md](../FINAL_REPORT.md) dosyasındadır. Aşağıdaki tarihli release kayıtları tarihsel kanıttır. 9 Ekim doğrulaması: source1fb9eb1 / Worker eabe551c; production82/82 ve kaynak Actions37854993962 başarılı. Responsive media migration045 production'da uygulanmış ve history kaydı doğrulanmıştır; orijinallerin korunması ve parent RLS/Storage kontrolleri ilgili medya belgelerinde kayıtlıdır. Lazy-image follow-up b7d0682 / Worker485bb85d olarak dağıtıldı; güncel gate durumu FINAL_REPORT.md içindedir.
 
 Astro SSR uygulaması Cloudflare Worker `palmarghe` üzerinde çalışır. Zone `palmarghe.com` aktiftir; apex, `studio` ve `www` Worker custom domainleridir. `www` apex'e 301 yönlenir. DNS teşhisi, eski/yeni NS ve geri dönüş planı için `docs/dns-backup-2026-09-16.md` dosyasına bakın.
 
