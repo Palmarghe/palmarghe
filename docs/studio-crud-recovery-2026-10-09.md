@@ -37,3 +37,5 @@ Final combined local121/121 passed5.3m. Unchanged36 baseline comparison is runni
 Final combined unchanged visual36/36 passed32.7s. All local release gates are terminal and passed; source commit/clean deployment can now proceed.
 
 Actor/password follow-up deployed: clean1fb9eb1 normally pushed, clean committed build passed; Worker eabe551c-698d-4417-840f-63e7ae230681. Full local121/1215.3m, visual36/3632.7s, verify249/221/build passed. No new binding/secret/migration. Fresh full production is running; native staff verification/source CI remain outstanding.
+
+Actual connected Edge postdeploy public page has title Palmarghe, unchanged heading, dark theme and no horizontal overflow. Native proof studio-release-public-2026-10-09.png. This is public rendering proof, not authenticated administrator proof.
