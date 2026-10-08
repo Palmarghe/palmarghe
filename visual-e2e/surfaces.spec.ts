@@ -21,7 +21,7 @@ test.beforeAll(async({browser})=>{
  await context.close();
 });
 
-for(const width of [390,1440])for(const theme of ['dark','light','aurora'])for(const surface of ['home','search','dashboard','editor','homepage','health']){
+for(const width of [390,1440])for(const theme of ['dark','light','aurora'])for(const surface of ['home','search','archive','dashboard','editor','homepage','health']){
  test(`${surface} ${theme} ${width}`,async({page,context})=>{
   await page.setViewportSize({width,height:900});
   await page.addInitScript(theme=>localStorage.setItem('palmarghe-theme',theme),theme);
@@ -31,7 +31,7 @@ for(const width of [390,1440])for(const theme of ['dark','light','aurora'])for(c
    const observations=[{status:303,duration_ms:100,time:'2026-10-07T10:00:00Z',failed:false},{status:400,duration_ms:500,time:'2026-10-07T11:00:00Z',failed:true}];
    await page.route('**/api/studio-health/',route=>route.fulfill({json:{checked_at:'2026-10-07T12:00:00Z',release:'visual-fixture',built_at:'2026-10-07T09:00:00Z',services:{auth:'ok',database:'ok',media_catalog:'ok'},database_ms:20,observations,observations_available:true,trends:operationTrends(observations,Date.parse('2026-10-07T12:00:00Z')),note:'Son 50 örneklenmiş Studio isteği; yalnız yerel görsel test verisi.'}}));
   }
-  const path=surface==='home'?'/':surface==='search'?'/search/?q=Dijital':`/studio/?section=${surface==='editor'?'content':surface}`;
+  const path=surface==='home'?'/':surface==='search'?'/search/?q=Dijital':surface==='archive'?'/archive/':`/studio/?section=${surface==='editor'?'content':surface}`;
   await page.goto(path);await expect(page.locator('body')).toHaveAttribute('data-theme',theme);
   await page.evaluate(()=>document.fonts.ready);
   // Deferred navigation/editor code must finish before photographing the surface.
