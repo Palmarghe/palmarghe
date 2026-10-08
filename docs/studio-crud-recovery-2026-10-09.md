@@ -35,3 +35,5 @@ After both sequential Lighthouse samples ended, final combined actor/password121
 Final combined local121/121 passed5.3m. Unchanged36 baseline comparison is running sequentially under81420 after the full suite server ended. Report history was preserved byte-for-byte in final-report-history-through-2026-10-09.md (SHA256183eba6baba3d3aab0ecd0fca369825478c821b6f15db0f8601102095cd683ca); FINAL_REPORT now has one authoritative deployment, explicit local follow-up and all fourteen requirements, without treating old open/current phrases as current.
 
 Final combined unchanged visual36/36 passed32.7s. All local release gates are terminal and passed; source commit/clean deployment can now proceed.
+
+Actor/password follow-up deployed: clean1fb9eb1 normally pushed, clean committed build passed; Worker eabe551c-698d-4417-840f-63e7ae230681. Full local121/1215.3m, visual36/3632.7s, verify249/221/build passed. No new binding/secret/migration. Fresh full production is running; native staff verification/source CI remain outstanding.
