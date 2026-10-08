@@ -1,4 +1,5 @@
 import { Editor, Node, mergeAttributes, type JSONContent } from '@tiptap/core';
+import './editor-viewport';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import { BubbleMenu } from '@tiptap/extension-bubble-menu';

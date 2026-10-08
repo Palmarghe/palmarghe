@@ -172,17 +172,18 @@ const containsEmbed = (block: Block): boolean => block.type === 'embed' || Boole
 const articleHasEmbed = Boolean(articleBody?.content.some(containsEmbed));
 const typeData = item?.type_data ?? {};
 const galleryMediaIds = item?.type === 'gallery' && Array.isArray(typeData.gallery_media_ids) ? typeData.gallery_media_ids.filter((id): id is string => typeof id === 'string' && /^[0-9a-f-]{36}$/i.test(id)).slice(0,24) : [];
-const { data: galleryRows } = galleryMediaIds.length && categoryDb ? await categoryDb.from('media').select('id,width,height,alt_tr,alt_en,caption_tr,caption_en').in('id',galleryMediaIds) : { data: null };
-const galleryMedia = galleryMediaIds.map((id) => galleryRows?.find((row: {id:string}) => row.id === id)).filter((row): row is NonNullable<typeof row> => Boolean(row));
 const coverIds = [...new Set([...items,...(publicAuthorItems??[]),...searchResults, ...(item ? [item] : [])].map((entry) => entry.cover_media_id).filter((id): id is string => Boolean(id)))];
-const { data: coverRows } = coverIds.length && categoryDb ? await categoryDb.from('media').select('id,width,height,alt_tr,alt_en').in('id',coverIds) : { data: null };
 const bodyImageIds=[...mediaReferences(item?.body,item?.type==='gallery'?typeData:null)];
 const allImageIds=[...new Set([...coverIds,...galleryMediaIds,...bodyImageIds])];
-const [renditionResult,bodyDimensionsResult]=await Promise.all([
+// All IDs are known before fetching. Keep the same RLS-bound client while
+// avoiding separate sequential gallery, cover and document metadata requests.
+const [renditionResult,imageMetadataResult]=await Promise.all([
  allImageIds.length&&categoryDb?categoryDb.from('media_renditions').select('media_id,width,height,path,bytes').in('media_id',allImageIds):{data:null},
- bodyImageIds.length&&categoryDb?categoryDb.from('media').select('id,width,height').in('id',bodyImageIds):{data:null},
+ allImageIds.length&&categoryDb?categoryDb.from('media').select('id,width,height,alt_tr,alt_en,caption_tr,caption_en').in('id',allImageIds):{data:null},
 ]);
-const imageMetadata=[...(coverRows??[]),...(galleryRows??[]),...(bodyDimensionsResult.data??[])];
+const imageMetadata=imageMetadataResult.data??[];
+const coverRows=imageMetadata;
+const galleryMedia=galleryMediaIds.map(id=>imageMetadata.find((row:{id:string})=>row.id===id)).filter((row):row is NonNullable<typeof row>=>Boolean(row));
 const imageSrcSet=(source:string|null|undefined)=>{
  const id=source?.match(/\/api\/media\/([0-9a-f-]{36})\/$/i)?.[1];
  return mediaRenditionSrcSet(source,renditionResult.data??[],imageMetadata.find((row:{id:string})=>row.id===id))??publicImageSrcSet(source);
