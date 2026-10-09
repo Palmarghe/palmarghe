@@ -1,5 +1,7 @@
 # Public shell follow-up — 9 October 2026
 
+Current production authority: FINAL_REPORT.md. The release labels and native nonstaff-session statements below describe the historical shell checkpoint612ee8f. They are superseded by account-logout-scope-2026-10-09.md: source4b5aeda retains these shell fixes; native saved sign-in now opens admin Studio. The newer homepage containment and transition observations remain open in studio-homepage-containment-2026-10-09.md.
+
 This follow-up addresses three observed defects within the full fourteen-item premium scope. It does not declare that scope complete.
 
 ## Changes and preserved boundaries

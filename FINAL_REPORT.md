@@ -2,8 +2,9 @@
 
 ## Current production state — 9 October 2026
 
-- Worker: `d95acfc3-7932-4d2b-afa9-ec0632c14207`.
-- Deployed runtime source: `612ee8f`, normally pushed to `Palmarghe/palmarghe` main; clean committed build/deploy passed. Archive/auxiliary recovery and no-JavaScript navigation repair remain included.
+- Worker: `db369c83-33e5-488a-b21b-af9833cd5e23`.
+- Deployed runtime source: `4b5aeda`, normally pushed to `Palmarghe/palmarghe` main; clean committed build/deploy passed. Archive/auxiliary recovery, header containment and no-JavaScript navigation repair remain included.
+- Ordinary logout now explicitly uses local scope; the separate all-device action uses global. Remote failure shows a localized unconfirmed-revocation warning rather than claiming success. Real SDK/controlled-transport tests cover second-device refresh and both failure scopes; no production all-device revocation is claimed.
 - Newsletter legal text wraps together with a permanently underlined privacy link. Required unchecked consent and existing subscription semantics are preserved. Public indexes omit three inactive interaction modules; article, account and author controls retain their required scripts.
 - Phone archive discovery uses compact aligned filters. JavaScript-disabled navigation remains usable in normal document flow and does not cover the filter action.
 - Lazy cards/body media now use actual rendered source size with preserved fallback sizes. Archive/category cards now expose their existing RLS-bound ready derivatives; originals, dimensions, eager LCP loading and inspector URLs are preserved.
@@ -15,19 +16,19 @@ This is the only current deployment state in this report. Historical snapshots a
 
 ## Verified release gates
 
-| Gate | Actual evidence for deployed 612ee8f |
+| Gate | Actual evidence for deployed 4b5aeda |
 |---|---|
-| Local verify |255 checked files, zero diagnostics;221 unit tests; build passed |
-| Full local E2E |127/127 passed5.8m, including changed-actor refusal before insertion, preserved draft/retry/cleanup and five-root-category header bounds |
-| Visual comparison |42/42 unchanged references passed37.7s; dark/light/Aurora, public/Studio390/1440. Eighteen public references were previously updated only for consent text/link layout;24 Studio references unchanged; older references preserved in Git history |
+| Local verify |260 checked files, zero diagnostics;225 unit tests; build passed |
+| Full local E2E |129/129 passed5.9m, including account sign-out and unconfirmed-revocation warning, main-editor actor guard and five-root-category header bounds |
+| Visual comparison |42/42 unchanged references passed40.1s; dark/light/Aurora, public/Studio390/1440. Existing reference history is preserved |
 | Clean committed build/deploy |Completed; Worker ID above |
-| Fresh production E2E |Full85/85 production suite passed6.2m on this Worker using real Chrome; includes hidden Aurora persistence/search/accessibility,390/1440 layout and existing public/write-boundary flows |
-| Source GitHub Actions |Actions37894831390 for612ee8f: verify, visual and production-smoke all completed successfully, confirmed through the GitHub connector. CI smoke is a selected subset; separate full85/85 live Chrome proof is above |
-| Original data protection |No production write in this release's QA; prior original/Storage boundary and fingerprint proofs retained in media documents |
+| Fresh production E2E |Full86/86 live Chrome suite passed6.3m, including new warning rendering/localization/theme/axe test and all prior public/read/write-boundary flows |
+| Source GitHub Actions |Actions37897754596 for4b5aeda: verify, visual and production-smoke all completed successfully, confirmed through the GitHub connector. CI smoke is a selected subset; separate full86 live proof is above |
+| Original data protection |Native review used normal current-session logout and existing saved sign-in only. No global logout, original/media/content/account/role/settings mutation; prior Storage/fingerprint proof retained |
 
-The connected browser's Studio-host session is nonstaff and correctly denies Studio. Public-host staff links are not proof of a staff session on the separate Studio host. This is role-boundary evidence, not authenticated administrator verification. Native authorized Studio review is still outstanding; no browser identity or evidence is fabricated.
+Native Edge verified normal Studio-host logout returned to login without a warning, then a standard saved-credential sign-in opened an actual admin Studio dashboard. The dashboard fit client width906 with no overflow. Private health showed committed source4b5aedac9315 with Auth/database/media checks accessible and35ms database control. The earlier nonstaff denial remains historical evidence; it no longer describes the current native session. Current native Chrome/mobile/short-viewport review and wider staff interactions remain required. No credential values are copied into reports or Git.
 
-Native Edge921px exposed a real scrollbar/header defect in the previous c1b307e release: client width906, document scroll width913 and staff-link right913.27 outside header right882. Current612ee8f repairs that spacing: a fresh native reload proves document scroll/client width906 and staff-link/header right882; no horizontal overflow and no captured warning/error. The stronger local fixture includes five categories/two disclosures and tests901/921/1024/1100 against client width and header bounds. The main editor's page-actor guard is also deployed, with meaningful local refusal/no-insert/retry proof. Current native authorized Studio review remains outstanding. Details: [public shell follow-up](docs/public-shell-followup-2026-10-09.md).
+Native Edge921px exposed a real scrollbar/header defect in the previous c1b307e release: client width906, document scroll width913 and staff-link right913.27 outside header right882. The612ee8f repair, retained in current4b5aeda, corrected that spacing: a fresh native reload proves document scroll/client width906 and staff-link/header right882; no horizontal overflow and no captured warning/error. The stronger local fixture includes five categories/two disclosures and tests901/921/1024/1100 against client width and header bounds. The main editor's page-actor guard is also deployed, with meaningful local refusal/no-insert/retry proof. Current native authorized Studio review remains outstanding. Details: [public shell follow-up](docs/public-shell-followup-2026-10-09.md).
 
 ## Historical actor and membership release retained in current production
 
@@ -44,12 +45,14 @@ The scope is preserved in [the binding scope document](docs/premium-webmaster-20
 Remaining applicable work includes:
 
 - Native staff verification of the actor/password management changes; full local/live/visual/source CI gates passed for that previous release.
-- Native authorized Studio desktop/phone/short-viewport review and wider management error/pending/keyboard states.
+- Native Edge administrator dashboard and health review now passed. Current native Chrome/phone/short-viewport review and wider management error/pending/keyboard states remain.
 - Native staff review of the newly wrapped translation/revision/native-only flows; broader member/access/message/comment management error/pending states.
 - Broader performance/slow-network review; current responsive-image local/live/visual/source CI gates passed, with actual candidate selection, byte reduction and original preservation proof.
 - Finish performance/slow-network review and final completion audit against every explicit requirement. Earlier successful feature checkpoints do not close this scope.
 - Native authorized Studio review remains outstanding. Header containment, main-editor page-actor guard, newsletter alignment and inactive public-index module omission are deployed with completed local/live/source CI gates.
-- Ordinary account logout currently relies on the SDK's default global scope; repair it to local scope with meaningful session/failure coverage before using the account-switch path. Neither logout control was submitted during native review; no real sessions were revoked.
+- Continue broader native staff review. Ordinary logout scope is repaired and normal live sign-out/sign-in is verified, with completed current-source gates; all-device revocation is covered by controlled SDK transport rather than real-session cancellation.
+- Inspect the local aborted-transition warning and native Edge opt-in transition error recorded during navigation; green functional counts do not prove a clean console for those native transitions.
+- Repair the actual native Studio homepage editor overflow: at921px, client width906 but document scroll width999; the form's first panel and change bar extend to999. Existing390/1440 visual checks do not cover this intermediate width and live settings density. Native before proof: studio-homepage-overflow-before-2026-10-09.png. This remains an applicable UX defect, not an external blocker.
 
 ## Measured performance, not organic traffic
 
