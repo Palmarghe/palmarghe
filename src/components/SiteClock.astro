@@ -1,0 +1,41 @@
+---
+import {siteClock} from '../lib/site-clock';
+interface Props {locale: 'tr' | 'en'}
+const {locale} = Astro.props;
+const clock = siteClock(new Date(), locale);
+---
+<div class="site-clock" data-site-clock data-locale={locale}>
+ <span class="site-clock-zone">{locale === 'tr' ? 'İstanbul · Türkiye saati' : 'Istanbul · Türkiye time'} <span>UTC+3</span></span>
+ <time datetime={clock.iso}><span data-clock-date>{clock.date}</span><span class="site-clock-hour" data-clock-hour>{clock.time}</span></time>
+</div>
+<script>
+ import {siteClock} from '../lib/site-clock';
+ const clocks = document.querySelectorAll<HTMLElement>('[data-site-clock]');
+ let timer: ReturnType<typeof setTimeout> | undefined;
+ function update() {
+  clearTimeout(timer);
+  if (document.hidden) return;
+  const now = new Date();
+  clocks.forEach(node => {
+   const value = siteClock(now, node.dataset.locale === 'en' ? 'en' : 'tr');
+   const time = node.querySelector('time');
+   if (time) time.dateTime = value.iso;
+   const date = node.querySelector('[data-clock-date]');
+   const hour = node.querySelector('[data-clock-hour]');
+   if (date) date.textContent = value.date;
+   if (hour) hour.textContent = value.time;
+  });
+  timer = setTimeout(update, 60000 - now.getTime() % 60000 + 25);
+ }
+ update();
+ document.addEventListener('visibilitychange', update);
+ window.addEventListener('pagehide', () => {clearTimeout(timer);document.removeEventListener('visibilitychange', update);});
+ window.addEventListener('pageshow', event => {if(event.persisted){document.addEventListener('visibilitychange', update);update();}});
+</script>
+<style>
+ .site-clock{display:flex;align-items:center;justify-content:space-between;gap:.5rem 1.5rem;flex-wrap:wrap;border-top:1px solid var(--border);padding-block:.85rem;color:var(--muted);font-size:.75rem}
+ .site-clock-zone{display:flex;gap:.6rem;flex-wrap:wrap}.site-clock-zone>span{font-size:.65rem;letter-spacing:.08em}
+ time{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+ .site-clock-hour{color:var(--text);letter-spacing:.08em;min-width:3.3em}
+ @media(max-width:480px){.site-clock{align-items:flex-start;gap:.4rem}.site-clock time{width:100%;justify-content:space-between}}
+</style>
