@@ -1,5 +1,11 @@
 # Archive density and Studio auxiliary recovery — 9 October 2026
 
+## Current release checkpoint
+
+Runtime106565f/Worker0dcec388-5a04-46ec-ad99-2bcbc54273da is deployed from a clean committed build after normal main push. Final local verify252 files/221 units/build,124/124 E2E5.4m and unchanged42/42 visual37.8s passed. Current live archive/media4/4 passed18.0s, including the formerly failing native no-JavaScript filter click. Full84/84 production passed6.0m; source Actions37888766838 is Success: verify8m50s (124 E2E7.3m), visual2m5s, production-smoke2m49s; total11m45s, inspected in connected Edge. Native connected Edge after this deployment confirms390px Aurora first title at687.59px, no overflow and preserved original cover; screenshot archive-compact-followup-live-2026-10-09.png. Viewport override reset. Studio-host nonstaff denial remains correctly enforced; no authorized native staff proof is inferred from the public-host staff link.
+
+Later sections retain chronological local/first-release checkpoints, including the concrete failed live assertion. Their pending/deployment labels describe those earlier checkpoints, superseded by this opening state.
+
 ## Implementation
 
 Phone archive filters use two columns for type/category, a full-width filter action and reduced section spacing. Optional year and reset controls retain their native GET behavior. Desktop category layouts and original covers are unchanged.
@@ -35,3 +41,5 @@ Final follow-up local gates: verify252 files zero diagnostics/221 units/build; f
 ## Follow-up found during visual review
 
 The shared newsletter consent sentence is split into separate flex items around its legal link. It remains readable but deserves a separate layout repair and meaningful keyboard/consent regression; do not silently replace existing visual references to hide the issue.
+
+Fresh native current-source921px Aurora homepage also renders without overflow or console warnings/errors (aurora-home-followup-live-2026-10-09.png); its staff Studio entry wraps its arrow, a concrete intermediate-width visual follow-up. Historical clean mobile Lighthouse request inventory onb7d0682 shows comments.js (3612 transfer/7966 decoded), engagement.js (1360/2182) and library.js (2065/4212) downloaded on the homepage even though their relevant content/account/author controls are absent. These modules currently self-guard after download. Conditional loading is applicable next performance work; those historical bytes are not claimed current wire measurements or a measured future speedup.
