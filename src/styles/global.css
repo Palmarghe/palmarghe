@@ -863,6 +863,7 @@ html:has(.content-editor-form){scroll-padding-block-start:calc(var(--studio-stic
 }
 /* Keep archive discovery within the first phone screen without hiding filters. */
 @media(max-width:600px){
+ body:has(.promotion-slot--header) .archive-page-head{padding-block:1rem .75rem}
  .archive-section{padding-block:1.5rem}
  .archive-section .archive-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem;margin-block:0 1rem}
  .archive-section .archive-filters label{min-width:0}
