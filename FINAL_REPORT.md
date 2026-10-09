@@ -2,8 +2,9 @@
 
 ## Current production state — 9 October 2026
 
-- Worker: `fb6f561f-d1ba-4957-b245-5082802b4641`.
-- Deployed runtime source: `508c59d`, normally pushed to `Palmarghe/palmarghe` main; clean committed build/deploy passed. Earlier repairs remain included. Community management actions now have themed44px targets; messages retain desktop columns and become labelled cards on phones, keeping status/save inside the viewport.
+- Worker: `901ad088-ad85-4b15-9b7c-d4d1def3e142`.
+- Deployed runtime source: `611f5f1`, normally pushed to `Palmarghe/palmarghe` main; clean committed build/deploy passed. Earlier repairs remain included. Community management actions have themed44px targets; messages retain desktop columns and become labelled cards on phones, keeping status/save inside the viewport.
+- Public footer displays a restrained, localized date and clock in Europe/Istanbul (UTC+3), fitting phone/tablet/desktop in dark, light and hidden Aurora. Initial611f5f1 has a confirmed production CSP defect: the server fallback displays but client minute updates are blocked. External same-origin script repair is staged; this feature is not production-complete until repaired deployment/update/console checks pass. No security-policy weakening, database/network/location request or production data write is introduced. Details: [date/time evidence](docs/site-clock-2026-10-09.md).
 - Complete PostgREST GET responses now have a12-second per-attempt deadline, including the body. Primary content query errors return a themed503/manual retry instead of false empty/404 results; filters, private/no-store, noindex and security headers are preserved. Auth and POST RPC transports are unchanged and require separate review.
 - Ordinary logout now explicitly uses local scope; the separate all-device action uses global. Remote failure shows a localized unconfirmed-revocation warning rather than claiming success. Real SDK/controlled-transport tests cover second-device refresh and both failure scopes; no production all-device revocation is claimed.
 - Newsletter legal text wraps together with a permanently underlined privacy link. Required unchecked consent and existing subscription semantics are preserved. Public indexes omit three inactive interaction modules; article, account and author controls retain their required scripts.
@@ -17,20 +18,20 @@ This is the only current deployment state in this report. Historical snapshots a
 
 ## Verified release gates
 
-| Gate | Actual evidence for deployed 508c59d |
+| Gate | Actual evidence for deployed 611f5f1 |
 |---|---|
-| Local verify |269 checked files, zero diagnostics;242 unit tests; build passed |
-| Full local E2E |138/138 passed6.4m; after double-slash retry-link hardening, dedicated unit and final scoped recovery2/2 passed16.6s. Real local503/security/retry/feed tests and controlled SDK/body deadlines included |
-| Visual comparison |48/48 passed40.2s:42 unchanged existing references plus six individually inspected new503 references in three themes/390+1440. Prior references/history preserved |
+| Local verify |274 checked files, zero diagnostics;244 unit tests; build passed |
+| Full local E2E |142/142 passed6.6m, including four clock checks, existing real503/retry/feed and SDK/body-deadline proofs |
+| Visual comparison |48/48 passed41.2s. Eighteen public footer references intentionally updated and inspected;30 other references unchanged. Clock instant fixed and its actual date/time visible. All prior references preserved in Git history |
 | Clean committed build/deploy |Completed; Worker ID above |
-| Fresh production E2E |Full87/87 current run passed7.0m. Previous878afd8 final86/86 passed6.8m; its initial archive timeout and exact3/3 follow-up remain historical evidence |
-| Source GitHub Actions |Current508c59d Actions37953166150: verify, visual and production-smoke all completed successfully. Previous runtime37947826724 and documentation37950851900 all three jobs completed successfully |
+| Fresh production E2E |Initial611f5f1 run86 passed/5 failed7.3m: four clock-update checks and CSP console check. Repair staged; predecessor508c59d full87/87 passed7.0m. Older failures/follow-ups remain historical evidence |
+| Source GitHub Actions |Initial611f5f1 Actions37956662094 verify/visual succeeded, production-smoke failed. Predecessor508c59d Actions37953166150 and documentation37954654983 all three jobs successful |
 | Asset readiness |Deployed global.DDlsu8kr.css/index.DZ3ze1po.css on both apex/Studio200 text/css, all four SHA-256 hashes match clean committed build bytes. Measured requests only, not all-edge/future guarantee |
 | Original data protection |Current QA is read-only; no production failure injection/form submission/account/role/content/media/settings write. Existing Storage/fingerprint proofs retained |
 
 Historical native Auth/health proof on predecessor4b5aeda: normal Studio-host logout returned to login without a warning, then saved-credential sign-in opened an actual admin dashboard. Private health showed committed source4b5aedac9315 and accessible services with35ms database control. At the earlier878afd8 checkpoint, that actual admin session was retained for the homepage and palette review; no new Auth operation was performed. The earlier nonstaff denial is historical. Current native Chrome/mobile/short-viewport review and wider staff interactions remain required. No credential values are copied into reports or Git.
 
-Native Edge921px exposed a real scrollbar/header defect in the previous c1b307e release: client width906, document scroll width913 and staff-link right913.27 outside header right882. The612ee8f repair, retained in current508c59d, corrected that spacing: a fresh native reload proves document scroll/client width906 and staff-link/header right882; no horizontal overflow and no captured warning/error. The stronger local fixture includes five categories/two disclosures and tests901/921/1024/1100 against client width and header bounds. The main editor's page-actor guard is also deployed, with meaningful local refusal/no-insert/retry proof. Current native authorized Studio review remains outstanding. Details: [public shell follow-up](docs/public-shell-followup-2026-10-09.md).
+Native Edge921px exposed a real scrollbar/header defect in the previous c1b307e release: client width906, document scroll width913 and staff-link right913.27 outside header right882. The612ee8f repair, retained in current611f5f1, corrected that spacing: a fresh native reload proves document scroll/client width906 and staff-link/header right882; no horizontal overflow and no captured warning/error. The stronger local fixture includes five categories/two disclosures and tests901/921/1024/1100 against client width and header bounds. The main editor's page-actor guard is also deployed, with meaningful local refusal/no-insert/retry proof. Current native authorized Studio review remains outstanding. Details: [public shell follow-up](docs/public-shell-followup-2026-10-09.md).
 
 ## Historical actor and membership release retained in current production
 
@@ -73,4 +74,6 @@ Custom SMTP, optional Cloudflare Access, Search Console field CWV/indexing matur
 
 Existing architecture, Git history, original content/media/accounts and production permissions are preserved. No force push. Runtime source was committed and deployed cleanly. Responsive-image work is deployed; its release gates are recorded separately. The goal is active, not complete and not blocked. Completion requires the full scope and current gates to be proved, normal main push, QA cleanup, clean Git and one accurate final production state.
 
-Current508c59d native Edge proof: actual public homepage reload retained Aurora with12 loaded main images and client/scroll906. Normal header archive/filter navigation returned three real project results with retained filters and client/scroll906. Actual admin Studio health confirms committed508c59d611cd, Auth/database/media accessible and34ms database control; empty24h samples remain unmeasured. Those two native tabs recorded no warning/error in the inspected window. This is not native phone or deliberate production outage proof. New recovery implementation/evidence/limits: [server read resilience](docs/server-read-resilience-2026-10-09.md).
+Historical508c59d native Edge proof: actual public homepage reload retained Aurora with12 loaded main images and client/scroll906. Normal header archive/filter navigation returned three real project results with retained filters and client/scroll906. Actual admin Studio health confirms committed508c59d611cd, Auth/database/media accessible and34ms database control; empty24h samples remain unmeasured. Those two native tabs recorded no warning/error in the inspected window. This is not native phone or deliberate production outage proof. New recovery implementation/evidence/limits: [server read resilience](docs/server-read-resilience-2026-10-09.md).
+
+Current611f5f1 native Edge proof: the public Aurora footer displays9 Ekim2026/19:07, client/scroll width906, clock bounds24..882, with an empty newsletter input. Actual authorized Studio health confirms source611f5f1040a6/build19:06:19, Auth/database/media accessible and47ms database control; absent24h observations remain unmeasured. Both inspected console windows contain no warning/error. This is desktop native proof; responsive clock proof is automated real Chrome at320/768/1440. See docs/site-clock-live-611f5f1-2026-10-09.png.
