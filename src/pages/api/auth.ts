@@ -43,8 +43,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const action = String(form.get('action') ?? '');
   const locale = form.get('locale') === 'en' ? 'en' : 'tr';
   const account = `/${locale === 'en' ? 'en/' : ''}account/`;
-  if (action === 'logout') { await db.auth.signOut(); return redirectTo(request, account); }
-  if (action === 'logout_all') { await db.auth.signOut({ scope: 'global' }); return redirectTo(request, account); }
+  if (action === 'logout' || action === 'logout_all') {
+    // Supabase defaults to global. Ordinary sign-out must leave other devices alone.
+    const { error } = await db.auth.signOut({ scope: action === 'logout_all' ? 'global' : 'local' });
+    // The SDK clears current-session cookies even when remote revocation fails.
+    // Report uncertainty rather than restoring tokens or claiming all devices signed out.
+    if (error) return redirectTo(request, `${account}?notice=logout_unconfirmed`);
+    return redirectTo(request, account);
+  }
   if (action === 'profile') {
     const { data: { user } } = await db.auth.getUser();
     if (!user) return errorResponse('Unauthorized',401);
