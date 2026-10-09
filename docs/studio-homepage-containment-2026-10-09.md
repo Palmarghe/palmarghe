@@ -2,6 +2,16 @@
 
 ## Release checkpoint
 
+Final source Actions37944021083 completed successfully across verify, visual and production-smoke, confirmed through the GitHub connector. Earlier running labels in this process record describe historical checkpoints. The initial full production85/86 and exact3/3 recovery evidence remain explicit below; CI subset success does not erase that failure.
+
+Terminal current production result:85 passed/1 failed7.1m. The first dark contact scan failed target-size while trace network recorded global.Bnvu8cRf.css404 (preceded by one failed request). Current public CSS reads return200/text-css. The exact failed test then passed3/3 fresh Chrome repetitions9.1s. Initial failure trace is preserved locally under test-results/release-css-404; do not publish raw traces containing request metadata. No error filtering, assertion weakening, timeout increases or broad repeat was used. This is follow-up recovery evidence, not an86/86 first-pass claim or proof that every deployment edge is ready atomically. Source verify/visual jobs succeeded; production smoke is still running.
+
+Current native public Aurora Easter egg also verified via Alt+Shift+A: body theme aurora, background rgb(16,38,42), accent #ffbe98, client/scroll906. Safe public proof: aurora-live-ea65450-2026-10-09.png; older screenshot remains preserved. Full production hidden-Aurora case passed; ordinary selector remains two choices.
+
+Clean normal main commit/push ea65450 and committed build/deploy completed: Worker f72fc7e9-07c1-479e-a421-a9c18e8fa60b. Fresh native Edge921px reload has client/scroll906, panel right869.17 and Spotlight right844.17. Delivered Escape now closes the actual palette and returns opener focus. Actual mobile preview reports390px. Saved safe after screenshot: studio-homepage-overflow-after-2026-10-09.png. No settings/content/media/account/role writes were made.
+
+Fresh native actual menu navigation reached Categories and Tags with no captured warning/error. An immediate second click during the first page transition did not navigate; after reading the settled page, the next Tags click reached the expected heading. This limited clean menu sample does not resolve earlier programmatic opt-in/local-abort warnings or establish universal rapid-navigation behavior. Full production86 and source Actions37944021083 are still in progress; first dark contact axe scan failed target-size and remains to investigate.
+
 Candidate verification: 261 checked files, zero diagnostics, 225 units and build; full local E2E 131/131 passed in5.9m. Original visual comparison passed36/42: only the six homepage-editor references changed, each by40px because Spotlight now puts its label above the full-width select. The actual desktop/light and phone/dark renders and difference were inspected; the change starts at Spotlight, preserves controls and shifts subsequent rows. Those six references were updated explicitly (6/6 in23.2s); the full comparison is running again without snapshot updates. Production remains4b5aeda until the clean release and native checks below complete.
 
 ## Historical discovery on source4b5aeda
