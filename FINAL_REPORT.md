@@ -2,8 +2,8 @@
 
 ## Current production state — 9 October 2026
 
-- Worker: `7f2413f6-47a0-4d31-9518-7485d2bb136b`.
-- Deployed runtime source: `c1b307e`, normally pushed to `Palmarghe/palmarghe` main; clean committed build/deploy passed. Archive/auxiliary recovery and no-JavaScript navigation repair remain included.
+- Worker: `d95acfc3-7932-4d2b-afa9-ec0632c14207`.
+- Deployed runtime source: `612ee8f`, normally pushed to `Palmarghe/palmarghe` main; clean committed build/deploy passed. Archive/auxiliary recovery and no-JavaScript navigation repair remain included.
 - Newsletter legal text wraps together with a permanently underlined privacy link. Required unchecked consent and existing subscription semantics are preserved. Public indexes omit three inactive interaction modules; article, account and author controls retain their required scripts.
 - Phone archive discovery uses compact aligned filters. JavaScript-disabled navigation remains usable in normal document flow and does not cover the filter action.
 - Lazy cards/body media now use actual rendered source size with preserved fallback sizes. Archive/category cards now expose their existing RLS-bound ready derivatives; originals, dimensions, eager LCP loading and inspector URLs are preserved.
@@ -15,19 +15,19 @@ This is the only current deployment state in this report. Historical snapshots a
 
 ## Verified release gates
 
-| Gate | Actual evidence for deployed c1b307e |
+| Gate | Actual evidence for deployed 612ee8f |
 |---|---|
-| Local verify |254 checked files, zero diagnostics;221 unit tests; build passed |
-| Full local E2E |126/126 passed6.0m, including actual article/account/author controls and confirmed translation pairing |
-| Visual comparison |42/42 passed39.8s; dark/light/Aurora, public/Studio390/1440. Eighteen public references intentionally updated only for consent text/link layout;24 Studio references unchanged; older references preserved in Git history |
+| Local verify |255 checked files, zero diagnostics;221 unit tests; build passed |
+| Full local E2E |127/127 passed5.8m, including changed-actor refusal before insertion, preserved draft/retry/cleanup and five-root-category header bounds |
+| Visual comparison |42/42 unchanged references passed37.7s; dark/light/Aurora, public/Studio390/1440. Eighteen public references were previously updated only for consent text/link layout;24 Studio references unchanged; older references preserved in Git history |
 | Clean committed build/deploy |Completed; Worker ID above |
-| Fresh production E2E |Focused archive/media/payload5/5 passed22.7s. Full85/85 production suite passed6.1m. These passes do not erase the separately observed native header defect below |
-| Source GitHub Actions |Actions37892221289: verify, visual and production-smoke all completed successfully, confirmed through the GitHub connector. Historical106565f Actions37888766838 and documentationfaef593 Actions37889845294 also succeeded |
+| Fresh production E2E |Full85/85 production suite passed6.2m on this Worker using real Chrome; includes hidden Aurora persistence/search/accessibility,390/1440 layout and existing public/write-boundary flows |
+| Source GitHub Actions |Actions37894831390 for612ee8f: verify, visual and production-smoke all completed successfully, confirmed through the GitHub connector. CI smoke is a selected subset; separate full85/85 live Chrome proof is above |
 | Original data protection |No production write in this release's QA; prior original/Storage boundary and fingerprint proofs retained in media documents |
 
 The connected browser's Studio-host session is nonstaff and correctly denies Studio. Public-host staff links are not proof of a staff session on the separate Studio host. This is role-boundary evidence, not authenticated administrator verification. Native authorized Studio review is still outstanding; no browser identity or evidence is fabricated.
 
-Native Edge921px also exposed a real scrollbar/header defect: client width906, document scroll width913 and staff-link right913.27 outside the header right882. The text no longer wraps but the last link is clipped. A stronger five-category/two-disclosure fixture and a spacing repair have passed local checks; they are not yet deployed. The main editor's page-actor guard is also a locally verified candidate, not claimed live. Details: [public shell follow-up](docs/public-shell-followup-2026-10-09.md).
+Native Edge921px exposed a real scrollbar/header defect in the previous c1b307e release: client width906, document scroll width913 and staff-link right913.27 outside header right882. Current612ee8f repairs that spacing: a fresh native reload proves document scroll/client width906 and staff-link/header right882; no horizontal overflow and no captured warning/error. The stronger local fixture includes five categories/two disclosures and tests901/921/1024/1100 against client width and header bounds. The main editor's page-actor guard is also deployed, with meaningful local refusal/no-insert/retry proof. Current native authorized Studio review remains outstanding. Details: [public shell follow-up](docs/public-shell-followup-2026-10-09.md).
 
 ## Historical actor and membership release retained in current production
 
@@ -48,7 +48,8 @@ Remaining applicable work includes:
 - Native staff review of the newly wrapped translation/revision/native-only flows; broader member/access/message/comment management error/pending states.
 - Broader performance/slow-network review; current responsive-image local/live/visual/source CI gates passed, with actual candidate selection, byte reduction and original preservation proof.
 - Finish performance/slow-network review and final completion audit against every explicit requirement. Earlier successful feature checkpoints do not close this scope.
-- Deploy and verify the native scrollbar/header repair and specialized main-editor page-actor guard. Newsletter alignment and inactive public-index module omission are already deployed and live tested; they are no longer open implementation work.
+- Native authorized Studio review remains outstanding. Header containment, main-editor page-actor guard, newsletter alignment and inactive public-index module omission are deployed with completed local/live/source CI gates.
+- Ordinary account logout currently relies on the SDK's default global scope; repair it to local scope with meaningful session/failure coverage before using the account-switch path. Neither logout control was submitted during native review; no real sessions were revoked.
 
 ## Measured performance, not organic traffic
 

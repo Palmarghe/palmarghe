@@ -1,5 +1,7 @@
 # Aurora hidden theme — 6 October 2026
 
+Current deployment authority: FINAL_REPORT.md. Release labels below describe dated historical checkpoints. On9 October, source612ee8f/Worker d95acfc3-7932-4d2b-afa9-ec0632c14207 retained the hidden palette and passed the fresh85/85 Chrome production regression in6.2m, including Aurora persistence/search/accessibility at390/1440. Native Edge921px screenshot: public-shell-header-live-2026-10-09.png; client/document width906, staff link contained within the header, no captured warning/error. Local127/127 and unchanged42/42 visual comparison also passed. No ordinary third theme option was added; all fourteen premium requirements remain active.
+
 Aurora uses petrol #10262A/#19343A, warm text #F5F1E8, apricot #FFBE98 and restrained mint #91D9C2. It is not listed as a third choice in the normal theme controls. Hold the existing theme control for 1.4 seconds (phone or mouse), or press Alt+Shift+A outside editing fields/dialogs. Moving away, scrolling motion and pointer cancellation cancel the hold. A normal click leaves Aurora for light mode; next click returns dark. Preference persists locally across public/Studio page navigation and synchronizes open same-origin tabs.
 
 Original assets, publication values, geometry and security roles are untouched. Existing mobile logo portal remains independent. Theme applies through shared tokens; inline appearance accent is overridden only while Aurora is active. Notification is localized, accessible and nonblocking. No new tracking, dependency or migration.

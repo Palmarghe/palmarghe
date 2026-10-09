@@ -38,3 +38,13 @@ The specialized main editor now also submits its original page actor to the exis
 ## Combined candidate gates
 
 Verify passed255 checked files with zero diagnostics,221 units and build after making the root fixture's empty parent explicit for type safety. Full127/127 local E2E passed5.8m, including the main-editor actor guard and live-density header fixture with cleanup. The unchanged42/42-reference comparison passed37.7s. Clean release, native scrollbar proof, production and matching source Actions are required before calling this repair deployed and verified.
+
+## Current release — 612ee8f
+
+Normal main commit/push and clean build/deploy completed as Worker d95acfc3-7932-4d2b-afa9-ec0632c14207. Fresh native Edge921px reload now proves client/document width906 and header/staff-link right882, with no captured warning/error. Screenshot: public-shell-header-live-2026-10-09.png. A requested second viewport override did not alter the actual921px page width; no native901px result is claimed. The local strengthened fixture covers901/921/1024/1100. Temporary viewport override was reset.
+
+Full85/85 live Chrome regression passed6.2m. Matching source Actions37894831390 verify, visual and production-smoke all completed successfully, confirmed through the GitHub connector. CI production smoke is a selected subset; the separate live Chrome run covers all85. Earlier sections are historical checkpoints, superseded by this current release and FINAL_REPORT.md. Native Studio-host session still correctly denies nonstaff access; no authorized native staff proof is fabricated.
+
+## Independent follow-up found during native account review
+
+The native Studio-host account page exposes separate ordinary sign-out and all-session sign-out controls. Source inspection found ordinary `logout` calls `db.auth.signOut()` without a scope, while `logout_all` explicitly uses global. The official Supabase [sign-out guide](https://supabase.com/docs/guides/auth/signout) documents global as the default. Ordinary logout therefore needs an explicit local scope, meaningful SDK/transport coverage and safe failure handling before using that account-switch path. Neither button was submitted during this review; no real sessions were revoked. This is an actionable application follow-up, not an external blocker or a completed repair.
