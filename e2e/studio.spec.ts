@@ -301,6 +301,7 @@ test('Studio pairs translations without exposing a UUID field', async ({ page })
   await page.getByRole('row').filter({ hasText: 'Bağlantılı Türkçe' }).getByRole('link', { name: 'Düzenle' }).click();
   await page.locator('select[name="target_id"]').selectOption({ label: 'Linked English · EN' });
   await page.getByRole('button', { name: 'Eşleştir' }).click();
+  await expect(page.locator('.translation-panel')).toContainText('Bu içerik bir çeviriyle eşleşmiş.');
   await page.goto('/baglantili-turkce/');
   await expect(page.locator('link[hreflang="en"]')).toHaveAttribute('href','https://palmarghe.com/en/linked-english/');
 });

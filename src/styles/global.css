@@ -840,6 +840,14 @@ html:has(.content-editor-form){scroll-padding-block-start:calc(var(--studio-stic
 /* Result text and surface switch atomically; an interpolated surface can break contrast. */
 .search-overlay [data-search-results] .instant-search-result,.instant-search-result{transition:border-color .2s ease}
 
+.newsletter-signup .newsletter-consent-copy{display:block;flex:1;min-width:0}
+.newsletter-consent-copy a{text-decoration:underline;text-underline-offset:.18em}
+@media(min-width:901px) and (max-width:1100px){
+ .site-header{gap:.85rem}
+ .desktop-nav{gap:.8rem}
+ .head-actions{gap:.75rem}
+ .head-actions a{white-space:nowrap}
+}
 /* Keep archive discovery within the first phone screen without hiding filters. */
 @media(max-width:600px){
  .archive-section{padding-block:1.5rem}
