@@ -22,6 +22,16 @@ No production content/account/settings/SQL/Storage writes are part of this relea
 
 Clean normal commit/push/build/deploy, current production archive/full regression, connected live browser proof, current source Actions and final report update. This document records local progress, not a production completion claim. The full fourteen-item objective remains active.
 
+## First live release and concrete follow-up
+
+Source41c0d25 was normally pushed and deployed cleanly as Worker1a2d2a3d-0a55-4408-8a6c-19e429f96130. Native connected Edge390px confirms137.67px filter height, first real cover title at687.59px, no overflow, dark/light/Aurora and clean warning/error console. Original real covers remain present. Temporary viewport override was reset.
+
+Focused live media checks passed3/3, but the added archive case failed at its JavaScript-disabled pointer click: existing noscript navigation was an always-open overlay over the filter action. This is an actual defect, not a reason to force-click or increase the timeout. Follow-up makes the mobile noscript menu normal-flow navigation and hides script-dependent toggle/theme controls. A stronger local and live assertion requires the menu to remain visible above main, the inert toggle absent, and the actual native filter click successful. Final local archive/category checks passed3/3 in12.0s after correcting the CSS specificity so the header grows with its navigation. This follow-up is not yet deployed at this checkpoint.
+
+Source41c0d25 Actions37859878195 is terminal Failure: verify8m7s (124 E2E6.8m) and visual2m7s succeeded; production-smoke3m42s failed. This was inspected in connected Edge; its private job logs were not available in that browser session, so its exact failed assertion is not inferred from the summary. The independent local production run gives the concrete noscript pointer-interception evidence above. The follow-up requires fresh deployment and terminal production/CI checks.
+
+Final follow-up local gates: verify252 files zero diagnostics/221 units/build; full124/124 E2E5.4m; unchanged42/42 visual37.8s, sequentially after that server exited. The strengthened no-JavaScript geometry/click check is included in the124-case full run. No screenshot references were changed by the fallback repair.
+
 ## Follow-up found during visual review
 
 The shared newsletter consent sentence is split into separate flex items around its legal link. It remains readable but deserves a separate layout repair and meaningful keyboard/consent regression; do not silently replace existing visual references to hide the issue.
