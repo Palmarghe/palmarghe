@@ -764,6 +764,14 @@ body[data-theme="aurora"]{--accent:#ffbe98!important}body[data-theme="aurora"] .
 .homepage-editor select{min-width:0;max-width:100%}
 .homepage-curation-editor>.field:has(select[name="spotlight_id"]){display:grid;grid-template-columns:minmax(0,1fr)}
 .homepage-curation-editor select[name="spotlight_id"]{width:100%}
+.member-actions button,.access-list button,.comment-moderation-list button,.admin-table form button{min-height:44px;min-width:44px}
+.member-actions button:not(.danger-button),.access-list button,.comment-moderation-list button:not(.danger-button),.admin-table form button{padding:.5rem .75rem;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text)}
+.member-actions label{min-width:0}.member-actions select{min-width:0;width:100%}
+.access-list .text-link{display:inline-flex;align-items:center;min-height:44px}
+.permission-grid input{flex-shrink:0}
+.message-table{display:table;table-layout:fixed;overflow:visible}.message-table th:nth-child(1){width:20%}.message-table th:nth-child(2){width:18%}.message-table th:nth-child(3){width:40%}.message-table th:nth-child(4){width:22%}
+.message-table td{overflow-wrap:anywhere}.message-table form{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem}.message-table select{min-width:0;max-width:100%}.message-table summary{min-height:44px;display:flex;align-items:center;cursor:pointer}
+@media(max-width:760px){.message-table,.message-table tbody{display:block;width:100%}.message-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}.message-table tr{display:grid;grid-template-columns:minmax(0,1fr);padding:1rem;border:1px solid var(--border);border-radius:8px;margin-bottom:1rem;background:var(--surface)}.message-table td{display:block;min-width:0;padding:.6rem 0;border:0}.message-table td::before{content:attr(data-label);display:block;font-size:.72rem;color:var(--muted);margin-bottom:.35rem}.message-table td:nth-child(4){border-top:1px solid var(--border);margin-top:.4rem}.message-table .message-preview{max-width:none}}
 .homepage-device-preview header strong{display:block;margin-bottom:.5rem}.homepage-device-preview header .field-help{margin-top:0;line-height:1.5}
 @media(max-width:600px){.homepage-device-preview .studio-preview-tools button{padding-inline:.35rem;font-size:.8rem;white-space:nowrap;min-width:0}}
 
