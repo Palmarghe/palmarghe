@@ -48,7 +48,7 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
   private max = Infinity;
   private expectSingle = false;
   private ignoreDuplicates = false;
-  constructor(private table: TableName, private user: Row | null) {}
+  constructor(private table: TableName, private user: Row | null, private failContentReads = false) {}
   select(columns = '*') { this.columns = columns; return this; }
   eq(field: string, value: any) { this.filters.push((row) => row[field] === value); return this; }
   in(field: string, values: any[]) { this.filters.push((row) => values.includes(row[field])); return this; }
@@ -103,6 +103,7 @@ class Query implements PromiseLike<{ data: any; error: { code: string; message: 
     return ['admin','editor'].includes(this.user.role);
   }
   private execute() {
+    if (this.failContentReads && this.table === 'content_items' && this.action === 'read') return { data: null, error: { code: 'LOCAL_READ_FAILURE', message: 'controlled local read failure' } };
     const rows = tables[this.table];
     if (this.action !== 'read' && !this.canWrite()) return { data: null, error: { code: '42501', message: 'permission denied' } };
     let selected = rows.filter((row) => this.visible(row) && this.filters.every((filter) => filter(row)));
@@ -158,10 +159,10 @@ function localMediaReferenced(id: string): boolean {
   return tables.content_items.some(item => mediaReferences(item.body,item.type==='gallery'?item.type_data:null,item.cover_media_id,item.og_media_id).has(id))
     || tables.content_revisions.some(item => mediaReferences(item.body,item.type_data).has(id));
 }
-export function localSupabase(cookies: import('astro').AstroCookies) {
+export function localSupabase(cookies: import('astro').AstroCookies, failContentReads = false) {
   const getUser = () => users.find((user) => user.id === cookies.get('pg_mock_user')?.value) ?? null;
   return {
-    from: (name: string) => { if (!isTable(name)) throw new Error('Unknown table'); return new Query(name, getUser()); },
+    from: (name: string) => { if (!isTable(name)) throw new Error('Unknown table'); return new Query(name, getUser(), failContentReads); },
     rpc: async (name: string, args: Row) => {
       const actor = getUser();
       if(['prepare_media_renditions','complete_media_renditions'].includes(name)){

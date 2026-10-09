@@ -1,5 +1,6 @@
 import { defineMiddleware } from 'astro:middleware';
 import { supabase } from './lib/supabase';
+import { ContentUnavailable, contentUnavailableResponse } from './lib/content-unavailable';
 
 export const onRequest = defineMiddleware(async (context, next) => {
   if (import.meta.env.PROD && context.url.hostname === 'www.palmarghe.com') {
@@ -11,7 +12,12 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return Response.redirect(new URL(context.url.pathname + context.url.search, import.meta.env.STUDIO_URL || 'https://studio.palmarghe.com'), 302);
   }
   if (context.url.hostname === 'studio.palmarghe.com' && context.url.pathname === '/') return Response.redirect(new URL('/studio/', context.url),302);
-  const original = await next();
+  let original: Response;
+  try { original = await next(); }
+  catch (error) {
+    if (!(error instanceof ContentUnavailable)) throw error;
+    original = contentUnavailableResponse(context.request);
+  }
   if (original.status === 404 && !context.url.pathname.startsWith('/api/')) {
     const db = supabase(context.cookies, context.request);
     if (db) {
