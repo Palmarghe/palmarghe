@@ -759,6 +759,11 @@ body[data-theme="aurora"]{--accent:#ffbe98!important}body[data-theme="aurora"] .
 @media(min-width:1200px){.homepage-hero-editor{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:1.5rem}.homepage-hero-editor>*{grid-column:1}.homepage-hero-editor>.homepage-device-preview{grid-column:2;grid-row:1/span 10;align-self:start;position:sticky;top:1rem}}
 .homepage-device-preview>[data-device-retry][hidden]{display:none}
 .admin-main>.homepage-editor{width:100%;max-width:1440px}
+.homepage-editor{grid-template-columns:minmax(0,1fr)}
+.homepage-editor>.studio-panel,.homepage-editor .field{min-width:0}
+.homepage-editor select{min-width:0;max-width:100%}
+.homepage-curation-editor>.field:has(select[name="spotlight_id"]){display:grid;grid-template-columns:minmax(0,1fr)}
+.homepage-curation-editor select[name="spotlight_id"]{width:100%}
 .homepage-device-preview header strong{display:block;margin-bottom:.5rem}.homepage-device-preview header .field-help{margin-top:0;line-height:1.5}
 @media(max-width:600px){.homepage-device-preview .studio-preview-tools button{padding-inline:.35rem;font-size:.8rem;white-space:nowrap;min-width:0}}
 

@@ -2,6 +2,17 @@ import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 const origin='http://127.0.0.1:4322';
 const admin='00000000-0000-4000-8000-100000000001',editor='00000000-0000-4000-8000-100000000002',member='00000000-0000-4000-8000-100000000003';
+
+test('palette handles an Escape key event even without a native dialog cancel action',async({page,context})=>{
+ await context.addCookies([{name:'pg_mock_user',value:admin,url:origin}]);await page.goto('/studio/');
+ const opener=page.locator('[data-command-open]'),dialog=page.locator('[data-command-dialog]'),input=dialog.locator('input');
+ await opener.click();await expect(input).toBeFocused();
+ await input.evaluate(e=>e.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',isComposing:true,bubbles:true,cancelable:true})));
+ await expect(dialog).toBeVisible();
+ await input.evaluate(e=>e.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true})));
+ await expect(dialog).not.toBeVisible();await expect(opener).toBeFocused();
+ await expect(page.locator('html')).not.toHaveClass(/studio-command-open/);
+});
 test('staff command palette is keyboard accessible, responsive and finds saved records',async({page,context})=>{
  await context.addCookies([{name:'pg_mock_user',value:admin,url:origin}]);
  const title='Palette QA '+Date.now();const saved=await context.request.post('/api/studio/',{headers:{Origin:origin},form:{entity:'content',title,slug:'palette-qa-'+Date.now(),locale:'tr',type:'article',status:'draft',body:JSON.stringify({type:'doc',content:[{type:'paragraph',content:[{type:'text',text:'Local fixture'}]}]})}});expect(saved.ok()).toBe(true);

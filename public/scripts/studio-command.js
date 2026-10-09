@@ -10,6 +10,7 @@
  const open=button=>{if(dialog.open)return;trigger=button||document.activeElement;input.value='';render(base);status.textContent='';dialog.showModal();document.documentElement.classList.add('studio-command-open');input.focus();};
  document.querySelector('[data-command-open]').addEventListener('click',event=>open(event.currentTarget));
  dialog.querySelector('[data-command-close]').addEventListener('click',()=>dialog.close());
+ dialog.addEventListener('keydown',event=>{if(event.key==='Escape'&&!event.isComposing&&!event.defaultPrevented){event.preventDefault();dialog.close();}});
  dialog.addEventListener('close',()=>{++serial;controller?.abort();clearTimeout(timer);document.documentElement.classList.remove('studio-command-open');trigger?.focus();});
  input.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(search,180);});
  input.addEventListener('keydown',event=>{const items=links();if(event.key==='ArrowDown'||event.key==='ArrowUp'){event.preventDefault();if(items.length){active=(active+(event.key==='ArrowDown'?1:-1)+items.length)%items.length;highlight();items[active].scrollIntoView({block:'nearest'});}}else if(event.key==='Enter'){event.preventDefault();items[active]?.click();}});
