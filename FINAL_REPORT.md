@@ -2,8 +2,8 @@
 
 ## Current production state — 9 October 2026
 
-- Worker: `f72fc7e9-07c1-479e-a421-a9c18e8fa60b`.
-- Deployed runtime source: `ea65450`, normally pushed to `Palmarghe/palmarghe` main; clean committed build/deploy passed. Archive/auxiliary recovery, header containment and no-JavaScript navigation repair remain included. The homepage form now contains real long Spotlight labels; the palette explicitly handles Escape with IME protection and focus return.
+- Worker: `f11acc5d-c4b8-40ee-91b2-87a4bf2a62a6`.
+- Deployed runtime source: `878afd8`, normally pushed to `Palmarghe/palmarghe` main; clean committed build/deploy passed. Earlier repairs remain included. Community management actions now have themed44px targets; messages retain desktop columns and become labelled cards on phones, keeping status/save inside the viewport.
 - Ordinary logout now explicitly uses local scope; the separate all-device action uses global. Remote failure shows a localized unconfirmed-revocation warning rather than claiming success. Real SDK/controlled-transport tests cover second-device refresh and both failure scopes; no production all-device revocation is claimed.
 - Newsletter legal text wraps together with a permanently underlined privacy link. Required unchecked consent and existing subscription semantics are preserved. Public indexes omit three inactive interaction modules; article, account and author controls retain their required scripts.
 - Phone archive discovery uses compact aligned filters. JavaScript-disabled navigation remains usable in normal document flow and does not cover the filter action.
@@ -16,19 +16,20 @@ This is the only current deployment state in this report. Historical snapshots a
 
 ## Verified release gates
 
-| Gate | Actual evidence for deployed ea65450 |
+| Gate | Actual evidence for deployed 878afd8 |
 |---|---|
-| Local verify |261 checked files, zero diagnostics;225 unit tests; build passed |
-| Full local E2E |131/131 passed5.9m, including live-length Spotlight containment and delivered Escape/IME/focus regression |
-| Visual comparison |42/42 passed39.5s without updates after six inspected homepage references were intentionally updated for the40px Spotlight row change;36 other references unchanged. Dark/light/Aurora, public/Studio390/1440; prior references preserved in Git |
+| Local verify |262 checked files, zero diagnostics;225 unit tests; build passed |
+| Full local E2E |136/136 passed6.4m, including five community recovery cases across320/390/921 and three themes/main axe, actual30-second timeout, duplicate/pending/input retention and comment-delete submitter semantics |
+| Visual comparison |42/42 unchanged references passed40.3s; dark/light/Aurora, public/Studio390/1440; prior reference history preserved in Git |
 | Clean committed build/deploy |Completed; Worker ID above |
-| Fresh production E2E |Full run85 passed/1 failed7.1m: first dark contact axe scan reported target-size with new CSS asset404 in captured network. Current CSS200; exact failed case passed3/3 fresh Chrome repetitions9.1s. Do not call the initial full run86/86 or claim universal deploy asset availability |
-| Source GitHub Actions |Actions37944021083 for ea65450: verify, visual and production-smoke all completed successfully, confirmed through the GitHub connector. CI smoke is a selected subset and does not replace the full run/failure/follow-up evidence above |
+| Fresh production E2E |Initial85 passed/1 failed7.8m: JS-disabled archive filter navigation waited without completed response and hit60s. Exact unmodified test3/3 passed19.4s; final full86/86 passed6.8m. Earlier ea65450 CSS404/contact3/3 remains historical evidence |
+| Source GitHub Actions |Actions37947826724 for878afd8: verify, visual and production-smoke all completed successfully, confirmed through the GitHub connector. CI smoke is a selected subset and does not replace full-run evidence |
+| Asset readiness |New global.DDlsu8kr.css/index.DZ3ze1po.css on both apex/Studio200 text/css, all four SHA-256 hashes match clean committed build bytes. Measured requests only, not all-edge/future guarantee |
 | Original data protection |Native review used normal current-session logout and existing saved sign-in only. No global logout, original/media/content/account/role/settings mutation; prior Storage/fingerprint proof retained |
 
-Historical native Auth/health proof on predecessor4b5aeda: normal Studio-host logout returned to login without a warning, then saved-credential sign-in opened an actual admin dashboard. Private health showed committed source4b5aedac9315 and accessible services with35ms database control. Current ea65450 retained that actual admin session for the homepage and palette review; no new Auth operation was performed. The earlier nonstaff denial is historical. Current native Chrome/mobile/short-viewport review and wider staff interactions remain required. No credential values are copied into reports or Git.
+Historical native Auth/health proof on predecessor4b5aeda: normal Studio-host logout returned to login without a warning, then saved-credential sign-in opened an actual admin dashboard. Private health showed committed source4b5aedac9315 and accessible services with35ms database control. Current878afd8 retained that actual admin session for the homepage and palette review; no new Auth operation was performed. The earlier nonstaff denial is historical. Current native Chrome/mobile/short-viewport review and wider staff interactions remain required. No credential values are copied into reports or Git.
 
-Native Edge921px exposed a real scrollbar/header defect in the previous c1b307e release: client width906, document scroll width913 and staff-link right913.27 outside header right882. The612ee8f repair, retained in current4b5aeda, corrected that spacing: a fresh native reload proves document scroll/client width906 and staff-link/header right882; no horizontal overflow and no captured warning/error. The stronger local fixture includes five categories/two disclosures and tests901/921/1024/1100 against client width and header bounds. The main editor's page-actor guard is also deployed, with meaningful local refusal/no-insert/retry proof. Current native authorized Studio review remains outstanding. Details: [public shell follow-up](docs/public-shell-followup-2026-10-09.md).
+Native Edge921px exposed a real scrollbar/header defect in the previous c1b307e release: client width906, document scroll width913 and staff-link right913.27 outside header right882. The612ee8f repair, retained in current878afd8, corrected that spacing: a fresh native reload proves document scroll/client width906 and staff-link/header right882; no horizontal overflow and no captured warning/error. The stronger local fixture includes five categories/two disclosures and tests901/921/1024/1100 against client width and header bounds. The main editor's page-actor guard is also deployed, with meaningful local refusal/no-insert/retry proof. Current native authorized Studio review remains outstanding. Details: [public shell follow-up](docs/public-shell-followup-2026-10-09.md).
 
 ## Historical actor and membership release retained in current production
 
@@ -46,7 +47,7 @@ Remaining applicable work includes:
 
 - Native staff verification of the actor/password management changes; full local/live/visual/source CI gates passed for that previous release.
 - Native Edge administrator dashboard and health review now passed. Current native Chrome/phone/short-viewport review and wider management error/pending/keyboard states remain.
-- Native staff review of the newly wrapped translation/revision/native-only flows; broader member/access/message/comment management error/pending states.
+- Native staff review of translation/revision/native-only flows. Member/access/message/comment retained-input/pending/error/timeout/delete-submit semantics are now covered by controlled local cases and live basic management geometry; native phone/wider empty states remain.
 - Broader performance/slow-network review; current responsive-image local/live/visual/source CI gates passed, with actual candidate selection, byte reduction and original preservation proof.
 - Finish performance/slow-network review and final completion audit against every explicit requirement. Earlier successful feature checkpoints do not close this scope.
 - Native authorized Studio review remains outstanding. Header containment, main-editor page-actor guard, newsletter alignment and inactive public-index module omission are deployed with completed local/live/source CI gates.
@@ -54,6 +55,8 @@ Remaining applicable work includes:
 - Inspect the local aborted-transition warning and native Edge opt-in transition error recorded during navigation; green functional counts do not prove a clean console for those native transitions.
 - Investigate production rollout asset readiness: captured first contact CSS404 caused unstyled-header axe failure, despite current200 and3/3 exact follow-up scans. Initial full run remains85/86; no blanket deploy availability guarantee is inferred.
 - Homepage intermediate-width overflow is repaired in ea65450. Native Edge921px now has client/scroll906, panel right869.17 and Spotlight right844.17; Escape closes the palette and returns opener focus, and actual device preview is390px. Before/after proof and regression evidence: [containment review](docs/studio-homepage-containment-2026-10-09.md). Wider native staff/phone review remains applicable.
+
+Current878afd8 native community review: message Save and four member Apply buttons44px and bounded; message controls use correct light/Aurora colors, dark preference restored. Actual member UI has minlength8. No account/profile/message/role/settings form submitted; no private identities/values exported. Populated comment recovery is controlled local proof, not native production empty-list proof. Details: [community controls](docs/studio-community-controls-2026-10-09.md).
 
 ## Measured performance, not organic traffic
 

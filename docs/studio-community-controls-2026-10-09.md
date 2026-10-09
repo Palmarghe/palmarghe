@@ -1,3 +1,5 @@
+Current release checkpoint: source878afd8 / Worker f11acc5d-c4b8-40ee-91b2-87a4bf2a62a6; local136/136, visual42/42, final production86/86 (6.8m), source Actions37947826724 all three jobs successful. Running/pending statements below preserve earlier process checkpoints and are superseded by this result.
+
 # Studio community controls — 9 October 2026
 
 ## Observed production baseline
@@ -21,3 +23,13 @@ Predecessor documentation cefe2f1 Actions37945568105 now completed all3jobs succ
 Final full local136/136 passed6.4m after verify ended. Intentional invalid-category test emitted its expected transaction failure; the separate content-tag navigation still emitted an aborted-transition warning, so this release does not claim to resolve that issue. Unchanged42-reference visual comparison is now running sequentially, with no snapshot updates.
 
 Final unchanged visual comparison42/42 passed40.3s. All local gates are terminal. Candidate release is ready for normal commit/push and a clean committed build/deploy; production/native/asset/source CI gates are next.
+
+Release supersedes candidate-only status: normal main878afd8 push, clean committed build/deploy completed as Worker f11acc5d-c4b8-40ee-91b2-87a4bf2a62a6. Both current build CSS files (global.DDlsu8kr.css and index.DZ3ze1po.css) returned200/text-css on apex and Studio, four checks with matching SHA-256 of actual local committed-build bytes. This is the measured request scope, not a guarantee across all Cloudflare edges or future deploys.
+
+Fresh native Edge message view has client/scroll921 and table599.34; Save is44px high/right845.56 and status select51.59px/right868.17. No message or status was changed. Native clipped screenshot initially timed out; the later returned crop showed sidebar instead of the requested message cell, so the misleading own artifact was removed. No full private-message screenshot was taken. Geometry is the native proof; do not claim a native message screenshot or phone viewport from that tool result. At that intermediate checkpoint production and Actions were running; final results below supersede that status.
+
+Current native light/Aurora message controls are44px and bounded: light background rgb(235,231,225)/text rgb(32,29,39); Aurora background rgb(25,52,58)/text rgb(245,241,232). Theme preference restored to dark. Actual menu click to Members confirms four Apply buttons44px/right840.58, client/scroll921 and create-password minlength8. No identity/password values read, no membership form submitted. Programmatic connected navigation again logged opt-in-disabled transition errors; actual settled menu click succeeded. No clean-universal-console claim.
+
+Initial full production85 passed/1 failed7.8m. Archive density timed out at60s during JavaScript-disabled filter navigation: trace shows button was actionable/clicked, then waiting for scheduled navigation; initial archive200, filtered navigation request had no completed response. This does not prove a Supabase/server cause. Exact unmodified archive test passed3/3 repetitions19.4s. Initial trace preserved locally in test-results/release-archive-navigation-timeout. No assertion weakening/error filtering/timeout increases. Source Actions37947826724 all3jobs completed successfully. Final full86/86 live run passed6.8m; both initial failure and follow-up evidence are retained.
+
+Independent next resilience finding: src/lib/supabase.ts creates its SSR client without a server transport read deadline; published/publishedBySlug currently treat query errors as empty/missing content. This source evidence justifies a bounded-read/service-unavailable follow-up, but does not identify the timed-out live request's provider cause. Do not change write/transaction/Auth semantics or blame the database without a controlled reproduction and proof. Current release is limited to community controls; broader14-item performance/resilience/transition/native-phone work remains active.
