@@ -2,8 +2,9 @@
 
 ## Current production state — 9 October 2026
 
-- Worker: `0dcec388-5a04-46ec-ad99-2bcbc54273da`.
-- Deployed runtime source: `106565f`, normally pushed to `Palmarghe/palmarghe` main; clean committed build/deploy passed. This includes41c0d25 archive/auxiliary recovery and the subsequent no-JavaScript navigation repair.
+- Worker: `7f2413f6-47a0-4d31-9518-7485d2bb136b`.
+- Deployed runtime source: `c1b307e`, normally pushed to `Palmarghe/palmarghe` main; clean committed build/deploy passed. Archive/auxiliary recovery and no-JavaScript navigation repair remain included.
+- Newsletter legal text wraps together with a permanently underlined privacy link. Required unchecked consent and existing subscription semantics are preserved. Public indexes omit three inactive interaction modules; article, account and author controls retain their required scripts.
 - Phone archive discovery uses compact aligned filters. JavaScript-disabled navigation remains usable in normal document flow and does not cover the filter action.
 - Lazy cards/body media now use actual rendered source size with preserved fallback sizes. Archive/category cards now expose their existing RLS-bound ready derivatives; originals, dimensions, eager LCP loading and inspector URLs are preserved.
 - Studio generic management forms preserve input after failed saves, use bounded verified redirects and block duplicate pending submissions. Translation/revision/native content operations now share recovery and page-actor validation, refuse unsaved main-editor changes before sending, and keep the editor read-only during an auxiliary request. Existing content/media handlers retain their own behavior.
@@ -14,17 +15,19 @@ This is the only current deployment state in this report. Historical snapshots a
 
 ## Verified release gates
 
-| Gate | Actual evidence for deployed106565f |
+| Gate | Actual evidence for deployed c1b307e |
 |---|---|
-| Local verify |252 checked files, zero diagnostics;221 unit tests; build passed |
-| Full local E2E |124/124 passed5.4m, including actual no-JavaScript filter clicks and auxiliary recovery |
-| Visual comparison |42/42 passed37.8s; dark/light/Aurora, public/Studio390/1440. Six archive references added; previous36 preserved |
+| Local verify |254 checked files, zero diagnostics;221 unit tests; build passed |
+| Full local E2E |126/126 passed6.0m, including actual article/account/author controls and confirmed translation pairing |
+| Visual comparison |42/42 passed39.8s; dark/light/Aurora, public/Studio390/1440. Eighteen public references intentionally updated only for consent text/link layout;24 Studio references unchanged; older references preserved in Git history |
 | Clean committed build/deploy |Completed; Worker ID above |
-| Fresh production E2E |Focused archive/media4/4 passed18.0s on current Worker, including no-JavaScript navigation geometry/actual filter click and real smaller rendition/privacy checks. Full84/84 production suite passed6.0m |
-| Source GitHub Actions |Current106565f Actions37888766838 Success: verify8m50s (124 E2E7.3m), visual2m5s, production-smoke2m49s; total11m45s, inspected in connected Edge. Historical41c0d25 Actions37859878195 passed verify124 and visual but failed production-smoke; the independent live run identified its actual no-JavaScript menu interception, now repaired and live4/4 verified. Historicalb7d0682 Actions37856721050 and docs9365ccf Actions37857925629 succeeded |
+| Fresh production E2E |Focused archive/media/payload5/5 passed22.7s. Full85/85 production suite passed6.1m. These passes do not erase the separately observed native header defect below |
+| Source GitHub Actions |Actions37892221289: verify, visual and production-smoke all completed successfully, confirmed through the GitHub connector. Historical106565f Actions37888766838 and documentationfaef593 Actions37889845294 also succeeded |
 | Original data protection |No production write in this release's QA; prior original/Storage boundary and fingerprint proofs retained in media documents |
 
 The connected browser's Studio-host session is nonstaff and correctly denies Studio. Public-host staff links are not proof of a staff session on the separate Studio host. This is role-boundary evidence, not authenticated administrator verification. Native authorized Studio review is still outstanding; no browser identity or evidence is fabricated.
+
+Native Edge921px also exposed a real scrollbar/header defect: client width906, document scroll width913 and staff-link right913.27 outside the header right882. The text no longer wraps but the last link is clipped. A stronger five-category/two-disclosure fixture and a spacing repair have passed local checks; they are not yet deployed. The main editor's page-actor guard is also a locally verified candidate, not claimed live. Details: [public shell follow-up](docs/public-shell-followup-2026-10-09.md).
 
 ## Historical actor and membership release retained in current production
 
@@ -44,9 +47,8 @@ Remaining applicable work includes:
 - Native authorized Studio desktop/phone/short-viewport review and wider management error/pending/keyboard states.
 - Native staff review of the newly wrapped translation/revision/native-only flows; broader member/access/message/comment management error/pending states.
 - Broader performance/slow-network review; current responsive-image local/live/visual/source CI gates passed, with actual candidate selection, byte reduction and original preservation proof.
-- Archive density and no-JavaScript fallback are repaired and deployed with full production84/84 and source Actions green; accessible controls and original covers are preserved.
 - Finish performance/slow-network review and final completion audit against every explicit requirement. Earlier successful feature checkpoints do not close this scope.
-- Repair shared newsletter consent sentence alignment; remove demonstrably unused home-page comment/readership/library downloads while preserving article, author and account interactions. Native921px staff header also needs its Studio arrow kept on one line without introducing overflow.
+- Deploy and verify the native scrollbar/header repair and specialized main-editor page-actor guard. Newsletter alignment and inactive public-index module omission are already deployed and live tested; they are no longer open implementation work.
 
 ## Measured performance, not organic traffic
 

@@ -270,6 +270,7 @@ if (element && output) {
   for (const name of ['input', 'change']) output.form?.addEventListener(name, () => {
     if (!submitting && !auxiliaryPending) { dirty = true; updateStatus('Kaydedilmedi'); }
   });
+  const expectedActor = document.body.dataset.studioActor;
   output.form?.addEventListener('submit', async (event) => {
     event.preventDefault();
     const form = output.form;
@@ -278,6 +279,7 @@ if (element && output) {
     if (!form.reportValidity()) { updateStatus('Eksik veya geçersiz alanları kontrol edin.'); return; }
     // Serialize before disabling fields: disabled controls are omitted from FormData.
     const body = new FormData(form);
+    if (expectedActor) body.set('expected_actor', expectedActor);
     submitting = true;
     dirty = true;
     const publishing = form.querySelector<HTMLSelectElement>('select[name="status"]')?.value === 'published';

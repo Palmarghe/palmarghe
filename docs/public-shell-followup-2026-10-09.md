@@ -22,3 +22,19 @@ Original images, publications, settings, roles and accounts remain intact. All m
 ## Final local release gates
 
 Final verify passed254 checked files with zero diagnostics,221 unit tests and a build. The complete local suite passed126/126 in6.0m, including the repaired translation confirmation and actual article/account/author actions. Public reference generation passed18/18 in33.2s after visual inspection. The final42/42 comparison without reference updates passed39.8s; the24 Studio references remain unchanged and prior public references are preserved in Git history. Clean commit/build/deploy, live tests and source CI remain required at this checkpoint.
+
+## First live checkpoint and native scrollbar defect
+
+Sourcec1b307e was normally pushed and deployed from a clean build as Worker7f2413f6-47a0-4d31-9518-7485d2bb136b. Focused live archive/media/payload5/5 passed22.7s. Source Actions37892221289 and the85-case full production run were live at this checkpoint.
+
+Connected Edge921px exposed an additional defect despite those headless assertions: `innerWidth=921`, client width906, document scroll width913, header right882 and staff-link right913.27. The link's text was one line but escaped the header and was clipped by the native scrollbar. The earlier `scrollWidth<=innerWidth` assertion was insufficient. The follow-up reduces intermediate-width gaps, matches staff link typography to the compact navigation and asserts both client width and the header's own bounds. This repair still requires final local/live/native proof. Studio-host nonstaff denial remains intact; a public-host editor link does not establish an authorized Studio-host session.
+
+Full production85/85 on that first Worker passed6.1m. Sourcec1b307e Actions37892221289 completed all three jobs successfully, confirmed through the GitHub connector. These broad passes do not override the contradictory native scrollbar evidence above.
+
+The strengthened local header fixture now includes the live fifth root category and a second category disclosure; it removes both disposable categories afterwards. Its first fixture lookup incorrectly looked for an edit input on a list page and timed out; the corrected lookup uses the actual saved table row and its ID, without a timeout increase. The corrected header/payload2/2 passed13.1s.
+
+The specialized main editor now also submits its original page actor to the existing server guard. A different staff session returns409 before content insertion; title/body remain editable, and restoring the original actor permits a real save. The saved local draft is removed afterwards. Main-editor actor/header/payload3/3 passed14.6s. Legacy requests omitting the optional actor still use server authorization; no universal actor binding is claimed. Final combined release gates remain required.
+
+## Combined candidate gates
+
+Verify passed255 checked files with zero diagnostics,221 units and build after making the root fixture's empty parent explicit for type safety. Full127/127 local E2E passed5.8m, including the main-editor actor guard and live-density header fixture with cleanup. The unchanged42/42-reference comparison passed37.7s. Clean release, native scrollbar proof, production and matching source Actions are required before calling this repair deployed and verified.
