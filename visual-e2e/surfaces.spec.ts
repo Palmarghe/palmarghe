@@ -21,12 +21,12 @@ test.beforeAll(async({browser})=>{
  await context.close();
 });
 
-for(const width of [390,1440])for(const theme of ['dark','light','aurora'])for(const surface of ['home','search','archive','dashboard','editor','homepage','health']){
+for(const width of [390,768,1440])for(const theme of ['dark','light','aurora'])for(const surface of ['home','search','archive','dashboard','editor','homepage','health','advertising','categories','media']){
  test(`${surface} ${theme} ${width}`,async({page,context})=>{
   await page.setViewportSize({width,height:900});
   if(['home','search','archive'].includes(surface))await page.clock.setFixedTime(new Date('2026-10-09T12:05:00Z'));
   await page.addInitScript(theme=>localStorage.setItem('palmarghe-theme',theme),theme);
-  if(['dashboard','editor','homepage','health'].includes(surface))await context.addCookies([admin]);
+  if(['dashboard','editor','homepage','health','advertising','categories','media'].includes(surface))await context.addCookies([admin]);
   if(surface==='health'){
    // Fixed local screenshot fixture, never a claimed production measurement.
    const observations=[{status:303,duration_ms:100,time:'2026-10-07T10:00:00Z',failed:false},{status:400,duration_ms:500,time:'2026-10-07T11:00:00Z',failed:true}];
@@ -57,7 +57,8 @@ for(const width of [390,1440])for(const theme of ['dark','light','aurora'])for(c
   }
   if(surface==='homepage')await expect(page.locator('[data-device-preview]>[role=status]')).toContainText('1440px');
   if(surface==='health')await expect(page.locator('[data-health-metrics] .health-metric')).toHaveCount(4);
+  if(surface==='media'){await expect(page.locator('.media-storage-path')).toHaveText(/^[a-f0-9-]{36}\.webp$/);await expect(page.locator('.media-storage-path').locator('..')).toContainText('image/webp · 29 KB · 1600×900');}
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  await expect(page).toHaveScreenshot(`${surface}-${theme}-${width}.png`,{fullPage:true,mask:[page.locator('time:not([data-site-clock] time)'),page.locator('.content-list .admin-table tbody tr td:nth-child(5)')]});
+  await expect(page).toHaveScreenshot(`${surface}-${theme}-${width}.png`,{fullPage:true,mask:[page.locator('time:not([data-site-clock] time)'),page.locator('.media-storage-path'),page.locator('.content-list .admin-table tbody tr td:nth-child(5)')]});
  });
 }

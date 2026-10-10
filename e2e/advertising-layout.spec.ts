@@ -31,3 +31,22 @@ test('partner bands share public alignment, readable themed copy and no hidden s
   for(const path of ['/','/search/?q=Digital','/archive/']){await page.goto(path);await expect(page.locator('.footer-discovery h2')).toBeVisible();}
  }finally{expect((await context.request.post('/api/studio/',{headers:{origin},form:original})).ok()).toBe(true);}
 });
+
+test('Studio ad preview mirrors theme-aware bands across phone, tablet and desktop without saving',async({page,context})=>{
+ test.setTimeout(60000);await context.addCookies([{name:'pg_mock_user',value:'00000000-0000-4000-8000-100000000001',url:'http://127.0.0.1:4322'}]);
+ for(const width of [390,768,1440]){
+  await page.setViewportSize({width,height:900});await page.goto('/studio/?section=advertising');
+  await page.locator('[name=header_image_url]').fill('/ads/test-header-neutral.svg');await page.locator('[name=header_title]').fill('Unsaved preview title');
+  const card=page.locator('[data-preview-placement=header]');await expect(card.locator('strong')).toHaveText('Unsaved preview title');await expect(card.locator('img')).toBeVisible();
+  for(const theme of ['dark','light','aurora']){
+   await page.evaluate(theme=>document.body.dataset.theme=theme,theme);
+   const geometry=await card.evaluate(node=>{const copy=node.querySelector('.advertising-preview-copy')!,art=node.querySelector('img')!;const text=copy.getBoundingClientRect(),image=art.getBoundingClientRect();return{right:text.right,imageLeft:image.left,background:getComputedStyle(node).backgroundImage,color:getComputedStyle(node).color,bodyColor:getComputedStyle(document.body).color};});
+   expect(geometry.right).toBeLessThanOrEqual(geometry.imageLeft+1);expect(geometry.background).toBe('none');expect(geometry.color).toBe(geometry.bodyColor);
+   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth)).toBe(true);
+   const audit=await new AxeBuilder({page}).include('[data-ad-preview]').withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22a','wcag22aa']).analyze();expect(audit.violations.filter(v=>['serious','critical'].includes(v.impact??''))).toEqual([]);
+  }
+  await page.locator('[name=header_visible]').uncheck();await expect(card).toBeHidden();await page.locator('[name=header_visible]').check();await expect(card).toBeVisible();
+  await page.locator('[name=header_image_url]').fill('');await expect(card.locator('img')).toBeHidden();await expect(card.locator('strong')).toBeVisible();
+ }
+ // No form is submitted: changing a design preview must not publish settings.
+});

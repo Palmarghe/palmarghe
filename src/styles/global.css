@@ -895,3 +895,39 @@ body .promotion-slot--google{padding:32px 12px 12px;min-height:156px}
 @media(max-width:900px){.footer-connect{gap:1.5rem}}
 @media(max-width:600px){body .promotion-slot,body .home-sections .promotion-slot--article,body main>.promotion-slot--article{width:calc(100% - 32px);margin:1rem auto;min-height:132px}body .content-detail>.promotion-slot--article{width:100%;margin:1rem 0}body .promotion-slot>.promotion-label,body .promotion-slot:has(.promotion-image)>.promotion-label{left:14px}body .promotion-slot:has(.promotion-image) .promotion-manual,body .promotion-slot:has(.promotion-image) .promotion-custom{grid-template-columns:minmax(0,1fr) 28%}body .promotion-copy{padding:34px 14px 14px}.footer-connect{grid-template-columns:minmax(0,1fr);gap:1.25rem;padding-block:1.25rem 1.5rem}.footer-connect .newsletter-signup{max-width:none;justify-self:stretch}}
 @media(max-width:360px){body .promotion-slot,body .home-sections .promotion-slot--article,body main>.promotion-slot--article{width:calc(100% - 24px)}}
+
+/* Studio ad previews share the public band composition and theme foreground. */
+body .studio-home-link{transition:border-color .2s ease}
+body .advertising-live-preview>div{grid-template-columns:minmax(0,1fr)}
+body .advertising-live-preview article{display:grid;grid-template-columns:minmax(0,1fr);gap:0;padding:0;min-height:132px;background:var(--surface);color:var(--text);border:1px solid var(--border)}
+body .advertising-live-preview article:has(img:not([hidden])){grid-template-columns:minmax(0,1fr) minmax(80px,30%)}
+body .advertising-live-preview article img{position:static;inset:auto;grid-column:2;grid-row:1;align-self:stretch;width:100%;height:100%;min-height:132px;max-height:220px;opacity:1;z-index:auto;object-fit:cover;border-left:1px solid var(--border)}
+body .advertising-preview-copy{grid-column:1;grid-row:1;display:grid;align-content:center;gap:.3rem;min-width:0;padding:16px 20px}
+body .advertising-live-preview article span,body .advertising-live-preview article small{color:var(--muted)}
+body .advertising-live-preview article strong{font-size:1.1rem;line-height:1.35;overflow-wrap:anywhere}
+body .advertising-live-preview article small{font-size:.8rem;line-height:1.5;overflow-wrap:anywhere}
+body .advertising-live-preview article em{color:var(--text);font-size:.7rem;margin-top:.3rem;text-decoration:underline;text-underline-offset:4px}
+@media(max-width:600px){body .advertising-preview-copy{padding:14px}body .advertising-live-preview article:has(img:not([hidden])){grid-template-columns:minmax(0,1fr) 28%}}
+
+/* Labelled management records keep every action reachable without sideways scrolling. */
+@media(max-width:700px){
+ body .admin-record-table{display:block;width:100%;overflow:visible}
+ body .admin-record-table thead{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%)}
+ body .admin-record-table tbody{display:grid;gap:.75rem;width:100%}
+ body .admin-record-table tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.35rem;padding:1rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)}
+ body .admin-record-table td{grid-column:1/-1;display:grid;grid-template-columns:minmax(64px,30%) minmax(0,1fr);gap:.5rem;min-width:0;padding:.35rem 0;border:0;white-space:normal;overflow-wrap:anywhere}
+ body .admin-record-table td::before{content:attr(data-label);font-size:.7rem;color:var(--muted)}
+ body .admin-record-table td.record-action{grid-column:auto;display:flex;align-items:center;padding:.5rem 0 0}
+ body .admin-record-table td.record-action::before{display:none}
+ body .admin-record-table .record-action a,body .admin-record-table .record-action button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;max-width:100%;margin:0}
+}
+body .admin-main button.text-link{background:var(--surface);color:var(--text);border:1px solid var(--border);padding:.5rem .75rem;min-height:44px}
+.now-strip>div{scrollbar-width:thin;scrollbar-color:var(--border) transparent;scroll-snap-type:x proximity;padding-bottom:.25rem}
+.now-strip a{scroll-snap-align:start}
+body .admin-table a{display:inline-flex;align-items:center;min-height:44px;min-width:44px;padding:.25rem .35rem}
+body .admin-table button,body .admin-table summary{min-height:44px;min-width:44px}
+body .admin-table summary{padding:.5rem 0;cursor:pointer}
+@media(max-width:700px){body .content-list .admin-record-table td.record-action{grid-column:1/-1;flex-wrap:wrap;gap:.5rem}body .content-list .admin-record-table td.record-action details{margin:0}}
+body .health-buckets:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:var(--radius)}
+
+.media-storage-path{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
