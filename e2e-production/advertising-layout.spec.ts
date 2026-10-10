@@ -9,6 +9,10 @@ test('live partner bands align with the public grid and the connected footer sta
    await page.evaluate(theme=>document.body.dataset.theme=theme,theme);
    const boxes=await page.locator('.promotion-slot').evaluateAll(nodes=>nodes.map(node=>{const box=node.getBoundingClientRect(),shell=document.querySelector('.site-header')!.getBoundingClientRect();return {left:box.left,right:box.right,shellLeft:shell.left,shellRight:shell.right};}));
    for(const box of boxes){expect(Math.abs(box.left-box.shellLeft)).toBeLessThan(1);expect(Math.abs(box.right-box.shellRight)).toBeLessThan(1);}
+   if(width>600){
+    const splits=await page.locator('.promotion-slot:has(.promotion-image)').evaluateAll(nodes=>nodes.map(node=>{const box=node.getBoundingClientRect(),copy=node.querySelector('.promotion-copy')!.getBoundingClientRect(),image=node.querySelector('.promotion-image')!.getBoundingClientRect();return{share:(image.left-box.left-1)/(box.width-2),copyRight:copy.right,imageLeft:image.left};}));
+    for(const split of splits){expect(split.share).toBeCloseTo(width>900?.5:.6,2);expect(split.copyRight).toBeLessThanOrEqual(split.imageLeft+1);}
+   }
    await expect(page.locator('.footer-discovery h2')).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth)).toBe(true);
    const audit=await new AxeBuilder({page}).include('.site-footer').include('.promotion-slot').withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22a','wcag22aa']).analyze();expect(audit.violations.filter(v=>['serious','critical'].includes(v.impact??''))).toEqual([]);
   }

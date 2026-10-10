@@ -2,8 +2,8 @@
 
 ## Current production state — 10 October 2026
 
-- Worker: `37488ff6-5969-4f21-8094-cf03eec79294`.
-- Deployed runtime source: `93dbd0b`, normally pushed to `Palmarghe/palmarghe` main; clean committed build/deploy passed. Earlier repairs remain included. Community management actions have themed44px targets; messages retain desktop columns and become labelled cards on phones, keeping status/save inside the viewport.
+- Worker: `ec9c7ced-622b-4858-86b1-4615f209071b`.
+- Deployed runtime source: `3ffa2b3`, normally pushed to `Palmarghe/palmarghe` main; clean committed build/deploy passed. Earlier repairs remain included. Community management actions have themed44px targets; messages retain desktop columns and become labelled cards on phones, keeping status/save inside the viewport.
 - All three first-party advertisement bands align to the public content grid, with separated original artwork/theme-aware text, restrained minimum height and no reserved space for hidden placements. Footer discovery groups real archive/collections/RSS links with the existing required-consent newsletter form. Native Chrome desktop proves all three bands1440px at left232.5, matching the header; phone client375 shows bands16..359 with no horizontal overflow. Details: [partner/footer evidence](docs/partner-footer-polish-2026-10-10.md).
 - Public footer displays a restrained, localized date and minute clock in Europe/Istanbul (UTC+3), fitting phone/tablet/desktop in dark, light and hidden Aurora. External same-origin modules preserve the strict CSP and share the server/client formatter. Current live clock/update/console checks passed; actual Chrome screenshots show continued localized minute time on10 October, with bounded phone/tablet layouts. Two static module requests are added, without background clock API, database, account or location requests. Initial inline-script defect/failures remain historical evidence. Details: [date/time evidence](docs/site-clock-2026-10-09.md).
 - Complete PostgREST GET responses now have a12-second per-attempt deadline, including the body. Primary content query errors return a themed503/manual retry instead of false empty/404 results; filters, private/no-store, noindex and security headers are preserved. Auth and POST RPC transports are unchanged and require separate review.
@@ -19,20 +19,23 @@ This is the only current deployment state in this report. Historical snapshots a
 
 ## Verified release gates
 
-| Gate | Actual evidence for deployed 93dbd0b |
+| Gate | Actual evidence for deployed3ffa2b3 |
 |---|---|
-| Local verify |280 checked files, zero diagnostics;244 unit tests; build passed |
-| Full local E2E |Final combined144/144 passed6.9m; repaired contrast/heading targeted32/32 passed1.1m |
-| Visual comparison |Final48/48 passed41.7s. Eighteen reviewed public layout references changed; twelve also received the reviewed CTA contrast correction. Thirty Studio/recovery references unchanged; prior references preserved in Git |
-| Clean committed build/deploy |Completed; Worker ID above |
-| Fresh production E2E |Fresh full92/92 passed7.2m; scoped7/7 passed33.3s including new partner bands, phone archive, four clock cases and console. Interrupted predecessor full91 outcome remains historical/unverified |
-| Source GitHub Actions |Source93dbd0b Actions38042992391 verify/visual/production-smoke all completed successfully. Predecessor0a303af all three successful; earlier failed checkpoints remain in evidence docs |
-| Asset readiness |Deployed global.puzM4tDc.css/index.C8OsIVjc.css and both clock modules on apex/Studio200 with expected MIME; all eight reads match clean committed build bytes. Measured requests only, not all-edge/future guarantee |
-| Original data protection |No production account/role/content/media/settings form submission or deliberate mutation. Automated Chrome QA excludes telemetry; normal native homepage inspection may emit existing first-party direct-visit telemetry and is not organic-traffic evidence. Future native public QA uses verify query flags. Existing Storage/fingerprint proofs retained |
+| Local verify |282checked files,zero diagnostics;244units; final build passed10Oct18:15 |
+| Full local E2E |149/149 passed8.3m after final corrections; includes171Studio section/theme/width combinations and populated records |
+| Visual comparison |96/96 passed1.1m;48new phone/tablet/desktop references reviewed, six reviewed editor references changed, originals retained. Only volatile media UUID/date values masked, with metadata/value guards |
+| Clean committed build/deploy |Normal main commit/push; clean committed build10Oct18:16:15 and Worker above |
+| Fresh production E2E |Scoped6/6 passed1.4m including full sitemap responsive matrix; full93/93 passed8.2m |
+| GitHub Actions |Runtime source3ffa2b3 Actions38062917682 visual87/96:only native empty date placeholders differed. CI-only31dc3b2 pins Windows runner culture tr-TR; corrected38063503243 verify/visual successful, production-smoke running at this checkpoint |
+| Asset readiness |global.DXYy4otQ.css/index.DzU-4lzX.css and both clock modules:all eight apex/Studio reads200,expectedMIME,exact clean-build bytes |
+| Native visual review |Post-deploy19Studio sections at320/768/desktop and eight public routes at390/768/1440 bounded; narrow editor ribbon retains intentional local scroll. Category44px actions reachable. Real health source3ffa2b3/services accessible/database38ms; region focus outline2px. Media Aurora validation button themed44px; inspected Studio console empty. Screenshots saved |
+| Original data protection |No production account/role/content/media/settings form submission or deliberate mutation. QA query flags exclude telemetry; existing Storage/fingerprint proofs retained |
+
+Current responsive follow-up:Studio original-artwork previews now match theme surfaces; content/category/tag/navigation/redirect/audit/traffic records become labelled phone cards with44px actions. Media validation button contrast and health trend keyboard region repaired; publication strip scrollbar is restrained and themed. Detailed evidence, failed attempts and remaining completion gates:[responsive audit](docs/responsive-visual-audit-2026-10-10.md). The preceding93dbd0b release144/48/92 and successful source CI are historical proof, not the current runtime's gate counts.
 
 Historical native Auth/health proof on predecessor4b5aeda: normal Studio-host logout returned to login without a warning, then saved-credential sign-in opened an actual admin dashboard. Private health showed committed source4b5aedac9315 and accessible services with35ms database control. At the earlier878afd8 checkpoint, that actual admin session was retained for the homepage and palette review; no new Auth operation was performed. The earlier nonstaff denial is historical. Current native Chrome/mobile/short-viewport review and wider staff interactions remain required. No credential values are copied into reports or Git.
 
-Native Edge921px exposed a real scrollbar/header defect in the previous c1b307e release: client width906, document scroll width913 and staff-link right913.27 outside header right882. The612ee8f repair, retained in current93dbd0b, corrected that spacing: a fresh native reload proves document scroll/client width906 and staff-link/header right882; no horizontal overflow and no captured warning/error. The stronger local fixture includes five categories/two disclosures and tests901/921/1024/1100 against client width and header bounds. The main editor's page-actor guard is also deployed, with meaningful local refusal/no-insert/retry proof. Current native authorized health confirms93dbd0bfc75e/build10Oct12:53:39/services accessible/database55ms; broader staff review remains outstanding. Details: [public shell follow-up](docs/public-shell-followup-2026-10-09.md).
+Native Edge921px exposed a real scrollbar/header defect in the previous c1b307e release: client width906, document scroll width913 and staff-link right913.27 outside header right882. The612ee8f repair, retained in subsequent releases, corrected that spacing: a fresh native reload proves document scroll/client width906 and staff-link/header right882; no horizontal overflow and no captured warning/error. The stronger local fixture includes five categories/two disclosures and tests901/921/1024/1100 against client width and header bounds. The main editor's page-actor guard is also deployed, with meaningful local refusal/no-insert/retry proof. Historical native authorized health confirmed93dbd0bfc75e/build10Oct12:53:39/services accessible/database55ms; broader staff review remains outstanding. Details: [public shell follow-up](docs/public-shell-followup-2026-10-09.md).
 
 ## Historical actor and membership release retained in current production
 

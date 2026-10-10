@@ -931,3 +931,20 @@ body .admin-table summary{padding:.5rem 0;cursor:pointer}
 body .health-buckets:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:var(--radius)}
 
 .media-storage-path{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+
+/* Balanced partner bands: artwork shares the desktop width without dictating row height. */
+@media(min-width:601px){
+ body .promotion-slot:not(.promotion-slot--google){min-height:112px}
+ body .promotion-slot .promotion-manual,body .promotion-slot .promotion-custom,body .promotion-slot:has(.promotion-image) .promotion-manual,body .promotion-slot:has(.promotion-image) .promotion-custom{min-height:112px}
+ body .promotion-slot:has(.promotion-image) .promotion-manual,body .promotion-slot:has(.promotion-image) .promotion-custom{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body .promotion-copy{padding:32px 20px 14px}
+ body .promotion-slot .promotion-image{position:absolute;grid-area:auto;inset:0 0 0 auto;width:50%;height:100%;min-height:0;max-height:none}
+ body .promotion-slot .promotion-sample{min-height:112px;padding:32px 20px 14px}
+ body .advertising-live-preview article{position:relative;min-height:112px}
+ body .advertising-live-preview article:has(img:not([hidden])){grid-template-columns:repeat(2,minmax(0,1fr))}
+ body .advertising-live-preview article img{position:absolute;grid-area:auto;inset:0 0 0 auto;width:50%;height:100%;min-height:0;max-height:none}
+}
+@media(min-width:601px) and (max-width:900px){
+ body .promotion-slot:has(.promotion-image) .promotion-manual,body .promotion-slot:has(.promotion-image) .promotion-custom,body .advertising-live-preview article:has(img:not([hidden])){grid-template-columns:minmax(0,3fr) minmax(0,2fr)}
+ body .promotion-slot .promotion-image,body .advertising-live-preview article img{width:40%}
+}
