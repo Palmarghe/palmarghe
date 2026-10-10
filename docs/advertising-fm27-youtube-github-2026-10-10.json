@@ -1,0 +1,50 @@
+{
+  "enabled": false,
+  "placements": {
+    "article": {
+      "cta": "Kanala git",
+      "description": "Müzik, oyunlar ve dijital deneyler. Yeni videolara göz at.",
+      "device": "all",
+      "ends_at": "",
+      "image_url": "/ads/palmarghe-youtube-v1.webp",
+      "mode": "manual",
+      "scope": "all",
+      "starts_at": "",
+      "title": "Palmarghe · YouTube",
+      "url": "https://www.youtube.com/@palmarghe",
+      "visible": true
+    },
+    "footer": {
+      "cta": "Projeleri gör",
+      "description": "Modlar, araçlar ve açık kaynak projeler. Kodun arkasını keşfet.",
+      "device": "all",
+      "ends_at": "",
+      "image_url": "/ads/palmarghe-github-v1.webp",
+      "mode": "manual",
+      "scope": "all",
+      "starts_at": "",
+      "title": "Palmarghe · GitHub",
+      "url": "https://github.com/Palmarghe",
+      "visible": true
+    },
+    "header": {
+      "cta": "Resmi site",
+      "description": "Yeni sezon, yeni fikirler. FM27’yi resmi sitesinde keşfet.",
+      "device": "all",
+      "ends_at": "",
+      "image_url": "/ads/fm27-stadium-v1.webp",
+      "mode": "manual",
+      "scope": "all",
+      "starts_at": "",
+      "title": "Football Manager 27",
+      "url": "https://www.footballmanager.com/",
+      "visible": true
+    }
+  },
+  "publisher_id": "",
+  "slots": {
+    "article": "",
+    "footer": "",
+    "header": ""
+  }
+}
