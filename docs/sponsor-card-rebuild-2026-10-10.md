@@ -19,4 +19,33 @@ The user rejected the previous wide advertisement bands and requested a fresh, a
 - Focused local advertisement/navigation run: 18/18 passed in 39.3 seconds, including persisted edits and unchanged closed-panel fields; local test configuration restored in finally blocks. No production setting was written by these tests.
 
 ## Release evidence
-Final local verify: 284 checked files, zero diagnostics, 244/244 unit tests and build passed at19:59:48 Istanbul. Final focused advertisement run including the AdSense preview assertion:3/3 passed in29.9s. Deployment, production Chrome checks and source GitHub Actions evidence will be recorded here after they finish. The previous deployed runtime remains historical evidence in advertisement-balance-2026-10-10.md.
+Final local verify: 284 checked files, zero diagnostics, 244/244 unit tests and build passed at19:59:48 Istanbul. Final focused advertisement run including the AdSense preview assertion:3/3 passed in29.9s. Implementation source516c673 was deployed and all three CI jobs passed (run38070328482,150functional E2E). The latest generated-asset release and approved live data replacement are recorded below. The previous deployed runtime remains historical evidence in advertisement-balance-2026-10-10.md.
+
+## Approved FM27 / YouTube / GitHub replacement
+- Runtime4e66fc9; clean committed build10Oct23:30:44 Istanbul; Worker f7bcb8bd-1ac9-47f1-8e9f-8a8d38a1e602.
+- Header links to https://www.footballmanager.com/; article links to https://www.youtube.com/@palmarghe; footer links to https://github.com/Palmarghe.
+- Built-in imagegen produced three reviewed editorial illustrations, optimized without cropping to512px WebP. They are not official platform assets/game screenshots. [Exact prompts and saved asset paths](sponsor-art-prompts-2026-10-10.md). Combined82,972bytes.
+- All six asset reads across public and Studio hosts returned200/image-webp and exact expected lengths before database update.
+- Backed up the sole advertising row in advertising-before-fm27-youtube-github-2026-10-10.json. Executed advertising-fm27-youtube-github-2026-10-10.sql through the authenticated linked Supabase CLI. Transactional exact-value concurrency guard succeeded; readback equals the prepared JSON exactly. Timestamp2026-10-10T20:33:17.530712Z. Device/scope/schedule/visibility/publisher/slots unchanged.
+- Rollback: read and compare the current row first, then restore the saved previous value with the same conditional transaction; refuse later user edits rather than overwriting them. Versioned previous images remain available. No schema migration or user/content/media mutations.
+- Actual native Chrome:all three public titles/destinations and loaded512px images match. Authenticated Studio footer shortcut opens and focuses the correct editor; unsaved hide removes its card; undo restores checked state. Tablet article shortcut opens/focuses YouTube. No production UI save during QA.
+- Mobile390/client375 has all three card left16,width343 and scroll375; Studio tablet client/scroll753. Public and Studio consoles contain no captured errors/warnings. Theme/viewport restored. Saved sponsor-native-public, sponsor-native-mobile-light, sponsor-native-studio and sponsor-native-tablet-studio PNGs.
+- Fresh post-update production bundle:11/11 passed2.1m. Initial earlier3738020 bundle10/11 traced oldglobal.Dh1iQDsK.css during deployment propagation; current unchanged geometry/WCAG test passes.
+- Latest source Actions run38084033669 completed successfully; all terminal evidence below.
+
+## Native Chrome screenshots
+
+![Desktop sponsor cards](sponsor-native-public-2026-10-10.png)
+
+![Mobile light sponsor cards](sponsor-native-mobile-light-2026-10-10.png)
+
+![Studio placement editor](sponsor-native-studio-2026-10-10.png)
+
+![Tablet Studio editor](sponsor-native-tablet-studio-2026-10-10.png)
+
+Latest asset-source verify job114306647253 succeeded:244units/47files,150/150functional E2E11.0m. Visual job114306647092 succeeded:96/96 in1.3m. Actual signed-in native GitHub Chrome confirms those counts. Production-smoke job114309077120 follows.
+
+Final source Actions38084033669:verify/visual/production-smoke all succeeded. Verify282clean CI files/zero diagnostics,244units,150functional cases;96visual cases;33production smoke cases. Documentation-only final commit uses [skip ci] to avoid repeating the identical verified runtime. Ordinary push preserves history; no force push.
+
+Native GitHub Chrome confirms Success for all three jobs; screenshot: sponsor-native-actions-2026-10-10.png. Production smoke33/33 passed4.2m.
+

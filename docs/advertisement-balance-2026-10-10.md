@@ -1,5 +1,8 @@
 # Advertisement balance follow-up — 10 October 2026
 
+> Historical checkpoint: the advertisement design and deployed state below were superseded by the sponsor-card rebuild and generated FM27/YouTube/GitHub release. See [current release audit](sponsor-card-rebuild-2026-10-10.md) and [FINAL_REPORT](../FINAL_REPORT.md). Uses of “current” below refer to that recorded checkpoint.
+
+
 User follow-up: advertisement bands still look disproportionate. Native current runtime3ffa2b3 showed three equally aligned1377px bands but a70% copy area with sparse text and a30% artwork area: alignment alone did not solve visual balance.
 
 Desktop composition is now50/50, tablet60/40. Phone28% artwork remains unchanged to preserve readable copy. Desktop/tablet minimum height112px; original images no longer contribute their intrinsic aspect ratio to grid-row sizing. Long text can expand normally; no line clamp or hidden content. Studio unsaved previews share these proportions. Visibility/device/scope/schedule/links/storage/settings are unchanged; no production data submission.

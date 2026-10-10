@@ -1,5 +1,8 @@
 # Responsive visual audit — 10 October 2026
 
+> Historical checkpoint: the advertisement design and deployed state below were superseded by the sponsor-card rebuild and generated FM27/YouTube/GitHub release. See [current release audit](sponsor-card-rebuild-2026-10-10.md) and [FINAL_REPORT](../FINAL_REPORT.md). Uses of “current” below refer to that recorded checkpoint.
+
+
 Goal: inspect public and Studio mobile, tablet and desktop, repair asymmetric or visually inconsistent surfaces while preserving working architecture, Git, production records and original media.
 
 ## Latest state
