@@ -37,6 +37,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install chromium
+      - name: Match the native date-control baseline culture
+        shell: pwsh
+        run: |
+          Set-Culture -CultureInfo tr-TR
+          Get-Culture
       - run: npm run test:visual
       - uses: actions/upload-artifact@v4
         if: failure()
