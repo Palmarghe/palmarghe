@@ -219,7 +219,7 @@ const handlePost: APIRoute = async ({ request, cookies }) => {
     const invalidPlacement = Object.entries(placements).find(([,item]:any) => !['placeholder','google','manual','off'].includes(item.mode) || !['all','desktop','mobile'].includes(item.device) || !['all','home','content'].includes(item.scope) || item.starts_at === null || item.ends_at === null || (item.starts_at && item.ends_at && Date.parse(item.starts_at) > Date.parse(item.ends_at)) || item.title.length > 100 || item.description.length > 240 || item.cta.length > 40 || (item.url && !safeExternalUrl(item.url)) || (item.image_url && !(item.image_url.startsWith('/ads/') || safeExternalUrl(item.image_url))) || (item.mode === 'manual' && (!item.title || !item.url)));
     if (invalidPlacement) {
       const label = invalidPlacement[0] === 'header' ? 'Üst alan' : invalidPlacement[0] === 'article' ? 'Yazı içi alan' : 'Alt alan';
-      return advertisingError(`${label}: manuel tanıtım için başlık ve geçerli HTTPS bağlantısı gerekir. Bağlantısız test için Temalı reklam alanı seçin; görsel yolu /ads/ ile başlamalı veya HTTPS olmalıdır.`);
+      return advertisingError(`${label}: manuel tanıtım için başlık ve geçerli HTTPS bağlantısı gerekir. Bağlantı kullanmayacaksanız Bağlantısız tanıtım seçin; görsel yolu /ads/ ile başlamalı veya HTTPS olmalıdır.`);
     }
     if (Object.values(placements).some((item:any) => item.mode === 'google') && (!publisherId || !Object.entries(placements).some(([name,item]:any) => item.mode === 'google' && slots[name]))) return advertisingError('Google AdSense için geçerli yayıncı kimliği ve ilgili alanın slot numarası gerekir.');
     const enabled = Object.values(placements).some((item:any) => item.mode === 'google');
