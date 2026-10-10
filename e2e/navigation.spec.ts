@@ -240,7 +240,7 @@ test('Studio dashboard reports publication quality and Studio previews update be
 
   await page.goto('/studio/?section=advertising');
   await page.locator('input[name="header_title"]').fill('Yerel reklam önizlemesi');
-  await expect(page.locator('[data-ad-preview]')).toContainText('Yerel reklam önizlemesi');
+  await expect(page.locator('#ad-header [data-ad-preview]')).toContainText('Yerel reklam önizlemesi');
 });
 
 test('mobile portal is exclusive to touch devices and closes accessibly', async ({ browser }) => {

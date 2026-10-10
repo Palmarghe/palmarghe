@@ -1,0 +1,37 @@
+---
+import SavedRecordTime from './SavedRecordTime.astro';
+const {row, placements, error} = Astro.props;
+const config = row?.value ?? {};
+---
+<section class="studio-panel sponsor-manager">
+  {error && <p class="alert" role="alert">{error}</p>}
+  <div class="sponsor-manager-intro"><span class="eyebrow">REKLAMLAR</span><h2>Üç alan, tek düzen.</h2><p>Bir alan seç, kartını düzenle ve kaydet. Kapalı alanlar sitede yer kaplamaz.</p></div>
+  <nav class="advertising-placement-list" aria-label="Reklam alanını seç">
+    {placements.map((placement:any) => <a class="advertising-placement-card" href={`#ad-${placement.name}`} data-ad-jump={`ad-${placement.name}`}><span>{placement.label}</span><strong>{placement.title || 'Başlık ekle'}</strong><b>Düzenle ↓</b></a>)}
+  </nav>
+  <p class="field-help" data-ad-jump-status aria-live="polite">Önizleme değişiklikleri kaydetmeden sitede yayınlanmaz.</p>
+  <form class="advertising-form" method="post" action="/api/studio/">
+    <SavedRecordTime value={row?.updated_at} exists={Boolean(row)}/><input type="hidden" name="entity" value="advertising"/>
+    {placements.map((placement:any,index:number) => { const item=config.placements?.[placement.name] ?? {}; const name=placement.name; return <details id={`ad-${name}`} class="manual-ad-placement sponsor-editor" name="sponsor-placement" open={index===0}>
+      <summary><span><h3>{placement.label}</h3><small>{name==='header'?'Sayfanın üstünde':name==='article'?'İçerik akışı içinde':'Sayfanın sonunda'}</small></span><span class="sponsor-state" data-ad-state={name}>{placement.visible?'Açık':'Kapalı'}</span><span class="sponsor-chevron" aria-hidden="true">⌄</span></summary>
+      <div class="sponsor-editor-body">
+        <label class="sponsor-visibility"><input type="checkbox" name={`${name}_visible`} checked={placement.visible}/><span>Bu alanı göster<small>Gizlemek için kapat; kayıtlı bilgiler korunur.</small></span></label>
+        <div class="sponsor-edit-grid"><div>
+          <label class="field">Gösterim türü<select name={`${name}_mode`}><option value="placeholder" selected={placement.mode==='placeholder'||placement.mode==='off'}>Bağlantısız tanıtım</option><option value="manual" selected={placement.mode==='manual'}>Bağlantılı sponsor kartı</option><option value="google" selected={placement.mode==='google'}>Google AdSense</option></select></label>
+          <label class="field">Başlık<input name={`${name}_title`} maxlength="100" value={item.title??''} placeholder="Kısa ve anlaşılır bir başlık"/></label>
+          <label class="field">Açıklama<input name={`${name}_description`} maxlength="240" value={item.description??''} placeholder="Tek cümleyle tanıt"/></label>
+          <div class="sponsor-field-pair"><label class="field">Bağlantı<input name={`${name}_url`} type="url" value={item.url??''} placeholder="https://"/><small>Bağlantılı kart için gerekli.</small></label><label class="field">Buton metni<input name={`${name}_cta`} maxlength="40" value={item.cta??''} placeholder="İncele"/></label></div>
+          <label class="field">Görsel adresi<input name={`${name}_image_url`} value={item.image_url??''} placeholder="/ads/ornek.webp veya https://"/><small>İsteğe bağlı. Görsel küçük bir çerçevede gösterilir.</small></label>
+        </div><div class="sponsor-preview-column"><aside class="sponsor-preview" data-ad-preview><span class="eyebrow">KART ÖNİZLEMESİ</span><article class="sponsor-card" data-preview-placement={name}><img class="promotion-image" alt="" hidden/><div class="promotion-copy advertising-preview-copy"><span class="sponsor-label">SPONSORLU</span><strong>{item.title||'Başlık bekliyor'}</strong><small></small><em></em></div><span class="sponsor-arrow" aria-hidden="true">↗</span></article><p class="field-help">Önizleme tasarımı gösterir. Cihaz, sayfa ve tarih kuralları yayın sırasında uygulanır.</p></aside></div></div>
+        <details class="sponsor-advanced"><summary>Gelişmiş ayarlar · cihaz, sayfa ve zamanlama</summary><div class="sponsor-advanced-grid">
+          <label class="field">Cihaz<select name={`${name}_device`}><option value="all" selected={!item.device||item.device==='all'}>Tüm cihazlar</option><option value="desktop" selected={item.device==='desktop'}>Masaüstü</option><option value="mobile" selected={item.device==='mobile'}>Mobil</option></select></label>
+          <label class="field">Sayfa<select name={`${name}_scope`}><option value="all" selected={!item.scope||item.scope==='all'}>Tüm sayfalar</option><option value="home" selected={item.scope==='home'}>Yalnız ana sayfa</option><option value="content" selected={item.scope==='content'}>Ana sayfa dışı</option></select></label>
+          <label class="field">Başlangıç<input type="datetime-local" name={`${name}_starts_at`} value={item.starts_at?String(item.starts_at).slice(0,16):''}/></label><label class="field">Bitiş<input type="datetime-local" name={`${name}_ends_at`} value={item.ends_at?String(item.ends_at).slice(0,16):''}/></label>
+          <label class="field">AdSense slotu<input name={`${name}_slot`} inputmode="numeric" pattern="[0-9]{6,20}" value={config.slots?.[name]??''}/><small>Yalnız Google AdSense için.</small></label>
+        </div></details>
+      </div>
+    </details>})}
+    <details class="sponsor-advanced sponsor-publisher"><summary>Google AdSense yayıncı ayarı</summary><label class="field">AdSense yayıncı kimliği<input name="publisher_id" pattern="ca-pub-[0-9]{10,20}" value={config.publisher_id??''} placeholder="ca-pub-1234567890123456"/></label></details>
+    <div class="sponsor-save"><span class="field-help">Tüm alanların değişiklikleri birlikte kaydedilir.</span><button class="button">Reklam ayarlarını kaydet</button></div>
+  </form>
+</section>
