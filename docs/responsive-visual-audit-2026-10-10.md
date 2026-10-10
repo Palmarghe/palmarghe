@@ -2,6 +2,10 @@
 
 Goal: inspect public and Studio mobile, tablet and desktop, repair asymmetric or visually inconsistent surfaces while preserving working architecture, Git, production records and original media.
 
+## Latest state
+
+Current runtime deb79ca / Workerabccfe54-6e86-4345-8246-b2208e18d059 incorporates the responsive repairs below and the user's advertisement-balance follow-up. Current final local advertisement2/2,244units/build,96visual and production11/11 passed; source CI38064685755 verify/visual/production-smoke all successful,149functional and33live smoke cases passed. Predecessor3ffa2b3 full149local/93production and all19nativeStudio sections/eight public routes in three sizes remain retained evidence. Current native public/Studio ads checked atphone/tablet/desktop, functional edit focus and clear consoles; actual health confirms current source. See advertisement-balance-2026-10-10.md and FINAL_REPORT.md for the authoritative current gate table. Everything below is chronological checkpoint evidence, including failed/interrupted attempts.
+
 Baseline runtime93dbd0b / Worker37488ff6; normal documentation commit85ccaa2. Previous partner/footer release has144 local,48 visual,92 production and all source Actions jobs successful.
 
 Native Chrome public inspection: home, Gaming, KaanBuilder, archive, search, contact, collections and account at390/768/1440. Settled client/body-scroll widths375/753/1425; no outside main form controls. Tablet hero705x357.13. Public inspection uses verify query flags; no submitted forms or account/settings changes.
@@ -54,3 +58,21 @@ Runtime3ffa2b3 clean commit/push/build18:16:15/deploy Worker ec9c7ced-622b-4858-
 Source3ffa2b3 CI38062917682 visual87/96:only nine advertising references fail. Downloaded artifact11672874951 through GitHub connector; actual diff isolates six emptydatetime placeholder strings (expecteddd.mm.yyyy; CIactualmm/dd/yyyy), no layout/control/artwork differences. Windows visual runner culture is now explicitly tr-TR to match the native control baseline; no new control masks or tolerance change. This CI-only correction does not change deployed runtime or production data. Await corrected CI proof; no green claim yet.
 
 Final predecessor3ffa2b3 proof: full production93/93 passed8.2m. Native post-deploy all19Studio sections checked atphone/tablet/desktop; eight public routes at390/768/1440 had bounded main controls. Actual health source3ffa2b3/services accessible/database38ms and2px keyboard outline; media Aurora button themed44px; Studio console empty. Current user follow-up asks for better advertisement proportions, recorded separately in advertisement-balance-2026-10-10.md; prior alignment evidence is not claimed sufficient for that request.
+
+## Final requirement inventory for the visual goal
+
+| Requirement | Final evidence |
+|---|---|
+| Public phone/tablet/desktop inspection | Native eight routes in three sizes on3ffa2b3; currentdeb79ca sitemap-wide three-width/three-palette production check passed, current native advertisement geometry corroborated |
+| Studio phone/tablet/desktop inspection | Native all19sections in three sizes on3ffa2b3; current advertising screen bounded305/753/1905 clients, original saved fields retained, reachable edit focus |
+| Symmetric public advertisements | Current native three equal heights122.84desktop/119.17tablet, public grid alignment,50/50desktop and60/40tablet; mobile copy retained |
+| Studio preview parity | Current native three equal128.53 heights; exact copy/image boundaries/shares, all-theme local unsaved/hide/no-image checks |
+| Reachable controls and keyboard access | Seven labelled mobile record lists/44px actions, measured Aurora button repair, actual focusable health table and edit-anchor focus; full149 predecessor E2E/171combinations |
+| Reproducible visual regression | Current96/96 passed;24 reviewed compact-band references,72 unchanged; no new masks or weaker tolerance |
+| Production release and preservation | Clean committeddeb79ca/Workerabccfe54; eight exact static asset reads; native actual health/current source; no production data/settings submission; normal push |
+| Final live checks | Current11/11 passed2.1m, console/WCAG/themes/security/sitemap/layout; first failure and unmodified passing repeat retained |
+| Source CI and final docs | Source38064685755 all three jobs successful;149functional,96visual,244units,33live smoke; native Chrome Run332 Success. Final docs-only normal commit records exact deployed source and proofs |
+
+This inventory applies to visual/responsive work. It does not close the separate fourteen-item technical scope or claim unperformed production account/settings operations.
+
+Final source38064685755 all three Actions jobs succeeded;149functional10.3m and33production-smoke5.0m,96visual and244units. Native GitHub Chrome Run332 showsSuccess and all three green jobs. The applicable visual/responsive requirement inventory is complete; no known P0/P1 visual defect remains from this audit. The separate fourteen-item technical backlog remains active and is not declared finished.
