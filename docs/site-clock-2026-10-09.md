@@ -29,3 +29,9 @@ Full repaired live run:90 passed/1 failed7.3m. All four clock-update cases and t
 
 Final ad-aware local regression143/143 passed7.6m. Three phone archive references were reviewed and reduced44px; final visual48/48 passed43.9s, other45 unchanged relative9521511. Actual authorized native Chrome Studio health confirms9521511a811d/build22:48:15, accessible Auth/database/media and67ms database control.
 Final combined verify:278 checked files, zero diagnostics,244 unit tests and build passed. Production follow-up pending.
+
+## Ad-aware final runtime checkpoint
+
+Clean normally pushed source0a303af65b6b933c6de7fab83acf2281fdf3a1be deployed as Workerd8404aae-1f09-475f-be45-02882c64b529, build23:11:55. Final localverify278 files/zero diagnostics/244 units/build, full143/1437.6m and visual48/4843.9s passed. Fresh scope6/6 production27.7s includes ad-enabled phone archive, four clock cases and console checks. Full91-case production and source Actions37985345188 still running at this checkpoint. Both new CSS files and both clock modules on apex/Studio returned200 with expected MIME and exact clean build bytes in all eight measured reads. Native authorized health confirms0a303af65b6b/accessibility of Auth/database/media/database33ms. Fresh public verify-flagged Chrome phone/client375 has clock16..359; tablet753 has clock24..729 and46.19px height. Desktop23:13→phone23:14 confirms continued minute update; viewport restored. Current screenshot proofs saved separately from earlier9521511 proofs.
+
+10 October follow-up: source0a303af Actions37985345188 verify/visual/production-smoke all completed successfully. Prior full91 process handle is absent following turn interruption and its final full outcome is not claimed. Fresh live full coverage is required for the partner/footer follow-up.

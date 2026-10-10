@@ -35,7 +35,7 @@ test('editorial imagery loads and mobile menu remains keyboard accessible', asyn
 
 test('empty publication presents areas without placeholder work', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Keşfet' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Keşfet', exact: true })).toBeVisible();
   await expect(page.locator('.home-sections .empty')).toHaveCount(0);
   await page.goto('/ai/');
   await expect(page.getByText('Bu alanda henüz yayımlanmış bir çalışma yok.')).toBeVisible();
