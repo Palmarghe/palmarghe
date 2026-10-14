@@ -6,8 +6,15 @@ test('live curated showcase and visual spotlight load in both themes and sizes',
  for(const img of await page.locator('.hero-preview img,.featured-card img').all()){
   await img.scrollIntoViewIfNeeded();await expect.poll(()=>img.evaluate(e=>(e as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
  }
- await expect(page.locator('.spotlight a')).toHaveAttribute('href','/gaming/stranded-alien-dawn/colony-director/');
- const image=page.locator('.spotlight img');await image.scrollIntoViewIfNeeded();await expect.poll(()=>image.evaluate(e=>(e as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+ // Studio may hide Spotlight or select another publication; do not overwrite that choice for QA.
+ const spotlight=page.locator('.spotlight');
+ expect(await spotlight.count()).toBeLessThanOrEqual(1);
+ if(await spotlight.count()){
+  const link=spotlight.locator('a');
+  const href=await link.getAttribute('href');expect(href).toMatch(/^\/(?!\/).+\/$/);
+  expect((await page.request.get(href!)).status()).toBe(200);
+  const image=spotlight.locator('img');await image.scrollIntoViewIfNeeded();await expect.poll(()=>image.evaluate(e=>(e as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+ }
  for(const width of [320,390,1024,1440])for(const theme of ['dark','light']){
   await page.setViewportSize({width,height:900});await page.evaluate(t=>document.body.dataset.theme=t,theme);
   await expect(page.locator('.category strong').first()).toHaveCSS('color','rgb(243, 241, 234)');
