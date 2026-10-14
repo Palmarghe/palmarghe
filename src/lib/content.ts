@@ -19,6 +19,16 @@ export async function publishedBySlug(cookies: AstroCookies, request: Request, l
   return data?.[0] as ContentItem | undefined;
 }
 
+/** Resolve an explicit editorial choice independently of locale and index pagination. */
+export async function publishedById(cookies: AstroCookies, request: Request, id: string): Promise<ContentItem | undefined> {
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return undefined;
+  const db = supabase(cookies, request);
+  if (!db) return undefined;
+  const { data, error } = await db.from('content_items').select('*').eq('id', id).in('status', ['published', 'scheduled']).lte('published_at', new Date().toISOString()).limit(1);
+  if (error) { console.error('Published selection query failed:', error.code); throw new ContentUnavailable(); }
+  return data?.[0] as ContentItem | undefined;
+}
+
 export async function published(cookies: AstroCookies, request: Request, locale: Locale, limit = 30): Promise<ContentItem[]> {
   const db = supabase(cookies, request);
   if (!db) return [];

@@ -4,7 +4,7 @@ import HomeHero from '../components/HomeHero.astro';
 import FMModDetail from '../components/FMModDetail.astro';
 import AdSlot from '../components/AdSlot.astro';
 import { copy, contentTypeLabel, nav, parsePath, pathFor, safeExternalUrl } from '../lib/site';
-import { published, publishedBySlug, type ContentItem } from '../lib/content';
+import { published, publishedBySlug, publishedById, type ContentItem } from '../lib/content';
 import { categoryPath, categoryDescendantIds, pageDescription } from '../lib/seo';
 import { coverStyle } from '../lib/cover-framing';
 import {showcaseFocus} from '../lib/showcase-focus';
@@ -138,10 +138,11 @@ if (configuredFeatured.length) featuredItems = configuredFeatured;
 const configuredSpotlight = typeof curation.spotlight_id === 'string' ? items.find((entry) => entry.id === curation.spotlight_id) : undefined;
 if (configuredSpotlight) fmSpotlight = configuredSpotlight;
 const previewSetting = heroSetting.preview ?? {};
-const heroPreview = items.find(entry=>entry.id===previewSetting.content_id) ?? featuredItems[0] ?? items[0];
+const selectedHeroPreview = items.find(entry=>entry.id===previewSetting.content_id) ?? (slug === '' && typeof previewSetting.content_id === 'string' ? await publishedById(Astro.cookies, Astro.request, previewSetting.content_id) : undefined);
+const heroPreview = selectedHeroPreview ?? featuredItems[0] ?? items[0];
 const previewTitle = String(previewSetting[`title_${locale}`]??'').trim() || heroPreview?.title;
 const previewLabel = String(previewSetting[`label_${locale}`]??'').trim() || (locale==='tr'?'VİTRİNDEN':'IN THE SHOWCASE');
-const previewImage = typeof previewSetting.media_id==='string' && /^[0-9a-f-]{36}$/i.test(previewSetting.media_id) ? `/api/media/${previewSetting.media_id}/` : heroPreview ? coverFor(heroPreview) : '';
+const previewImage = typeof previewSetting.media_id==='string' && /^[0-9a-f-]{36}$/i.test(previewSetting.media_id) ? `/api/media/${previewSetting.media_id}/` : heroPreview?.cover_media_id ? `/api/media/${heroPreview.cover_media_id}/` : heroPreview ? coverFor(heroPreview) : '';
 const previewWidth = Math.min(480,Math.max(260,Number(previewSetting.width)||420));
 const previewZoom=Math.min(200,Math.max(100,Number(previewSetting.zoom)||100));
 const cardFocus=showcaseFocus(previewSetting);
@@ -246,7 +247,7 @@ const structuredData = contentSchema || breadcrumbSchema ? {'@context':'https://
 <Site locale={locale} title={title} contentInteractions={Boolean(item)} description={metadataDescription} alternate={alternatePath} canonicalOverride={item?.canonical_override ?? undefined} noindex={['account','search'].includes(slug) || item?.indexable === false || !valid} structuredData={structuredData} ogImage={item?.og_media_id ? `/api/media/${item.og_media_id}/` : publicImageUrl(item?.cover_url)} ogAlt={item?.title} ogType={item?.type === 'article' ? 'article' : 'website'}>
   {String(slug) === '' && <>
     {Astro.url.searchParams.get('newsletter') === '1' && <p class="alert wrap">{locale === 'tr' ? 'Bülten listesine kaydın alındı.' : 'You are on the newsletter list.'}</p>}
-    {heroVisible && <HomeHero visual={heroSetting.visual} locale={locale} mode={heroMode} title={heroTitle} eyebrow={heroEyebrow} descriptor={heroDescriptor} image={heroImage} preview={previewSetting.visible !== false && heroPreview ? {href:pathFor(locale,heroPreview.slug),image:previewImage,srcset:imageSrcSet(previewImage),alt:coverAlt(heroPreview),label:previewLabel,title:previewTitle??heroPreview.title,style:previewStyle}:undefined}/> }
+    {heroVisible && <HomeHero visual={heroSetting.visual} locale={locale} mode={heroMode} title={heroTitle} eyebrow={heroEyebrow} descriptor={heroDescriptor} image={heroImage} preview={previewSetting.visible !== false && heroPreview ? {href:pathFor(heroPreview.locale,heroPreview.slug),image:previewImage,srcset:imageSrcSet(previewImage),alt:coverAlt(heroPreview),label:previewLabel,title:previewTitle??heroPreview.title,style:previewStyle}:undefined}/> }
     {String(slug) === '' && <AdSlot placement="article" config={advertising} locale={locale}/>} 
     <div class="home-sections">
       {homeVisible('now') && nowItems.length > 0 && <section class="now-strip wrap" style={`order:${homeOrder('now')}`} aria-label={locale === 'tr' ? 'Şu anda' : 'Now'}><span class="eyebrow">{locale === 'tr' ? 'ŞU ANDA' : 'NOW'}</span><div>{nowItems.map((entry) => <a href={pathFor(locale,entry.slug)}><span>{contentTypeLabel(locale,entry.type)}</span><strong>{entry.title}</strong></a>)}</div></section>}

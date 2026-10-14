@@ -43,6 +43,26 @@ test('independent showcase card saves, renders, hides and preserves publication 
   await expect(card.locator('.hero-card-image-frame')).toHaveCSS('aspect-ratio','4 / 3');await expect(card.locator('img')).toHaveCSS('transform','matrix(1.25, 0, 0, 1.25, 0, 0)');await expect(card.locator('img')).toHaveCSS('object-fit','cover');
   for(const width of [390,1440]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
   await card.click();await expect(page.getByRole('heading',{name:title,exact:true})).toBeVisible();
+  // A selection in another language must not silently become an unrelated local card.
+  const englishTitle='English showcase QA '+Date.now();
+  const englishSlug='english-showcase-'+Date.now();
+  expect((await context.request.post('/api/studio/',{headers:{Origin:origin},form:{entity:'content',title:englishTitle,slug:englishSlug,locale:'en',type:'article',status:'published',cover_url:'/visuals/editorial-fm.webp',body:JSON.stringify({type:'doc',content:[{type:'paragraph',content:[{type:'text',text:'Cross-language showcase fixture.'}]}]})}})).ok()).toBe(true);
+  await page.goto('/studio/?section=homepage');
+  await page.locator('[name=preview_content_id]').selectOption({label:englishTitle});
+  await page.locator('[name=preview_title_tr]').fill('');
+  await page.locator('[name=preview_title_en]').fill('');
+  await page.locator('[name=preview_media_id]').selectOption('');
+  await expect(page.locator('[data-card-title]')).toHaveText(englishTitle);
+  await save();
+  for(const home of ['/','/en/']){
+    await page.goto(home);
+    await expect(page.locator('.hero-preview strong')).toHaveText(englishTitle);
+    await expect(page.locator('.hero-preview')).toHaveAttribute('href','/en/'+englishSlug+'/');
+    // This fixture has no stored cover (the API accepts library IDs, not arbitrary cover URLs).
+    await expect(page.locator('.hero-preview img')).toHaveAttribute('src','/visuals/hero-glass.webp');
+  }
+  await page.locator('.hero-preview').click();
+  await expect(page.getByRole('heading',{name:englishTitle,exact:true})).toBeVisible();
   await page.goto('/studio/?section=homepage');await page.locator('[name=preview_visible]').uncheck();await save();
   await page.goto('/');await expect(page.locator('.hero-preview')).toHaveCount(0);await expect(page.locator('.hero-copy')).toBeVisible();
   await page.goto('/studio/?section=homepage');await page.evaluate(()=>document.body.dataset.theme='light');

@@ -2,7 +2,7 @@ import { beforeEach, expect, test, vi } from 'vitest';
 import type { AstroCookies } from 'astro';
 const { client } = vi.hoisted(() => ({ client: vi.fn() }));
 vi.mock('./supabase', () => ({ supabase: client }));
-import { published, publishedBySlug } from './content';
+import { published, publishedBySlug, publishedById } from './content';
 import { ContentUnavailable, contentUnavailableResponse } from './content-unavailable';
 const cookies = {} as AstroCookies;
 const request = new Request('https://palmarghe.com/archive/?type=project');
@@ -13,6 +13,27 @@ function result(data: unknown, error: unknown = null) {
   client.mockReturnValue({ from: () => chain });
 }
 beforeEach(() => { client.mockReset(); });
+
+test('explicit showcase lookup is independent of locale and retains publication filters', async () => {
+  const entry={id:'00000000-0000-4000-8000-100000000002',locale:'en',title:'Chosen English item'};
+  const chain={select:vi.fn(),eq:vi.fn(),in:vi.fn(),lte:vi.fn(),limit:vi.fn().mockResolvedValue({data:[entry],error:null})};
+  for(const key of ['select','eq','in','lte'] as const) chain[key].mockReturnValue(chain);
+  client.mockReturnValue({from:()=>chain});
+  expect(await publishedById(cookies,request,entry.id)).toEqual(entry);
+  expect(chain.eq.mock.calls).toEqual([['id',entry.id]]);
+  expect(chain.in).toHaveBeenCalledWith('status',['published','scheduled']);
+  expect(chain.lte).toHaveBeenCalledWith('published_at',expect.any(String));
+  expect(chain.limit).toHaveBeenCalledWith(1);
+});
+
+test('malformed explicit selection is not queried and service errors do not silently swap cards', async () => {
+  expect(await publishedById(cookies,request,'invalid')).toBeUndefined();
+  expect(client).not.toHaveBeenCalled();
+  result(null,{code:'SERVICE_FAILURE'});
+  const log=vi.spyOn(console,'error').mockImplementation(()=>{});
+  await expect(publishedById(cookies,request,'00000000-0000-4000-8000-100000000002')).rejects.toBeInstanceOf(ContentUnavailable);
+  log.mockRestore();
+});
 test('actual empty reads still mean empty list or missing detail', async () => {
   result([]);
   expect(await published(cookies, request, 'tr')).toEqual([]);
